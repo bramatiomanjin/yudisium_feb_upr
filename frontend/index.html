@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,18 +14,214 @@
 
     <main class="container">
 
+        <!-- HEADER -->
         <header class="page-header">
             <h1>Pendaftaran Yudisium</h1>
             <p>Fakultas Ekonomi dan Bisnis Universitas Palangka Raya</p>
         </header>
 
-        <section>
-            <h2>Form Pengajuan Yudisium</h2>
-            <p>Silakan isi data dengan benar.</p>
-        </section>
+        <!-- STEP INDICATOR -->
+        <div class="step-indicator">
+
+            <div class="step active">
+                <div class="step-number">1</div>
+                <span>Identitas</span>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <span>Akademik</span>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <span>Dokumen</span>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <span>Konfirmasi</span>
+            </div>
+
+        </div>
+
+        <!-- FORM -->
+        <form id="formYudisium">
+
+            <section class="form-section active">
+
+                <div class="section-header">
+                    <h2>Data Identitas Mahasiswa</h2>
+                    <p>
+                        Pastikan data yang dimasukkan sesuai dengan data resmi mahasiswa.
+                    </p>
+                </div>
+
+                <!-- NAMA -->
+                <div class="form-group">
+                    <label for="nama_lengkap">
+                        Nama Lengkap
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nama_lengkap"
+                        name="nama_lengkap"
+                        placeholder="Masukkan nama lengkap sesuai ijazah"
+                        required
+                    >
+                </div>
+
+                <!-- NIM -->
+                <div class="form-group">
+                    <label for="nim">
+                        NIM
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nim"
+                        name="nim"
+                        placeholder="Masukkan NIM"
+                        required
+                    >
+
+                    <small>
+                        Pastikan NIM benar karena digunakan sebagai identitas utama mahasiswa.
+                    </small>
+                </div>
+
+                <!-- EMAIL -->
+                <div class="form-group">
+                    <label for="email">
+                        Email
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="contoh@email.com"
+                        required
+                    >
+                </div>
+
+                <!-- WHATSAPP -->
+                <div class="form-group">
+                    <label for="no_whatsapp">
+                        Nomor WhatsApp
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="no_whatsapp"
+                        name="no_whatsapp"
+                        placeholder="Contoh: 081234567890"
+                        required
+                    >
+                </div>
+
+                <!-- TAHUN ANGKATAN -->
+                <div class="form-group">
+                    <label for="tahun_angkatan">
+                        Tahun Angkatan
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="number"
+                        id="tahun_angkatan"
+                        name="tahun_angkatan"
+                        placeholder="Contoh: 2023"
+                        min="2000"
+                        max="2100"
+                        required
+                    >
+                </div>
+
+                <!-- JALUR MASUK -->
+                <div class="form-group">
+                    <label for="jalur_masuk">
+                        Jalur Masuk Kuliah
+                        <span class="required">*</span>
+                    </label>
+
+                    <select
+                        id="jalur_masuk"
+                        name="jalur_masuk"
+                        required
+                    >
+                        <option value="">
+                            Pilih jalur masuk
+                        </option>
+
+                        <option value="REGULER">
+                            Reguler
+                        </option>
+
+                        <option value="RPL">
+                            RPL
+                        </option>
+
+                    </select>
+                </div>
+
+                <!-- JURUSAN -->
+                <div class="form-group">
+                    <label for="jurusan">
+                        Jurusan
+                        <span class="required">*</span>
+                    </label>
+
+                    <select
+                        id="jurusan"
+                        name="jurusan"
+                        required
+                    >
+                        <option value="">
+                            Pilih jurusan
+                        </option>
+
+                        <option value="EKONOMI PEMBANGUNAN">
+                            Ekonomi Pembangunan
+                        </option>
+
+                        <option value="MANAJEMEN">
+                            Manajemen
+                        </option>
+
+                        <option value="AKUNTANSI">
+                            Akuntansi
+                        </option>
+
+                    </select>
+                </div>
+
+                <!-- NAVIGATION -->
+                <div class="form-navigation">
+
+                    <button
+                        type="button"
+                        id="btnNext"
+                        class="btn btn-primary"
+                    >
+                        Berikutnya
+                    </button>
+
+                </div>
+
+            </section>
+
+        </form>
 
     </main>
 
     <script src="js/form.js"></script>
+
 </body>
+
 </html>

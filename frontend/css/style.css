@@ -6,24 +6,170 @@
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background-color: #f5f6f8;
+    background-color: #f4f6f8;
     color: #222;
+    line-height: 1.6;
 }
+
+/* CONTAINER */
 
 .container {
     max-width: 900px;
     margin: 40px auto;
     padding: 32px;
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    background-color: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
+/* HEADER */
+
 .page-header {
-    margin-bottom: 32px;
     text-align: center;
+    margin-bottom: 35px;
 }
 
 .page-header h1 {
+    font-size: 28px;
     margin-bottom: 8px;
+}
+
+.page-header p {
+    color: #666;
+}
+
+/* STEP INDICATOR */
+
+.step-indicator {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+}
+
+.step {
+    flex: 1;
+    text-align: center;
+    color: #aaa;
+}
+
+.step-number {
+    width: 38px;
+    height: 38px;
+    margin: 0 auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #e5e7eb;
+    font-weight: bold;
+}
+
+.step.active {
+    color: #222;
+    font-weight: bold;
+}
+
+.step.active .step-number {
+    background-color: #222;
+    color: white;
+}
+
+/* SECTION */
+
+.section-header {
+    margin-bottom: 28px;
+}
+
+.section-header h2 {
+    font-size: 22px;
+    margin-bottom: 6px;
+}
+
+.section-header p {
+    color: #666;
+    font-size: 14px;
+}
+
+/* FORM */
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.required {
+    color: red;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #222;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+.form-group small {
+    display: block;
+    margin-top: 6px;
+    color: #777;
+    font-size: 13px;
+}
+
+/* NAVIGATION */
+
+.form-navigation {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #222;
+    color: white;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+
+    .container {
+        margin: 20px;
+        padding: 22px;
+    }
+
+    .step-indicator {
+        gap: 8px;
+    }
+
+    .step span {
+        font-size: 12px;
+    }
+
 }
