@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Proses SK Yudisium - FEB UPR
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/admin.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/admin-proses-sk.css"
+    >
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- =====================================
+             SIDEBAR
+        ====================================== -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-sidebar-brand">
+
+                <div class="admin-sidebar-logo">
+                    FEB
+                </div>
+
+                <div>
+
+                    <strong>
+                        Yudisium FEB
+                    </strong>
+
+                    <span>
+                        Admin Panel
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <nav class="admin-sidebar-nav">
+
+                <a
+                    href="dashboard.html"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ▦
+                    </span>
+
+                    <span>
+                        Dashboard
+                    </span>
+                </a>
+
+
+                <a
+                    href="pengajuan.html"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ☷
+                    </span>
+
+                    <span>
+                        Pengajuan
+                    </span>
+                </a>
+
+
+                <a
+                    href="pengajuan.html?filter=revisi"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        !
+                    </span>
+
+                    <span>
+                        Perlu Revisi
+                    </span>
+
+                    <span class="admin-nav-count">
+                        3
+                    </span>
+                </a>
+
+
+                <a
+                    href="pengajuan.html?filter=proses-sk"
+                    class="admin-nav-item active"
+                >
+                    <span class="admin-nav-icon">
+                        ◷
+                    </span>
+
+                    <span>
+                        Proses SK
+                    </span>
+                </a>
+
+
+                <a
+                    href="history.html"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ↺
+                    </span>
+
+                    <span>
+                        History
+                    </span>
+                </a>
+
+
+                <div class="admin-nav-divider"></div>
+
+
+                <a
+                    href="kelola_admin.html"
+                    class="admin-nav-item super-admin-only"
+                    id="manageAdminMenu"
+                >
+                    <span class="admin-nav-icon">
+                        ♙
+                    </span>
+
+                    <span>
+                        Kelola Admin
+                    </span>
+                </a>
+
+            </nav>
+
+
+            <div class="admin-sidebar-footer">
+
+                <div class="admin-user-mini">
+
+                    <div class="admin-user-avatar">
+                        A
+                    </div>
+
+                    <div>
+
+                        <strong id="sidebarAdminName">
+                            Admin
+                        </strong>
+
+                        <span id="sidebarAdminRole">
+                            ADMIN
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="admin-logout-button"
+                    id="adminLogout"
+                >
+                    Keluar
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================
+             MAIN
+        ====================================== -->
+        <main class="admin-main sk-process-main">
+
+            <!-- BACK -->
+            <div class="sk-process-back">
+
+                <a href="pengajuan.html?filter=proses-sk">
+                    ← Kembali ke Daftar Pengajuan
+                </a>
+
+            </div>
+
+
+            <!-- HEADER -->
+            <header class="sk-process-header">
+
+                <div>
+
+                    <p class="admin-page-eyebrow">
+                        PROSES SK YUDISIUM
+                    </p>
+
+                    <h1>
+                        YDS-2026-0006
+                    </h1>
+
+                    <p>
+                        Kelola tahapan penerbitan SK yudisium mahasiswa.
+                    </p>
+
+                </div>
+
+
+                <div class="sk-process-header-actions">
+
+                    <span
+                        class="admin-status-badge verified"
+                        id="skHeaderStatus"
+                    >
+                        Terverifikasi
+                    </span>
+
+
+                    <div class="admin-profile-chip">
+
+                        <div class="admin-profile-avatar">
+                            A
+                        </div>
+
+                        <div>
+
+                            <strong id="topbarAdminName">
+                                Admin
+                            </strong>
+
+                            <span id="topbarAdminRole">
+                                ADMIN
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- =====================================
+                 STUDENT
+            ====================================== -->
+            <section class="sk-student-card">
+
+                <div class="sk-student-avatar">
+                    GA
+                </div>
+
+
+                <div class="sk-student-main">
+
+                    <h2>
+                        Grace Amelia
+                    </h2>
+
+                    <p>
+                        NIM 2301110006
+                    </p>
+
+                </div>
+
+
+                <div class="sk-student-meta">
+
+                    <div>
+
+                        <span>
+                            Jurusan
+                        </span>
+
+                        <strong>
+                            Manajemen
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Angkatan
+                        </span>
+
+                        <strong>
+                            2023
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Pengajuan
+                        </span>
+
+                        <strong>
+                            31 Agustus 2026
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 INFORMATION
+            ====================================== -->
+            <section class="sk-process-info">
+
+                <div class="sk-info-icon">
+                    i
+                </div>
+
+                <div>
+
+                    <strong>
+                        Status hanya dapat dilanjutkan secara berurutan
+                    </strong>
+
+                    <p>
+                        Admin maupun Super Admin dapat memperbarui proses SK.
+                        Sistem tidak mengizinkan tahap berikutnya dilewati.
+                        Setiap perubahan status akan dicatat ke history.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 PROGRESS
+            ====================================== -->
+            <section class="sk-process-card">
+
+                <div class="sk-card-header">
+
+                    <div>
+
+                        <h2>
+                            Tahapan Proses SK
+                        </h2>
+
+                        <p>
+                            Status penerbitan SK mahasiswa saat ini.
+                        </p>
+
+                    </div>
+
+
+                    <div class="sk-progress-summary">
+
+                        <span>
+                            Progress
+                        </span>
+
+                        <strong id="skProgressText">
+                            1 / 5
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sk-progress-bar">
+
+                    <div
+                        class="sk-progress-fill"
+                        id="skProgressFill"
+                    ></div>
+
+                </div>
+
+
+                <!-- STAGES -->
+                <div
+                    class="sk-stage-list"
+                    id="skStageList"
+                >
+
+                    <!-- TERVERIFIKASI -->
+                    <article
+                        class="sk-stage-item"
+                        data-stage="TERVERIFIKASI"
+                    >
+
+                        <div class="sk-stage-marker">
+                            1
+                        </div>
+
+
+                        <div class="sk-stage-content">
+
+                            <div class="sk-stage-title">
+
+                                <div>
+
+                                    <h3>
+                                        Pengajuan Terverifikasi
+                                    </h3>
+
+                                    <p>
+                                        Seluruh data dan dokumen telah disetujui.
+                                    </p>
+
+                                </div>
+
+
+                                <span class="sk-stage-badge">
+                                    Menunggu
+                                </span>
+
+                            </div>
+
+
+                            <div class="sk-stage-meta">
+
+                                <span class="sk-stage-date">
+                                    -
+                                </span>
+
+                                <span class="sk-stage-admin">
+                                    -
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- PEMBUATAN SK -->
+                    <article
+                        class="sk-stage-item"
+                        data-stage="PEMBUATAN_SK"
+                    >
+
+                        <div class="sk-stage-marker">
+                            2
+                        </div>
+
+
+                        <div class="sk-stage-content">
+
+                            <div class="sk-stage-title">
+
+                                <div>
+
+                                    <h3>
+                                        Pembuatan SK
+                                    </h3>
+
+                                    <p>
+                                        Dokumen SK sedang dipersiapkan.
+                                    </p>
+
+                                </div>
+
+
+                                <span class="sk-stage-badge">
+                                    Menunggu
+                                </span>
+
+                            </div>
+
+
+                            <div class="sk-stage-meta">
+
+                                <span class="sk-stage-date">
+                                    -
+                                </span>
+
+                                <span class="sk-stage-admin">
+                                    -
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- WAKIL DEKAN -->
+                    <article
+                        class="sk-stage-item"
+                        data-stage="TTD_WAKIL_DEKAN"
+                    >
+
+                        <div class="sk-stage-marker">
+                            3
+                        </div>
+
+
+                        <div class="sk-stage-content">
+
+                            <div class="sk-stage-title">
+
+                                <div>
+
+                                    <h3>
+                                        TTD Wakil Dekan
+                                    </h3>
+
+                                    <p>
+                                        SK menunggu atau sedang diproses untuk
+                                        tanda tangan Wakil Dekan.
+                                    </p>
+
+                                </div>
+
+
+                                <span class="sk-stage-badge">
+                                    Menunggu
+                                </span>
+
+                            </div>
+
+
+                            <div class="sk-stage-meta">
+
+                                <span class="sk-stage-date">
+                                    -
+                                </span>
+
+                                <span class="sk-stage-admin">
+                                    -
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- DEKAN -->
+                    <article
+                        class="sk-stage-item"
+                        data-stage="TTD_DEKAN"
+                    >
+
+                        <div class="sk-stage-marker">
+                            4
+                        </div>
+
+
+                        <div class="sk-stage-content">
+
+                            <div class="sk-stage-title">
+
+                                <div>
+
+                                    <h3>
+                                        TTD Dekan
+                                    </h3>
+
+                                    <p>
+                                        SK menunggu atau sedang diproses
+                                        untuk tanda tangan Dekan.
+                                    </p>
+
+                                </div>
+
+
+                                <span class="sk-stage-badge">
+                                    Menunggu
+                                </span>
+
+                            </div>
+
+
+                            <div class="sk-stage-meta">
+
+                                <span class="sk-stage-date">
+                                    -
+                                </span>
+
+                                <span class="sk-stage-admin">
+                                    -
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- SK TERBIT -->
+                    <article
+                        class="sk-stage-item"
+                        data-stage="SK_TERBIT"
+                    >
+
+                        <div class="sk-stage-marker">
+                            5
+                        </div>
+
+
+                        <div class="sk-stage-content">
+
+                            <div class="sk-stage-title">
+
+                                <div>
+
+                                    <h3>
+                                        SK Terbit
+                                    </h3>
+
+                                    <p>
+                                        Proses penerbitan SK yudisium selesai.
+                                    </p>
+
+                                </div>
+
+
+                                <span class="sk-stage-badge">
+                                    Menunggu
+                                </span>
+
+                            </div>
+
+
+                            <div class="sk-stage-meta">
+
+                                <span class="sk-stage-date">
+                                    -
+                                </span>
+
+                                <span class="sk-stage-admin">
+                                    -
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 NEXT ACTION
+            ====================================== -->
+            <section
+                class="sk-action-card"
+                id="skActionCard"
+            >
+
+                <div class="sk-action-header">
+
+                    <div>
+
+                        <span>
+                            TAHAP BERIKUTNYA
+                        </span>
+
+                        <h2 id="skNextStageTitle">
+                            Pembuatan SK
+                        </h2>
+
+                        <p id="skNextStageDescription">
+                            Tandai bahwa proses pembuatan SK telah dimulai.
+                        </p>
+
+                    </div>
+
+
+                    <span
+                        class="sk-next-status"
+                        id="skNextStatus"
+                    >
+                        PEMBUATAN_SK
+                    </span>
+
+                </div>
+
+
+                <div class="sk-note-group">
+
+                    <label for="skProcessNote">
+                        Catatan Proses
+                        <span>
+                            Opsional
+                        </span>
+                    </label>
+
+                    <textarea
+                        id="skProcessNote"
+                        placeholder="Tambahkan catatan apabila diperlukan..."
+                    ></textarea>
+
+                </div>
+
+
+                <label class="sk-confirmation">
+
+                    <input
+                        type="checkbox"
+                        id="skProcessConfirmation"
+                    >
+
+                    <span>
+                        Saya memastikan bahwa pengajuan ini siap
+                        dilanjutkan ke tahap berikutnya.
+                    </span>
+
+                </label>
+
+
+                <span
+                    class="sk-confirmation-error"
+                    id="skConfirmationError"
+                >
+                    Centang konfirmasi sebelum melanjutkan proses.
+                </span>
+
+
+                <button
+                    type="button"
+                    class="sk-process-button"
+                    id="advanceSkProcess"
+                >
+                    Lanjutkan ke Pembuatan SK
+                </button>
+
+            </section>
+
+
+            <!-- =====================================
+                 COMPLETED
+            ====================================== -->
+            <section
+                class="sk-completed-card"
+                id="skCompletedCard"
+            >
+
+                <div class="sk-completed-icon">
+                    ✓
+                </div>
+
+                <div>
+
+                    <h2>
+                        Proses SK Selesai
+                    </h2>
+
+                    <p>
+                        SK yudisium mahasiswa telah terbit.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 RECENT ACTIVITY
+            ====================================== -->
+            <section class="sk-process-card">
+
+                <div class="sk-card-header">
+
+                    <div>
+
+                        <h2>
+                            Aktivitas Proses
+                        </h2>
+
+                        <p>
+                            Riwayat singkat perubahan status SK pengajuan ini.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="sk-activity-list"
+                    id="skActivityList"
+                >
+
+                    <div class="sk-activity-empty">
+                        Belum ada aktivitas tambahan.
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- =====================================
+         CONFIRM MODAL
+    ====================================== -->
+    <div
+        class="sk-modal-overlay"
+        id="skConfirmModal"
+    >
+
+        <div class="sk-modal">
+
+            <div class="sk-modal-icon">
+                →
+            </div>
+
+            <h2>
+                Konfirmasi Perubahan Status
+            </h2>
+
+            <p>
+                Status akan diperbarui menjadi
+                <strong id="skConfirmStatus">
+                    PEMBUATAN_SK
+                </strong>.
+            </p>
+
+
+            <div class="sk-modal-actions">
+
+                <button
+                    type="button"
+                    class="sk-modal-cancel"
+                    id="cancelSkUpdate"
+                >
+                    Batal
+                </button>
+
+                <button
+                    type="button"
+                    class="sk-modal-confirm"
+                    id="confirmSkUpdate"
+                >
+                    Ya, Lanjutkan
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         SUCCESS MODAL
+    ====================================== -->
+    <div
+        class="modal-overlay"
+        id="skSuccessModal"
+    >
+
+        <div class="modal-card">
+
+            <div class="success-icon">
+                ✓
+            </div>
+
+            <h2>
+                Status Berhasil Diperbarui
+            </h2>
+
+            <p id="skSuccessMessage">
+                Proses SK berhasil dilanjutkan.
+            </p>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="closeSkSuccess"
+            >
+                Lanjut
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script src="../js/admin.js"></script>
+    <script src="../js/admin_proses_sk.js"></script>
+
+</body>
+
+</html>

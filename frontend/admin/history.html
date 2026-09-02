@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        History Aktivitas - Yudisium FEB UPR
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/admin.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/admin-history.css"
+    >
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- =====================================
+             SIDEBAR
+        ====================================== -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-sidebar-brand">
+
+                <div class="admin-sidebar-logo">
+                    FEB
+                </div>
+
+                <div>
+
+                    <strong>
+                        Yudisium FEB
+                    </strong>
+
+                    <span>
+                        Admin Panel
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <nav class="admin-sidebar-nav">
+
+                <a
+                    href="dashboard.html"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ▦
+                    </span>
+
+                    <span>
+                        Dashboard
+                    </span>
+                </a>
+
+
+                <a
+                    href="pengajuan.html"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ☷
+                    </span>
+
+                    <span>
+                        Pengajuan
+                    </span>
+                </a>
+
+
+                <a
+                    href="pengajuan.html?filter=revisi"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        !
+                    </span>
+
+                    <span>
+                        Perlu Revisi
+                    </span>
+
+                    <span class="admin-nav-count">
+                        3
+                    </span>
+                </a>
+
+
+                <a
+                    href="pengajuan.html?filter=proses-sk"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ◷
+                    </span>
+
+                    <span>
+                        Proses SK
+                    </span>
+                </a>
+
+
+                <a
+                    href="history.html"
+                    class="admin-nav-item active"
+                >
+                    <span class="admin-nav-icon">
+                        ↺
+                    </span>
+
+                    <span>
+                        History
+                    </span>
+                </a>
+
+
+                <div class="admin-nav-divider"></div>
+
+
+                <a
+                    href="kelola_admin.html"
+                    class="admin-nav-item super-admin-only"
+                    id="manageAdminMenu"
+                >
+                    <span class="admin-nav-icon">
+                        ♙
+                    </span>
+
+                    <span>
+                        Kelola Admin
+                    </span>
+                </a>
+
+            </nav>
+
+
+            <div class="admin-sidebar-footer">
+
+                <div class="admin-user-mini">
+
+                    <div class="admin-user-avatar">
+                        A
+                    </div>
+
+                    <div>
+
+                        <strong id="sidebarAdminName">
+                            Admin
+                        </strong>
+
+                        <span id="sidebarAdminRole">
+                            ADMIN
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="admin-logout-button"
+                    id="adminLogout"
+                >
+                    Keluar
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================
+             MAIN
+        ====================================== -->
+        <main class="admin-main history-main">
+
+            <!-- HEADER -->
+            <header class="history-header">
+
+                <div>
+
+                    <p class="admin-page-eyebrow">
+                        AUDIT & AKTIVITAS
+                    </p>
+
+                    <h1 id="historyPageTitle">
+                        History Aktivitas Saya
+                    </h1>
+
+                    <p id="historyPageDescription">
+                        Riwayat aktivitas yang Anda lakukan pada sistem.
+                    </p>
+
+                </div>
+
+
+                <div class="admin-profile-chip">
+
+                    <div class="admin-profile-avatar">
+                        A
+                    </div>
+
+                    <div>
+
+                        <strong id="topbarAdminName">
+                            Admin
+                        </strong>
+
+                        <span id="topbarAdminRole">
+                            ADMIN
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- =====================================
+                 INFO ROLE
+            ====================================== -->
+            <section
+                class="history-role-info"
+                id="historyRoleInfo"
+            >
+
+                <div class="history-role-icon">
+                    i
+                </div>
+
+                <div>
+
+                    <strong id="historyRoleTitle">
+                        History akun Anda
+                    </strong>
+
+                    <p id="historyRoleDescription">
+                        Admin hanya dapat melihat aktivitas yang dilakukan
+                        menggunakan akun sendiri.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 SUMMARY
+            ====================================== -->
+            <section class="history-summary-grid">
+
+                <div class="history-summary-card">
+
+                    <span>
+                        Total Aktivitas
+                    </span>
+
+                    <strong id="historyTotalCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="history-summary-card">
+
+                    <span>
+                        Verifikasi
+                    </span>
+
+                    <strong id="historyVerificationCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="history-summary-card revision">
+
+                    <span>
+                        Revisi
+                    </span>
+
+                    <strong id="historyRevisionCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="history-summary-card process">
+
+                    <span>
+                        Proses SK
+                    </span>
+
+                    <strong id="historySkCount">
+                        0
+                    </strong>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 FILTER
+            ====================================== -->
+            <section class="history-card">
+
+                <div class="history-card-header">
+
+                    <div>
+
+                        <h2>
+                            Cari & Filter History
+                        </h2>
+
+                        <p>
+                            Tentukan filter lalu klik Terapkan Filter.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="history-filter-grid">
+
+                    <!-- SEARCH -->
+                    <div class="history-filter-group history-search">
+
+                        <label for="historySearch">
+                            Cari
+                        </label>
+
+                        <input
+                            type="text"
+                            id="historySearch"
+                            placeholder="Nama mahasiswa, NIM, atau kode pengajuan"
+                        >
+
+                    </div>
+
+
+                    <!-- ADMIN FILTER - SUPER ADMIN ONLY -->
+                    <div
+                        class="history-filter-group"
+                        id="historyAdminFilterGroup"
+                    >
+
+                        <label for="historyAdminFilter">
+                            Admin
+                        </label>
+
+                        <select id="historyAdminFilter">
+
+                            <option value="">
+                                Semua Admin
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- ACTION -->
+                    <div class="history-filter-group">
+
+                        <label for="historyActionFilter">
+                            Aktivitas
+                        </label>
+
+                        <select id="historyActionFilter">
+
+                            <option value="">
+                                Semua Aktivitas
+                            </option>
+
+                            <option value="VERIFICATION">
+                                Verifikasi
+                            </option>
+
+                            <option value="REVISION">
+                                Revisi
+                            </option>
+
+                            <option value="UPDATE_SK_STATUS">
+                                Proses SK
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="history-filter-actions">
+
+                    <button
+                        type="button"
+                        class="history-primary-button"
+                        id="applyHistoryFilter"
+                    >
+                        Terapkan Filter
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="history-secondary-button"
+                        id="resetHistoryFilter"
+                    >
+                        Reset Filter
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="history-active-filter"
+                    id="historyActiveFilter"
+                >
+
+                    <div>
+
+                        <strong>
+                            Filter aktif:
+                        </strong>
+
+                        <span id="historyActiveFilterText">
+                            Semua aktivitas
+                        </span>
+
+                    </div>
+
+                    <span class="history-filter-applied">
+                        ✓ Diterapkan
+                    </span>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 HISTORY TABLE
+            ====================================== -->
+            <section class="history-card history-table-card">
+
+                <div class="history-card-header">
+
+                    <div>
+
+                        <h2>
+                            Riwayat Aktivitas
+                        </h2>
+
+                        <p id="historyResultText">
+                            Menampilkan 0 aktivitas
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="history-table-wrapper">
+
+                    <table class="history-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Waktu
+                                </th>
+
+                                <th
+                                    class="history-admin-column"
+                                    id="historyAdminColumn"
+                                >
+                                    Admin
+                                </th>
+
+                                <th>
+                                    Mahasiswa
+                                </th>
+
+                                <th>
+                                    Aktivitas
+                                </th>
+
+                                <th>
+                                    Perubahan
+                                </th>
+
+                                <th>
+                                    Aksi
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="historyTableBody">
+
+                            <!-- Render JavaScript -->
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- EMPTY -->
+                <div
+                    class="history-empty"
+                    id="historyEmpty"
+                >
+
+                    <div>
+                        ↺
+                    </div>
+
+                    <strong>
+                        Belum ada history
+                    </strong>
+
+                    <p>
+                        Tidak ada aktivitas yang sesuai dengan filter.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <script src="../js/admin.js"></script>
+    <script src="../js/admin_history.js"></script>
+
+</body>
+
+</html>

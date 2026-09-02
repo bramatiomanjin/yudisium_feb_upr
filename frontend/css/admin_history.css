@@ -1,0 +1,782 @@
+/* ==========================================
+   HISTORY MAIN
+========================================== */
+
+.history-main {
+    max-width: 1500px;
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.history-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    margin-bottom: 20px;
+}
+
+
+.history-header h1 {
+    margin-top: 2px;
+
+    font-size: 28px;
+}
+
+
+.history-header > div:first-child > p:last-child {
+    margin-top: 4px;
+
+    color: #777;
+
+    font-size: 11px;
+}
+
+
+/* ==========================================
+   ROLE INFO
+========================================== */
+
+.history-role-info {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 11px;
+
+    margin-bottom: 18px;
+
+    padding: 13px 15px;
+
+    border: 1px solid #bfdbfe;
+
+    border-radius: 9px;
+
+    background-color: #eff6ff;
+}
+
+
+.history-role-icon {
+    width: 28px;
+    height: 28px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background-color: #dbeafe;
+
+    color: #1d4ed8;
+
+    font-size: 11px;
+
+    font-weight: 800;
+}
+
+
+.history-role-info strong {
+    display: block;
+
+    margin-bottom: 2px;
+
+    font-size: 10px;
+}
+
+
+.history-role-info p {
+    color: #555;
+
+    font-size: 9px;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================
+   SUMMARY
+========================================== */
+
+.history-summary-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap: 12px;
+
+    margin-bottom: 18px;
+}
+
+
+.history-summary-card {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 15px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 10px;
+
+    background-color: #fff;
+}
+
+
+.history-summary-card span {
+    color: #777;
+
+    font-size: 9px;
+
+    font-weight: 600;
+}
+
+
+.history-summary-card strong {
+    font-size: 21px;
+}
+
+
+.history-summary-card.revision {
+    border-color: #fed7aa;
+
+    background-color: #fffaf5;
+}
+
+
+.history-summary-card.process {
+    border-color: #ddd6fe;
+
+    background-color: #faf8ff;
+}
+
+
+/* ==========================================
+   CARD
+========================================== */
+
+.history-card {
+    margin-bottom: 18px;
+
+    padding: 20px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    background-color: #fff;
+}
+
+
+.history-card-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 15px;
+
+    margin-bottom: 16px;
+}
+
+
+.history-card-header h2 {
+    margin-bottom: 2px;
+
+    font-size: 15px;
+}
+
+
+.history-card-header p {
+    color: #777;
+
+    font-size: 9px;
+}
+
+
+/* ==========================================
+   FILTER
+========================================== */
+
+.history-filter-grid {
+    display: grid;
+
+    grid-template-columns:
+        minmax(260px, 2fr)
+        minmax(160px, 1fr)
+        minmax(180px, 1fr);
+
+    gap: 12px;
+}
+
+
+.history-filter-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+.history-filter-group label {
+    color: #555;
+
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+
+.history-filter-group input,
+.history-filter-group select {
+    width: 100%;
+
+    height: 39px;
+
+    padding: 0 10px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 7px;
+
+    background-color: #fff;
+
+    color: #222;
+
+    font-family: inherit;
+
+    font-size: 10px;
+}
+
+
+.history-filter-group input:focus,
+.history-filter-group select:focus {
+    outline: none;
+
+    border-color: #777;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(
+            0,
+            0,
+            0,
+            0.05
+        );
+}
+
+
+/* ==========================================
+   FILTER ACTIONS
+========================================== */
+
+.history-filter-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 16px;
+}
+
+
+.history-primary-button,
+.history-secondary-button {
+    min-height: 37px;
+
+    padding: 8px 13px;
+
+    border-radius: 7px;
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.history-primary-button {
+    border: 1px solid #222;
+
+    background-color: #222;
+
+    color: #fff;
+}
+
+
+.history-primary-button:hover {
+    background-color: #111;
+}
+
+
+.history-secondary-button {
+    border: 1px solid #d1d5db;
+
+    background-color: #fff;
+
+    color: #333;
+}
+
+
+.history-secondary-button:hover {
+    background-color: #f3f4f6;
+}
+
+
+/* ==========================================
+   ACTIVE FILTER
+========================================== */
+
+.history-active-filter {
+    display: none;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-top: 14px;
+
+    padding: 10px 12px;
+
+    border: 1px solid #bfdbfe;
+
+    border-radius: 8px;
+
+    background-color: #eff6ff;
+
+    color: #1e3a8a;
+
+    font-size: 9px;
+}
+
+
+.history-active-filter.active {
+    display: flex;
+}
+
+
+.history-active-filter strong {
+    margin-right: 4px;
+}
+
+
+.history-filter-applied {
+    flex-shrink: 0;
+
+    color: #166534;
+
+    font-weight: 700;
+}
+
+
+/* ==========================================
+   TABLE
+========================================== */
+
+.history-table-card {
+    overflow: hidden;
+}
+
+
+.history-table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+.history-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    font-size: 10px;
+}
+
+
+.history-table th {
+    padding: 10px 8px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    color: #777;
+
+    font-size: 8px;
+
+    text-align: left;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.3px;
+}
+
+
+.history-table td {
+    padding: 13px 8px;
+
+    border-bottom: 1px solid #f0f0f0;
+
+    vertical-align: middle;
+}
+
+
+.history-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+.history-table tbody tr:hover {
+    background-color: #fafafa;
+}
+
+
+/* ==========================================
+   TIME
+========================================== */
+
+.history-time {
+    min-width: 110px;
+}
+
+
+.history-time strong {
+    color: #555;
+
+    font-size: 9px;
+
+    font-weight: 600;
+}
+
+
+/* ==========================================
+   ADMIN
+========================================== */
+
+.history-admin-cell {
+    min-width: 100px;
+}
+
+
+.history-admin-cell strong {
+    display: block;
+
+    margin-bottom: 2px;
+
+    font-size: 9px;
+}
+
+
+.history-admin-cell span {
+    color: #888;
+
+    font-size: 7px;
+}
+
+
+/* ==========================================
+   STUDENT
+========================================== */
+
+.history-student {
+    min-width: 145px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+
+.history-student strong {
+    color: #222;
+
+    font-size: 10px;
+}
+
+
+.history-student span {
+    color: #666;
+
+    font-size: 8px;
+}
+
+
+.history-student small {
+    color: #999;
+
+    font-size: 7px;
+}
+
+
+/* ==========================================
+   ACTION BADGE
+========================================== */
+
+.history-action-badge {
+    display: inline-block;
+
+    padding: 5px 8px;
+
+    border-radius: 999px;
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.history-action-badge.verification {
+    background-color: #dcfce7;
+
+    color: #166534;
+}
+
+
+.history-action-badge.revision {
+    background-color: #ffedd5;
+
+    color: #c2410c;
+}
+
+
+.history-action-badge.process {
+    background-color: #ede9fe;
+
+    color: #6d28d9;
+}
+
+
+/* ==========================================
+   CHANGE
+========================================== */
+
+.history-change {
+    min-width: 150px;
+
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 5px;
+}
+
+
+.history-change span {
+    color: #777;
+
+    font-size: 8px;
+}
+
+
+.history-change b {
+    color: #aaa;
+
+    font-size: 9px;
+}
+
+
+.history-change strong {
+    color: #222;
+
+    font-size: 8px;
+}
+
+
+/* ==========================================
+   DETAIL BUTTON
+========================================== */
+
+.history-detail-button {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 30px;
+
+    padding: 6px 9px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 6px;
+
+    background-color: #fff;
+
+    color: #222;
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+    white-space: nowrap;
+}
+
+
+.history-detail-button:hover {
+    background-color: #f3f4f6;
+}
+
+
+/* ==========================================
+   EMPTY STATE
+========================================== */
+
+.history-empty {
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+    padding: 45px 20px;
+
+    color: #777;
+
+    text-align: center;
+}
+
+
+.history-empty > div {
+    margin-bottom: 5px;
+
+    font-size: 25px;
+}
+
+
+.history-empty strong {
+    color: #333;
+
+    font-size: 11px;
+}
+
+
+.history-empty p {
+    font-size: 9px;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 1000px) {
+
+    .history-summary-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+
+    .history-filter-grid {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+
+    .history-search {
+        grid-column:
+            1 / -1;
+    }
+
+}
+
+
+@media (max-width: 760px) {
+
+    .history-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .history-filter-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .history-search {
+        grid-column:
+            auto;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .history-card {
+        padding: 14px;
+    }
+
+
+    .history-summary-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .history-filter-actions {
+        align-items: stretch;
+
+        flex-direction: column;
+    }
+
+
+    .history-primary-button,
+    .history-secondary-button {
+        width: 100%;
+    }
+
+
+    .history-active-filter {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+}
