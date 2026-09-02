@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Review Revisi - Yudisium FEB UPR
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/admin.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/admin-review-revisi.css"
+    >
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-sidebar-brand">
+
+                <div class="admin-sidebar-logo">
+                    FEB
+                </div>
+
+                <div>
+                    <strong>Yudisium FEB</strong>
+                    <span>Admin Panel</span>
+                </div>
+
+            </div>
+
+
+            <nav class="admin-sidebar-nav">
+
+                <a
+                    href="dashboard.html"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">▦</span>
+                    <span>Dashboard</span>
+                </a>
+
+
+                <a
+                    href="pengajuan.html"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">☷</span>
+                    <span>Pengajuan</span>
+                </a>
+
+
+                <a
+                    href="pengajuan.html?filter=revisi"
+                    class="admin-nav-item active"
+                >
+                    <span class="admin-nav-icon">!</span>
+                    <span>Perlu Revisi</span>
+
+                    <span class="admin-nav-count">
+                        3
+                    </span>
+                </a>
+
+
+                <a
+                    href="pengajuan.html?filter=proses-sk"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">◷</span>
+                    <span>Proses SK</span>
+                </a>
+
+
+                <a
+                    href="history.html"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">↺</span>
+                    <span>History</span>
+                </a>
+
+
+                <div class="admin-nav-divider"></div>
+
+
+                <a
+                    href="kelola_admin.html"
+                    class="admin-nav-item super-admin-only"
+                    id="manageAdminMenu"
+                >
+                    <span class="admin-nav-icon">♙</span>
+                    <span>Kelola Admin</span>
+                </a>
+
+            </nav>
+
+
+            <div class="admin-sidebar-footer">
+
+                <div class="admin-user-mini">
+
+                    <div class="admin-user-avatar">
+                        A
+                    </div>
+
+                    <div>
+                        <strong id="sidebarAdminName">
+                            Admin
+                        </strong>
+
+                        <span id="sidebarAdminRole">
+                            ADMIN
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="admin-logout-button"
+                    id="adminLogout"
+                >
+                    Keluar
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- MAIN -->
+        <main class="admin-main revision-review-main">
+
+            <div class="revision-review-back">
+
+                <a href="detail_pengajuan.html?id=5">
+                    ← Kembali ke Detail Pengajuan
+                </a>
+
+            </div>
+
+
+            <!-- HEADER -->
+            <header class="revision-review-header">
+
+                <div>
+
+                    <p class="admin-page-eyebrow">
+                        REVIEW REVISI
+                    </p>
+
+                    <h1>
+                        YDS-2026-0005
+                    </h1>
+
+                    <p>
+                        Periksa kembali hanya item yang telah
+                        diperbaiki oleh mahasiswa.
+                    </p>
+
+                </div>
+
+
+                <div class="revision-review-header-actions">
+
+                    <span class="admin-status-badge revision-submitted">
+                        Revisi Dikirim
+                    </span>
+
+
+                    <div class="admin-profile-chip">
+
+                        <div class="admin-profile-avatar">
+                            A
+                        </div>
+
+                        <div>
+                            <strong id="topbarAdminName">
+                                Admin
+                            </strong>
+
+                            <span id="topbarAdminRole">
+                                ADMIN
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- STUDENT -->
+            <section class="revision-student-card">
+
+                <div class="revision-student-avatar">
+                    FR
+                </div>
+
+                <div>
+
+                    <h2>
+                        Fajar Rahman
+                    </h2>
+
+                    <p>
+                        NIM 2301120005 • Akuntansi • Angkatan 2023
+                    </p>
+
+                </div>
+
+
+                <div class="revision-round">
+
+                    <span>
+                        Revisi ke
+                    </span>
+
+                    <strong>
+                        1
+                    </strong>
+
+                </div>
+
+            </section>
+
+
+            <!-- INFO -->
+            <section class="revision-info-box">
+
+                <div>
+                    i
+                </div>
+
+                <p>
+                    Item yang sebelumnya sudah disetujui tetap terkunci.
+                    Halaman ini hanya menampilkan item yang diminta revisi
+                    oleh admin.
+                </p>
+
+            </section>
+
+
+            <!-- =====================================
+                 FIELD REVISION
+            ====================================== -->
+            <section class="revision-review-section">
+
+                <div class="revision-section-header">
+
+                    <div>
+
+                        <span class="revision-section-number">
+                            1
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Revisi Data
+                            </h2>
+
+                            <p>
+                                Bandingkan nilai sebelum dan sesudah revisi.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <article
+                    class="revision-review-item"
+                    data-review-item
+                    data-item-type="field"
+                    data-item-key="judul_karya_tulis"
+                >
+
+                    <div class="revision-item-title">
+
+                        <div>
+
+                            <span>
+                                Judul Skripsi / Artikel
+                            </span>
+
+                            <strong>
+                                Judul Karya Tulis
+                            </strong>
+
+                        </div>
+
+
+                        <span class="revision-item-type">
+                            DATA
+                        </span>
+
+                    </div>
+
+
+                    <div class="revision-comparison">
+
+                        <div class="revision-old-value">
+
+                            <span>
+                                Sebelum Revisi
+                            </span>
+
+                            <p>
+                                Sistem Informasi Akademik FEB UPR
+                            </p>
+
+                        </div>
+
+
+                        <div class="revision-arrow">
+                            →
+                        </div>
+
+
+                        <div class="revision-new-value">
+
+                            <span>
+                                Setelah Revisi
+                            </span>
+
+                            <p>
+                                Analisis dan Perancangan Sistem Informasi
+                                Akademik Fakultas Ekonomi dan Bisnis
+                                Universitas Palangka Raya
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="revision-admin-feedback">
+
+                        <span>
+                            Feedback Sebelumnya
+                        </span>
+
+                        <p>
+                            Judul tidak sama dengan judul yang tercantum
+                            pada berita acara ujian.
+                        </p>
+
+                    </div>
+
+
+                    <div class="revision-review-actions">
+
+                        <button
+                            type="button"
+                            class="revision-review-choice approve"
+                            data-choice="approved"
+                        >
+                            ✓ Setujui Revisi
+                        </button>
+
+                        <button
+                            type="button"
+                            class="revision-review-choice revision"
+                            data-choice="revision"
+                        >
+                            ! Revisi Lagi
+                        </button>
+
+                    </div>
+
+
+                    <div class="revision-review-feedback">
+
+                        <label>
+                            Feedback Revisi Berikutnya
+                        </label>
+
+                        <textarea
+                            placeholder="Jelaskan bagian yang masih perlu diperbaiki..."
+                        ></textarea>
+
+                        <span class="revision-feedback-error">
+                            Feedback wajib diisi jika memilih Revisi Lagi.
+                        </span>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- =====================================
+                 DOCUMENT REVISION
+            ====================================== -->
+            <section class="revision-review-section">
+
+                <div class="revision-section-header">
+
+                    <div>
+
+                        <span class="revision-section-number">
+                            2
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Revisi Dokumen
+                            </h2>
+
+                            <p>
+                                Bandingkan dokumen lama dengan dokumen baru.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <article
+                    class="revision-review-item"
+                    data-review-item
+                    data-item-type="document"
+                    data-item-key="rekap_nilai"
+                >
+
+                    <div class="revision-item-title">
+
+                        <div>
+
+                            <span>
+                                Rekapitulasi Nilai Ujian
+                            </span>
+
+                            <strong>
+                                Dokumen PDF
+                            </strong>
+
+                        </div>
+
+
+                        <span class="revision-item-type document">
+                            PDF
+                        </span>
+
+                    </div>
+
+
+                    <div class="revision-file-comparison">
+
+                        <!-- OLD -->
+                        <div class="revision-file-card old">
+
+                            <div>
+
+                                <span>
+                                    Dokumen Sebelum Revisi
+                                </span>
+
+                                <strong>
+                                    rekap_nilai_lama.pdf
+                                </strong>
+
+                                <small>
+                                    720 KB
+                                </small>
+
+                            </div>
+
+
+                            <button
+                                type="button"
+                                class="revision-preview-button"
+                                data-preview-title="Rekapitulasi Nilai - Sebelum Revisi"
+                                data-preview-file="rekap_nilai_lama.pdf"
+                            >
+                                Preview Lama
+                            </button>
+
+                        </div>
+
+
+                        <!-- NEW -->
+                        <div class="revision-file-card new">
+
+                            <div>
+
+                                <span>
+                                    Dokumen Setelah Revisi
+                                </span>
+
+                                <strong>
+                                    rekap_nilai_revisi.pdf
+                                </strong>
+
+                                <small>
+                                    745 KB
+                                </small>
+
+                            </div>
+
+
+                            <button
+                                type="button"
+                                class="revision-preview-button"
+                                data-preview-title="Rekapitulasi Nilai - Setelah Revisi"
+                                data-preview-file="rekap_nilai_revisi.pdf"
+                            >
+                                Preview Baru
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="revision-admin-feedback">
+
+                        <span>
+                            Feedback Sebelumnya
+                        </span>
+
+                        <p>
+                            Dokumen belum ditandatangani oleh Wakil Dekan I.
+                        </p>
+
+                    </div>
+
+
+                    <div class="revision-review-actions">
+
+                        <button
+                            type="button"
+                            class="revision-review-choice approve"
+                            data-choice="approved"
+                        >
+                            ✓ Setujui Revisi
+                        </button>
+
+                        <button
+                            type="button"
+                            class="revision-review-choice revision"
+                            data-choice="revision"
+                        >
+                            ! Revisi Lagi
+                        </button>
+
+                    </div>
+
+
+                    <div class="revision-review-feedback">
+
+                        <label>
+                            Feedback Revisi Berikutnya
+                        </label>
+
+                        <textarea
+                            placeholder="Jelaskan bagian dokumen yang masih perlu diperbaiki..."
+                        ></textarea>
+
+                        <span class="revision-feedback-error">
+                            Feedback wajib diisi jika memilih Revisi Lagi.
+                        </span>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- =====================================
+                 RESULT
+            ====================================== -->
+            <section class="revision-result-card">
+
+                <div class="revision-result-header">
+
+                    <div>
+
+                        <h2>
+                            Hasil Review Revisi
+                        </h2>
+
+                        <p>
+                            Keputusan berdasarkan item revisi mahasiswa.
+                        </p>
+
+                    </div>
+
+
+                    <span
+                        class="revision-result-status pending"
+                        id="revisionResultStatus"
+                    >
+                        Belum Lengkap
+                    </span>
+
+                </div>
+
+
+                <div class="revision-result-summary">
+
+                    <div>
+
+                        <span>
+                            Disetujui
+                        </span>
+
+                        <strong id="revisionApprovedCount">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Revisi Lagi
+                        </span>
+
+                        <strong id="revisionAgainCount">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Belum Diperiksa
+                        </span>
+
+                        <strong id="revisionPendingCount">
+                            2
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <label class="revision-confirmation">
+
+                    <input
+                        type="checkbox"
+                        id="revisionReviewConfirmation"
+                    >
+
+                    <span>
+                        Saya telah memeriksa seluruh item revisi mahasiswa.
+                    </span>
+
+                </label>
+
+
+                <span
+                    class="revision-confirmation-error"
+                    id="revisionConfirmationError"
+                >
+                    Centang konfirmasi sebelum menyimpan.
+                </span>
+
+
+                <button
+                    type="button"
+                    class="revision-submit-button"
+                    id="submitRevisionReview"
+                >
+                    Simpan Hasil Review
+                </button>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- =====================================
+         PREVIEW MODAL
+    ====================================== -->
+    <div
+        class="revision-preview-overlay"
+        id="revisionPreviewModal"
+    >
+
+        <div class="revision-preview-modal">
+
+            <div class="revision-preview-header">
+
+                <div>
+
+                    <span>
+                        PREVIEW DOKUMEN
+                    </span>
+
+                    <h2 id="revisionPreviewTitle">
+                        Dokumen
+                    </h2>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="closeRevisionPreview"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="revision-preview-body">
+
+                <div class="revision-preview-placeholder">
+
+                    <div>
+                        PDF
+                    </div>
+
+                    <strong id="revisionPreviewFilename">
+                        file.pdf
+                    </strong>
+
+                    <p>
+                        Nanti file PDF asli ditampilkan di sini
+                        menggunakan URL dari Laravel.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="revision-preview-footer">
+
+                <span>
+                    Admin dan Super Admin dapat membuka preview dokumen.
+                </span>
+
+                <button
+                    type="button"
+                    class="admin-secondary-button"
+                    id="revisionOpenNewTab"
+                >
+                    Buka di Tab Baru
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SUCCESS MODAL -->
+    <div
+        class="modal-overlay"
+        id="revisionReviewSuccessModal"
+    >
+
+        <div class="modal-card">
+
+            <div class="success-icon">
+                ✓
+            </div>
+
+            <h2 id="revisionReviewSuccessTitle">
+                Review Disimpan
+            </h2>
+
+            <p id="revisionReviewSuccessMessage">
+                Hasil review revisi berhasil disimpan.
+            </p>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="revisionReviewSuccessButton"
+            >
+                Kembali ke Pengajuan
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script src="../js/admin.js"></script>
+    <script src="../js/admin_review_revisi.js"></script>
+
+</body>
+
+</html>
