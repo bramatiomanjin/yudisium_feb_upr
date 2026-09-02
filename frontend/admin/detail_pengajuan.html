@@ -9,9 +9,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>
-        Detail Pengajuan - Yudisium FEB UPR
-    </title>
+    <title>Detail Pengajuan - Yudisium FEB UPR</title>
 
     <link
         rel="stylesheet"
@@ -22,15 +20,26 @@
         rel="stylesheet"
         href="../css/admin.css"
     >
+
+    <link
+        rel="stylesheet"
+        href="../css/admin_theme.css"
+    >
+
+    <!-- CSS KHUSUS HALAMAN DETAIL PENGAJUAN -->
+    <link
+        rel="stylesheet"
+        href="../css/admin_detail_pengajuan.css"
+    >
 </head>
 
 <body>
 
     <div class="admin-layout">
 
-        <!-- =====================================
+        <!-- =====================================================
              SIDEBAR
-        ====================================== -->
+        ====================================================== -->
         <aside class="admin-sidebar">
 
             <div class="admin-sidebar-brand">
@@ -157,7 +166,6 @@
                     </div>
 
                     <div>
-
                         <strong id="sidebarAdminName">
                             Admin
                         </strong>
@@ -165,7 +173,6 @@
                         <span id="sidebarAdminRole">
                             ADMIN
                         </span>
-
                     </div>
 
                 </div>
@@ -184,10 +191,10 @@
         </aside>
 
 
-        <!-- =====================================
-             MAIN
-        ====================================== -->
-        <main class="admin-main">
+        <!-- =====================================================
+             MAIN CONTENT
+        ====================================================== -->
+        <main class="admin-main detail-page-main">
 
             <!-- BACK -->
             <div class="detail-back-wrapper">
@@ -202,10 +209,12 @@
             </div>
 
 
-            <!-- HEADER -->
+            <!-- =================================================
+                 HEADER
+            ================================================== -->
             <header class="admin-topbar detail-topbar">
 
-                <div>
+                <div class="detail-title-area">
 
                     <p class="admin-page-eyebrow">
                         DETAIL PENGAJUAN
@@ -216,7 +225,8 @@
                     </h1>
 
                     <p class="admin-page-description">
-                        Pengajuan Yudisium Mahasiswa
+                        Periksa informasi mahasiswa dan dokumen
+                        pengajuan yudisium.
                     </p>
 
                 </div>
@@ -224,9 +234,13 @@
 
                 <div class="detail-header-actions">
 
-                    <span class="admin-status-badge pending" id="detailSubmissionStatusBadge">
+                    <span
+                        class="admin-status-badge pending"
+                        id="detailSubmissionStatusBadge"
+                    >
                         Menunggu Verifikasi
                     </span>
+
 
                     <div class="admin-profile-chip">
 
@@ -235,7 +249,6 @@
                         </div>
 
                         <div>
-
                             <strong id="topbarAdminName">
                                 Admin
                             </strong>
@@ -243,7 +256,6 @@
                             <span id="topbarAdminRole">
                                 ADMIN
                             </span>
-
                         </div>
 
                     </div>
@@ -253,18 +265,26 @@
             </header>
 
 
-            <!-- =====================================
-                 SUMMARY
-            ====================================== -->
+            <!-- =================================================
+                 SUMMARY MAHASISWA
+            ================================================== -->
             <section class="detail-summary-card">
 
                 <div class="detail-summary-main">
 
-                    <div class="detail-student-avatar" id="detailStudentAvatar">
+                    <div
+                        class="detail-student-avatar"
+                        id="detailStudentAvatar"
+                    >
                         AS
                     </div>
 
-                    <div>
+
+                    <div class="detail-summary-identity">
+
+                        <span class="detail-summary-label">
+                            Mahasiswa
+                        </span>
 
                         <h2 id="detailStudentName">
                             Andi Saputra
@@ -281,40 +301,40 @@
 
                 <div class="detail-summary-meta">
 
-                    <div>
+                    <div class="detail-summary-meta-item">
 
                         <span>
                             Jurusan
                         </span>
 
-                        <strong>
-                            <span id="detailStudentDepartmentSummary">Manajemen</span>
+                        <strong id="detailStudentDepartmentSummary">
+                            Manajemen
                         </strong>
 
                     </div>
 
 
-                    <div>
+                    <div class="detail-summary-meta-item">
 
                         <span>
                             Tanggal Pengajuan
                         </span>
 
-                        <strong>
-                            <span id="detailSubmittedAt">02 September 2026</span>
+                        <strong id="detailSubmittedAt">
+                            02 September 2026
                         </strong>
 
                     </div>
 
 
-                    <div>
+                    <div class="detail-summary-meta-item">
 
                         <span>
-                            Status
+                            Status Pengajuan
                         </span>
 
-                        <strong>
-                            <span id="detailSubmissionStatusText">Menunggu Verifikasi</span>
+                        <strong id="detailSubmissionStatusText">
+                            Menunggu Verifikasi
                         </strong>
 
                     </div>
@@ -324,21 +344,26 @@
             </section>
 
 
-            <!-- =====================================
+            <!-- =================================================
                  DATA MAHASISWA
-            ====================================== -->
+            ================================================== -->
             <section class="admin-dashboard-card detail-section">
 
-                <div class="admin-card-header">
+                <div class="admin-card-header detail-section-header">
 
                     <div>
+
+                        <p class="detail-section-eyebrow">
+                            IDENTITAS
+                        </p>
 
                         <h2>
                             Data Mahasiswa
                         </h2>
 
                         <p>
-                            Informasi identitas mahasiswa.
+                            Informasi identitas mahasiswa yang
+                            mengajukan yudisium.
                         </p>
 
                     </div>
@@ -354,8 +379,8 @@
                             Nama Lengkap
                         </span>
 
-                        <strong>
-                            <span id="detailStudentFullName">Andi Saputra</span>
+                        <strong id="detailStudentFullName">
+                            Andi Saputra
                         </strong>
 
                     </div>
@@ -367,8 +392,8 @@
                             NIM
                         </span>
 
-                        <strong>
-                            <span id="detailStudentNim">2301110001</span>
+                        <strong id="detailStudentNim">
+                            2301110001
                         </strong>
 
                     </div>
@@ -380,8 +405,8 @@
                             Email
                         </span>
 
-                        <strong>
-                            <span id="detailStudentEmail">andi.saputra@example.com</span>
+                        <strong id="detailStudentEmail">
+                            andi.saputra@example.com
                         </strong>
 
                     </div>
@@ -393,8 +418,8 @@
                             Nomor WhatsApp
                         </span>
 
-                        <strong>
-                            <span id="detailStudentWhatsapp">081234567890</span>
+                        <strong id="detailStudentWhatsapp">
+                            081234567890
                         </strong>
 
                     </div>
@@ -406,8 +431,8 @@
                             Tahun Angkatan
                         </span>
 
-                        <strong>
-                            <span id="detailStudentYear">2023</span>
+                        <strong id="detailStudentYear">
+                            2023
                         </strong>
 
                     </div>
@@ -419,8 +444,8 @@
                             Jalur Masuk
                         </span>
 
-                        <strong>
-                            <span id="detailStudentEntryRoute">Reguler</span>
+                        <strong id="detailStudentEntryRoute">
+                            Reguler
                         </strong>
 
                     </div>
@@ -432,8 +457,8 @@
                             Jurusan
                         </span>
 
-                        <strong>
-                            <span id="detailStudentDepartment">Manajemen</span>
+                        <strong id="detailStudentDepartment">
+                            Manajemen
                         </strong>
 
                     </div>
@@ -443,21 +468,26 @@
             </section>
 
 
-            <!-- =====================================
+            <!-- =================================================
                  DATA AKADEMIK
-            ====================================== -->
+            ================================================== -->
             <section class="admin-dashboard-card detail-section">
 
-                <div class="admin-card-header">
+                <div class="admin-card-header detail-section-header">
 
                     <div>
+
+                        <p class="detail-section-eyebrow">
+                            AKADEMIK
+                        </p>
 
                         <h2>
                             Data Akademik
                         </h2>
 
                         <p>
-                            Informasi karya tulis dan hasil ujian.
+                            Informasi karya tulis dan hasil ujian
+                            mahasiswa.
                         </p>
 
                     </div>
@@ -470,24 +500,11 @@
                     <div class="detail-data-item">
 
                         <span>
-                            Karya Tulis Ilmiah
+                            Jenis Karya Tulis
                         </span>
 
-                        <strong>
-                            <span id="detailWorkType">Skripsi</span>
-                        </strong>
-
-                    </div>
-
-
-                    <div class="detail-data-item detail-data-wide">
-
-                        <span>
-                            Judul Skripsi / Artikel
-                        </span>
-
-                        <strong>
-                            <span id="detailWorkTitle">Analisis Sistem Informasi Akademik Fakultas Ekonomi dan Bisnis</span>
+                        <strong id="detailWorkType">
+                            Skripsi
                         </strong>
 
                     </div>
@@ -499,8 +516,22 @@
                             Tanggal Ujian
                         </span>
 
-                        <strong>
-                            <span id="detailExamDate">28 Agustus 2026</span>
+                        <strong id="detailExamDate">
+                            28 Agustus 2026
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item detail-data-wide">
+
+                        <span>
+                            Judul Skripsi / Artikel
+                        </span>
+
+                        <strong id="detailWorkTitle">
+                            Analisis Sistem Informasi Akademik
+                            Fakultas Ekonomi dan Bisnis
                         </strong>
 
                     </div>
@@ -512,8 +543,8 @@
                             Nilai Ujian
                         </span>
 
-                        <strong>
-                            <span id="detailExamScore">80,00</span>
+                        <strong id="detailExamScore">
+                            80,00
                         </strong>
 
                     </div>
@@ -525,8 +556,8 @@
                             Nilai Huruf
                         </span>
 
-                        <strong>
-                            <span id="detailLetterGrade">A</span>
+                        <strong id="detailLetterGrade">
+                            A
                         </strong>
 
                     </div>
@@ -536,24 +567,30 @@
             </section>
 
 
-            <!-- =====================================
+            <!-- =================================================
                  DOKUMEN
-            ====================================== -->
+            ================================================== -->
             <section class="admin-dashboard-card detail-section">
 
-                <div class="admin-card-header">
+                <div class="admin-card-header detail-section-header">
 
                     <div>
+
+                        <p class="detail-section-eyebrow">
+                            BERKAS
+                        </p>
 
                         <h2>
                             Dokumen Mahasiswa
                         </h2>
 
                         <p>
-                            Preview dan periksa seluruh dokumen yang diunggah.
+                            Klik tombol Preview untuk melihat
+                            dokumen tanpa meninggalkan halaman.
                         </p>
 
                     </div>
+
 
                     <span class="detail-document-count">
                         15 Dokumen
@@ -563,6 +600,7 @@
 
 
                 <div class="detail-document-list">
+
 
                     <!-- 1 -->
                     <div class="detail-document-item">
@@ -574,7 +612,6 @@
                             </div>
 
                             <div>
-
                                 <strong>
                                     Formulir Pendaftaran Yudisium
                                 </strong>
@@ -582,7 +619,6 @@
                                 <span>
                                     formulir_yudisium.pdf • 650 KB
                                 </span>
-
                             </div>
 
                         </div>
@@ -618,7 +654,6 @@
                             </div>
 
                             <div>
-
                                 <strong>
                                     Foto 3x4 Berwarna
                                 </strong>
@@ -626,7 +661,6 @@
                                 <span>
                                     foto_3x4.pdf • 420 KB
                                 </span>
-
                             </div>
 
                         </div>
@@ -662,7 +696,6 @@
                             </div>
 
                             <div>
-
                                 <strong>
                                     Ijazah SLTA
                                 </strong>
@@ -670,7 +703,6 @@
                                 <span>
                                     ijazah_slta.pdf • 830 KB
                                 </span>
-
                             </div>
 
                         </div>
@@ -706,7 +738,6 @@
                             </div>
 
                             <div>
-
                                 <strong>
                                     Berita Acara Ujian Skripsi / Artikel
                                 </strong>
@@ -714,7 +745,6 @@
                                 <span>
                                     berita_acara.pdf • 790 KB
                                 </span>
-
                             </div>
 
                         </div>
@@ -750,7 +780,6 @@
                             </div>
 
                             <div>
-
                                 <strong>
                                     Rekapitulasi Nilai Ujian
                                 </strong>
@@ -758,7 +787,6 @@
                                 <span>
                                     rekap_nilai.pdf • 740 KB
                                 </span>
-
                             </div>
 
                         </div>
@@ -794,7 +822,6 @@
                             </div>
 
                             <div>
-
                                 <strong>
                                     Blanko Revisi
                                 </strong>
@@ -802,7 +829,6 @@
                                 <span>
                                     blanko_revisi.pdf • 510 KB
                                 </span>
-
                             </div>
 
                         </div>
@@ -838,7 +864,6 @@
                             </div>
 
                             <div>
-
                                 <strong>
                                     Tanda Terima Skripsi / Artikel
                                 </strong>
@@ -846,7 +871,6 @@
                                 <span>
                                     tanda_terima.pdf • 1.2 MB
                                 </span>
-
                             </div>
 
                         </div>
@@ -882,7 +906,6 @@
                             </div>
 
                             <div>
-
                                 <strong>
                                     Surat Pernyataan Penulisan Ijazah
                                 </strong>
@@ -890,7 +913,6 @@
                                 <span>
                                     pernyataan_ijazah.pdf • 560 KB
                                 </span>
-
                             </div>
 
                         </div>
@@ -926,7 +948,6 @@
                             </div>
 
                             <div>
-
                                 <strong>
                                     Surat Bebas Pinjam Perpustakaan Universitas
                                 </strong>
@@ -934,7 +955,6 @@
                                 <span>
                                     bebas_pinjam_univ.pdf • 690 KB
                                 </span>
-
                             </div>
 
                         </div>
@@ -970,7 +990,6 @@
                             </div>
 
                             <div>
-
                                 <strong>
                                     Surat Bebas Pinjam Perpustakaan Fakultas
                                 </strong>
@@ -978,7 +997,6 @@
                                 <span>
                                     bebas_pinjam_fakultas.pdf • 620 KB
                                 </span>
-
                             </div>
 
                         </div>
@@ -1014,7 +1032,6 @@
                             </div>
 
                             <div>
-
                                 <strong>
                                     KHS Semester 1 s/d Terbaru
                                 </strong>
@@ -1022,7 +1039,6 @@
                                 <span>
                                     khs.pdf • 880 KB
                                 </span>
-
                             </div>
 
                         </div>
@@ -1058,7 +1074,6 @@
                             </div>
 
                             <div>
-
                                 <strong>
                                     Transkrip Nilai Ujian Skripsi
                                 </strong>
@@ -1066,7 +1081,6 @@
                                 <span>
                                     transkrip.pdf • 710 KB
                                 </span>
-
                             </div>
 
                         </div>
@@ -1102,7 +1116,6 @@
                             </div>
 
                             <div>
-
                                 <strong>
                                     Surat Tugas Dosen Pembimbing
                                 </strong>
@@ -1110,7 +1123,6 @@
                                 <span>
                                     surat_tugas_pembimbing.pdf • 1.4 MB
                                 </span>
-
                             </div>
 
                         </div>
@@ -1146,7 +1158,6 @@
                             </div>
 
                             <div>
-
                                 <strong>
                                     Surat Verifikasi Bebas Tunggakan
                                 </strong>
@@ -1154,7 +1165,6 @@
                                 <span>
                                     bebas_tunggakan.pdf • 530 KB
                                 </span>
-
                             </div>
 
                         </div>
@@ -1190,7 +1200,6 @@
                             </div>
 
                             <div>
-
                                 <strong>
                                     Bukti Pengisian Jurnal Manajemen
                                 </strong>
@@ -1198,7 +1207,6 @@
                                 <span>
                                     jurnal_manajemen.pdf • 680 KB
                                 </span>
-
                             </div>
 
                         </div>
@@ -1228,12 +1236,16 @@
             </section>
 
 
-            <!-- =====================================
+            <!-- =================================================
                  ACTION
-            ====================================== -->
+            ================================================== -->
             <section class="detail-action-card">
 
-                <div>
+                <div class="detail-action-content">
+
+                    <span class="detail-action-label">
+                        TINDAKAN SELANJUTNYA
+                    </span>
 
                     <h2 id="detailActionTitle">
                         Verifikasi Pengajuan
@@ -1262,19 +1274,24 @@
     </div>
 
 
-    <!-- =====================================
-         PDF PREVIEW MODAL
-    ====================================== -->
+    <!-- =========================================================
+         MODAL PREVIEW DOKUMEN
+         Secara default BENAR-BENAR tersembunyi.
+    ========================================================== -->
     <div
         class="document-preview-overlay"
         id="documentPreviewModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="documentPreviewTitle"
     >
 
         <div class="document-preview-modal">
 
+            <!-- MODAL HEADER -->
             <div class="document-preview-header">
 
-                <div>
+                <div class="document-preview-heading">
 
                     <p>
                         PREVIEW DOKUMEN
@@ -1291,7 +1308,7 @@
                     type="button"
                     class="document-preview-close"
                     id="closeDocumentPreview"
-                    aria-label="Tutup preview"
+                    aria-label="Tutup preview dokumen"
                 >
                     ×
                 </button>
@@ -1299,30 +1316,23 @@
             </div>
 
 
+            <!-- MODAL BODY -->
             <div class="document-preview-body">
 
-                <!--
-                    Untuk frontend sementara,
-                    sample.pdf belum harus ada.
-
-                    Jika file tidak ditemukan,
-                    fallback akan tampil.
-
-                    Nanti src berasal dari Laravel.
-                -->
-
+                <!-- Nanti digunakan jika backend sudah menyediakan URL -->
                 <iframe
                     id="documentPreviewFrame"
                     title="Preview Dokumen"
                 ></iframe>
 
 
+                <!-- Placeholder sementara frontend -->
                 <div
                     class="document-preview-placeholder"
                     id="documentPreviewPlaceholder"
                 >
 
-                    <div>
+                    <div class="document-preview-file-icon">
                         PDF
                     </div>
 
@@ -1331,27 +1341,42 @@
                     </strong>
 
                     <p>
-                        File asli akan tampil di sini setelah
+                        File asli akan tampil di area ini setelah
                         frontend terhubung dengan backend Laravel.
                     </p>
+
+                    <span>
+                        Untuk sekarang, tombol preview digunakan
+                        sebagai simulasi tampilan dokumen.
+                    </span>
 
                 </div>
 
             </div>
 
 
+            <!-- MODAL FOOTER -->
             <div class="document-preview-footer">
 
-                <span id="documentPreviewFilename">
-                    sample.pdf
-                </span>
+                <div class="document-preview-file-info">
+
+                    <span>
+                        Nama File
+                    </span>
+
+                    <strong id="documentPreviewFilename">
+                        sample.pdf
+                    </strong>
+
+                </div>
+
 
                 <button
                     type="button"
                     class="admin-secondary-button"
                     id="openDocumentNewTab"
                 >
-                    Buka di Tab Baru
+                    Buka di Tab Baru ↗
                 </button>
 
             </div>
@@ -1361,9 +1386,13 @@
     </div>
 
 
+    <!-- =========================================================
+         SCRIPT
+    ========================================================== -->
     <script src="../js/admin_data.js"></script>
     <script src="../js/admin.js"></script>
     <script src="../js/admin_detail.js"></script>
+
 </body>
 
 </html>
