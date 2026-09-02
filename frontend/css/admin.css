@@ -1,0 +1,297 @@
+/* ==========================================
+   ADMIN AUTH PAGE
+========================================== */
+
+.admin-auth-page {
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 40px 20px;
+
+    background-color: #f4f6f8;
+}
+
+
+.admin-auth-container {
+    width: 100%;
+
+    max-width: 460px;
+}
+
+
+/* ==========================================
+   BRAND
+========================================== */
+
+.admin-auth-brand {
+    margin-bottom: 24px;
+
+    text-align: center;
+}
+
+
+.admin-brand-badge {
+    width: fit-content;
+
+    margin: 0 auto 15px;
+
+    padding: 6px 14px;
+
+    border-radius: 999px;
+
+    background-color: #222;
+
+    color: #fff;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    letter-spacing: 1px;
+}
+
+
+.admin-auth-brand h1 {
+    margin-bottom: 4px;
+
+    font-size: 28px;
+}
+
+
+.admin-auth-brand p {
+    color: #666;
+
+    font-size: 14px;
+}
+
+
+/* ==========================================
+   AUTH CARD
+========================================== */
+
+.admin-auth-card {
+    padding: 30px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    background-color: #fff;
+
+    box-shadow:
+        0 8px 28px
+        rgba(0, 0, 0, 0.07);
+}
+
+
+.admin-auth-header {
+    margin-bottom: 25px;
+}
+
+
+.admin-auth-header h2 {
+    margin-bottom: 4px;
+
+    font-size: 22px;
+}
+
+
+.admin-auth-header p {
+    color: #666;
+
+    font-size: 14px;
+}
+
+
+/* ==========================================
+   PASSWORD
+========================================== */
+
+.password-wrapper {
+    position: relative;
+}
+
+
+.password-wrapper input {
+    padding-right: 95px;
+}
+
+
+.password-toggle {
+    position: absolute;
+
+    top: 50%;
+    right: 10px;
+
+    transform: translateY(-50%);
+
+    padding: 5px 10px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background-color: #f3f4f6;
+
+    color: #333;
+
+    font-size: 12px;
+
+    cursor: pointer;
+}
+
+
+.password-toggle:hover {
+    background-color: #e5e7eb;
+}
+
+
+/* ==========================================
+   LOGIN OPTIONS
+========================================== */
+
+.admin-login-options {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 22px;
+}
+
+
+.remember-wrapper {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+
+.remember-wrapper input {
+    width: 16px;
+    height: 16px;
+}
+
+
+/* ==========================================
+   LINK
+========================================== */
+
+.admin-auth-link {
+    color: #222;
+
+    font-size: 13px;
+
+    text-decoration: underline;
+
+    cursor: pointer;
+}
+
+
+.admin-auth-link.strong {
+    font-weight: bold;
+}
+
+
+/* ==========================================
+   SUBMIT
+========================================== */
+
+.admin-auth-submit {
+    width: 100%;
+}
+
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+.admin-auth-footer {
+    margin-top: 24px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #e5e7eb;
+
+    text-align: center;
+}
+
+
+.admin-auth-footer p {
+    margin-bottom: 3px;
+
+    color: #666;
+
+    font-size: 13px;
+}
+
+
+/* ==========================================
+   BACK
+========================================== */
+
+.admin-auth-back {
+    margin-top: 20px;
+
+    text-align: center;
+}
+
+
+.admin-auth-back a {
+    color: #666;
+
+    font-size: 13px;
+
+    text-decoration: none;
+}
+
+
+.admin-auth-back a:hover {
+    color: #000;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 600px) {
+
+    .admin-auth-page {
+        align-items: flex-start;
+
+        padding: 25px 14px;
+    }
+
+
+    .admin-auth-card {
+        padding: 22px;
+    }
+
+
+    .admin-auth-brand h1 {
+        font-size: 24px;
+    }
+
+
+    .admin-login-options {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+}
