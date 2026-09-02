@@ -7,6 +7,64 @@ document.addEventListener(
         );
 
 
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const submission =
+            window.YudisiumMockDB
+                .getSubmission(
+                    params.get("id") || 5
+                );
+
+
+        if (
+            !submission
+        ) {
+
+            window.location.href =
+                "pengajuan.html";
+
+
+            return;
+
+        }
+
+
+        document.querySelector(
+            ".revision-review-header h1"
+        ).textContent =
+            submission.code;
+
+
+        document.querySelector(
+            ".revision-student-avatar"
+        ).textContent =
+            window.YudisiumMockDB
+                .getInitials(
+                    submission.name
+                );
+
+
+        document.querySelector(
+            ".revision-student-card h2"
+        ).textContent =
+            submission.name;
+
+
+        document.querySelector(
+            ".revision-student-card p"
+        ).textContent =
+            "NIM " +
+            submission.nim +
+            " • " +
+            submission.department +
+            " • Angkatan " +
+            submission.year;
+
+
         const items =
             Array.from(
                 document.querySelectorAll(
@@ -583,7 +641,7 @@ document.addEventListener(
                 console.log(
                     {
                         pengajuan_id:
-                            5,
+                            submission.id,
 
                         revisi_ke:
                             1,
@@ -595,6 +653,53 @@ document.addEventListener(
                             payload
                     }
                 );
+
+
+                const storedStatus =
+                    finalStatus ===
+                    "PERLU_REVISI"
+                        ?
+                        "perlu revisi"
+                        :
+                        "terverifikasi";
+
+
+                window.YudisiumMockDB
+                    .setSubmissionStatus(
+                        submission.id,
+                        storedStatus
+                    );
+
+
+                window.YudisiumMockDB
+                    .saveActivity(
+                        {
+                            pengajuan_id:
+                                submission.id,
+
+                            action:
+                                "REVISION",
+
+                            action_label:
+                                "Review Revisi",
+
+                            old_status:
+                                "REVISI_DIKIRIM",
+
+                            new_status:
+                                finalStatus,
+
+                            note:
+                                finalStatus ===
+                                "TERVERIFIKASI"
+                                    ?
+                                    "Seluruh perbaikan mahasiswa telah diterima."
+                                    :
+                                    "Masih terdapat " +
+                                    revisionAgain +
+                                    " item yang perlu diperbaiki kembali."
+                        }
+                    );
 
 
                 if (

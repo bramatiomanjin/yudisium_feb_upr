@@ -7,6 +7,71 @@ document.addEventListener(
         );
 
 
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const submission =
+            window.YudisiumMockDB
+                .getSubmission(
+                    params.get("id") || 1
+                );
+
+
+        if (
+            !submission
+        ) {
+
+            window.location.href =
+                "pengajuan.html";
+
+
+            return;
+
+        }
+
+
+        document.querySelector(
+            ".verification-back a"
+        ).href =
+            "detail_pengajuan.html?id=" +
+            submission.id;
+
+
+        document.querySelector(
+            ".verification-header h1"
+        ).textContent =
+            submission.code;
+
+
+        document.querySelector(
+            ".verification-student-avatar"
+        ).textContent =
+            window.YudisiumMockDB
+                .getInitials(
+                    submission.name
+                );
+
+
+        document.querySelector(
+            ".verification-student-info h2"
+        ).textContent =
+            submission.name;
+
+
+        document.querySelector(
+            ".verification-student-info p"
+        ).textContent =
+            "NIM " +
+            submission.nim +
+            " • " +
+            submission.department +
+            " • Angkatan " +
+            submission.year;
+
+
         /* =====================================
            DOCUMENT DATA
         ===================================== */
@@ -1194,10 +1259,10 @@ document.addEventListener(
                 console.log(
                     {
                         pengajuan_id:
-                            1,
+                            submission.id,
 
                         kode_pengajuan:
-                            "YDS-2026-0001",
+                            submission.code,
 
                         final_status:
                             finalStatus,
@@ -1206,6 +1271,63 @@ document.addEventListener(
                             result
                     }
                 );
+
+
+                const storedStatus =
+                    finalStatus ===
+                    "PERLU_REVISI"
+                        ?
+                        "perlu revisi"
+                        :
+                        "terverifikasi";
+
+
+                window.YudisiumMockDB
+                    .setSubmissionStatus(
+                        submission.id,
+                        storedStatus
+                    );
+
+
+                window.YudisiumMockDB
+                    .saveActivity(
+                        {
+                            pengajuan_id:
+                                submission.id,
+
+                            action:
+                                finalStatus ===
+                                "PERLU_REVISI"
+                                    ?
+                                    "REVISION"
+                                    :
+                                    "VERIFICATION",
+
+                            action_label:
+                                finalStatus ===
+                                "PERLU_REVISI"
+                                    ?
+                                    "Permintaan Revisi"
+                                    :
+                                    "Verifikasi Pengajuan",
+
+                            old_status:
+                                "VERIFIKASI_ADMIN",
+
+                            new_status:
+                                finalStatus,
+
+                            note:
+                                finalStatus ===
+                                "PERLU_REVISI"
+                                    ?
+                                    "Terdapat " +
+                                    revisionCount +
+                                    " item yang perlu diperbaiki mahasiswa."
+                                    :
+                                    "Seluruh data dan dokumen mahasiswa telah disetujui."
+                        }
+                    );
 
 
                 if (

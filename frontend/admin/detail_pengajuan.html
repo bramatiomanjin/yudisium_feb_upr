@@ -211,7 +211,7 @@
                         DETAIL PENGAJUAN
                     </p>
 
-                    <h1>
+                    <h1 id="detailSubmissionCode">
                         YDS-2026-0001
                     </h1>
 
@@ -224,7 +224,7 @@
 
                 <div class="detail-header-actions">
 
-                    <span class="admin-status-badge pending">
+                    <span class="admin-status-badge pending" id="detailSubmissionStatusBadge">
                         Menunggu Verifikasi
                     </span>
 
@@ -260,17 +260,17 @@
 
                 <div class="detail-summary-main">
 
-                    <div class="detail-student-avatar">
+                    <div class="detail-student-avatar" id="detailStudentAvatar">
                         AS
                     </div>
 
                     <div>
 
-                        <h2>
+                        <h2 id="detailStudentName">
                             Andi Saputra
                         </h2>
 
-                        <p>
+                        <p id="detailStudentNimSummary">
                             NIM 2301110001
                         </p>
 
@@ -288,7 +288,7 @@
                         </span>
 
                         <strong>
-                            Manajemen
+                            <span id="detailStudentDepartmentSummary">Manajemen</span>
                         </strong>
 
                     </div>
@@ -301,7 +301,7 @@
                         </span>
 
                         <strong>
-                            02 September 2026
+                            <span id="detailSubmittedAt">02 September 2026</span>
                         </strong>
 
                     </div>
@@ -314,7 +314,7 @@
                         </span>
 
                         <strong>
-                            Menunggu Verifikasi
+                            <span id="detailSubmissionStatusText">Menunggu Verifikasi</span>
                         </strong>
 
                     </div>
@@ -355,7 +355,7 @@
                         </span>
 
                         <strong>
-                            Andi Saputra
+                            <span id="detailStudentFullName">Andi Saputra</span>
                         </strong>
 
                     </div>
@@ -368,7 +368,7 @@
                         </span>
 
                         <strong>
-                            2301110001
+                            <span id="detailStudentNim">2301110001</span>
                         </strong>
 
                     </div>
@@ -381,7 +381,7 @@
                         </span>
 
                         <strong>
-                            andi.saputra@example.com
+                            <span id="detailStudentEmail">andi.saputra@example.com</span>
                         </strong>
 
                     </div>
@@ -394,7 +394,7 @@
                         </span>
 
                         <strong>
-                            081234567890
+                            <span id="detailStudentWhatsapp">081234567890</span>
                         </strong>
 
                     </div>
@@ -407,7 +407,7 @@
                         </span>
 
                         <strong>
-                            2023
+                            <span id="detailStudentYear">2023</span>
                         </strong>
 
                     </div>
@@ -420,7 +420,7 @@
                         </span>
 
                         <strong>
-                            Reguler
+                            <span id="detailStudentEntryRoute">Reguler</span>
                         </strong>
 
                     </div>
@@ -433,7 +433,7 @@
                         </span>
 
                         <strong>
-                            Manajemen
+                            <span id="detailStudentDepartment">Manajemen</span>
                         </strong>
 
                     </div>
@@ -474,7 +474,7 @@
                         </span>
 
                         <strong>
-                            Skripsi
+                            <span id="detailWorkType">Skripsi</span>
                         </strong>
 
                     </div>
@@ -487,8 +487,7 @@
                         </span>
 
                         <strong>
-                            Analisis Sistem Informasi Akademik
-                            Fakultas Ekonomi dan Bisnis
+                            <span id="detailWorkTitle">Analisis Sistem Informasi Akademik Fakultas Ekonomi dan Bisnis</span>
                         </strong>
 
                     </div>
@@ -501,7 +500,7 @@
                         </span>
 
                         <strong>
-                            28 Agustus 2026
+                            <span id="detailExamDate">28 Agustus 2026</span>
                         </strong>
 
                     </div>
@@ -514,7 +513,7 @@
                         </span>
 
                         <strong>
-                            80,00
+                            <span id="detailExamScore">80,00</span>
                         </strong>
 
                     </div>
@@ -527,7 +526,7 @@
                         </span>
 
                         <strong>
-                            A
+                            <span id="detailLetterGrade">A</span>
                         </strong>
 
                     </div>
@@ -1236,11 +1235,11 @@
 
                 <div>
 
-                    <h2>
+                    <h2 id="detailActionTitle">
                         Verifikasi Pengajuan
                     </h2>
 
-                    <p>
+                    <p id="detailActionDescription">
                         Periksa seluruh data dan dokumen sebelum
                         menentukan hasil verifikasi.
                     </p>
@@ -1250,6 +1249,7 @@
 
                 <a
                     href="verifikasi.html?id=1"
+                    id="detailPrimaryAction"
                     class="admin-primary-button detail-verify-button"
                 >
                     Mulai Verifikasi
@@ -1361,6 +1361,7 @@
     </div>
 
 
+    <script src="../js/admin_data.js"></script>
     <script src="../js/admin.js"></script>
     <script src="../js/admin_detail.js"></script>
 </body>

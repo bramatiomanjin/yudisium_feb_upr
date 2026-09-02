@@ -1966,3 +1966,13 @@
     }
 
 }
+.admin-auth-error-message {
+    margin: -4px 0 16px;
+    padding: 12px 14px;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    background: #fef2f2;
+    color: #b91c1c;
+    font-size: 0.9rem;
+    line-height: 1.45;
+}

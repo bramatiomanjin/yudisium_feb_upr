@@ -197,6 +197,153 @@ document.addEventListener(
 
 
 
+        const ADMIN_ACCOUNT_STORAGE_KEY =
+            "yudisium_admin_accounts";
+
+
+        const defaultAdminAccounts = [
+            {
+                id: 1,
+                name: "Budi Santoso",
+                username: "budi.santoso",
+                email: "budi.santoso@example.com",
+                role: "ADMIN",
+                status: "PENDING",
+                created_at: "1 Sep 2026"
+            },
+            {
+                id: 2,
+                name: "Rina Marlina",
+                username: "rina.marlina",
+                email: "rina.marlina@example.com",
+                role: "ADMIN",
+                status: "PENDING",
+                created_at: "2 Sep 2026"
+            },
+            {
+                id: 3,
+                name: "Admin FEB",
+                username: "adminfeb",
+                email: "adminfeb@example.com",
+                role: "ADMIN",
+                status: "ACTIVE",
+                created_at: "20 Agu 2026"
+            },
+            {
+                id: 4,
+                name: "Ciko Admin",
+                username: "ciko_admin",
+                email: "ciko@example.com",
+                role: "ADMIN",
+                status: "ACTIVE",
+                created_at: "22 Agu 2026"
+            },
+            {
+                id: 5,
+                name: "Dewi Akademik",
+                username: "dewi.akademik",
+                email: "dewi.akademik@example.com",
+                role: "ADMIN",
+                status: "INACTIVE",
+                created_at: "10 Agu 2026"
+            }
+        ];
+
+
+        function loadAdminAccounts() {
+
+            try {
+
+                const parsed =
+                    JSON.parse(
+                        localStorage.getItem(
+                            ADMIN_ACCOUNT_STORAGE_KEY
+                        ) || "null"
+                    );
+
+
+                if (
+                    Array.isArray(parsed)
+                ) {
+
+                    return parsed;
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Gagal membaca akun admin",
+                    error
+                );
+
+            }
+
+
+            localStorage.setItem(
+                ADMIN_ACCOUNT_STORAGE_KEY,
+                JSON.stringify(
+                    defaultAdminAccounts
+                )
+            );
+
+
+            return defaultAdminAccounts.map(
+                function (admin) {
+
+                    return Object.assign({}, admin);
+
+                }
+            );
+
+        }
+
+
+        function showLoginMessage(
+            message
+        ) {
+
+            let messageBox =
+                document.getElementById(
+                    "adminLoginMessage"
+                );
+
+
+            if (
+                !messageBox
+            ) {
+
+                messageBox =
+                    document.createElement(
+                        "p"
+                    );
+
+
+                messageBox.id =
+                    "adminLoginMessage";
+
+
+                messageBox.className =
+                    "admin-auth-error-message";
+
+
+                adminLoginForm.insertBefore(
+                    messageBox,
+                    adminLoginForm.querySelector(
+                        ".admin-auth-submit"
+                    )
+                );
+
+            }
+
+
+            messageBox.textContent =
+                message;
+
+        }
+
+
+
         function setupPasswordToggle(
             button,
             input,
@@ -610,6 +757,95 @@ document.addEventListener(
                     }
 
 
+                    const loginUsername =
+                        username.value
+                            .trim()
+                            .toLowerCase();
+
+
+                    const isSuperAdminLogin =
+                        loginUsername ===
+                        "superadmin";
+
+
+                    const account =
+                        loadAdminAccounts().find(
+                            function (admin) {
+
+                                return (
+                                    String(admin.username)
+                                        .toLowerCase() ===
+                                    loginUsername
+                                );
+
+                            }
+                        );
+
+
+                    if (
+                        !isSuperAdminLogin &&
+                        !account
+                    ) {
+
+                        showLoginMessage(
+                            "Username tidak ditemukan. Silakan daftar terlebih dahulu."
+                        );
+
+
+                        return;
+
+                    }
+
+
+                    if (
+                        account &&
+                        account.status ===
+                        "PENDING"
+                    ) {
+
+                        showLoginMessage(
+                            "Akun masih menunggu persetujuan Super Admin."
+                        );
+
+
+                        return;
+
+                    }
+
+
+                    if (
+                        account &&
+                        account.status !==
+                        "ACTIVE"
+                    ) {
+
+                        showLoginMessage(
+                            "Akun tidak aktif. Hubungi Super Admin untuk mengaktifkannya."
+                        );
+
+
+                        return;
+
+                    }
+
+
+                    if (
+                        account &&
+                        account.password &&
+                        account.password !==
+                        password.value
+                    ) {
+
+                        showLoginMessage(
+                            "Password yang dimasukkan tidak sesuai."
+                        );
+
+
+                        return;
+
+                    }
+
+
                     if (
                         loading
                     ) {
@@ -622,13 +858,11 @@ document.addEventListener(
 
 
                     const role =
-                        username.value
-                            .trim()
-                            .toLowerCase() ===
-                        "superadmin"
+                        isSuperAdminLogin
                             ?
                             "SUPER_ADMIN"
                             :
+                            account.role ||
                             "ADMIN";
 
 
@@ -640,7 +874,11 @@ document.addEventListener(
 
                     sessionStorage.setItem(
                         "admin_username",
-                        username.value.trim()
+                        isSuperAdminLogin
+                            ?
+                            "superadmin"
+                            :
+                            account.username
                     );
 
 
@@ -1144,23 +1382,117 @@ document.addEventListener(
                     }
 
 
+                    const admins =
+                        loadAdminAccounts();
+
+
+                    const duplicateAccount =
+                        admins.some(
+                            function (admin) {
+
+                                return (
+                                    String(admin.username)
+                                        .toLowerCase() ===
+                                        username.value
+                                            .trim()
+                                            .toLowerCase() ||
+                                    String(admin.email)
+                                        .toLowerCase() ===
+                                        email.value
+                                            .trim()
+                                            .toLowerCase()
+                                );
+
+                            }
+                        );
+
+
+                    if (
+                        duplicateAccount
+                    ) {
+
+                        setError(
+                            username,
+                            true
+                        );
+
+
+                        setError(
+                            email,
+                            true
+                        );
+
+
+                        return;
+
+                    }
+
+
+                    const createdAt =
+                        new Intl.DateTimeFormat(
+                            "id-ID",
+                            {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric"
+                            }
+                        ).format(
+                            new Date()
+                        );
+
+
+                    const registeredAdmin = {
+                        id:
+                            admins.reduce(
+                                function (highestId, admin) {
+
+                                    return Math.max(
+                                        highestId,
+                                        Number(admin.id) || 0
+                                    );
+
+                                },
+                                0
+                            ) + 1,
+
+                        name:
+                            name.value.trim(),
+
+                        username:
+                            username.value.trim(),
+
+                        email:
+                            email.value.trim(),
+
+                        password:
+                            password.value,
+
+                        role:
+                            "ADMIN",
+
+                        status:
+                            "PENDING",
+
+                        created_at:
+                            createdAt
+                    };
+
+
+                    admins.push(
+                        registeredAdmin
+                    );
+
+
+                    localStorage.setItem(
+                        ADMIN_ACCOUNT_STORAGE_KEY,
+                        JSON.stringify(
+                            admins
+                        )
+                    );
+
+
                     console.log(
-                        {
-                            name:
-                                name.value,
-
-                            username:
-                                username.value,
-
-                            email:
-                                email.value,
-
-                            role:
-                                "ADMIN",
-
-                            status:
-                                "PENDING"
-                        }
+                        registeredAdmin
                     );
 
 
@@ -1765,6 +2097,139 @@ document.addEventListener(
                         "tr"
                     )
                 );
+
+
+            if (
+                window.YudisiumMockDB
+            ) {
+
+                rows.forEach(
+                    function (row) {
+
+                        const id =
+                            Number(
+                                String(row.dataset.code || "")
+                                    .slice(-4)
+                            );
+
+
+                        const submission =
+                            window.YudisiumMockDB
+                                .getSubmission(id);
+
+
+                        if (
+                            !submission
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        row.dataset.status =
+                            submission.status;
+
+
+                        const badge =
+                            row.querySelector(
+                                ".admin-status-badge"
+                            );
+
+
+                        const meta =
+                            window.YudisiumMockDB
+                                .statusMeta[
+                                    submission.status
+                                ];
+
+
+                        if (
+                            badge &&
+                            meta
+                        ) {
+
+                            badge.textContent =
+                                meta.label;
+
+
+                            badge.className =
+                                "admin-status-badge " +
+                                meta.className;
+
+                        }
+
+
+                        const actionLink =
+                            row.querySelector(
+                                ".admin-detail-button"
+                            );
+
+
+                        if (
+                            actionLink
+                        ) {
+
+                            actionLink.href =
+                                window.YudisiumMockDB
+                                    .getRoute(
+                                        submission,
+                                        submission.status ===
+                                            "perlu revisi"
+                                    );
+
+
+                            if (
+                                submission.status ===
+                                "menunggu verifikasi"
+                            ) {
+
+                                actionLink.textContent =
+                                    "Verifikasi";
+
+                            } else if (
+                                submission.status ===
+                                "revisi dikirim"
+                            ) {
+
+                                actionLink.textContent =
+                                    "Review Revisi";
+
+                            } else if (
+                                submission.status ===
+                                    "terverifikasi" ||
+                                submission.status ===
+                                    "pembuatan sk" ||
+                                submission.status ===
+                                    "ttd wakil dekan" ||
+                                submission.status ===
+                                    "ttd dekan"
+                            ) {
+
+                                actionLink.textContent =
+                                    "Proses SK";
+
+                            } else if (
+                                submission.status ===
+                                "sk terbit"
+                            ) {
+
+                                actionLink.textContent =
+                                    "Lihat SK";
+
+                            } else {
+
+                                actionLink.textContent =
+                                    "Detail";
+
+                            }
+
+                        }
+
+                    }
+                );
+
+            }
 
 
             let appliedSearch =

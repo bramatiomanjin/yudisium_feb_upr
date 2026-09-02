@@ -445,6 +445,34 @@ document.addEventListener(
 
                 entryRoute:
                     "Reguler"
+            },
+
+            "2301130007": {
+                email:
+                    "hendra.wijaya@example.com",
+
+                whatsapp:
+                    "081252527777",
+
+                year:
+                    "2023",
+
+                entryRoute:
+                    "Reguler"
+            },
+
+            "2301120008": {
+                email:
+                    "intan.permata@example.com",
+
+                whatsapp:
+                    "082133344488",
+
+                year:
+                    "2023",
+
+                entryRoute:
+                    "Reguler"
             }
 
         };

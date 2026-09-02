@@ -11,21 +11,87 @@ document.addEventListener(
            CONFIG
         ===================================== */
 
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const submissionData =
+            window.YudisiumMockDB
+                .getSubmission(
+                    params.get("id") || 6
+                );
+
+
+        if (
+            !submissionData
+        ) {
+
+            window.location.href =
+                "pengajuan.html";
+
+
+            return;
+
+        }
+
+
         const submission = {
-
-            id:
-                6,
-
-            code:
-                "YDS-2026-0006",
-
-            nim:
-                "2301110006",
-
-            student:
-                "Grace Amelia"
-
+            id: submissionData.id,
+            code: submissionData.code,
+            nim: submissionData.nim,
+            student: submissionData.name,
+            department: submissionData.department,
+            year: submissionData.year,
+            submittedAt: submissionData.submittedAt,
+            status: submissionData.status
         };
+
+
+        document.querySelector(
+            ".sk-process-header h1"
+        ).textContent =
+            submission.code;
+
+
+        document.querySelector(
+            ".sk-student-avatar"
+        ).textContent =
+            window.YudisiumMockDB
+                .getInitials(
+                    submission.student
+                );
+
+
+        document.querySelector(
+            ".sk-student-main h2"
+        ).textContent =
+            submission.student;
+
+
+        document.querySelector(
+            ".sk-student-main p"
+        ).textContent =
+            "NIM " + submission.nim;
+
+
+        const studentMeta =
+            document.querySelectorAll(
+                ".sk-student-meta strong"
+            );
+
+
+        studentMeta[0].textContent =
+            submission.department;
+
+
+        studentMeta[1].textContent =
+            submission.year;
+
+
+        studentMeta[2].textContent =
+            submission.submittedAt;
 
 
         const stages = [
@@ -548,6 +614,9 @@ document.addEventListener(
                 action:
                     "UPDATE_SK_STATUS",
 
+                action_label:
+                    "Update Status SK",
+
                 old_status:
                     fromStatus,
 
@@ -703,8 +772,36 @@ document.addEventListener(
                 0
             ) {
 
+                const statusMap = {
+                    "terverifikasi": "TERVERIFIKASI",
+                    "pembuatan sk": "PEMBUATAN_SK",
+                    "ttd wakil dekan": "TTD_WAKIL_DEKAN",
+                    "ttd dekan": "TTD_DEKAN",
+                    "sk terbit": "SK_TERBIT"
+                };
+
+
+                const initialStatus =
+                    statusMap[
+                        submission.status
+                    ] ||
+                    "TERVERIFIKASI";
+
+
                 currentStageIndex =
-                    0;
+                    Math.max(
+                        0,
+                        stages.findIndex(
+                            function (stage) {
+
+                                return (
+                                    stage.key ===
+                                    initialStatus
+                                );
+
+                            }
+                        )
+                    );
 
 
                 return;
@@ -1225,6 +1322,24 @@ document.addEventListener(
                     newStage.key,
                     processNote
                 );
+
+
+                const storedStatus = {
+                    TERVERIFIKASI: "terverifikasi",
+                    PEMBUATAN_SK: "pembuatan sk",
+                    TTD_WAKIL_DEKAN: "ttd wakil dekan",
+                    TTD_DEKAN: "ttd dekan",
+                    SK_TERBIT: "sk terbit"
+                }[
+                    newStage.key
+                ];
+
+
+                window.YudisiumMockDB
+                    .setSubmissionStatus(
+                        submission.id,
+                        storedStatus
+                    );
 
 
                 currentStageIndex++;
