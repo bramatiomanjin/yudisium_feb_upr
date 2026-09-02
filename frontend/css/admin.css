@@ -29,6 +29,11 @@
 }
 
 
+.admin-auth-container.recovery-container {
+    max-width: 520px;
+}
+
+
 /* ==========================================
    BRAND
 ========================================== */
@@ -417,6 +422,97 @@
 
 
 /* ==========================================
+   RECOVERY TABS
+========================================== */
+
+.recovery-tabs {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px;
+
+    margin-bottom: 24px;
+
+    padding: 5px;
+
+    border-radius: 9px;
+
+    background-color: #f3f4f6;
+}
+
+
+.recovery-tab {
+    padding: 10px 14px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background-color: transparent;
+
+    color: #666;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.recovery-tab:hover {
+    color: #222;
+}
+
+
+.recovery-tab.active {
+    background-color: #fff;
+
+    color: #222;
+
+    box-shadow:
+        0 2px 7px
+        rgba(0, 0, 0, 0.08);
+}
+
+
+/* ==========================================
+   RECOVERY PANEL
+========================================== */
+
+.recovery-panel {
+    display: none;
+}
+
+
+.recovery-panel.active {
+    display: block;
+}
+
+
+.recovery-panel-header {
+    margin-bottom: 20px;
+}
+
+
+.recovery-panel-header h3 {
+    margin-bottom: 4px;
+
+    font-size: 18px;
+}
+
+
+.recovery-panel-header p {
+    color: #666;
+
+    font-size: 13px;
+}
+
+
+/* ==========================================
    SUBMIT
 ========================================== */
 
@@ -501,6 +597,11 @@
         align-items: flex-start;
 
         flex-direction: column;
+    }
+
+
+    .recovery-tabs {
+        grid-template-columns: 1fr;
     }
 
 }

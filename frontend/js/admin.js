@@ -23,6 +23,18 @@ document.addEventListener(
             );
 
 
+        const usernameRecoveryForm =
+            document.getElementById(
+                "usernameRecoveryForm"
+            );
+
+
+        const passwordRecoveryForm =
+            document.getElementById(
+                "passwordRecoveryForm"
+            );
+
+
         if (adminLoginForm) {
 
             initAdminLogin();
@@ -33,6 +45,16 @@ document.addEventListener(
         if (adminRegisterForm) {
 
             initAdminRegister();
+
+        }
+
+
+        if (
+            usernameRecoveryForm ||
+            passwordRecoveryForm
+        ) {
+
+            initAccountRecovery();
 
         }
 
@@ -84,6 +106,35 @@ document.addEventListener(
                 }
 
             }
+
+        }
+
+
+
+        function validateEmailField(
+            field
+        ) {
+
+            const value =
+                field.value
+                    .trim();
+
+
+            const pattern =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+            const valid =
+                pattern.test(value);
+
+
+            setError(
+                field,
+                !valid
+            );
+
+
+            return valid;
 
         }
 
@@ -395,8 +446,6 @@ document.addEventListener(
                 );
 
 
-            /* PASSWORD ICON */
-
             setupPasswordToggle(
                 document.getElementById(
                     "toggleRegisterPassword"
@@ -431,10 +480,6 @@ document.addEventListener(
             );
 
 
-            /* ===============================
-               VALIDATE NAME
-            =============================== */
-
             function validateName() {
 
                 const valid =
@@ -454,9 +499,6 @@ document.addEventListener(
             }
 
 
-            /* ===============================
-               VALIDATE USERNAME
-            =============================== */
 
             function validateUsername() {
 
@@ -485,39 +527,16 @@ document.addEventListener(
             }
 
 
-            /* ===============================
-               VALIDATE EMAIL
-            =============================== */
 
             function validateEmail() {
 
-                const value =
-                    email.value
-                        .trim();
-
-
-                const pattern =
-                    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
-                const valid =
-                    pattern.test(value);
-
-
-                setError(
-                    email,
-                    !valid
+                return validateEmailField(
+                    email
                 );
-
-
-                return valid;
 
             }
 
 
-            /* ===============================
-               PASSWORD STRENGTH
-            =============================== */
 
             function calculatePasswordStrength(
                 value
@@ -693,10 +712,6 @@ document.addEventListener(
 
 
 
-            /* ===============================
-               CONFIRM PASSWORD
-            =============================== */
-
             function validateConfirmation() {
 
                 const valid =
@@ -719,10 +734,6 @@ document.addEventListener(
 
 
 
-            /* ===============================
-               EVENTS
-            =============================== */
-
             name.addEventListener(
                 "input",
                 validateName
@@ -733,9 +744,6 @@ document.addEventListener(
                 "input",
                 function () {
 
-                    /*
-                     * Hilangkan spasi.
-                     */
                     this.value =
                         this.value.replace(
                             /\s/g,
@@ -804,10 +812,6 @@ document.addEventListener(
             );
 
 
-            /* ===============================
-               SUBMIT
-            =============================== */
-
             adminRegisterForm.addEventListener(
                 "submit",
                 function (event) {
@@ -864,14 +868,6 @@ document.addEventListener(
                     }
 
 
-                    /*
-                     * Simulasi frontend.
-                     *
-                     * Nanti Laravel:
-                     * INSERT users
-                     * status = PENDING
-                     */
-
                     console.log(
                         {
                             name:
@@ -882,6 +878,9 @@ document.addEventListener(
 
                             email:
                                 email.value,
+
+                            role:
+                                "ADMIN",
 
                             status:
                                 "PENDING"
@@ -900,6 +899,278 @@ document.addEventListener(
 
 
             registerToLogin.addEventListener(
+                "click",
+                function () {
+
+                    window.location.href =
+                        "login.html";
+
+                }
+            );
+
+        }
+
+
+
+        /* =====================================
+           ACCOUNT RECOVERY
+        ===================================== */
+
+        function initAccountRecovery() {
+
+            const usernameTab =
+                document.getElementById(
+                    "usernameTab"
+                );
+
+
+            const passwordTab =
+                document.getElementById(
+                    "passwordTab"
+                );
+
+
+            const usernamePanel =
+                document.getElementById(
+                    "usernameRecoveryPanel"
+                );
+
+
+            const passwordPanel =
+                document.getElementById(
+                    "passwordRecoveryPanel"
+                );
+
+
+            const usernameEmail =
+                document.getElementById(
+                    "recovery_username_email"
+                );
+
+
+            const passwordEmail =
+                document.getElementById(
+                    "recovery_password_email"
+                );
+
+
+            const successModal =
+                document.getElementById(
+                    "recoverySuccessModal"
+                );
+
+
+            const successTitle =
+                document.getElementById(
+                    "recoverySuccessTitle"
+                );
+
+
+            const successMessage =
+                document.getElementById(
+                    "recoverySuccessMessage"
+                );
+
+
+            const backToLogin =
+                document.getElementById(
+                    "recoveryBackToLogin"
+                );
+
+
+            /* ===============================
+               TAB SWITCH
+            =============================== */
+
+            function showUsernameRecovery() {
+
+                usernameTab
+                    .classList
+                    .add("active");
+
+
+                passwordTab
+                    .classList
+                    .remove("active");
+
+
+                usernamePanel
+                    .classList
+                    .add("active");
+
+
+                passwordPanel
+                    .classList
+                    .remove("active");
+
+            }
+
+
+
+            function showPasswordRecovery() {
+
+                passwordTab
+                    .classList
+                    .add("active");
+
+
+                usernameTab
+                    .classList
+                    .remove("active");
+
+
+                passwordPanel
+                    .classList
+                    .add("active");
+
+
+                usernamePanel
+                    .classList
+                    .remove("active");
+
+            }
+
+
+            usernameTab.addEventListener(
+                "click",
+                showUsernameRecovery
+            );
+
+
+            passwordTab.addEventListener(
+                "click",
+                showPasswordRecovery
+            );
+
+
+            /* ===============================
+               USERNAME EMAIL
+            =============================== */
+
+            usernameEmail.addEventListener(
+                "input",
+                function () {
+
+                    validateEmailField(
+                        this
+                    );
+
+                }
+            );
+
+
+            /* ===============================
+               PASSWORD EMAIL
+            =============================== */
+
+            passwordEmail.addEventListener(
+                "input",
+                function () {
+
+                    validateEmailField(
+                        this
+                    );
+
+                }
+            );
+
+
+            /* ===============================
+               USERNAME SUBMIT
+            =============================== */
+
+            usernameRecoveryForm.addEventListener(
+                "submit",
+                function (event) {
+
+                    event.preventDefault();
+
+
+                    if (
+                        !validateEmailField(
+                            usernameEmail
+                        )
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    /*
+                     * Simulasi frontend.
+                     *
+                     * Nanti Laravel mencari user
+                     * berdasarkan email dan
+                     * mengirim username.
+                     */
+
+                    successTitle.textContent =
+                        "Username Dikirim";
+
+
+                    successMessage.textContent =
+                        "Jika email terdaftar pada sistem, username akun akan dikirim ke alamat email tersebut.";
+
+
+                    successModal
+                        .classList
+                        .add(
+                            "active"
+                        );
+
+                }
+            );
+
+
+            /* ===============================
+               PASSWORD SUBMIT
+            =============================== */
+
+            passwordRecoveryForm.addEventListener(
+                "submit",
+                function (event) {
+
+                    event.preventDefault();
+
+
+                    if (
+                        !validateEmailField(
+                            passwordEmail
+                        )
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    /*
+                     * Simulasi frontend.
+                     *
+                     * Nanti Laravel membuat
+                     * token password reset.
+                     */
+
+                    successTitle.textContent =
+                        "Link Reset Dikirim";
+
+
+                    successMessage.textContent =
+                        "Jika email terdaftar pada sistem, tautan untuk membuat password baru akan dikirim ke email tersebut.";
+
+
+                    successModal
+                        .classList
+                        .add(
+                            "active"
+                        );
+
+                }
+            );
+
+
+            backToLogin.addEventListener(
                 "click",
                 function () {
 
