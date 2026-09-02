@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Dashboard Admin - Yudisium FEB UPR
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/admin.css"
+    >
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- =====================================
+             SIDEBAR
+        ====================================== -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-sidebar-brand">
+
+                <div class="admin-sidebar-logo">
+                    FEB
+                </div>
+
+                <div>
+                    <strong>
+                        Yudisium FEB
+                    </strong>
+
+                    <span>
+                        Admin Panel
+                    </span>
+                </div>
+
+            </div>
+
+
+            <nav class="admin-sidebar-nav">
+
+                <a
+                    href="dashboard.html"
+                    class="admin-nav-item active"
+                >
+                    <span class="admin-nav-icon">
+                        ▦
+                    </span>
+
+                    <span>
+                        Dashboard
+                    </span>
+                </a>
+
+
+                <a
+                    href="pengajuan.html"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ☷
+                    </span>
+
+                    <span>
+                        Pengajuan
+                    </span>
+                </a>
+
+
+                <a
+                    href="pengajuan.html?filter=revisi"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        !
+                    </span>
+
+                    <span>
+                        Perlu Revisi
+                    </span>
+
+                    <span
+                        class="admin-nav-count"
+                        id="sidebarRevisionCount"
+                    >
+                        3
+                    </span>
+                </a>
+
+
+                <a
+                    href="pengajuan.html?filter=proses-sk"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ◷
+                    </span>
+
+                    <span>
+                        Proses SK
+                    </span>
+                </a>
+
+
+                <div class="admin-nav-divider"></div>
+
+
+                <!-- KHUSUS SUPER ADMIN -->
+                <a
+                    href="#"
+                    class="admin-nav-item super-admin-only"
+                    id="manageAdminMenu"
+                >
+                    <span class="admin-nav-icon">
+                        ♙
+                    </span>
+
+                    <span>
+                        Kelola Admin
+                    </span>
+                </a>
+
+            </nav>
+
+
+            <div class="admin-sidebar-footer">
+
+                <div class="admin-user-mini">
+
+                    <div class="admin-user-avatar">
+                        A
+                    </div>
+
+                    <div>
+
+                        <strong id="sidebarAdminName">
+                            Admin
+                        </strong>
+
+                        <span id="sidebarAdminRole">
+                            ADMIN
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="admin-logout-button"
+                    id="adminLogout"
+                >
+                    Keluar
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================
+             MAIN
+        ====================================== -->
+        <main class="admin-main">
+
+            <!-- TOPBAR -->
+            <header class="admin-topbar">
+
+                <div>
+
+                    <p class="admin-page-eyebrow">
+                        SISTEM YUDISIUM FEB UPR
+                    </p>
+
+                    <h1>
+                        Dashboard
+                    </h1>
+
+                </div>
+
+
+                <div class="admin-topbar-actions">
+
+                    <span class="admin-date">
+                        02 September 2026
+                    </span>
+
+                    <div class="admin-profile-chip">
+
+                        <div class="admin-profile-avatar">
+                            A
+                        </div>
+
+                        <div>
+
+                            <strong id="topbarAdminName">
+                                Admin
+                            </strong>
+
+                            <span id="topbarAdminRole">
+                                ADMIN
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- =====================================
+                 STATISTIC CARDS
+            ====================================== -->
+            <section class="admin-stats-grid">
+
+                <article class="admin-stat-card">
+
+                    <div class="admin-stat-header">
+
+                        <span>
+                            Total Pengajuan
+                        </span>
+
+                        <span class="admin-stat-icon">
+                            ☷
+                        </span>
+
+                    </div>
+
+                    <strong class="admin-stat-value">
+                        124
+                    </strong>
+
+                    <p>
+                        Seluruh pengajuan yudisium
+                    </p>
+
+                </article>
+
+
+                <article class="admin-stat-card">
+
+                    <div class="admin-stat-header">
+
+                        <span>
+                            Menunggu Verifikasi
+                        </span>
+
+                        <span class="admin-stat-icon">
+                            ◷
+                        </span>
+
+                    </div>
+
+                    <strong class="admin-stat-value">
+                        18
+                    </strong>
+
+                    <p>
+                        Perlu diperiksa admin
+                    </p>
+
+                </article>
+
+
+                <article class="admin-stat-card warning">
+
+                    <div class="admin-stat-header">
+
+                        <span>
+                            Perlu Revisi
+                        </span>
+
+                        <span class="admin-stat-icon">
+                            !
+                        </span>
+
+                    </div>
+
+                    <strong class="admin-stat-value">
+                        3
+                    </strong>
+
+                    <p>
+                        Menunggu perbaikan mahasiswa
+                    </p>
+
+                </article>
+
+
+                <article class="admin-stat-card success">
+
+                    <div class="admin-stat-header">
+
+                        <span>
+                            Terverifikasi
+                        </span>
+
+                        <span class="admin-stat-icon">
+                            ✓
+                        </span>
+
+                    </div>
+
+                    <strong class="admin-stat-value">
+                        67
+                    </strong>
+
+                    <p>
+                        Data dinyatakan lengkap
+                    </p>
+
+                </article>
+
+
+                <article class="admin-stat-card">
+
+                    <div class="admin-stat-header">
+
+                        <span>
+                            Proses SK
+                        </span>
+
+                        <span class="admin-stat-icon">
+                            ✎
+                        </span>
+
+                    </div>
+
+                    <strong class="admin-stat-value">
+                        26
+                    </strong>
+
+                    <p>
+                        Sedang dalam proses penerbitan
+                    </p>
+
+                </article>
+
+
+                <article class="admin-stat-card success">
+
+                    <div class="admin-stat-header">
+
+                        <span>
+                            SK Terbit
+                        </span>
+
+                        <span class="admin-stat-icon">
+                            ✓
+                        </span>
+
+                    </div>
+
+                    <strong class="admin-stat-value">
+                        10
+                    </strong>
+
+                    <p>
+                        Proses telah selesai
+                    </p>
+
+                </article>
+
+            </section>
+
+
+            <!-- =====================================
+                 MAIN GRID
+            ====================================== -->
+            <section class="admin-dashboard-grid">
+
+                <!-- RECENT SUBMISSIONS -->
+                <div class="admin-dashboard-card admin-dashboard-large">
+
+                    <div class="admin-card-header">
+
+                        <div>
+
+                            <h2>
+                                Pengajuan Terbaru
+                            </h2>
+
+                            <p>
+                                Pengajuan mahasiswa yang baru masuk.
+                            </p>
+
+                        </div>
+
+                        <a
+                            href="pengajuan.html"
+                            class="admin-text-link"
+                        >
+                            Lihat Semua
+                        </a>
+
+                    </div>
+
+
+                    <div class="admin-table-wrapper">
+
+                        <table class="admin-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Mahasiswa
+                                    </th>
+
+                                    <th>
+                                        NIM
+                                    </th>
+
+                                    <th>
+                                        Jurusan
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th>
+                                        Aksi
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                <tr>
+
+                                    <td>
+                                        Andi Saputra
+                                    </td>
+
+                                    <td>
+                                        2301110001
+                                    </td>
+
+                                    <td>
+                                        Manajemen
+                                    </td>
+
+                                    <td>
+                                        <span class="admin-status-badge pending">
+                                            Menunggu Verifikasi
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <a
+                                            href="detail_pengajuan.html?id=1"
+                                            class="admin-table-link"
+                                        >
+                                            Lihat
+                                        </a>
+                                    </td>
+
+                                </tr>
+
+
+                                <tr>
+
+                                    <td>
+                                        Citra Lestari
+                                    </td>
+
+                                    <td>
+                                        2301120002
+                                    </td>
+
+                                    <td>
+                                        Akuntansi
+                                    </td>
+
+                                    <td>
+                                        <span class="admin-status-badge revision">
+                                            Perlu Revisi
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <a
+                                            href="detail_pengajuan.html?id=2"
+                                            class="admin-table-link"
+                                        >
+                                            Lihat
+                                        </a>
+                                    </td>
+
+                                </tr>
+
+
+                                <tr>
+
+                                    <td>
+                                        Deni Pratama
+                                    </td>
+
+                                    <td>
+                                        2301130003
+                                    </td>
+
+                                    <td>
+                                        Ekonomi Pembangunan
+                                    </td>
+
+                                    <td>
+                                        <span class="admin-status-badge verified">
+                                            Terverifikasi
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <a
+                                            href="detail_pengajuan.html?id=3"
+                                            class="admin-table-link"
+                                        >
+                                            Lihat
+                                        </a>
+                                    </td>
+
+                                </tr>
+
+
+                                <tr>
+
+                                    <td>
+                                        Eva Natalia
+                                    </td>
+
+                                    <td>
+                                        2301110004
+                                    </td>
+
+                                    <td>
+                                        Manajemen
+                                    </td>
+
+                                    <td>
+                                        <span class="admin-status-badge process">
+                                            TTD Wakil Dekan
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <a
+                                            href="detail_pengajuan.html?id=4"
+                                            class="admin-table-link"
+                                        >
+                                            Lihat
+                                        </a>
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- QUICK ACTION -->
+                <div class="admin-dashboard-card">
+
+                    <div class="admin-card-header">
+
+                        <div>
+
+                            <h2>
+                                Aksi Cepat
+                            </h2>
+
+                            <p>
+                                Menu yang sering digunakan.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="admin-quick-actions">
+
+                        <a
+                            href="pengajuan.html?filter=menunggu"
+                            class="admin-quick-action"
+                        >
+
+                            <div class="admin-quick-icon">
+                                ◷
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Verifikasi Pengajuan
+                                </strong>
+
+                                <span>
+                                    18 pengajuan menunggu
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+                        <a
+                            href="pengajuan.html?filter=revisi"
+                            class="admin-quick-action"
+                        >
+
+                            <div class="admin-quick-icon warning">
+                                !
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Periksa Revisi
+                                </strong>
+
+                                <span>
+                                    3 mahasiswa perlu revisi
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+                        <a
+                            href="pengajuan.html?filter=terverifikasi"
+                            class="admin-quick-action"
+                        >
+
+                            <div class="admin-quick-icon success">
+                                ✓
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Data Terverifikasi
+                                </strong>
+
+                                <span>
+                                    Siap diproses ke SK
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+                        <button
+                            type="button"
+                            class="admin-quick-action button-action"
+                            id="quickExport"
+                        >
+
+                            <div class="admin-quick-icon">
+                                ↓
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Export Excel
+                                </strong>
+
+                                <span>
+                                    Unduh data pengajuan
+                                </span>
+
+                            </div>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 SUPER ADMIN CARD
+            ====================================== -->
+            <section
+                class="admin-dashboard-card super-admin-section"
+                id="superAdminDashboardSection"
+            >
+
+                <div class="admin-card-header">
+
+                    <div>
+
+                        <h2>
+                            Permintaan Akun Admin
+                        </h2>
+
+                        <p>
+                            Akun baru yang menunggu persetujuan Super Admin.
+                        </p>
+
+                    </div>
+
+                    <span class="admin-status-badge revision">
+                        2 Pending
+                    </span>
+
+                </div>
+
+
+                <div class="admin-super-admin-list">
+
+                    <div class="admin-account-request">
+
+                        <div>
+
+                            <strong>
+                                Budi Santoso
+                            </strong>
+
+                            <span>
+                                budi.santoso@example.com
+                            </span>
+
+                        </div>
+
+
+                        <div class="admin-account-actions">
+
+                            <button
+                                type="button"
+                                class="admin-small-button approve"
+                            >
+                                Setujui
+                            </button>
+
+                            <button
+                                type="button"
+                                class="admin-small-button reject"
+                            >
+                                Tolak
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="admin-account-request">
+
+                        <div>
+
+                            <strong>
+                                Rina Marlina
+                            </strong>
+
+                            <span>
+                                rina.marlina@example.com
+                            </span>
+
+                        </div>
+
+
+                        <div class="admin-account-actions">
+
+                            <button
+                                type="button"
+                                class="admin-small-button approve"
+                            >
+                                Setujui
+                            </button>
+
+                            <button
+                                type="button"
+                                class="admin-small-button reject"
+                            >
+                                Tolak
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- EXPORT MODAL -->
+    <div
+        class="modal-overlay"
+        id="exportModal"
+    >
+
+        <div class="modal-card">
+
+            <div class="success-icon">
+                ↓
+            </div>
+
+            <h2>
+                Export Data
+            </h2>
+
+            <p>
+                Fitur export akan mengunduh data pengajuan dalam
+                format Excel setelah terhubung dengan Laravel.
+            </p>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="closeExportModal"
+            >
+                Tutup
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script src="../js/admin.js"></script>
+
+</body>
+
+</html>
