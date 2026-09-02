@@ -24,6 +24,11 @@
 }
 
 
+.admin-auth-container.register-container {
+    max-width: 540px;
+}
+
+
 /* ==========================================
    BRAND
 ========================================== */
@@ -118,7 +123,7 @@
 
 
 .password-wrapper input {
-    padding-right: 95px;
+    padding-right: 50px;
 }
 
 
@@ -126,28 +131,126 @@
     position: absolute;
 
     top: 50%;
-    right: 10px;
+    right: 12px;
+
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
 
     transform: translateY(-50%);
 
-    padding: 5px 10px;
+    padding: 0;
 
     border: none;
 
-    border-radius: 6px;
+    border-radius: 50%;
 
-    background-color: #f3f4f6;
+    background-color: transparent;
 
-    color: #333;
-
-    font-size: 12px;
+    color: #555;
 
     cursor: pointer;
 }
 
 
 .password-toggle:hover {
+    background-color: #f3f4f6;
+
+    color: #111;
+}
+
+
+.password-toggle:focus {
+    outline: none;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(0, 0, 0, 0.08);
+}
+
+
+.password-toggle svg {
+    width: 20px;
+    height: 20px;
+
+    fill: none;
+
+    stroke: currentColor;
+
+    stroke-width: 1.8;
+
+    stroke-linecap: round;
+
+    stroke-linejoin: round;
+}
+
+
+.password-toggle svg.hidden {
+    display: none;
+}
+
+
+/* ==========================================
+   PASSWORD STRENGTH
+========================================== */
+
+.password-strength {
+    margin-top: 10px;
+}
+
+
+.password-strength-bar {
+    width: 100%;
+    height: 6px;
+
+    overflow: hidden;
+
+    border-radius: 999px;
+
     background-color: #e5e7eb;
+}
+
+
+.password-strength-fill {
+    width: 0%;
+    height: 100%;
+
+    border-radius: inherit;
+
+    transition:
+        width 0.2s ease,
+        background-color 0.2s ease;
+}
+
+
+.password-strength-fill.weak {
+    background-color: #dc2626;
+}
+
+
+.password-strength-fill.medium {
+    background-color: #f59e0b;
+}
+
+
+.password-strength-fill.strong {
+    background-color: #16a34a;
+}
+
+
+.password-strength span {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #777;
+
+    font-size: 12px;
 }
 
 
@@ -204,6 +307,112 @@
 
 .admin-auth-link.strong {
     font-weight: bold;
+}
+
+
+/* ==========================================
+   REGISTER STATUS
+========================================== */
+
+.register-status-info {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 12px;
+
+    margin-bottom: 20px;
+
+    padding: 14px;
+
+    border: 1px solid #bfdbfe;
+
+    border-radius: 9px;
+
+    background-color: #eff6ff;
+}
+
+
+.register-status-icon {
+    width: 28px;
+    height: 28px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background-color: #dbeafe;
+
+    color: #1d4ed8;
+
+    font-size: 14px;
+
+    font-weight: bold;
+}
+
+
+.register-status-info strong {
+    display: block;
+
+    margin-bottom: 2px;
+
+    font-size: 13px;
+}
+
+
+.register-status-info p {
+    color: #555;
+
+    font-size: 12px;
+}
+
+
+/* ==========================================
+   REGISTER CONFIRMATION
+========================================== */
+
+.register-confirmation {
+    margin-bottom: 22px;
+
+    padding: 14px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 9px;
+
+    background-color: #fafafa;
+}
+
+
+.register-confirmation label {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    cursor: pointer;
+}
+
+
+.register-confirmation input {
+    width: 17px;
+    height: 17px;
+
+    margin-top: 3px;
+
+    flex-shrink: 0;
+}
+
+
+.register-confirmation span {
+    font-size: 13px;
 }
 
 
