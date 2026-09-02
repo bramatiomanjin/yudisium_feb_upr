@@ -40,6 +40,7 @@
                 </div>
 
                 <div>
+
                     <strong>
                         Yudisium FEB
                     </strong>
@@ -47,6 +48,7 @@
                     <span>
                         Admin Panel
                     </span>
+
                 </div>
 
             </div>
@@ -85,6 +87,7 @@
                 <a
                     href="pengajuan.html?filter=revisi"
                     class="admin-nav-item"
+                    id="dashboardRevisionMenu"
                 >
                     <span class="admin-nav-icon">
                         !
@@ -106,6 +109,7 @@
                 <a
                     href="pengajuan.html?filter=proses-sk"
                     class="admin-nav-item"
+                    id="dashboardSkMenu"
                 >
                     <span class="admin-nav-icon">
                         ◷
@@ -117,12 +121,25 @@
                 </a>
 
 
+                <a
+                    href="history.html"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ↺
+                    </span>
+
+                    <span>
+                        History
+                    </span>
+                </a>
+
+
                 <div class="admin-nav-divider"></div>
 
 
-                <!-- KHUSUS SUPER ADMIN -->
                 <a
-                    href="#"
+                    href="kelola_admin.html"
                     class="admin-nav-item super-admin-only"
                     id="manageAdminMenu"
                 >
@@ -201,6 +218,7 @@
                         02 September 2026
                     </span>
 
+
                     <div class="admin-profile-chip">
 
                         <div class="admin-profile-avatar">
@@ -227,7 +245,7 @@
 
 
             <!-- =====================================
-                 STATISTIC CARDS
+                 STATISTICS
             ====================================== -->
             <section class="admin-stats-grid">
 
@@ -245,9 +263,11 @@
 
                     </div>
 
+
                     <strong class="admin-stat-value">
                         124
                     </strong>
+
 
                     <p>
                         Seluruh pengajuan yudisium
@@ -270,9 +290,11 @@
 
                     </div>
 
+
                     <strong class="admin-stat-value">
                         18
                     </strong>
+
 
                     <p>
                         Perlu diperiksa admin
@@ -295,9 +317,11 @@
 
                     </div>
 
+
                     <strong class="admin-stat-value">
                         3
                     </strong>
+
 
                     <p>
                         Menunggu perbaikan mahasiswa
@@ -320,9 +344,11 @@
 
                     </div>
 
+
                     <strong class="admin-stat-value">
                         67
                     </strong>
+
 
                     <p>
                         Data dinyatakan lengkap
@@ -345,9 +371,11 @@
 
                     </div>
 
+
                     <strong class="admin-stat-value">
                         26
                     </strong>
+
 
                     <p>
                         Sedang dalam proses penerbitan
@@ -370,9 +398,11 @@
 
                     </div>
 
+
                     <strong class="admin-stat-value">
                         10
                     </strong>
+
 
                     <p>
                         Proses telah selesai
@@ -384,11 +414,11 @@
 
 
             <!-- =====================================
-                 MAIN GRID
+                 DASHBOARD GRID
             ====================================== -->
             <section class="admin-dashboard-grid">
 
-                <!-- RECENT SUBMISSIONS -->
+                <!-- PENGAJUAN TERBARU -->
                 <div class="admin-dashboard-card admin-dashboard-large">
 
                     <div class="admin-card-header">
@@ -404,6 +434,7 @@
                             </p>
 
                         </div>
+
 
                         <a
                             href="pengajuan.html"
@@ -465,18 +496,22 @@
                                     </td>
 
                                     <td>
+
                                         <span class="admin-status-badge pending">
                                             Menunggu Verifikasi
                                         </span>
+
                                     </td>
 
                                     <td>
+
                                         <a
                                             href="detail_pengajuan.html?id=1"
                                             class="admin-table-link"
                                         >
                                             Lihat
                                         </a>
+
                                     </td>
 
                                 </tr>
@@ -497,18 +532,22 @@
                                     </td>
 
                                     <td>
+
                                         <span class="admin-status-badge revision">
                                             Perlu Revisi
                                         </span>
+
                                     </td>
 
                                     <td>
+
                                         <a
                                             href="detail_pengajuan.html?id=2"
                                             class="admin-table-link"
                                         >
                                             Lihat
                                         </a>
+
                                     </td>
 
                                 </tr>
@@ -529,18 +568,22 @@
                                     </td>
 
                                     <td>
+
                                         <span class="admin-status-badge verified">
                                             Terverifikasi
                                         </span>
+
                                     </td>
 
                                     <td>
+
                                         <a
                                             href="detail_pengajuan.html?id=3"
                                             class="admin-table-link"
                                         >
                                             Lihat
                                         </a>
+
                                     </td>
 
                                 </tr>
@@ -561,18 +604,22 @@
                                     </td>
 
                                     <td>
+
                                         <span class="admin-status-badge process">
                                             TTD Wakil Dekan
                                         </span>
+
                                     </td>
 
                                     <td>
+
                                         <a
                                             href="detail_pengajuan.html?id=4"
                                             class="admin-table-link"
                                         >
                                             Lihat
                                         </a>
+
                                     </td>
 
                                 </tr>
@@ -635,6 +682,7 @@
                         <a
                             href="pengajuan.html?filter=revisi"
                             class="admin-quick-action"
+                            id="dashboardQuickRevision"
                         >
 
                             <div class="admin-quick-icon warning">
@@ -680,6 +728,55 @@
                         </a>
 
 
+                        <a
+                            href="pengajuan.html?filter=proses-sk"
+                            class="admin-quick-action"
+                            id="dashboardQuickSk"
+                        >
+
+                            <div class="admin-quick-icon">
+                                ◷
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Proses SK
+                                </strong>
+
+                                <span>
+                                    Lihat pengajuan dalam proses SK
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+                        <a
+                            href="history.html"
+                            class="admin-quick-action"
+                        >
+
+                            <div class="admin-quick-icon">
+                                ↺
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    History Aktivitas
+                                </strong>
+
+                                <span>
+                                    Lihat aktivitas administrasi
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
                         <button
                             type="button"
                             class="admin-quick-action button-action"
@@ -712,7 +809,7 @@
 
 
             <!-- =====================================
-                 SUPER ADMIN CARD
+                 SUPER ADMIN
             ====================================== -->
             <section
                 class="admin-dashboard-card super-admin-section"
@@ -733,9 +830,13 @@
 
                     </div>
 
-                    <span class="admin-status-badge revision">
-                        2 Pending
-                    </span>
+
+                    <a
+                        href="kelola_admin.html"
+                        class="admin-text-link"
+                    >
+                        Kelola Admin
+                    </a>
 
                 </div>
 
@@ -759,19 +860,12 @@
 
                         <div class="admin-account-actions">
 
-                            <button
-                                type="button"
+                            <a
+                                href="kelola_admin.html"
                                 class="admin-small-button approve"
                             >
-                                Setujui
-                            </button>
-
-                            <button
-                                type="button"
-                                class="admin-small-button reject"
-                            >
-                                Tolak
-                            </button>
+                                Kelola
+                            </a>
 
                         </div>
 
@@ -795,19 +889,12 @@
 
                         <div class="admin-account-actions">
 
-                            <button
-                                type="button"
+                            <a
+                                href="kelola_admin.html"
                                 class="admin-small-button approve"
                             >
-                                Setujui
-                            </button>
-
-                            <button
-                                type="button"
-                                class="admin-small-button reject"
-                            >
-                                Tolak
-                            </button>
+                                Kelola
+                            </a>
 
                         </div>
 
@@ -839,8 +926,9 @@
             </h2>
 
             <p>
-                Fitur export akan mengunduh data pengajuan dalam
-                format Excel setelah terhubung dengan Laravel.
+                Fitur export akan mengunduh data pengajuan
+                dalam format Excel setelah terhubung
+                dengan Laravel.
             </p>
 
             <button

@@ -16,25 +16,30 @@ document.addEventListener(
                 "adminLoginForm"
             );
 
+
         const adminRegisterForm =
             document.getElementById(
                 "adminRegisterForm"
             );
+
 
         const usernameRecoveryForm =
             document.getElementById(
                 "usernameRecoveryForm"
             );
 
+
         const passwordRecoveryForm =
             document.getElementById(
                 "passwordRecoveryForm"
             );
 
-        const adminDashboard =
+
+        const adminLayout =
             document.querySelector(
                 ".admin-layout"
             );
+
 
         const submissionTableBody =
             document.getElementById(
@@ -42,13 +47,27 @@ document.addEventListener(
             );
 
 
-        if (adminLoginForm) {
+        const isDashboard =
+            document.getElementById(
+                "quickExport"
+            ) !== null;
+
+
+        if (
+            adminLoginForm
+        ) {
+
             initAdminLogin();
+
         }
 
 
-        if (adminRegisterForm) {
+        if (
+            adminRegisterForm
+        ) {
+
             initAdminRegister();
+
         }
 
 
@@ -56,22 +75,39 @@ document.addEventListener(
             usernameRecoveryForm ||
             passwordRecoveryForm
         ) {
+
             initAccountRecovery();
+
         }
 
 
         if (
-            adminDashboard &&
-            !submissionTableBody
+            adminLayout
         ) {
+
+            setAdminIdentity();
+
+            setupLogout();
+
+        }
+
+
+        if (
+            isDashboard
+        ) {
+
             initAdminDashboard();
+
         }
 
 
-        if (submissionTableBody) {
+        if (
+            submissionTableBody
+        ) {
+
             initSubmissionPage();
-        }
 
+        }
 
 
         /* =====================================
@@ -89,14 +125,18 @@ document.addEventListener(
                 );
 
 
-            if (hasError) {
+            if (
+                hasError
+            ) {
 
                 field.classList.add(
                     "form-control-error"
                 );
 
 
-                if (formGroup) {
+                if (
+                    formGroup
+                ) {
 
                     formGroup.classList.add(
                         "has-error"
@@ -111,7 +151,9 @@ document.addEventListener(
                 );
 
 
-                if (formGroup) {
+                if (
+                    formGroup
+                ) {
 
                     formGroup.classList.remove(
                         "has-error"
@@ -130,8 +172,7 @@ document.addEventListener(
         ) {
 
             const value =
-                field.value
-                    .trim();
+                field.value.trim();
 
 
             const pattern =
@@ -139,7 +180,9 @@ document.addEventListener(
 
 
             const valid =
-                pattern.test(value);
+                pattern.test(
+                    value
+                );
 
 
             setError(
@@ -167,7 +210,9 @@ document.addEventListener(
                 !openIcon ||
                 !closedIcon
             ) {
+
                 return;
+
             }
 
 
@@ -180,30 +225,26 @@ document.addEventListener(
                         "text";
 
 
-                    if (visible) {
+                    if (
+                        visible
+                    ) {
 
                         input.type =
                             "password";
 
-                        openIcon
-                            .classList
-                            .remove(
-                                "hidden"
-                            );
 
-                        closedIcon
-                            .classList
-                            .add(
-                                "hidden"
-                            );
+                        openIcon.classList.remove(
+                            "hidden"
+                        );
+
+
+                        closedIcon.classList.add(
+                            "hidden"
+                        );
+
 
                         button.setAttribute(
                             "aria-label",
-                            "Tampilkan password"
-                        );
-
-                        button.setAttribute(
-                            "title",
                             "Tampilkan password"
                         );
 
@@ -212,25 +253,19 @@ document.addEventListener(
                         input.type =
                             "text";
 
-                        openIcon
-                            .classList
-                            .add(
-                                "hidden"
-                            );
 
-                        closedIcon
-                            .classList
-                            .remove(
-                                "hidden"
-                            );
+                        openIcon.classList.add(
+                            "hidden"
+                        );
+
+
+                        closedIcon.classList.remove(
+                            "hidden"
+                        );
+
 
                         button.setAttribute(
                             "aria-label",
-                            "Sembunyikan password"
-                        );
-
-                        button.setAttribute(
-                            "title",
                             "Sembunyikan password"
                         );
 
@@ -258,11 +293,13 @@ document.addEventListener(
 
 
             return {
+
                 username:
                     username,
 
                 role:
                     role
+
             };
 
         }
@@ -277,20 +314,19 @@ document.addEventListener(
 
             const displayName =
                 session.username
-                    .charAt(0)
+                    .charAt(
+                        0
+                    )
                     .toUpperCase() +
-                session.username.slice(1);
+                session.username
+                    .slice(
+                        1
+                    );
 
 
             const sidebarName =
                 document.getElementById(
                     "sidebarAdminName"
-                );
-
-
-            const topbarName =
-                document.getElementById(
-                    "topbarAdminName"
                 );
 
 
@@ -300,33 +336,55 @@ document.addEventListener(
                 );
 
 
+            const topbarName =
+                document.getElementById(
+                    "topbarAdminName"
+                );
+
+
             const topbarRole =
                 document.getElementById(
                     "topbarAdminRole"
                 );
 
 
-            if (sidebarName) {
+            if (
+                sidebarName
+            ) {
+
                 sidebarName.textContent =
                     displayName;
+
             }
 
 
-            if (topbarName) {
-                topbarName.textContent =
-                    displayName;
-            }
+            if (
+                sidebarRole
+            ) {
 
-
-            if (sidebarRole) {
                 sidebarRole.textContent =
                     session.role;
+
             }
 
 
-            if (topbarRole) {
+            if (
+                topbarName
+            ) {
+
+                topbarName.textContent =
+                    displayName;
+
+            }
+
+
+            if (
+                topbarRole
+            ) {
+
                 topbarRole.textContent =
                     session.role;
+
             }
 
 
@@ -336,23 +394,32 @@ document.addEventListener(
                 );
 
 
-            if (manageAdminMenu) {
+            if (
+                manageAdminMenu
+            ) {
 
                 if (
                     session.role ===
                     "SUPER_ADMIN"
                 ) {
 
-                    manageAdminMenu
-                        .classList
-                        .add(
-                            "active-role"
-                        );
+                    manageAdminMenu.style.display =
+                        "flex";
+
+
+                    manageAdminMenu.classList.add(
+                        "active-role"
+                    );
 
                 } else {
 
                     manageAdminMenu.style.display =
                         "none";
+
+
+                    manageAdminMenu.classList.remove(
+                        "active-role"
+                    );
 
                 }
 
@@ -373,9 +440,34 @@ document.addEventListener(
                 );
 
 
-            if (!logoutButton) {
+            if (
+                !logoutButton
+            ) {
+
                 return;
+
             }
+
+
+            /*
+             * Supaya tidak terpasang
+             * listener dua kali.
+             */
+
+            if (
+                logoutButton.dataset
+                    .logoutInitialized ===
+                "true"
+            ) {
+
+                return;
+
+            }
+
+
+            logoutButton.dataset
+                .logoutInitialized =
+                "true";
 
 
             logoutButton.addEventListener(
@@ -386,9 +478,11 @@ document.addEventListener(
                         "admin_logged_in"
                     );
 
+
                     sessionStorage.removeItem(
                         "admin_username"
                     );
+
 
                     sessionStorage.removeItem(
                         "admin_role"
@@ -404,9 +498,8 @@ document.addEventListener(
         }
 
 
-
         /* =====================================
-           LOGIN PAGE
+           LOGIN
         ===================================== */
 
         function initAdminLogin() {
@@ -435,7 +528,8 @@ document.addEventListener(
 
                 const valid =
                     field.value
-                        .trim() !== "";
+                        .trim() !==
+                    "";
 
 
                 setError(
@@ -510,33 +604,22 @@ document.addEventListener(
                         !usernameValid ||
                         !passwordValid
                     ) {
+
                         return;
+
                     }
 
 
-                    if (loading) {
-
+                    if (
                         loading
-                            .classList
-                            .add(
-                                "active"
-                            );
+                    ) {
+
+                        loading.classList.add(
+                            "active"
+                        );
 
                     }
 
-
-                    /*
-                     * Simulasi role frontend.
-                     *
-                     * Username superadmin
-                     * = SUPER_ADMIN.
-                     *
-                     * Username lainnya
-                     * = ADMIN.
-                     *
-                     * Nanti sepenuhnya
-                     * ditentukan Laravel.
-                     */
 
                     const role =
                         username.value
@@ -574,7 +657,7 @@ document.addEventListener(
                                 "dashboard.html";
 
                         },
-                        700
+                        500
                     );
 
                 }
@@ -583,9 +666,8 @@ document.addEventListener(
         }
 
 
-
         /* =====================================
-           REGISTER PAGE
+           REGISTER
         ===================================== */
 
         function initAdminRegister() {
@@ -614,7 +696,7 @@ document.addEventListener(
                 );
 
 
-            const passwordConfirmation =
+            const confirmationPassword =
                 document.getElementById(
                     "register_password_confirmation"
                 );
@@ -662,7 +744,7 @@ document.addEventListener(
                 document.getElementById(
                     "toggleConfirmPassword"
                 ),
-                passwordConfirmation,
+                confirmationPassword,
                 document.getElementById(
                     "confirmEyeOpen"
                 ),
@@ -677,7 +759,8 @@ document.addEventListener(
                 const valid =
                     name.value
                         .trim()
-                        .length >= 2;
+                        .length >=
+                    2;
 
 
                 setError(
@@ -695,8 +778,7 @@ document.addEventListener(
             function validateUsername() {
 
                 const value =
-                    username.value
-                        .trim();
+                    username.value.trim();
 
 
                 const pattern =
@@ -704,8 +786,11 @@ document.addEventListener(
 
 
                 const valid =
-                    value.length >= 4 &&
-                    pattern.test(value);
+                    value.length >=
+                    4 &&
+                    pattern.test(
+                        value
+                    );
 
 
                 setError(
@@ -720,21 +805,12 @@ document.addEventListener(
 
 
 
-            function validateEmail() {
-
-                return validateEmailField(
-                    email
-                );
-
-            }
-
-
-
             function validatePassword() {
 
                 const valid =
                     password.value
-                        .length >= 8;
+                        .length >=
+                    8;
 
 
                 setError(
@@ -752,15 +828,14 @@ document.addEventListener(
             function validateConfirmation() {
 
                 const valid =
-                    passwordConfirmation
-                        .value !== "" &&
-                    passwordConfirmation
-                        .value ===
-                    password.value;
+                    confirmationPassword.value !==
+                        "" &&
+                    confirmationPassword.value ===
+                        password.value;
 
 
                 setError(
-                    passwordConfirmation,
+                    confirmationPassword,
                     !valid
                 );
 
@@ -772,10 +847,6 @@ document.addEventListener(
 
 
             function updatePasswordStrength() {
-
-                const value =
-                    password.value;
-
 
                 const fill =
                     document.getElementById(
@@ -789,34 +860,64 @@ document.addEventListener(
                     );
 
 
-                let score = 0;
+                if (
+                    !fill ||
+                    !text
+                ) {
+
+                    return;
+
+                }
+
+
+                const value =
+                    password.value;
+
+
+                let score =
+                    0;
 
 
                 if (
-                    value.length >= 8
+                    value.length >=
+                    8
                 ) {
+
                     score++;
+
                 }
 
 
                 if (
-                    /[A-Z]/.test(value)
+                    /[A-Z]/.test(
+                        value
+                    )
                 ) {
+
                     score++;
+
                 }
 
 
                 if (
-                    /[a-z]/.test(value)
+                    /[a-z]/.test(
+                        value
+                    )
                 ) {
+
                     score++;
+
                 }
 
 
                 if (
-                    /\d/.test(value)
+                    /\d/.test(
+                        value
+                    )
                 ) {
+
                     score++;
+
                 }
 
 
@@ -825,7 +926,9 @@ document.addEventListener(
                         value
                     )
                 ) {
+
                     score++;
+
                 }
 
 
@@ -834,7 +937,8 @@ document.addEventListener(
 
 
                 if (
-                    value.length === 0
+                    value.length ===
+                    0
                 ) {
 
                     fill.style.width =
@@ -845,13 +949,9 @@ document.addEventListener(
                         "Belum ada password";
 
 
-                    return;
-
-                }
-
-
-                if (
-                    score <= 2
+                } else if (
+                    score <=
+                    2
                 ) {
 
                     fill.style.width =
@@ -866,8 +966,10 @@ document.addEventListener(
                     text.textContent =
                         "Password lemah";
 
+
                 } else if (
-                    score <= 4
+                    score <=
+                    4
                 ) {
 
                     fill.style.width =
@@ -881,6 +983,7 @@ document.addEventListener(
 
                     text.textContent =
                         "Password cukup";
+
 
                 } else {
 
@@ -926,7 +1029,13 @@ document.addEventListener(
 
             email.addEventListener(
                 "input",
-                validateEmail
+                function () {
+
+                    validateEmailField(
+                        this
+                    );
+
+                }
             );
 
 
@@ -940,8 +1049,8 @@ document.addEventListener(
 
 
                     if (
-                        passwordConfirmation
-                            .value !== ""
+                        confirmationPassword.value !==
+                        ""
                     ) {
 
                         validateConfirmation();
@@ -952,30 +1061,38 @@ document.addEventListener(
             );
 
 
-            passwordConfirmation.addEventListener(
-                "input",
-                validateConfirmation
-            );
+            confirmationPassword
+                .addEventListener(
+                    "input",
+                    validateConfirmation
+                );
 
 
-            agreement.addEventListener(
-                "change",
-                function () {
+            if (
+                agreement
+            ) {
 
-                    if (
-                        this.checked
-                    ) {
+                agreement.addEventListener(
+                    "change",
+                    function () {
 
-                        agreementError
-                            .classList
-                            .remove(
-                                "active"
-                            );
+                        if (
+                            this.checked &&
+                            agreementError
+                        ) {
+
+                            agreementError
+                                .classList
+                                .remove(
+                                    "active"
+                                );
+
+                        }
 
                     }
+                );
 
-                }
-            );
+            }
 
 
             adminRegisterForm.addEventListener(
@@ -985,58 +1102,47 @@ document.addEventListener(
                     event.preventDefault();
 
 
-                    const nameValid =
-                        validateName();
-
-
-                    const usernameValid =
-                        validateUsername();
-
-
-                    const emailValid =
-                        validateEmail();
-
-
-                    const passwordValid =
-                        validatePassword();
-
-
-                    const confirmationValid =
+                    const valid =
+                        validateName() &&
+                        validateUsername() &&
+                        validateEmailField(
+                            email
+                        ) &&
+                        validatePassword() &&
                         validateConfirmation();
 
 
                     if (
-                        !nameValid ||
-                        !usernameValid ||
-                        !emailValid ||
-                        !passwordValid ||
-                        !confirmationValid
+                        !valid
                     ) {
+
                         return;
+
                     }
 
 
                     if (
+                        agreement &&
                         !agreement.checked
                     ) {
 
-                        agreementError
-                            .classList
-                            .add(
-                                "active"
-                            );
+                        if (
+                            agreementError
+                        ) {
+
+                            agreementError
+                                .classList
+                                .add(
+                                    "active"
+                                );
+
+                        }
 
 
                         return;
 
                     }
 
-
-                    /*
-                     * Akun register selalu ADMIN.
-                     * SUPER_ADMIN tidak dibuat
-                     * lewat halaman registrasi.
-                     */
 
                     console.log(
                         {
@@ -1058,28 +1164,39 @@ document.addEventListener(
                     );
 
 
-                    successModal
-                        .classList
-                        .add(
-                            "active"
-                        );
+                    if (
+                        successModal
+                    ) {
+
+                        successModal
+                            .classList
+                            .add(
+                                "active"
+                            );
+
+                    }
 
                 }
             );
 
 
-            registerToLogin.addEventListener(
-                "click",
-                function () {
+            if (
+                registerToLogin
+            ) {
 
-                    window.location.href =
-                        "login.html";
+                registerToLogin.addEventListener(
+                    "click",
+                    function () {
 
-                }
-            );
+                        window.location.href =
+                            "login.html";
+
+                    }
+                );
+
+            }
 
         }
-
 
 
         /* =====================================
@@ -1148,187 +1265,191 @@ document.addEventListener(
                 );
 
 
-            function showUsernameRecovery() {
-
+            if (
                 usernameTab
-                    .classList
-                    .add(
-                        "active"
-                    );
+            ) {
+
+                usernameTab.addEventListener(
+                    "click",
+                    function () {
+
+                        usernameTab
+                            .classList
+                            .add(
+                                "active"
+                            );
 
 
+                        passwordTab
+                            .classList
+                            .remove(
+                                "active"
+                            );
+
+
+                        usernamePanel
+                            .classList
+                            .add(
+                                "active"
+                            );
+
+
+                        passwordPanel
+                            .classList
+                            .remove(
+                                "active"
+                            );
+
+                    }
+                );
+
+            }
+
+
+            if (
                 passwordTab
-                    .classList
-                    .remove(
-                        "active"
-                    );
+            ) {
+
+                passwordTab.addEventListener(
+                    "click",
+                    function () {
+
+                        passwordTab
+                            .classList
+                            .add(
+                                "active"
+                            );
 
 
-                usernamePanel
-                    .classList
-                    .add(
-                        "active"
-                    );
+                        usernameTab
+                            .classList
+                            .remove(
+                                "active"
+                            );
 
 
-                passwordPanel
-                    .classList
-                    .remove(
-                        "active"
+                        passwordPanel
+                            .classList
+                            .add(
+                                "active"
+                            );
+
+
+                        usernamePanel
+                            .classList
+                            .remove(
+                                "active"
+                            );
+
+                    }
+                );
+
+            }
+
+
+            if (
+                usernameRecoveryForm
+            ) {
+
+                usernameRecoveryForm
+                    .addEventListener(
+                        "submit",
+                        function (event) {
+
+                            event.preventDefault();
+
+
+                            if (
+                                !validateEmailField(
+                                    usernameEmail
+                                )
+                            ) {
+
+                                return;
+
+                            }
+
+
+                            successTitle.textContent =
+                                "Username Dikirim";
+
+
+                            successMessage.textContent =
+                                "Jika email terdaftar, username akan dikirim ke alamat email tersebut.";
+
+
+                            successModal
+                                .classList
+                                .add(
+                                    "active"
+                                );
+
+                        }
                     );
 
             }
 
 
+            if (
+                passwordRecoveryForm
+            ) {
 
-            function showPasswordRecovery() {
+                passwordRecoveryForm
+                    .addEventListener(
+                        "submit",
+                        function (event) {
 
-                passwordTab
-                    .classList
-                    .add(
-                        "active"
-                    );
-
-
-                usernameTab
-                    .classList
-                    .remove(
-                        "active"
-                    );
+                            event.preventDefault();
 
 
-                passwordPanel
-                    .classList
-                    .add(
-                        "active"
-                    );
+                            if (
+                                !validateEmailField(
+                                    passwordEmail
+                                )
+                            ) {
+
+                                return;
+
+                            }
 
 
-                usernamePanel
-                    .classList
-                    .remove(
-                        "active"
+                            successTitle.textContent =
+                                "Link Reset Dikirim";
+
+
+                            successMessage.textContent =
+                                "Jika email terdaftar, tautan reset password akan dikirim ke email tersebut.";
+
+
+                            successModal
+                                .classList
+                                .add(
+                                    "active"
+                                );
+
+                        }
                     );
 
             }
 
 
-            usernameTab.addEventListener(
-                "click",
-                showUsernameRecovery
-            );
+            if (
+                backToLogin
+            ) {
 
+                backToLogin.addEventListener(
+                    "click",
+                    function () {
 
-            passwordTab.addEventListener(
-                "click",
-                showPasswordRecovery
-            );
+                        window.location.href =
+                            "login.html";
 
-
-            usernameEmail.addEventListener(
-                "input",
-                function () {
-
-                    validateEmailField(
-                        this
-                    );
-
-                }
-            );
-
-
-            passwordEmail.addEventListener(
-                "input",
-                function () {
-
-                    validateEmailField(
-                        this
-                    );
-
-                }
-            );
-
-
-            usernameRecoveryForm.addEventListener(
-                "submit",
-                function (event) {
-
-                    event.preventDefault();
-
-
-                    if (
-                        !validateEmailField(
-                            usernameEmail
-                        )
-                    ) {
-                        return;
                     }
+                );
 
-
-                    successTitle.textContent =
-                        "Username Dikirim";
-
-
-                    successMessage.textContent =
-                        "Jika email terdaftar, username akan dikirim ke alamat email tersebut.";
-
-
-                    successModal
-                        .classList
-                        .add(
-                            "active"
-                        );
-
-                }
-            );
-
-
-            passwordRecoveryForm.addEventListener(
-                "submit",
-                function (event) {
-
-                    event.preventDefault();
-
-
-                    if (
-                        !validateEmailField(
-                            passwordEmail
-                        )
-                    ) {
-                        return;
-                    }
-
-
-                    successTitle.textContent =
-                        "Link Reset Dikirim";
-
-
-                    successMessage.textContent =
-                        "Jika email terdaftar, tautan reset password akan dikirim ke email tersebut.";
-
-
-                    successModal
-                        .classList
-                        .add(
-                            "active"
-                        );
-
-                }
-            );
-
-
-            backToLogin.addEventListener(
-                "click",
-                function () {
-
-                    window.location.href =
-                        "login.html";
-
-                }
-            );
+            }
 
         }
-
 
 
         /* =====================================
@@ -1336,39 +1457,6 @@ document.addEventListener(
         ===================================== */
 
         function initAdminDashboard() {
-
-            /*
-             * Untuk testing frontend.
-             *
-             * Nanti Laravel menggunakan
-             * middleware auth.
-             */
-
-            if (
-                !sessionStorage.getItem(
-                    "admin_logged_in"
-                )
-            ) {
-
-                sessionStorage.setItem(
-                    "admin_logged_in",
-                    "true"
-                );
-
-
-                sessionStorage.setItem(
-                    "admin_username",
-                    "admin"
-                );
-
-
-                sessionStorage.setItem(
-                    "admin_role",
-                    "ADMIN"
-                );
-
-            }
-
 
             const session =
                 setAdminIdentity();
@@ -1389,24 +1477,146 @@ document.addEventListener(
                     "SUPER_ADMIN"
                 ) {
 
-                    superAdminSection
-                        .classList
-                        .add(
-                            "active"
-                        );
+                    superAdminSection.classList.add(
+                        "active"
+                    );
 
                 } else {
 
-                    superAdminSection
-                        .classList
-                        .remove(
-                            "active"
-                        );
+                    superAdminSection.classList.remove(
+                        "active"
+                    );
 
                 }
 
             }
 
+
+            /* =================================
+               SIDEBAR NAVIGATION
+            ================================= */
+
+            const revisionMenu =
+                document.getElementById(
+                    "dashboardRevisionMenu"
+                );
+
+
+            const skMenu =
+                document.getElementById(
+                    "dashboardSkMenu"
+                );
+
+
+            const quickRevision =
+                document.getElementById(
+                    "dashboardQuickRevision"
+                );
+
+
+            const quickSk =
+                document.getElementById(
+                    "dashboardQuickSk"
+                );
+
+
+            function goToRevision() {
+
+                window.location.assign(
+                    "pengajuan.html?filter=revisi"
+                );
+
+            }
+
+
+            function goToSkProcess() {
+
+                window.location.assign(
+                    "pengajuan.html?filter=proses-sk"
+                );
+
+            }
+
+
+            if (
+                revisionMenu
+            ) {
+
+                revisionMenu.addEventListener(
+                    "click",
+                    function (event) {
+
+                        event.preventDefault();
+
+                        event.stopPropagation();
+
+                        goToRevision();
+
+                    }
+                );
+
+            }
+
+
+            if (
+                skMenu
+            ) {
+
+                skMenu.addEventListener(
+                    "click",
+                    function (event) {
+
+                        event.preventDefault();
+
+                        event.stopPropagation();
+
+                        goToSkProcess();
+
+                    }
+                );
+
+            }
+
+
+            if (
+                quickRevision
+            ) {
+
+                quickRevision.addEventListener(
+                    "click",
+                    function (event) {
+
+                        event.preventDefault();
+
+                        goToRevision();
+
+                    }
+                );
+
+            }
+
+
+            if (
+                quickSk
+            ) {
+
+                quickSk.addEventListener(
+                    "click",
+                    function (event) {
+
+                        event.preventDefault();
+
+                        goToSkProcess();
+
+                    }
+                );
+
+            }
+
+
+            /* =================================
+               EXPORT
+            ================================= */
 
             const quickExport =
                 document.getElementById(
@@ -1452,38 +1662,30 @@ document.addEventListener(
                 exportModal
             ) {
 
-                closeExportModal.addEventListener(
-                    "click",
-                    function () {
+                closeExportModal
+                    .addEventListener(
+                        "click",
+                        function () {
 
-                        exportModal
-                            .classList
-                            .remove(
-                                "active"
-                            );
+                            exportModal
+                                .classList
+                                .remove(
+                                    "active"
+                                );
 
-                    }
-                );
+                        }
+                    );
 
             }
-
-
-            setupLogout();
 
         }
 
 
-
         /* =====================================
-           SUBMISSION LIST PAGE
+           SUBMISSION LIST
         ===================================== */
 
         function initSubmissionPage() {
-
-            setAdminIdentity();
-
-            setupLogout();
-
 
             const searchInput =
                 document.getElementById(
@@ -1559,20 +1761,11 @@ document.addEventListener(
 
             const rows =
                 Array.from(
-                    submissionTableBody
-                        .querySelectorAll(
-                            "tr"
-                        )
+                    submissionTableBody.querySelectorAll(
+                        "tr"
+                    )
                 );
 
-
-            /*
-             * Menyimpan nilai filter
-             * yang SUDAH diterapkan.
-             *
-             * Jadi perubahan dropdown
-             * tidak langsung memfilter.
-             */
 
             let appliedSearch =
                 "";
@@ -1590,36 +1783,29 @@ document.addEventListener(
                 false;
 
 
-
             function getDepartmentLabel(
                 value
             ) {
 
-                if (
-                    value ===
-                    "manajemen"
-                ) {
-                    return "Manajemen";
-                }
+                const labels = {
+
+                    manajemen:
+                        "Manajemen",
+
+                    akuntansi:
+                        "Akuntansi",
+
+                    "ekonomi pembangunan":
+                        "Ekonomi Pembangunan"
+
+                };
 
 
-                if (
-                    value ===
-                    "akuntansi"
-                ) {
-                    return "Akuntansi";
-                }
+                return (
+                    labels[value] ||
+                    ""
+                );
 
-
-                if (
-                    value ===
-                    "ekonomi pembangunan"
-                ) {
-                    return "Ekonomi Pembangunan";
-                }
-
-
-                return "";
             }
 
 
@@ -1628,7 +1814,7 @@ document.addEventListener(
                 value
             ) {
 
-                const statusLabels = {
+                const labels = {
 
                     "menunggu verifikasi":
                         "Menunggu Verifikasi",
@@ -1639,7 +1825,7 @@ document.addEventListener(
                     "revisi dikirim":
                         "Revisi Dikirim",
 
-                    "terverifikasi":
+                    terverifikasi:
                         "Terverifikasi",
 
                     "pembuatan sk":
@@ -1658,7 +1844,7 @@ document.addEventListener(
 
 
                 return (
-                    statusLabels[value] ||
+                    labels[value] ||
                     ""
                 );
 
@@ -1671,9 +1857,11 @@ document.addEventListener(
             ) {
 
                 return [
+
                     "pembuatan sk",
                     "ttd wakil dekan",
                     "ttd dekan"
+
                 ].includes(
                     status
                 );
@@ -1684,15 +1872,16 @@ document.addEventListener(
 
             function updateActiveFilterText() {
 
-                const filterParts =
+                const parts =
                     [];
 
 
                 if (
-                    appliedSearch !== ""
+                    appliedSearch !==
+                    ""
                 ) {
 
-                    filterParts.push(
+                    parts.push(
                         'Pencarian "' +
                         appliedSearch +
                         '"'
@@ -1702,10 +1891,11 @@ document.addEventListener(
 
 
                 if (
-                    appliedDepartment !== ""
+                    appliedDepartment !==
+                    ""
                 ) {
 
-                    filterParts.push(
+                    parts.push(
                         "Jurusan " +
                         getDepartmentLabel(
                             appliedDepartment
@@ -1716,10 +1906,11 @@ document.addEventListener(
 
 
                 if (
-                    appliedStatus !== ""
+                    appliedStatus !==
+                    ""
                 ) {
 
-                    filterParts.push(
+                    parts.push(
                         "Status " +
                         getStatusLabel(
                             appliedStatus
@@ -1733,35 +1924,27 @@ document.addEventListener(
                     appliedProcessSK
                 ) {
 
-                    filterParts.push(
+                    parts.push(
                         "Status Proses SK"
                     );
 
                 }
 
 
-                if (
-                    filterParts.length === 0
-                ) {
-
-                    activeFilterText.textContent =
-                        "Semua pengajuan";
-
-                } else {
-
-                    activeFilterText.textContent =
-                        filterParts.join(
+                activeFilterText.textContent =
+                    parts.length ===
+                    0
+                        ?
+                        "Semua pengajuan"
+                        :
+                        parts.join(
                             " • "
                         );
 
-                }
 
-
-                activeFilterBox
-                    .classList
-                    .add(
-                        "active"
-                    );
+                activeFilterBox.classList.add(
+                    "active"
+                );
 
             }
 
@@ -1777,45 +1960,61 @@ document.addEventListener(
                     function (row) {
 
                         const name =
-                            row.dataset.name
+                            (
+                                row.dataset.name ||
+                                ""
+                            )
                                 .toLowerCase();
 
 
                         const nim =
-                            row.dataset.nim
+                            (
+                                row.dataset.nim ||
+                                ""
+                            )
                                 .toLowerCase();
 
 
                         const code =
-                            row.dataset.code
+                            (
+                                row.dataset.code ||
+                                ""
+                            )
                                 .toLowerCase();
 
 
                         const department =
-                            row.dataset.department
+                            (
+                                row.dataset.department ||
+                                ""
+                            )
                                 .toLowerCase();
 
 
                         const status =
-                            row.dataset.status
+                            (
+                                row.dataset.status ||
+                                ""
+                            )
                                 .toLowerCase();
 
 
-                        const searchValue =
+                        const search =
                             appliedSearch
                                 .toLowerCase();
 
 
                         const matchSearch =
-                            searchValue === "" ||
+                            search ===
+                                "" ||
                             name.includes(
-                                searchValue
+                                search
                             ) ||
                             nim.includes(
-                                searchValue
+                                search
                             ) ||
                             code.includes(
-                                searchValue
+                                search
                             );
 
 
@@ -1833,7 +2032,7 @@ document.addEventListener(
                                 appliedStatus;
 
 
-                        const matchProcessSK =
+                        const matchProcess =
                             !appliedProcessSK ||
                             isSKProcessStatus(
                                 status
@@ -1844,20 +2043,22 @@ document.addEventListener(
                             matchSearch &&
                             matchDepartment &&
                             matchStatus &&
-                            matchProcessSK;
+                            matchProcess;
 
 
-                        if (visible) {
+                        row.style.display =
+                            visible
+                                ?
+                                ""
+                                :
+                                "none";
 
-                            row.style.display =
-                                "";
+
+                        if (
+                            visible
+                        ) {
 
                             visibleCount++;
-
-                        } else {
-
-                            row.style.display =
-                                "none";
 
                         }
 
@@ -1865,25 +2066,31 @@ document.addEventListener(
                 );
 
 
-                resultCount.textContent =
-                    "Menampilkan " +
-                    visibleCount +
-                    " dari " +
-                    rows.length +
-                    " pengajuan";
+                if (
+                    resultCount
+                ) {
+
+                    resultCount.textContent =
+                        "Menampilkan " +
+                        visibleCount +
+                        " dari " +
+                        rows.length +
+                        " pengajuan";
+
+                }
 
 
                 if (
-                    visibleCount === 0
+                    emptyState
                 ) {
 
                     emptyState.style.display =
-                        "flex";
-
-                } else {
-
-                    emptyState.style.display =
-                        "none";
+                        visibleCount ===
+                        0
+                            ?
+                            "flex"
+                            :
+                            "none";
 
                 }
 
@@ -1954,41 +2161,53 @@ document.addEventListener(
             }
 
 
+            if (
+                applyButton
+            ) {
 
-            applyButton.addEventListener(
-                "click",
-                applyFilter
-            );
+                applyButton.addEventListener(
+                    "click",
+                    applyFilter
+                );
+
+            }
 
 
-            resetButton.addEventListener(
-                "click",
-                resetFilter
-            );
+            if (
+                resetButton
+            ) {
+
+                resetButton.addEventListener(
+                    "click",
+                    resetFilter
+                );
+
+            }
 
 
-            /*
-             * ENTER pada pencarian
-             * juga menerapkan filter.
-             */
+            if (
+                searchInput
+            ) {
 
-            searchInput.addEventListener(
-                "keydown",
-                function (event) {
+                searchInput.addEventListener(
+                    "keydown",
+                    function (event) {
 
-                    if (
-                        event.key ===
-                        "Enter"
-                    ) {
+                        if (
+                            event.key ===
+                            "Enter"
+                        ) {
 
-                        event.preventDefault();
+                            event.preventDefault();
 
-                        applyFilter();
+                            applyFilter();
+
+                        }
 
                     }
+                );
 
-                }
-            );
+            }
 
 
             /* =================================
@@ -2020,8 +2239,6 @@ document.addEventListener(
                     "perlu revisi";
 
 
-                filterSubmissions();
-
             } else if (
                 pageFilter ===
                 "menunggu"
@@ -2034,8 +2251,6 @@ document.addEventListener(
                 appliedStatus =
                     "menunggu verifikasi";
 
-
-                filterSubmissions();
 
             } else if (
                 pageFilter ===
@@ -2050,25 +2265,26 @@ document.addEventListener(
                     "terverifikasi";
 
 
-                filterSubmissions();
-
             } else if (
                 pageFilter ===
                 "proses-sk"
             ) {
 
+                statusFilter.value =
+                    "";
+
+
+                appliedStatus =
+                    "";
+
+
                 appliedProcessSK =
                     true;
 
-
-                filterSubmissions();
-
-            } else {
-
-                filterSubmissions();
-
             }
 
+
+            filterSubmissions();
 
 
             /* =================================
@@ -2084,11 +2300,9 @@ document.addEventListener(
                     "click",
                     function () {
 
-                        exportModal
-                            .classList
-                            .add(
-                                "active"
-                            );
+                        exportModal.classList.add(
+                            "active"
+                        );
 
                     }
                 );
@@ -2105,11 +2319,9 @@ document.addEventListener(
                     "click",
                     function () {
 
-                        exportModal
-                            .classList
-                            .remove(
-                                "active"
-                            );
+                        exportModal.classList.remove(
+                            "active"
+                        );
 
                     }
                 );
