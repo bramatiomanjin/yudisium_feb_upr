@@ -48,7 +48,7 @@
 
 
         <!-- FORM -->
-        <form id="formYudisium" novalidate>
+        <form id="formYudisium" novalidate enctype="multipart/form-data">
 
             <!-- ==================================================
                  STEP 1 - IDENTITAS
@@ -59,8 +59,7 @@
                     <h2>Data Identitas Mahasiswa</h2>
 
                     <p>
-                        Pastikan data yang dimasukkan sesuai dengan
-                        data resmi mahasiswa.
+                        Pastikan data yang dimasukkan sesuai dengan data resmi mahasiswa.
                     </p>
                 </div>
 
@@ -247,7 +246,6 @@
             </section>
 
 
-
             <!-- ==================================================
                  STEP 2 - AKADEMIK
             =================================================== -->
@@ -258,8 +256,7 @@
                     <h2>Data Akademik</h2>
 
                     <p>
-                        Isi data akademik sesuai dengan dokumen resmi
-                        dan hasil ujian Skripsi/Artikel.
+                        Isi data akademik sesuai dengan dokumen resmi dan hasil ujian Skripsi/Artikel.
                     </p>
 
                 </div>
@@ -352,7 +349,7 @@
                     </small>
 
                     <div class="error-message">
-                        Nilai ujian wajib diisi.
+                        Masukkan nilai dengan format yang benar, contoh 80,00.
                     </div>
                 </div>
 
@@ -405,7 +402,6 @@
             </section>
 
 
-
             <!-- ==================================================
                  STEP 3 - DOKUMEN
             =================================================== -->
@@ -416,15 +412,12 @@
                     <h2>Upload Dokumen Persyaratan</h2>
 
                     <p>
-                        Upload dokumen sesuai ketentuan.
-                        Pastikan file jelas, dapat dibuka, dan tidak melebihi
-                        batas ukuran yang ditentukan.
+                        Upload dokumen sesuai ketentuan. Pastikan file jelas,
+                        dapat dibuka, dan tidak melebihi batas ukuran.
                     </p>
 
                 </div>
 
-
-                <!-- 1 -->
                 <div class="form-group file-group">
 
                     <label for="form_yudisium">
@@ -449,8 +442,6 @@
 
                 </div>
 
-
-                <!-- 2 -->
                 <div class="form-group file-group">
 
                     <label for="foto_3x4">
@@ -468,7 +459,7 @@
                     >
 
                     <small>
-                        Menggunakan kebaya untuk perempuan dan jas untuk laki-laki.
+                        Kebaya untuk perempuan dan jas untuk laki-laki.
                         PDF, maksimal 1 MB.
                     </small>
 
@@ -478,8 +469,6 @@
 
                 </div>
 
-
-                <!-- 3 -->
                 <div class="form-group file-group">
 
                     <label for="ijazah_slta">
@@ -504,8 +493,6 @@
 
                 </div>
 
-
-                <!-- 4 -->
                 <div class="form-group file-group">
 
                     <label for="berita_acara_ujian">
@@ -532,8 +519,6 @@
 
                 </div>
 
-
-                <!-- 5 -->
                 <div class="form-group file-group">
 
                     <label for="rekap_nilai">
@@ -560,8 +545,6 @@
 
                 </div>
 
-
-                <!-- 6 -->
                 <div class="form-group file-group">
 
                     <label for="blanko_revisi">
@@ -588,8 +571,6 @@
 
                 </div>
 
-
-                <!-- 7 -->
                 <div class="form-group file-group">
 
                     <label for="tanda_terima">
@@ -601,7 +582,7 @@
                         type="file"
                         id="tanda_terima"
                         name="tanda_terima"
-                        accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                        accept=".pdf,.doc,.docx"
                         data-max-size="10"
                         required
                     >
@@ -616,8 +597,6 @@
 
                 </div>
 
-
-                <!-- 8 -->
                 <div class="form-group file-group">
 
                     <label for="surat_pernyataan_ijazah">
@@ -642,8 +621,6 @@
 
                 </div>
 
-
-                <!-- 9 -->
                 <div class="form-group file-group">
 
                     <label for="bebas_perpus_universitas">
@@ -668,8 +645,6 @@
 
                 </div>
 
-
-                <!-- 10 -->
                 <div class="form-group file-group">
 
                     <label for="bebas_perpus_fakultas">
@@ -694,8 +669,6 @@
 
                 </div>
 
-
-                <!-- 11 -->
                 <div class="form-group file-group">
 
                     <label for="khs">
@@ -722,8 +695,6 @@
 
                 </div>
 
-
-                <!-- 12 -->
                 <div class="form-group file-group">
 
                     <label for="transkrip">
@@ -750,8 +721,6 @@
 
                 </div>
 
-
-                <!-- 13 -->
                 <div class="form-group file-group">
 
                     <label for="surat_tugas_pembimbing">
@@ -778,8 +747,6 @@
 
                 </div>
 
-
-                <!-- 14 -->
                 <div class="form-group file-group">
 
                     <label for="bebas_tunggakan">
@@ -805,19 +772,15 @@
                 </div>
 
 
-                <!-- ==========================================
-                     DOKUMEN KHUSUS JURUSAN
-                =========================================== -->
+                <!-- DOKUMEN KHUSUS JURUSAN -->
                 <div class="jurusan-document-wrapper">
 
                     <h3>Dokumen Khusus Jurusan</h3>
 
                     <p class="jurusan-info">
-                        Dokumen di bawah akan menyesuaikan jurusan yang dipilih pada Step Identitas.
+                        Dokumen menyesuaikan jurusan yang dipilih pada Step Identitas.
                     </p>
 
-
-                    <!-- MANAJEMEN -->
                     <div
                         class="form-group file-group jurusan-document"
                         id="dokumenManajemen"
@@ -846,8 +809,6 @@
 
                     </div>
 
-
-                    <!-- EKONOMI PEMBANGUNAN -->
                     <div
                         class="form-group file-group jurusan-document"
                         id="dokumenEkonomi"
@@ -876,8 +837,6 @@
 
                     </div>
 
-
-                    <!-- AKUNTANSI -->
                     <div
                         class="form-group file-group jurusan-document"
                         id="dokumenAkuntansi"
@@ -892,7 +851,7 @@
                             type="file"
                             id="jurnal_akuntansi"
                             name="jurnal_akuntansi"
-                            accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                            accept=".pdf,.doc,.docx"
                             data-max-size="10"
                         >
 
@@ -932,30 +891,229 @@
             </section>
 
 
-
             <!-- ==================================================
                  STEP 4 - KONFIRMASI
-                 sementara placeholder
             =================================================== -->
             <section class="form-section" id="step4">
 
                 <div class="section-header">
 
-                    <h2>Konfirmasi Data</h2>
+                    <h2>Konfirmasi Data Pengajuan</h2>
 
                     <p>
-                        Step konfirmasi akan kita isi setelah Step 3 selesai diuji.
+                        Periksa kembali seluruh data sebelum mengirim pengajuan.
                     </p>
 
                 </div>
 
-                <div class="placeholder-box">
 
-                    <h3>Semua tahap awal berhasil.</h3>
+                <!-- IDENTITAS -->
+                <div class="review-card">
+
+                    <div class="review-card-header">
+
+                        <h3>Data Identitas</h3>
+
+                        <button
+                            type="button"
+                            class="btn-edit"
+                            id="editIdentitas"
+                        >
+                            Edit
+                        </button>
+
+                    </div>
+
+                    <div class="review-grid">
+
+                        <div class="review-item">
+                            <span class="review-label">
+                                Nama Lengkap
+                            </span>
+
+                            <strong id="reviewNama">-</strong>
+                        </div>
+
+                        <div class="review-item">
+                            <span class="review-label">
+                                NIM
+                            </span>
+
+                            <strong id="reviewNim">-</strong>
+                        </div>
+
+                        <div class="review-item">
+                            <span class="review-label">
+                                Email
+                            </span>
+
+                            <strong id="reviewEmail">-</strong>
+                        </div>
+
+                        <div class="review-item">
+                            <span class="review-label">
+                                Nomor WhatsApp
+                            </span>
+
+                            <strong id="reviewWhatsapp">-</strong>
+                        </div>
+
+                        <div class="review-item">
+                            <span class="review-label">
+                                Tahun Angkatan
+                            </span>
+
+                            <strong id="reviewAngkatan">-</strong>
+                        </div>
+
+                        <div class="review-item">
+                            <span class="review-label">
+                                Jalur Masuk
+                            </span>
+
+                            <strong id="reviewJalur">-</strong>
+                        </div>
+
+                        <div class="review-item review-full">
+                            <span class="review-label">
+                                Jurusan
+                            </span>
+
+                            <strong id="reviewJurusan">-</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- AKADEMIK -->
+                <div class="review-card">
+
+                    <div class="review-card-header">
+
+                        <h3>Data Akademik</h3>
+
+                        <button
+                            type="button"
+                            class="btn-edit"
+                            id="editAkademik"
+                        >
+                            Edit
+                        </button>
+
+                    </div>
+
+                    <div class="review-grid">
+
+                        <div class="review-item">
+                            <span class="review-label">
+                                Karya Tulis Ilmiah
+                            </span>
+
+                            <strong id="reviewKaryaTulis">-</strong>
+                        </div>
+
+                        <div class="review-item">
+                            <span class="review-label">
+                                Tanggal Ujian
+                            </span>
+
+                            <strong id="reviewTanggalUjian">-</strong>
+                        </div>
+
+                        <div class="review-item">
+                            <span class="review-label">
+                                Nilai Angka
+                            </span>
+
+                            <strong id="reviewNilaiAngka">-</strong>
+                        </div>
+
+                        <div class="review-item">
+                            <span class="review-label">
+                                Nilai Huruf
+                            </span>
+
+                            <strong id="reviewNilaiHuruf">-</strong>
+                        </div>
+
+                        <div class="review-item review-full">
+                            <span class="review-label">
+                                Judul Skripsi / Artikel
+                            </span>
+
+                            <strong id="reviewJudul">-</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DOKUMEN -->
+                <div class="review-card">
+
+                    <div class="review-card-header">
+
+                        <h3>Dokumen Persyaratan</h3>
+
+                        <button
+                            type="button"
+                            class="btn-edit"
+                            id="editDokumen"
+                        >
+                            Edit
+                        </button>
+
+                    </div>
+
+                    <div
+                        class="document-review-list"
+                        id="documentReviewList"
+                    >
+                    </div>
+
+                </div>
+
+
+                <!-- PERNYATAAN -->
+                <div class="confirmation-box">
+
+                    <label class="confirmation-label">
+
+                        <input
+                            type="checkbox"
+                            id="konfirmasiData"
+                            name="konfirmasi_data"
+                        >
+
+                        <span>
+                            Saya menyatakan bahwa seluruh data dan dokumen yang
+                            saya masukkan telah saya periksa dan sesuai dengan
+                            dokumen yang sebenarnya.
+                        </span>
+
+                    </label>
+
+                    <div
+                        class="confirmation-error"
+                        id="confirmationError"
+                    >
+                        Anda harus menyetujui pernyataan sebelum mengirim pengajuan.
+                    </div>
+
+                </div>
+
+
+                <div class="important-notice">
+
+                    <strong>Perhatian</strong>
 
                     <p>
-                        Selanjutnya kita akan menampilkan seluruh data yang telah
-                        diisi mahasiswa untuk diperiksa sebelum dikirim.
+                        Setelah pengajuan dikirim, data akan diperiksa oleh admin.
+                        Jika terdapat kesalahan, Anda hanya dapat memperbaiki
+                        data yang ditandai untuk direvisi oleh admin.
                     </p>
 
                 </div>
@@ -971,6 +1129,14 @@
                         Kembali
                     </button>
 
+                    <button
+                        type="submit"
+                        class="btn btn-success"
+                        id="submitPengajuan"
+                    >
+                        Kirim Pengajuan
+                    </button>
+
                 </div>
 
             </section>
@@ -978,6 +1144,36 @@
         </form>
 
     </main>
+
+
+    <!-- MODAL SIMULASI BERHASIL -->
+    <div class="modal-overlay" id="successModal">
+
+        <div class="modal-card">
+
+            <div class="success-icon">
+                ✓
+            </div>
+
+            <h2>Pengajuan Siap Dikirim</h2>
+
+            <p>
+                Frontend pengajuan berhasil melewati seluruh validasi.
+                Saat backend Laravel sudah terhubung, data akan dikirim
+                ke server dari tombol ini.
+            </p>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="closeSuccessModal"
+            >
+                Tutup
+            </button>
+
+        </div>
+
+    </div>
 
 
     <script src="js/form.js"></script>

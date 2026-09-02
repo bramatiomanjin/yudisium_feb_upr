@@ -7,10 +7,17 @@ document.addEventListener("DOMContentLoaded", function () {
        STEP
     ========================================= */
 
-    const step1 = document.getElementById("step1");
-    const step2 = document.getElementById("step2");
-    const step3 = document.getElementById("step3");
-    const step4 = document.getElementById("step4");
+    const step1 =
+        document.getElementById("step1");
+
+    const step2 =
+        document.getElementById("step2");
+
+    const step3 =
+        document.getElementById("step3");
+
+    const step4 =
+        document.getElementById("step4");
 
 
     const steps = [
@@ -37,21 +44,53 @@ document.addEventListener("DOMContentLoaded", function () {
        BUTTON
     ========================================= */
 
-    const nextStep1 = document.getElementById("nextStep1");
-    const backStep2 = document.getElementById("backStep2");
-    const nextStep2 = document.getElementById("nextStep2");
+    const nextStep1 =
+        document.getElementById("nextStep1");
 
-    const backStep3 = document.getElementById("backStep3");
-    const nextStep3 = document.getElementById("nextStep3");
+    const backStep2 =
+        document.getElementById("backStep2");
 
-    const backStep4 = document.getElementById("backStep4");
+    const nextStep2 =
+        document.getElementById("nextStep2");
+
+    const backStep3 =
+        document.getElementById("backStep3");
+
+    const nextStep3 =
+        document.getElementById("nextStep3");
+
+    const backStep4 =
+        document.getElementById("backStep4");
+
+
+    /* =========================================
+       EDIT BUTTON
+    ========================================= */
+
+    const editIdentitas =
+        document.getElementById("editIdentitas");
+
+    const editAkademik =
+        document.getElementById("editAkademik");
+
+    const editDokumen =
+        document.getElementById("editDokumen");
+
+
+    /* =========================================
+       FORM
+    ========================================= */
+
+    const formYudisium =
+        document.getElementById("formYudisium");
 
 
     /* =========================================
        INPUT KHUSUS
     ========================================= */
 
-    const nim = document.getElementById("nim");
+    const nim =
+        document.getElementById("nim");
 
     const noWhatsapp =
         document.getElementById("no_whatsapp");
@@ -64,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================================
-       DOKUMEN KHUSUS JURUSAN
+       DOKUMEN KHUSUS
     ========================================= */
 
     const dokumenManajemen =
@@ -88,27 +127,61 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================================
+       KONFIRMASI
+    ========================================= */
+
+    const konfirmasiData =
+        document.getElementById("konfirmasiData");
+
+    const confirmationError =
+        document.getElementById("confirmationError");
+
+
+    /* =========================================
+       MODAL
+    ========================================= */
+
+    const successModal =
+        document.getElementById("successModal");
+
+    const closeSuccessModal =
+        document.getElementById("closeSuccessModal");
+
+
+    /* =========================================
        SHOW STEP
     ========================================= */
 
     function showStep(stepNumber) {
 
         steps.forEach(function (step) {
+
             step.classList.remove("active");
+
         });
 
 
         indicators.forEach(function (indicator) {
+
             indicator.classList.remove("active");
+
         });
 
 
-        steps[stepNumber - 1].classList.add("active");
+        steps[stepNumber - 1]
+            .classList
+            .add("active");
 
 
-        for (let i = 0; i < stepNumber; i++) {
+        for (
+            let i = 0;
+            i < stepNumber;
+            i++
+        ) {
 
-            indicators[i].classList.add("active");
+            indicators[i]
+                .classList
+                .add("active");
 
         }
 
@@ -116,6 +189,13 @@ document.addEventListener("DOMContentLoaded", function () {
         if (stepNumber === 3) {
 
             updateJurusanDocument();
+
+        }
+
+
+        if (stepNumber === 4) {
+
+            generateReview();
 
         }
 
@@ -140,31 +220,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (hasError) {
 
-            field.classList.add(
-                "form-control-error"
-            );
+            field
+                .classList
+                .add("form-control-error");
 
 
             if (formGroup) {
 
-                formGroup.classList.add(
-                    "has-error"
-                );
+                formGroup
+                    .classList
+                    .add("has-error");
 
             }
 
         } else {
 
-            field.classList.remove(
-                "form-control-error"
-            );
+            field
+                .classList
+                .remove("form-control-error");
 
 
             if (formGroup) {
 
-                formGroup.classList.remove(
-                    "has-error"
-                );
+                formGroup
+                    .classList
+                    .remove("has-error");
 
             }
 
@@ -179,12 +259,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function validateFile(field) {
 
-        const file = field.files[0];
+        const file =
+            field.files[0];
 
 
-        /*
-         * Jika required tetapi belum ada file.
-         */
         if (
             field.hasAttribute("required") &&
             !file
@@ -197,9 +275,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /*
-         * Optional dan tidak ada file.
-         */
         if (!file) {
 
             setError(field, false);
@@ -209,9 +284,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /*
-         * Ukuran file.
-         */
         const maxSizeMb =
             parseFloat(
                 field.dataset.maxSize || "1"
@@ -222,7 +294,9 @@ document.addEventListener("DOMContentLoaded", function () {
             maxSizeMb * 1024 * 1024;
 
 
-        if (file.size > maxSizeBytes) {
+        if (
+            file.size > maxSizeBytes
+        ) {
 
             setError(field, true);
 
@@ -231,9 +305,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /*
-         * Validasi extension.
-         */
         const fileName =
             file.name.toLowerCase();
 
@@ -299,10 +370,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function validateField(field) {
 
-        /*
-         * FILE INPUT
-         */
-        if (field.type === "file") {
+        if (
+            field.type === "file"
+        ) {
 
             return validateFile(field);
 
@@ -312,9 +382,6 @@ document.addEventListener("DOMContentLoaded", function () {
         let valid = true;
 
 
-        /*
-         * REQUIRED
-         */
         if (
             field.hasAttribute("required") &&
             field.value.trim() === ""
@@ -325,9 +392,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /*
-         * EMAIL
-         */
+        /* EMAIL */
+
         if (
             field.type === "email" &&
             field.value.trim() !== ""
@@ -350,9 +416,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /*
-         * NIM
-         */
+        /* NIM */
+
         if (
             field.id === "nim" &&
             field.value.trim() !== ""
@@ -371,9 +436,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /*
-         * WHATSAPP
-         */
+        /* WHATSAPP */
+
         if (
             field.id === "no_whatsapp" &&
             field.value.trim() !== ""
@@ -392,14 +456,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /*
-         * NILAI ANGKA
-         *
-         * Format yang diterima:
-         * 80
-         * 80,0
-         * 80,00
-         */
+        /* NILAI ANGKA */
+
         if (
             field.id === "nilai_angka" &&
             field.value.trim() !== ""
@@ -467,14 +525,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
         fields.forEach(function (field) {
 
-            /*
-             * Abaikan field tersembunyi.
-             */
+            const jurusanParent =
+                field.closest(
+                    ".jurusan-document"
+                );
+
+
             if (
-                field.closest(".jurusan-document") &&
-                !field
-                    .closest(".jurusan-document")
-                    .classList.contains("active")
+                jurusanParent &&
+                !jurusanParent
+                    .classList
+                    .contains("active")
             ) {
 
                 return;
@@ -493,7 +554,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (!firstInvalidField) {
 
-                    firstInvalidField = field;
+                    firstInvalidField =
+                        field;
 
                 }
 
@@ -502,51 +564,61 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
 
-        /*
-         * Validasi file optional yang diisi.
-         */
         const optionalFiles =
             section.querySelectorAll(
                 'input[type="file"]:not([required])'
             );
 
 
-        optionalFiles.forEach(function (field) {
+        optionalFiles.forEach(
+            function (field) {
 
-            if (
-                field.closest(".jurusan-document") &&
-                !field
-                    .closest(".jurusan-document")
-                    .classList.contains("active")
-            ) {
-
-                return;
-
-            }
+                const jurusanParent =
+                    field.closest(
+                        ".jurusan-document"
+                    );
 
 
-            if (field.files.length > 0) {
+                if (
+                    jurusanParent &&
+                    !jurusanParent
+                        .classList
+                        .contains("active")
+                ) {
 
-                const valid =
-                    validateFile(field);
+                    return;
+
+                }
 
 
-                if (!valid) {
+                if (
+                    field.files.length > 0
+                ) {
 
-                    sectionValid = false;
+                    const valid =
+                        validateFile(field);
 
 
-                    if (!firstInvalidField) {
+                    if (!valid) {
 
-                        firstInvalidField = field;
+                        sectionValid = false;
+
+
+                        if (
+                            !firstInvalidField
+                        ) {
+
+                            firstInvalidField =
+                                field;
+
+                        }
 
                     }
 
                 }
 
             }
-
-        });
+        );
 
 
         if (firstInvalidField) {
@@ -562,49 +634,47 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================================
-       DOKUMEN BERDASARKAN JURUSAN
+       DOKUMEN JURUSAN
     ========================================= */
 
     function updateJurusanDocument() {
 
-        dokumenManajemen.classList.remove(
-            "active"
-        );
+        dokumenManajemen
+            .classList
+            .remove("active");
 
-        dokumenEkonomi.classList.remove(
-            "active"
-        );
+        dokumenEkonomi
+            .classList
+            .remove("active");
 
-        dokumenAkuntansi.classList.remove(
-            "active"
-        );
+        dokumenAkuntansi
+            .classList
+            .remove("active");
 
 
-        jurnalManajemen.removeAttribute(
-            "required"
-        );
+        jurnalManajemen
+            .removeAttribute("required");
 
-        jurnalEkonomi.removeAttribute(
-            "required"
-        );
+        jurnalEkonomi
+            .removeAttribute("required");
 
-        jurnalAkuntansi.removeAttribute(
-            "required"
-        );
+        jurnalAkuntansi
+            .removeAttribute("required");
 
 
         if (
             jurusan.value === "MANAJEMEN"
         ) {
 
-            dokumenManajemen.classList.add(
-                "active"
-            );
+            dokumenManajemen
+                .classList
+                .add("active");
 
-            jurnalManajemen.setAttribute(
-                "required",
-                ""
-            );
+            jurnalManajemen
+                .setAttribute(
+                    "required",
+                    ""
+                );
 
         }
 
@@ -614,14 +684,15 @@ document.addEventListener("DOMContentLoaded", function () {
             "EKONOMI PEMBANGUNAN"
         ) {
 
-            dokumenEkonomi.classList.add(
-                "active"
-            );
+            dokumenEkonomi
+                .classList
+                .add("active");
 
-            jurnalEkonomi.setAttribute(
-                "required",
-                ""
-            );
+            jurnalEkonomi
+                .setAttribute(
+                    "required",
+                    ""
+                );
 
         }
 
@@ -630,16 +701,398 @@ document.addEventListener("DOMContentLoaded", function () {
             jurusan.value === "AKUNTANSI"
         ) {
 
-            dokumenAkuntansi.classList.add(
-                "active"
-            );
+            dokumenAkuntansi
+                .classList
+                .add("active");
 
-            jurnalAkuntansi.setAttribute(
-                "required",
-                ""
-            );
+            jurnalAkuntansi
+                .setAttribute(
+                    "required",
+                    ""
+                );
 
         }
+
+    }
+
+
+    /* =========================================
+       FORMAT TANGGAL
+    ========================================= */
+
+    function formatTanggal(dateValue) {
+
+        if (!dateValue) {
+
+            return "-";
+
+        }
+
+
+        const date =
+            new Date(
+                dateValue + "T00:00:00"
+            );
+
+
+        return date.toLocaleDateString(
+            "id-ID",
+            {
+                day: "2-digit",
+                month: "long",
+                year: "numeric"
+            }
+        );
+
+    }
+
+
+    /* =========================================
+       GENERATE REVIEW
+    ========================================= */
+
+    function generateReview() {
+
+        /* IDENTITAS */
+
+        document
+            .getElementById("reviewNama")
+            .textContent =
+                document
+                    .getElementById("nama_lengkap")
+                    .value;
+
+
+        document
+            .getElementById("reviewNim")
+            .textContent =
+                nim.value;
+
+
+        document
+            .getElementById("reviewEmail")
+            .textContent =
+                document
+                    .getElementById("email")
+                    .value;
+
+
+        document
+            .getElementById("reviewWhatsapp")
+            .textContent =
+                noWhatsapp.value;
+
+
+        document
+            .getElementById("reviewAngkatan")
+            .textContent =
+                document
+                    .getElementById("tahun_angkatan")
+                    .value;
+
+
+        document
+            .getElementById("reviewJalur")
+            .textContent =
+                document
+                    .getElementById("jalur_masuk")
+                    .value;
+
+
+        document
+            .getElementById("reviewJurusan")
+            .textContent =
+                jurusan.value;
+
+
+        /* AKADEMIK */
+
+        document
+            .getElementById("reviewKaryaTulis")
+            .textContent =
+                document
+                    .getElementById("karya_tulis")
+                    .value;
+
+
+        document
+            .getElementById("reviewJudul")
+            .textContent =
+                document
+                    .getElementById("judul_karya_tulis")
+                    .value;
+
+
+        document
+            .getElementById("reviewTanggalUjian")
+            .textContent =
+                formatTanggal(
+                    document
+                        .getElementById("tanggal_ujian")
+                        .value
+                );
+
+
+        document
+            .getElementById("reviewNilaiAngka")
+            .textContent =
+                nilaiAngka.value;
+
+
+        document
+            .getElementById("reviewNilaiHuruf")
+            .textContent =
+                document
+                    .getElementById("nilai_huruf")
+                    .value;
+
+
+        generateDocumentReview();
+
+    }
+
+
+    /* =========================================
+       LABEL DOKUMEN
+    ========================================= */
+
+    const documentLabels = {
+
+        form_yudisium:
+            "Formulir Pendaftaran Yudisium",
+
+        foto_3x4:
+            "Foto 3×4 Berwarna",
+
+        ijazah_slta:
+            "Ijazah SLTA",
+
+        berita_acara_ujian:
+            "Berita Acara Ujian Skripsi / Artikel",
+
+        rekap_nilai:
+            "Rekapitulasi Nilai Ujian Skripsi / Artikel",
+
+        blanko_revisi:
+            "Blanko Revisi",
+
+        tanda_terima:
+            "Tanda Terima Skripsi / Artikel",
+
+        surat_pernyataan_ijazah:
+            "Surat Pernyataan untuk Proses Penulisan Ijazah",
+
+        bebas_perpus_universitas:
+            "Surat Bebas Pinjam Perpustakaan Universitas",
+
+        bebas_perpus_fakultas:
+            "Surat Bebas Pinjam Perpustakaan Fakultas",
+
+        khs:
+            "KHS Semester 1 s/d Terbaru",
+
+        transkrip:
+            "Transkrip Nilai Ujian Skripsi",
+
+        surat_tugas_pembimbing:
+            "Surat Tugas Dosen Pembimbing Skripsi",
+
+        bebas_tunggakan:
+            "Surat Verifikasi Bebas Tunggakan",
+
+        jurnal_manajemen:
+            "Bukti Pengisian Jurnal JMSO",
+
+        jurnal_ekonomi:
+            "Bukti Pengisian Jurnal Ekonomi Pembangunan",
+
+        jurnal_akuntansi:
+            "Bukti Pengisian Jurnal Akuntansi"
+
+    };
+
+
+    /* =========================================
+       GENERATE DOCUMENT REVIEW
+    ========================================= */
+
+    function generateDocumentReview() {
+
+        const documentReviewList =
+            document.getElementById(
+                "documentReviewList"
+            );
+
+
+        documentReviewList.innerHTML = "";
+
+
+        const fileInputs =
+            step3.querySelectorAll(
+                'input[type="file"]'
+            );
+
+
+        fileInputs.forEach(
+            function (field) {
+
+                const jurusanParent =
+                    field.closest(
+                        ".jurusan-document"
+                    );
+
+
+                if (
+                    jurusanParent &&
+                    !jurusanParent
+                        .classList
+                        .contains("active")
+                ) {
+
+                    return;
+
+                }
+
+
+                const file =
+                    field.files[0];
+
+
+                if (
+                    !file &&
+                    !field.hasAttribute(
+                        "required"
+                    )
+                ) {
+
+                    const item =
+                        createDocumentReviewItem(
+                            documentLabels[field.id] ||
+                            field.id,
+                            "Tidak di-upload",
+                            true
+                        );
+
+
+                    documentReviewList
+                        .appendChild(item);
+
+
+                    return;
+
+                }
+
+
+                if (!file) {
+
+                    return;
+
+                }
+
+
+                const item =
+                    createDocumentReviewItem(
+                        documentLabels[field.id] ||
+                        field.id,
+                        file.name,
+                        false
+                    );
+
+
+                documentReviewList
+                    .appendChild(item);
+
+            }
+        );
+
+    }
+
+
+    /* =========================================
+       CREATE DOCUMENT ITEM
+    ========================================= */
+
+    function createDocumentReviewItem(
+        label,
+        fileName,
+        optional
+    ) {
+
+        const item =
+            document.createElement("div");
+
+
+        item.className =
+            "document-review-item";
+
+
+        const info =
+            document.createElement("div");
+
+
+        info.className =
+            "document-review-info";
+
+
+        const name =
+            document.createElement("span");
+
+
+        name.className =
+            "document-review-name";
+
+
+        name.textContent =
+            label;
+
+
+        const file =
+            document.createElement("span");
+
+
+        file.className =
+            "document-review-file";
+
+
+        file.textContent =
+            fileName;
+
+
+        info.appendChild(name);
+        info.appendChild(file);
+
+
+        const status =
+            document.createElement("span");
+
+
+        status.className =
+            "document-status";
+
+
+        if (optional) {
+
+            status.classList.add(
+                "optional"
+            );
+
+
+            status.textContent =
+                "Opsional";
+
+        } else {
+
+            status.textContent =
+                "Siap";
+
+        }
+
+
+        item.appendChild(info);
+        item.appendChild(status);
+
+
+        return item;
 
     }
 
@@ -687,16 +1140,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================================
-       NILAI ANGKA
+       NILAI
     ========================================= */
 
     nilaiAngka.addEventListener(
         "input",
         function () {
 
-            /*
-             * Hanya angka dan koma.
-             */
             this.value =
                 this.value.replace(
                     /[^0-9,]/g,
@@ -704,14 +1154,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
 
 
-            /*
-             * Hanya satu koma.
-             */
             const parts =
                 this.value.split(",");
 
 
-            if (parts.length > 2) {
+            if (
+                parts.length > 2
+            ) {
 
                 this.value =
                     parts[0] +
@@ -755,63 +1204,79 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-    allFields.forEach(function (field) {
+    allFields.forEach(
+        function (field) {
 
-        if (
-            field.id !== "nim" &&
-            field.id !== "no_whatsapp" &&
-            field.id !== "nilai_angka" &&
-            field.id !== "jurusan"
-        ) {
+            if (
+                field.id ===
+                "konfirmasiData"
+            ) {
 
-            if (field.type === "file") {
+                return;
 
-                field.addEventListener(
-                    "change",
-                    function () {
-
-                        validateFile(field);
-
-                    }
-                );
-
-            } else {
-
-                field.addEventListener(
-                    "input",
-                    function () {
-
-                        validateField(field);
-
-                    }
-                );
+            }
 
 
-                field.addEventListener(
-                    "change",
-                    function () {
+            if (
+                field.id !== "nim" &&
+                field.id !== "no_whatsapp" &&
+                field.id !== "nilai_angka" &&
+                field.id !== "jurusan"
+            ) {
 
-                        validateField(field);
+                if (
+                    field.type === "file"
+                ) {
 
-                    }
-                );
+                    field.addEventListener(
+                        "change",
+                        function () {
+
+                            validateFile(field);
+
+                        }
+                    );
+
+                } else {
+
+                    field.addEventListener(
+                        "input",
+                        function () {
+
+                            validateField(field);
+
+                        }
+                    );
+
+
+                    field.addEventListener(
+                        "change",
+                        function () {
+
+                            validateField(field);
+
+                        }
+                    );
+
+                }
 
             }
 
         }
-
-    });
+    );
 
 
     /* =========================================
-       STEP 1 -> STEP 2
+       STEP NAVIGATION
     ========================================= */
 
     nextStep1.addEventListener(
         "click",
         function () {
 
-            if (!validateSection(step1)) {
+            if (
+                !validateSection(step1)
+            ) {
 
                 return;
 
@@ -824,10 +1289,6 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
 
-    /* =========================================
-       STEP 2 -> STEP 1
-    ========================================= */
-
     backStep2.addEventListener(
         "click",
         function () {
@@ -838,15 +1299,13 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
 
-    /* =========================================
-       STEP 2 -> STEP 3
-    ========================================= */
-
     nextStep2.addEventListener(
         "click",
         function () {
 
-            if (!validateSection(step2)) {
+            if (
+                !validateSection(step2)
+            ) {
 
                 return;
 
@@ -859,10 +1318,6 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
 
-    /* =========================================
-       STEP 3 -> STEP 2
-    ========================================= */
-
     backStep3.addEventListener(
         "click",
         function () {
@@ -873,15 +1328,13 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
 
-    /* =========================================
-       STEP 3 -> STEP 4
-    ========================================= */
-
     nextStep3.addEventListener(
         "click",
         function () {
 
-            if (!validateSection(step3)) {
+            if (
+                !validateSection(step3)
+            ) {
 
                 return;
 
@@ -894,15 +1347,196 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
 
-    /* =========================================
-       STEP 4 -> STEP 3
-    ========================================= */
-
     backStep4.addEventListener(
         "click",
         function () {
 
             showStep(3);
+
+        }
+    );
+
+
+    /* =========================================
+       EDIT DARI REVIEW
+    ========================================= */
+
+    editIdentitas.addEventListener(
+        "click",
+        function () {
+
+            showStep(1);
+
+        }
+    );
+
+
+    editAkademik.addEventListener(
+        "click",
+        function () {
+
+            showStep(2);
+
+        }
+    );
+
+
+    editDokumen.addEventListener(
+        "click",
+        function () {
+
+            showStep(3);
+
+        }
+    );
+
+
+    /* =========================================
+       CHECKBOX KONFIRMASI
+    ========================================= */
+
+    konfirmasiData.addEventListener(
+        "change",
+        function () {
+
+            if (this.checked) {
+
+                confirmationError
+                    .classList
+                    .remove("active");
+
+            }
+
+        }
+    );
+
+
+    /* =========================================
+       SUBMIT
+    ========================================= */
+
+    formYudisium.addEventListener(
+        "submit",
+        function (event) {
+
+            /*
+             * Untuk sementara kita cegah
+             * submit ke server karena backend
+             * belum dihubungkan.
+             */
+            event.preventDefault();
+
+
+            if (
+                !konfirmasiData.checked
+            ) {
+
+                confirmationError
+                    .classList
+                    .add("active");
+
+
+                konfirmasiData.focus();
+
+
+                return;
+
+            }
+
+
+            /*
+             * Validasi ulang seluruh step
+             * sebelum dikirim.
+             */
+            if (
+                !validateSection(step1)
+            ) {
+
+                showStep(1);
+
+                return;
+
+            }
+
+
+            if (
+                !validateSection(step2)
+            ) {
+
+                showStep(2);
+
+                return;
+
+            }
+
+
+            if (
+                !validateSection(step3)
+            ) {
+
+                showStep(3);
+
+                return;
+
+            }
+
+
+            /*
+             * Simulasi berhasil.
+             */
+            successModal
+                .classList
+                .add("active");
+
+
+            console.log(
+                "Pengajuan siap dikirim ke Laravel"
+            );
+
+
+            /*
+             * Nanti ketika integrasi backend:
+             *
+             * event.preventDefault()
+             * bisa kita hilangkan
+             *
+             * atau menggunakan fetch().
+             */
+
+        }
+    );
+
+
+    /* =========================================
+       MODAL
+    ========================================= */
+
+    closeSuccessModal.addEventListener(
+        "click",
+        function () {
+
+            successModal
+                .classList
+                .remove("active");
+
+        }
+    );
+
+
+    successModal.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                event.target ===
+                successModal
+            ) {
+
+                successModal
+                    .classList
+                    .remove("active");
+
+            }
 
         }
     );
