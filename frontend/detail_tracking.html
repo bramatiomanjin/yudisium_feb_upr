@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Detail Pengajuan Yudisium - FEB UPR
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+</head>
+
+<body>
+
+    <main class="detail-page">
+
+        <div class="detail-container">
+
+            <!-- =====================================
+                 TOP NAVIGATION
+            ====================================== -->
+            <div class="detail-topbar">
+
+                <a
+                    href="tracking.html"
+                    class="back-link"
+                >
+                    ← Kembali ke Pencarian
+                </a>
+
+                <span class="faculty-badge">
+                    FEB UPR
+                </span>
+
+            </div>
+
+
+            <!-- =====================================
+                 HEADER
+            ====================================== -->
+            <header class="detail-header">
+
+                <div>
+
+                    <p class="detail-eyebrow">
+                        STATUS PENGAJUAN YUDISIUM
+                    </p>
+
+                    <h1>
+                        Detail Pengajuan
+                    </h1>
+
+                    <p>
+                        Pantau perkembangan proses penerbitan
+                        SK Yudisium Anda.
+                    </p>
+
+                </div>
+
+            </header>
+
+
+            <!-- =====================================
+                 CURRENT STATUS
+            ====================================== -->
+            <section
+                class="status-card"
+                id="statusCard"
+            >
+
+                <div class="status-icon" id="statusIcon">
+                    ⏳
+                </div>
+
+                <div class="status-content">
+
+                    <span class="status-caption">
+                        Status Saat Ini
+                    </span>
+
+                    <h2 id="currentStatus">
+                        Memuat status...
+                    </h2>
+
+                    <p id="statusDescription">
+                        Mohon tunggu sebentar.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 INFORMATION
+            ====================================== -->
+            <section class="detail-card">
+
+                <div class="detail-card-header">
+
+                    <div>
+
+                        <h2>
+                            Informasi Pengajuan
+                        </h2>
+
+                        <p>
+                            Informasi dasar pengajuan yudisium.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-info-grid">
+
+                    <div class="detail-info-item">
+
+                        <span>
+                            Kode Pengajuan
+                        </span>
+
+                        <strong id="detailKode">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-info-item">
+
+                        <span>
+                            NIM
+                        </span>
+
+                        <strong id="detailNim">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-info-item">
+
+                        <span>
+                            Nama Mahasiswa
+                        </span>
+
+                        <strong id="detailNama">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-info-item">
+
+                        <span>
+                            Jurusan
+                        </span>
+
+                        <strong id="detailJurusan">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-info-item">
+
+                        <span>
+                            Tanggal Pengajuan
+                        </span>
+
+                        <strong id="detailTanggal">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-info-item">
+
+                        <span>
+                            Pembaruan Terakhir
+                        </span>
+
+                        <strong id="detailUpdated">
+                            -
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 REVISION ALERT
+            ====================================== -->
+            <section
+                class="revision-alert"
+                id="revisionAlert"
+            >
+
+                <div class="revision-alert-icon">
+                    !
+                </div>
+
+                <div class="revision-alert-content">
+
+                    <h2>
+                        Pengajuan Memerlukan Revisi
+                    </h2>
+
+                    <p>
+                        Admin menemukan beberapa data yang perlu
+                        diperbaiki. Anda hanya dapat mengubah data
+                        yang telah ditandai oleh admin.
+                    </p>
+
+
+                    <div class="revision-summary">
+
+                        <div class="revision-summary-item">
+
+                            <span>
+                                Data perlu diperbaiki
+                            </span>
+
+                            <strong id="revisionCount">
+                                2
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <a
+                        href="revisi.html"
+                        class="btn btn-danger revision-button"
+                    >
+                        Perbaiki Data
+                    </a>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 TRACKING TIMELINE
+            ====================================== -->
+            <section class="detail-card">
+
+                <div class="detail-card-header">
+
+                    <div>
+
+                        <h2>
+                            Progres Penerbitan SK
+                        </h2>
+
+                        <p>
+                            Tahapan pengajuan hingga SK Yudisium diterbitkan.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="tracking-timeline"
+                    id="trackingTimeline"
+                >
+
+                    <!--
+                        Dibuat otomatis melalui JavaScript
+                    -->
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 ADMIN INFORMATION
+            ====================================== -->
+            <section class="detail-card">
+
+                <div class="detail-card-header">
+
+                    <div>
+
+                        <h2>
+                            Informasi
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="tracking-notice">
+
+                    <p>
+                        Status akan diperbarui oleh Bagian Akademik
+                        sesuai perkembangan proses penerbitan
+                        SK Yudisium.
+                    </p>
+
+                    <p>
+                        Jika terdapat data yang tidak sesuai,
+                        mahasiswa akan menerima pemberitahuan revisi
+                        pada halaman ini.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 ACTION
+            ====================================== -->
+            <div class="detail-actions">
+
+                <a
+                    href="tracking.html"
+                    class="btn btn-secondary"
+                >
+                    Cek Pengajuan Lain
+                </a>
+
+                <a
+                    href="index.html"
+                    class="btn btn-primary"
+                >
+                    Halaman Pendaftaran
+                </a>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <script src="js/tracking.js"></script>
+
+</body>
+
+</html>
