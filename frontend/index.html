@@ -20,44 +20,50 @@
             <p>Fakultas Ekonomi dan Bisnis Universitas Palangka Raya</p>
         </header>
 
+
         <!-- STEP INDICATOR -->
         <div class="step-indicator">
 
-            <div class="step active">
+            <div class="step active" id="indicatorStep1">
                 <div class="step-number">1</div>
                 <span>Identitas</span>
             </div>
 
-            <div class="step">
+            <div class="step" id="indicatorStep2">
                 <div class="step-number">2</div>
                 <span>Akademik</span>
             </div>
 
-            <div class="step">
+            <div class="step" id="indicatorStep3">
                 <div class="step-number">3</div>
                 <span>Dokumen</span>
             </div>
 
-            <div class="step">
+            <div class="step" id="indicatorStep4">
                 <div class="step-number">4</div>
                 <span>Konfirmasi</span>
             </div>
 
         </div>
 
-        <!-- FORM -->
-        <form id="formYudisium">
 
-            <section class="form-section active">
+        <!-- FORM -->
+        <form id="formYudisium" novalidate>
+
+            <!-- ==================================================
+                 STEP 1 - IDENTITAS
+            =================================================== -->
+            <section class="form-section active" id="step1">
 
                 <div class="section-header">
                     <h2>Data Identitas Mahasiswa</h2>
+
                     <p>
-                        Pastikan data yang dimasukkan sesuai dengan data resmi mahasiswa.
+                        Pastikan data yang dimasukkan sesuai dengan
+                        data resmi mahasiswa.
                     </p>
                 </div>
 
-                <!-- NAMA -->
                 <div class="form-group">
                     <label for="nama_lengkap">
                         Nama Lengkap
@@ -71,9 +77,12 @@
                         placeholder="Masukkan nama lengkap sesuai ijazah"
                         required
                     >
+
+                    <div class="error-message">
+                        Nama lengkap wajib diisi.
+                    </div>
                 </div>
 
-                <!-- NIM -->
                 <div class="form-group">
                     <label for="nim">
                         NIM
@@ -85,15 +94,21 @@
                         id="nim"
                         name="nim"
                         placeholder="Masukkan NIM"
+                        inputmode="numeric"
+                        autocomplete="off"
+                        maxlength="20"
                         required
                     >
 
                     <small>
-                        Pastikan NIM benar karena digunakan sebagai identitas utama mahasiswa.
+                        NIM hanya boleh berisi angka.
                     </small>
+
+                    <div class="error-message">
+                        NIM wajib diisi dan hanya boleh berisi angka.
+                    </div>
                 </div>
 
-                <!-- EMAIL -->
                 <div class="form-group">
                     <label for="email">
                         Email
@@ -107,9 +122,12 @@
                         placeholder="contoh@email.com"
                         required
                     >
+
+                    <div class="error-message">
+                        Masukkan alamat email yang valid.
+                    </div>
                 </div>
 
-                <!-- WHATSAPP -->
                 <div class="form-group">
                     <label for="no_whatsapp">
                         Nomor WhatsApp
@@ -121,11 +139,20 @@
                         id="no_whatsapp"
                         name="no_whatsapp"
                         placeholder="Contoh: 081234567890"
+                        inputmode="numeric"
+                        maxlength="15"
                         required
                     >
+
+                    <small>
+                        Nomor WhatsApp hanya boleh berisi angka.
+                    </small>
+
+                    <div class="error-message">
+                        Nomor WhatsApp wajib diisi dan hanya boleh berisi angka.
+                    </div>
                 </div>
 
-                <!-- TAHUN ANGKATAN -->
                 <div class="form-group">
                     <label for="tahun_angkatan">
                         Tahun Angkatan
@@ -141,20 +168,20 @@
                         max="2100"
                         required
                     >
+
+                    <div class="error-message">
+                        Tahun angkatan wajib diisi.
+                    </div>
                 </div>
 
-                <!-- JALUR MASUK -->
                 <div class="form-group">
                     <label for="jalur_masuk">
                         Jalur Masuk Kuliah
                         <span class="required">*</span>
                     </label>
 
-                    <select
-                        id="jalur_masuk"
-                        name="jalur_masuk"
-                        required
-                    >
+                    <select id="jalur_masuk" name="jalur_masuk" required>
+
                         <option value="">
                             Pilih jalur masuk
                         </option>
@@ -168,20 +195,20 @@
                         </option>
 
                     </select>
+
+                    <div class="error-message">
+                        Pilih jalur masuk kuliah.
+                    </div>
                 </div>
 
-                <!-- JURUSAN -->
                 <div class="form-group">
                     <label for="jurusan">
                         Jurusan
                         <span class="required">*</span>
                     </label>
 
-                    <select
-                        id="jurusan"
-                        name="jurusan"
-                        required
-                    >
+                    <select id="jurusan" name="jurusan" required>
+
                         <option value="">
                             Pilih jurusan
                         </option>
@@ -199,17 +226,749 @@
                         </option>
 
                     </select>
+
+                    <div class="error-message">
+                        Pilih jurusan.
+                    </div>
                 </div>
 
-                <!-- NAVIGATION -->
+                <div class="form-navigation navigation-end">
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="nextStep1"
+                    >
+                        Berikutnya
+                    </button>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ==================================================
+                 STEP 2 - AKADEMIK
+            =================================================== -->
+            <section class="form-section" id="step2">
+
+                <div class="section-header">
+
+                    <h2>Data Akademik</h2>
+
+                    <p>
+                        Isi data akademik sesuai dengan dokumen resmi
+                        dan hasil ujian Skripsi/Artikel.
+                    </p>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="karya_tulis">
+                        Karya Tulis Ilmiah
+                        <span class="required">*</span>
+                    </label>
+
+                    <select id="karya_tulis" name="karya_tulis" required>
+
+                        <option value="">
+                            Pilih jenis karya tulis
+                        </option>
+
+                        <option value="SKRIPSI">
+                            Skripsi
+                        </option>
+
+                        <option value="ARTIKEL">
+                            Artikel
+                        </option>
+
+                    </select>
+
+                    <div class="error-message">
+                        Pilih jenis karya tulis.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="judul_karya_tulis">
+                        Judul Skripsi / Artikel
+                        <span class="required">*</span>
+                    </label>
+
+                    <textarea
+                        id="judul_karya_tulis"
+                        name="judul_karya_tulis"
+                        rows="5"
+                        placeholder="Masukkan judul Skripsi / Artikel secara lengkap"
+                        required
+                    ></textarea>
+
+                    <small>
+                        Pastikan judul sama persis dengan dokumen resmi.
+                    </small>
+
+                    <div class="error-message">
+                        Judul Skripsi / Artikel wajib diisi.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="tanggal_ujian">
+                        Tanggal Ujian Skripsi / Artikel
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="date"
+                        id="tanggal_ujian"
+                        name="tanggal_ujian"
+                        required
+                    >
+
+                    <div class="error-message">
+                        Tanggal ujian wajib diisi.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="nilai_angka">
+                        Nilai Ujian Skripsi / Artikel
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nilai_angka"
+                        name="nilai_angka"
+                        inputmode="decimal"
+                        placeholder="Contoh: 80,00"
+                        required
+                    >
+
+                    <small>
+                        Gunakan tanda koma. Contoh: 80,00.
+                    </small>
+
+                    <div class="error-message">
+                        Nilai ujian wajib diisi.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="nilai_huruf">
+                        Nilai Huruf
+                        <span class="required">*</span>
+                    </label>
+
+                    <select id="nilai_huruf" name="nilai_huruf" required>
+
+                        <option value="">
+                            Pilih nilai huruf
+                        </option>
+
+                        <option value="A">A</option>
+                        <option value="A-">A-</option>
+                        <option value="A/B">A/B</option>
+                        <option value="B+">B+</option>
+                        <option value="B">B</option>
+                        <option value="B-">B-</option>
+
+                    </select>
+
+                    <div class="error-message">
+                        Pilih nilai huruf.
+                    </div>
+                </div>
+
                 <div class="form-navigation">
 
                     <button
                         type="button"
-                        id="btnNext"
+                        class="btn btn-secondary"
+                        id="backStep2"
+                    >
+                        Kembali
+                    </button>
+
+                    <button
+                        type="button"
                         class="btn btn-primary"
+                        id="nextStep2"
                     >
                         Berikutnya
+                    </button>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ==================================================
+                 STEP 3 - DOKUMEN
+            =================================================== -->
+            <section class="form-section" id="step3">
+
+                <div class="section-header">
+
+                    <h2>Upload Dokumen Persyaratan</h2>
+
+                    <p>
+                        Upload dokumen sesuai ketentuan.
+                        Pastikan file jelas, dapat dibuka, dan tidak melebihi
+                        batas ukuran yang ditentukan.
+                    </p>
+
+                </div>
+
+
+                <!-- 1 -->
+                <div class="form-group file-group">
+
+                    <label for="form_yudisium">
+                        Formulir Pendaftaran Yudisium
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="file"
+                        id="form_yudisium"
+                        name="form_yudisium"
+                        accept=".pdf,application/pdf"
+                        data-max-size="1"
+                        required
+                    >
+
+                    <small>PDF, maksimal 1 MB.</small>
+
+                    <div class="error-message">
+                        Formulir Pendaftaran Yudisium wajib berupa PDF maksimal 1 MB.
+                    </div>
+
+                </div>
+
+
+                <!-- 2 -->
+                <div class="form-group file-group">
+
+                    <label for="foto_3x4">
+                        Foto 3×4 Berwarna
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="file"
+                        id="foto_3x4"
+                        name="foto_3x4"
+                        accept=".pdf,application/pdf"
+                        data-max-size="1"
+                        required
+                    >
+
+                    <small>
+                        Menggunakan kebaya untuk perempuan dan jas untuk laki-laki.
+                        PDF, maksimal 1 MB.
+                    </small>
+
+                    <div class="error-message">
+                        Foto 3×4 wajib berupa PDF maksimal 1 MB.
+                    </div>
+
+                </div>
+
+
+                <!-- 3 -->
+                <div class="form-group file-group">
+
+                    <label for="ijazah_slta">
+                        Ijazah SLTA
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="file"
+                        id="ijazah_slta"
+                        name="ijazah_slta"
+                        accept=".pdf,application/pdf"
+                        data-max-size="1"
+                        required
+                    >
+
+                    <small>PDF, maksimal 1 MB.</small>
+
+                    <div class="error-message">
+                        Ijazah SLTA wajib berupa PDF maksimal 1 MB.
+                    </div>
+
+                </div>
+
+
+                <!-- 4 -->
+                <div class="form-group file-group">
+
+                    <label for="berita_acara_ujian">
+                        Berita Acara Ujian Skripsi / Artikel
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="file"
+                        id="berita_acara_ujian"
+                        name="berita_acara_ujian"
+                        accept=".pdf,application/pdf"
+                        data-max-size="1"
+                        required
+                    >
+
+                    <small>
+                        Sudah ditandatangani WD I dan dicap. PDF, maksimal 1 MB.
+                    </small>
+
+                    <div class="error-message">
+                        Berita Acara Ujian wajib berupa PDF maksimal 1 MB.
+                    </div>
+
+                </div>
+
+
+                <!-- 5 -->
+                <div class="form-group file-group">
+
+                    <label for="rekap_nilai">
+                        Rekapitulasi Nilai Ujian Skripsi / Artikel
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="file"
+                        id="rekap_nilai"
+                        name="rekap_nilai"
+                        accept=".pdf,application/pdf"
+                        data-max-size="1"
+                        required
+                    >
+
+                    <small>
+                        Disahkan Wakil Dekan I. PDF, maksimal 1 MB.
+                    </small>
+
+                    <div class="error-message">
+                        Rekapitulasi Nilai wajib berupa PDF maksimal 1 MB.
+                    </div>
+
+                </div>
+
+
+                <!-- 6 -->
+                <div class="form-group file-group">
+
+                    <label for="blanko_revisi">
+                        Blanko Revisi
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="file"
+                        id="blanko_revisi"
+                        name="blanko_revisi"
+                        accept=".pdf,application/pdf"
+                        data-max-size="1"
+                        required
+                    >
+
+                    <small>
+                        Sudah ditandatangani dosen. PDF, maksimal 1 MB.
+                    </small>
+
+                    <div class="error-message">
+                        Blanko Revisi wajib berupa PDF maksimal 1 MB.
+                    </div>
+
+                </div>
+
+
+                <!-- 7 -->
+                <div class="form-group file-group">
+
+                    <label for="tanda_terima">
+                        Tanda Terima Skripsi / Artikel
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="file"
+                        id="tanda_terima"
+                        name="tanda_terima"
+                        accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                        data-max-size="10"
+                        required
+                    >
+
+                    <small>
+                        PDF, DOC, atau DOCX. Maksimal 10 MB.
+                    </small>
+
+                    <div class="error-message">
+                        Tanda Terima wajib berupa PDF/DOC/DOCX maksimal 10 MB.
+                    </div>
+
+                </div>
+
+
+                <!-- 8 -->
+                <div class="form-group file-group">
+
+                    <label for="surat_pernyataan_ijazah">
+                        Surat Pernyataan untuk Proses Penulisan Ijazah
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="file"
+                        id="surat_pernyataan_ijazah"
+                        name="surat_pernyataan_ijazah"
+                        accept=".pdf,application/pdf"
+                        data-max-size="1"
+                        required
+                    >
+
+                    <small>PDF, maksimal 1 MB.</small>
+
+                    <div class="error-message">
+                        Surat Pernyataan wajib berupa PDF maksimal 1 MB.
+                    </div>
+
+                </div>
+
+
+                <!-- 9 -->
+                <div class="form-group file-group">
+
+                    <label for="bebas_perpus_universitas">
+                        Surat Bebas Pinjam Perpustakaan Universitas Asli
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="file"
+                        id="bebas_perpus_universitas"
+                        name="bebas_perpus_universitas"
+                        accept=".pdf,application/pdf"
+                        data-max-size="1"
+                        required
+                    >
+
+                    <small>PDF, maksimal 1 MB.</small>
+
+                    <div class="error-message">
+                        Surat Bebas Pinjam Perpustakaan Universitas wajib berupa PDF maksimal 1 MB.
+                    </div>
+
+                </div>
+
+
+                <!-- 10 -->
+                <div class="form-group file-group">
+
+                    <label for="bebas_perpus_fakultas">
+                        Surat Bebas Pinjam Perpustakaan Fakultas Asli
+                    </label>
+
+                    <input
+                        type="file"
+                        id="bebas_perpus_fakultas"
+                        name="bebas_perpus_fakultas"
+                        accept=".pdf,application/pdf"
+                        data-max-size="1"
+                    >
+
+                    <small>
+                        PDF, maksimal 1 MB. Tidak bertanda wajib pada Google Form lama.
+                    </small>
+
+                    <div class="error-message">
+                        File harus berupa PDF maksimal 1 MB.
+                    </div>
+
+                </div>
+
+
+                <!-- 11 -->
+                <div class="form-group file-group">
+
+                    <label for="khs">
+                        KHS Semester 1 s/d Terbaru
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="file"
+                        id="khs"
+                        name="khs"
+                        accept=".pdf,application/pdf"
+                        data-max-size="1"
+                        required
+                    >
+
+                    <small>
+                        Sudah ditandatangani Kajur. PDF, maksimal 1 MB.
+                    </small>
+
+                    <div class="error-message">
+                        KHS wajib berupa PDF maksimal 1 MB.
+                    </div>
+
+                </div>
+
+
+                <!-- 12 -->
+                <div class="form-group file-group">
+
+                    <label for="transkrip">
+                        Transkrip Nilai Ujian Skripsi
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="file"
+                        id="transkrip"
+                        name="transkrip"
+                        accept=".pdf,application/pdf"
+                        data-max-size="1"
+                        required
+                    >
+
+                    <small>
+                        Sudah dicap Fakultas. PDF, maksimal 1 MB.
+                    </small>
+
+                    <div class="error-message">
+                        Transkrip Nilai wajib berupa PDF maksimal 1 MB.
+                    </div>
+
+                </div>
+
+
+                <!-- 13 -->
+                <div class="form-group file-group">
+
+                    <label for="surat_tugas_pembimbing">
+                        Surat Tugas Dosen Pembimbing Skripsi
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="file"
+                        id="surat_tugas_pembimbing"
+                        name="surat_tugas_pembimbing"
+                        accept=".pdf,application/pdf"
+                        data-max-size="10"
+                        required
+                    >
+
+                    <small>
+                        Masih berlaku 6 bulan terakhir. PDF, maksimal 10 MB.
+                    </small>
+
+                    <div class="error-message">
+                        Surat Tugas Pembimbing wajib berupa PDF maksimal 10 MB.
+                    </div>
+
+                </div>
+
+
+                <!-- 14 -->
+                <div class="form-group file-group">
+
+                    <label for="bebas_tunggakan">
+                        Surat Verifikasi Bebas Tunggakan dari Keuangan Rektorat
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="file"
+                        id="bebas_tunggakan"
+                        name="bebas_tunggakan"
+                        accept=".pdf,application/pdf"
+                        data-max-size="1"
+                        required
+                    >
+
+                    <small>PDF, maksimal 1 MB.</small>
+
+                    <div class="error-message">
+                        Surat Bebas Tunggakan wajib berupa PDF maksimal 1 MB.
+                    </div>
+
+                </div>
+
+
+                <!-- ==========================================
+                     DOKUMEN KHUSUS JURUSAN
+                =========================================== -->
+                <div class="jurusan-document-wrapper">
+
+                    <h3>Dokumen Khusus Jurusan</h3>
+
+                    <p class="jurusan-info">
+                        Dokumen di bawah akan menyesuaikan jurusan yang dipilih pada Step Identitas.
+                    </p>
+
+
+                    <!-- MANAJEMEN -->
+                    <div
+                        class="form-group file-group jurusan-document"
+                        id="dokumenManajemen"
+                    >
+
+                        <label for="jurnal_manajemen">
+                            Bukti Pengisian Jurnal "Manajemen Sains dan Organisasi" (JMSO)
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="file"
+                            id="jurnal_manajemen"
+                            name="jurnal_manajemen"
+                            accept=".pdf,application/pdf"
+                            data-max-size="1"
+                        >
+
+                        <small>
+                            Khusus Jurusan Manajemen. PDF, maksimal 1 MB.
+                        </small>
+
+                        <div class="error-message">
+                            Dokumen JMSO wajib berupa PDF maksimal 1 MB.
+                        </div>
+
+                    </div>
+
+
+                    <!-- EKONOMI PEMBANGUNAN -->
+                    <div
+                        class="form-group file-group jurusan-document"
+                        id="dokumenEkonomi"
+                    >
+
+                        <label for="jurnal_ekonomi">
+                            Bukti Pengisian Jurnal Jurusan Ekonomi Pembangunan
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="file"
+                            id="jurnal_ekonomi"
+                            name="jurnal_ekonomi"
+                            accept=".pdf,application/pdf"
+                            data-max-size="1"
+                        >
+
+                        <small>
+                            Khusus Jurusan Ekonomi Pembangunan. PDF, maksimal 1 MB.
+                        </small>
+
+                        <div class="error-message">
+                            Dokumen jurnal Ekonomi Pembangunan wajib berupa PDF maksimal 1 MB.
+                        </div>
+
+                    </div>
+
+
+                    <!-- AKUNTANSI -->
+                    <div
+                        class="form-group file-group jurusan-document"
+                        id="dokumenAkuntansi"
+                    >
+
+                        <label for="jurnal_akuntansi">
+                            Bukti Pengisian Jurnal Jurusan Akuntansi
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="file"
+                            id="jurnal_akuntansi"
+                            name="jurnal_akuntansi"
+                            accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                            data-max-size="10"
+                        >
+
+                        <small>
+                            Khusus Jurusan Akuntansi. Maksimal 10 MB.
+                        </small>
+
+                        <div class="error-message">
+                            Dokumen jurnal Akuntansi wajib maksimal 10 MB.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-navigation">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="backStep3"
+                    >
+                        Kembali
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="nextStep3"
+                    >
+                        Berikutnya
+                    </button>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ==================================================
+                 STEP 4 - KONFIRMASI
+                 sementara placeholder
+            =================================================== -->
+            <section class="form-section" id="step4">
+
+                <div class="section-header">
+
+                    <h2>Konfirmasi Data</h2>
+
+                    <p>
+                        Step konfirmasi akan kita isi setelah Step 3 selesai diuji.
+                    </p>
+
+                </div>
+
+                <div class="placeholder-box">
+
+                    <h3>Semua tahap awal berhasil.</h3>
+
+                    <p>
+                        Selanjutnya kita akan menampilkan seluruh data yang telah
+                        diisi mahasiswa untuk diperiksa sebelum dikirim.
+                    </p>
+
+                </div>
+
+
+                <div class="form-navigation">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="backStep4"
+                    >
+                        Kembali
                     </button>
 
                 </div>
@@ -219,6 +978,7 @@
         </form>
 
     </main>
+
 
     <script src="js/form.js"></script>
 
