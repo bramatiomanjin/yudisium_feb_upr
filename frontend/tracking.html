@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Cek Status Yudisium - FEB UPR
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+</head>
+
+<body>
+
+    <main class="tracking-page">
+
+        <div class="tracking-container">
+
+            <!-- HEADER -->
+            <header class="tracking-header">
+
+                <div class="tracking-logo">
+                    FEB UPR
+                </div>
+
+                <h1>
+                    Cek Status Pengajuan Yudisium
+                </h1>
+
+                <p>
+                    Masukkan NIM dan kode pengajuan untuk melihat
+                    perkembangan proses penerbitan SK Yudisium.
+                </p>
+
+            </header>
+
+
+            <!-- FORM CARD -->
+            <section class="tracking-card">
+
+                <div class="tracking-card-header">
+
+                    <h2>
+                        Cari Pengajuan
+                    </h2>
+
+                    <p>
+                        Pastikan data yang dimasukkan sama dengan
+                        data saat melakukan pendaftaran.
+                    </p>
+
+                </div>
+
+
+                <form
+                    id="trackingForm"
+                    novalidate
+                >
+
+                    <!-- NIM -->
+                    <div class="form-group">
+
+                        <label for="tracking_nim">
+
+                            NIM
+
+                            <span class="required">
+                                *
+                            </span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="tracking_nim"
+                            name="nim"
+                            placeholder="Masukkan NIM"
+                            inputmode="numeric"
+                            autocomplete="off"
+                            maxlength="20"
+                            required
+                        >
+
+                        <small>
+                            NIM hanya boleh berisi angka.
+                        </small>
+
+                        <div
+                            class="error-message"
+                            id="trackingNimError"
+                        >
+                            NIM wajib diisi dan hanya boleh berisi angka.
+                        </div>
+
+                    </div>
+
+
+                    <!-- KODE PENGAJUAN -->
+                    <div class="form-group">
+
+                        <label for="kode_pengajuan">
+
+                            Kode Pengajuan
+
+                            <span class="required">
+                                *
+                            </span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="kode_pengajuan"
+                            name="kode_pengajuan"
+                            placeholder="Contoh: YDS-2026-00015"
+                            autocomplete="off"
+                            maxlength="30"
+                            required
+                        >
+
+                        <small>
+                            Kode pengajuan diperoleh setelah pengajuan
+                            yudisium berhasil dikirim.
+                        </small>
+
+                        <div
+                            class="error-message"
+                            id="trackingKodeError"
+                        >
+                            Kode pengajuan wajib diisi.
+                        </div>
+
+                    </div>
+
+
+                    <!-- BUTTON -->
+                    <button
+                        type="submit"
+                        class="btn btn-primary tracking-submit"
+                    >
+                        Cek Status
+                    </button>
+
+                </form>
+
+            </section>
+
+
+            <!-- INFORMATION -->
+            <section class="tracking-info">
+
+                <h3>
+                    Belum memiliki kode pengajuan?
+                </h3>
+
+                <p>
+                    Silakan melakukan pendaftaran yudisium terlebih dahulu.
+                </p>
+
+                <a
+                    href="index.html"
+                    class="tracking-link"
+                >
+                    Kembali ke Form Pendaftaran
+                </a>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- LOADING -->
+    <div
+        class="modal-overlay"
+        id="trackingLoading"
+    >
+
+        <div class="modal-card tracking-loading-card">
+
+            <div class="loading-spinner"></div>
+
+            <h2>
+                Mencari Pengajuan
+            </h2>
+
+            <p>
+                Mohon tunggu sebentar...
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <script src="js/tracking.js"></script>
+
+</body>
+
+</html>

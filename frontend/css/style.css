@@ -18,7 +18,7 @@ body {
 
 
 /* =================================
-   CONTAINER
+   CONTAINER FORM PENDAFTARAN
 ================================= */
 
 .container {
@@ -341,7 +341,7 @@ body {
 
 
 /* =================================
-   REVIEW / KONFIRMASI
+   REVIEW
 ================================= */
 
 .review-card {
@@ -411,9 +411,7 @@ body {
 
 .review-item {
     display: flex;
-
     flex-direction: column;
-
     gap: 3px;
 }
 
@@ -425,14 +423,12 @@ body {
 
 .review-label {
     color: #777;
-
     font-size: 13px;
 }
 
 
 .review-item strong {
     overflow-wrap: anywhere;
-
     font-size: 15px;
 }
 
@@ -443,9 +439,7 @@ body {
 
 .document-review-list {
     display: flex;
-
     flex-direction: column;
-
     gap: 10px;
 }
 
@@ -517,7 +511,6 @@ body {
 
 .document-status.optional {
     background-color: #f3f4f6;
-
     color: #666;
 }
 
@@ -582,7 +575,7 @@ body {
 
 
 /* =================================
-   IMPORTANT NOTICE
+   NOTICE
 ================================= */
 
 .important-notice {
@@ -600,14 +593,12 @@ body {
 
 .important-notice strong {
     display: block;
-
     margin-bottom: 5px;
 }
 
 
 .important-notice p {
     color: #66500d;
-
     font-size: 14px;
 }
 
@@ -700,7 +691,7 @@ body {
 
 
 /* =================================
-   SUCCESS MODAL
+   MODAL
 ================================= */
 
 .modal-overlay {
@@ -741,7 +732,8 @@ body {
     text-align: center;
 
     box-shadow:
-        0 20px 50px rgba(0, 0, 0, 0.2);
+        0 20px 50px
+        rgba(0, 0, 0, 0.2);
 }
 
 
@@ -778,6 +770,207 @@ body {
     margin-bottom: 24px;
 
     color: #666;
+}
+
+
+/* ==========================================
+   TRACKING PAGE
+========================================== */
+
+.tracking-page {
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 40px 20px;
+}
+
+
+.tracking-container {
+    width: 100%;
+
+    max-width: 650px;
+}
+
+
+/* HEADER */
+
+.tracking-header {
+    margin-bottom: 28px;
+
+    text-align: center;
+}
+
+
+.tracking-logo {
+    width: fit-content;
+
+    margin: 0 auto 18px;
+
+    padding: 7px 14px;
+
+    border-radius: 999px;
+
+    background-color: #222;
+
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: bold;
+
+    letter-spacing: 1px;
+}
+
+
+.tracking-header h1 {
+    margin-bottom: 10px;
+
+    font-size: 30px;
+
+    line-height: 1.25;
+}
+
+
+.tracking-header p {
+    max-width: 550px;
+
+    margin: auto;
+
+    color: #666;
+
+    font-size: 15px;
+}
+
+
+/* CARD */
+
+.tracking-card {
+    padding: 30px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    background-color: #fff;
+
+    box-shadow:
+        0 6px 25px
+        rgba(0, 0, 0, 0.07);
+}
+
+
+.tracking-card-header {
+    margin-bottom: 25px;
+}
+
+
+.tracking-card-header h2 {
+    margin-bottom: 4px;
+
+    font-size: 21px;
+}
+
+
+.tracking-card-header p {
+    color: #666;
+
+    font-size: 14px;
+}
+
+
+.tracking-submit {
+    width: 100%;
+}
+
+
+/* INFO */
+
+.tracking-info {
+    margin-top: 22px;
+
+    padding: 18px;
+
+    border-radius: 10px;
+
+    background-color: #eef2f7;
+
+    text-align: center;
+}
+
+
+.tracking-info h3 {
+    margin-bottom: 4px;
+
+    font-size: 15px;
+}
+
+
+.tracking-info p {
+    margin-bottom: 8px;
+
+    color: #666;
+
+    font-size: 14px;
+}
+
+
+.tracking-link {
+    color: #222;
+
+    font-size: 14px;
+
+    font-weight: bold;
+
+    text-decoration: underline;
+}
+
+
+/* ==========================================
+   LOADING
+========================================== */
+
+.tracking-loading-card {
+    max-width: 350px;
+}
+
+
+.loading-spinner {
+    width: 45px;
+    height: 45px;
+
+    margin: 0 auto 20px;
+
+    border: 5px solid #e5e7eb;
+
+    border-top-color: #222;
+
+    border-radius: 50%;
+
+    animation:
+        loadingSpin
+        0.8s
+        linear
+        infinite;
+}
+
+
+@keyframes loadingSpin {
+
+    from {
+        transform:
+            rotate(0deg);
+    }
+
+    to {
+        transform:
+            rotate(360deg);
+    }
+
 }
 
 
@@ -855,6 +1048,25 @@ body {
 
     .document-status {
         align-self: flex-start;
+    }
+
+
+    /* TRACKING */
+
+    .tracking-page {
+        padding: 25px 14px;
+
+        align-items: flex-start;
+    }
+
+
+    .tracking-header h1 {
+        font-size: 25px;
+    }
+
+
+    .tracking-card {
+        padding: 22px;
     }
 
 }
