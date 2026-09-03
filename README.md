@@ -1,58 +1,84 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Informasi SK Yudisium FEB UPR
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem berbasis web untuk digitalisasi pengajuan dan verifikasi berkas Surat Keputusan (SK) Yudisium di Fakultas Ekonomi dan Bisnis, Universitas Palangka Raya (UPR). Repositori ini berisi struktur inti *backend* yang dibangun menggunakan framework Laravel.
 
-## About Laravel
+## 🚀 Fitur Utama
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+**👨‍🎓 Modul Mahasiswa (Publik)**
+* **Pengajuan Terpadu:** Pengisian form identitas, data akademik, dan unggah dokumen persyaratan (PDF) dalam satu pintu dengan proteksi transaksi *database*.
+* **Tracking Status:** Pengecekan status pengajuan secara *real-time* menggunakan NIM dan Kode Pengajuan tanpa perlu memiliki akun.
+* **Sistem Revisi Pintar:** Mahasiswa hanya perlu (dan hanya bisa) memperbaiki *field* data atau dokumen spesifik yang ditolak oleh Admin. Data yang sudah disetujui akan otomatis terkunci.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**🧑‍💼 Modul Admin Akademik**
+* **Validasi Mikro:** Pemeriksaan berkas dan data teks dilakukan secara detail per-kolom (Field-by-Field) dan per-dokumen (Document-by-Document).
+* **Feedback Revisi:** Pemberian catatan penolakan spesifik pada data yang salah agar mahasiswa tahu persis apa yang harus diperbaiki.
+* **Automasi Status:** Sistem secara cerdas menyimpulkan status akhir pengajuan (*Terverifikasi*, *Verifikasi Admin*, atau *Perlu Revisi*) berdasarkan kalkulasi hasil validasi seluruh baris data.
+* **Keamanan Dokumen Private:** File PDF mahasiswa disimpan di direktori internal (`storage/app/private`) dan hanya bisa dirender oleh Admin yang memiliki sesi *login* valid.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**👑 Modul Super Admin**
+* **Manajemen Pengguna:** Sistem CRUD untuk mengelola otorisasi penambahan dan penghapusan akun Admin (staf akademik).
+* **Log Aktivitas (Audit Trail):** Perekaman riwayat aktivitas validasi yang transparan (melacak identitas Admin yang memverifikasi data, waktu eksekusi, serta keputusan yang diambil).
 
-## Learning Laravel
+## 🛠️ Tech Stack
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+* **Framework Backend:** Laravel
+* **Database:** MySQL
+* **Environment Server:** Laragon (PHP, Node.js, Composer)
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🗄️ Struktur Database Inti
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+Sistem ini didukung oleh arsitektur *relational database* dengan 8 tabel utama untuk menjaga integritas data pengajuan dan riwayat revisi:
+1. `users` - Autentikasi dan otorisasi tingkatan Admin/Super Admin.
+2. `mahasiswa` - Entitas biodata dan riwayat identitas akademik mahasiswa.
+3. `pengajuan_yudisium` - Entitas *header* pendaftaran SK Yudisium.
+4. `jenis_dokumen` - Master data untuk persyaratan dokumen (Ijazah, KHS, dll).
+5. `pengajuan_dokumen` - Penyimpanan referensi *path* file PDF dan status validasi lampiran.
+6. `validasi_field` - Tabel *tracking* log status persetujuan untuk masing-masing baris inputan teks mahasiswa.
+7. `riwayat_revisi` - Tabel pencatatan nilai historis (perubahan nilai lama ke nilai baru) setiap kali mahasiswa mensubmit ulang perbaikan data.
+8. `riwayat_status` - (Opsional/Mendatang) Pencatatan pergerakan status makro pengajuan.
 
-## Agentic Development
+## 💻 Panduan Instalasi Lokal
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
+1. **Clone repositori**
 ```bash
-composer require laravel/boost --dev
+git clone https://github.com/bramatiomanjin/yudisium_feb_upr.git
+cd yudisium-feb
 
-php artisan boost:install
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+2. **Install dependensi backend**
+```bash
+composer install
 
-## Contributing
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
+3. **Konfigurasi Environment**
+Salin file `.env.example` menjadi `.env`, lalu atur konfigurasi koneksi *database* MySQL (misal: `DB_DATABASE=yudisium_feb`).
+```bash
+copy .env.example .env
+php artisan key:generate
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. **Migrasi dan Seeding Database**
+Jalankan perintah ini untuk membangun seluruh relasi tabel dan memasukkan data *dummy* awal (termasuk persyaratan dokumen dan akun *Super Admin* default).
+```bash
+php artisan migrate --seed
 
-## License
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+5. **Jalankan Aplikasi**
+Akses melalui *virtual host* Laragon (contoh: `[http://yudisium-feb.test](http://yudisium-feb.test)`) atau jalankan server lokal bawaan Laravel:
+```bash
+php artisan serve
+
+```
+
+
+
+---
+
+*Dikembangkan oleh Ciko Christian untuk proyek Sistem Informasi Fakultas Ekonomi dan Bisnis Universitas Palangka Raya.*
