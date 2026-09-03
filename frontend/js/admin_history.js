@@ -1,28 +1,35 @@
 document.addEventListener(
     "DOMContentLoaded",
-    function () {
+    async function () {
 
-        console.log(
-            "Admin history aktif"
-        );
+        "use strict";
 
 
-        /* =====================================
-           STORAGE KEY
-        ===================================== */
+        if (
+            !window.YudisiumAPI
+        ) {
 
-        const STORAGE_KEY =
-            "yudisium_admin_activity";
+            console.error(
+                "YudisiumAPI tidak ditemukan."
+            );
+
+            return;
+
+        }
 
 
-        /* =====================================
-           SESSION
-        ===================================== */
+        const API =
+            window.YudisiumAPI;
+
+
+        /* =====================================================
+           SESSION ADMIN
+        ===================================================== */
 
         const currentUsername =
             sessionStorage.getItem(
                 "admin_username"
-            ) || "admin";
+            ) || "";
 
 
         const currentRole =
@@ -36,764 +43,170 @@ document.addEventListener(
             "SUPER_ADMIN";
 
 
-        /* =====================================
+        /* =====================================================
            ELEMENTS
-        ===================================== */
+        ===================================================== */
 
         const pageTitle =
             document.getElementById(
                 "historyPageTitle"
             );
 
-
         const pageDescription =
             document.getElementById(
                 "historyPageDescription"
             );
-
 
         const roleTitle =
             document.getElementById(
                 "historyRoleTitle"
             );
 
-
         const roleDescription =
             document.getElementById(
                 "historyRoleDescription"
             );
-
 
         const adminFilterGroup =
             document.getElementById(
                 "historyAdminFilterGroup"
             );
 
-
         const adminFilter =
             document.getElementById(
                 "historyAdminFilter"
             );
-
 
         const adminColumnHeader =
             document.getElementById(
                 "historyAdminColumn"
             );
 
-
         const searchInput =
             document.getElementById(
                 "historySearch"
             );
-
 
         const actionFilter =
             document.getElementById(
                 "historyActionFilter"
             );
 
-
         const applyFilterButton =
             document.getElementById(
                 "applyHistoryFilter"
             );
-
 
         const resetFilterButton =
             document.getElementById(
                 "resetHistoryFilter"
             );
 
-
         const activeFilterBox =
             document.getElementById(
                 "historyActiveFilter"
             );
-
 
         const activeFilterText =
             document.getElementById(
                 "historyActiveFilterText"
             );
 
-
         const tableBody =
             document.getElementById(
                 "historyTableBody"
             );
-
 
         const emptyState =
             document.getElementById(
                 "historyEmpty"
             );
 
-
         const resultText =
             document.getElementById(
                 "historyResultText"
             );
-
 
         const totalCount =
             document.getElementById(
                 "historyTotalCount"
             );
 
-
         const verificationCount =
             document.getElementById(
                 "historyVerificationCount"
             );
-
 
         const revisionCount =
             document.getElementById(
                 "historyRevisionCount"
             );
 
-
         const skCount =
             document.getElementById(
                 "historySkCount"
             );
 
-
-        /* =====================================
-           MOCK DATA
-        ===================================== */
-
-        const mockActivities = [
-
-            {
-                id:
-                    1001,
-
-                admin_username:
-                    "adminfeb",
-
-                admin_role:
-                    "ADMIN",
-
-                pengajuan_id:
-                    1,
-
-                kode_pengajuan:
-                    "YDS-2026-0001",
-
-                nim:
-                    "2301110001",
-
-                mahasiswa:
-                    "Andi Saputra",
-
-                jurusan:
-                    "Manajemen",
-
-                action:
-                    "VERIFICATION",
-
-                action_label:
-                    "Verifikasi Pengajuan",
-
-                old_status:
-                    "VERIFIKASI_ADMIN",
-
-                new_status:
-                    "TERVERIFIKASI",
-
-                note:
-                    "Seluruh data dan dokumen mahasiswa telah disetujui.",
-
-                created_at:
-                    "2 Sep 2026, 08.15",
-
-                timestamp:
-                    1788308100000
-            },
-
-
-            {
-                id:
-                    1002,
-
-                admin_username:
-                    "adminfeb",
-
-                admin_role:
-                    "ADMIN",
-
-                pengajuan_id:
-                    2,
-
-                kode_pengajuan:
-                    "YDS-2026-0002",
-
-                nim:
-                    "2301120002",
-
-                mahasiswa:
-                    "Citra Lestari",
-
-                jurusan:
-                    "Akuntansi",
-
-                action:
-                    "REVISION",
-
-                action_label:
-                    "Permintaan Revisi",
-
-                old_status:
-                    "VERIFIKASI_ADMIN",
-
-                new_status:
-                    "PERLU_REVISI",
-
-                note:
-                    "Judul karya tulis dan dokumen rekap nilai perlu diperbaiki.",
-
-                created_at:
-                    "2 Sep 2026, 08.45",
-
-                timestamp:
-                    1788309900000
-            },
-
-
-            {
-                id:
-                    1003,
-
-                admin_username:
-                    "ciko_admin",
-
-                admin_role:
-                    "ADMIN",
-
-                pengajuan_id:
-                    3,
-
-                kode_pengajuan:
-                    "YDS-2026-0003",
-
-                nim:
-                    "2301130003",
-
-                mahasiswa:
-                    "Deni Pratama",
-
-                jurusan:
-                    "Ekonomi Pembangunan",
-
-                action:
-                    "UPDATE_SK_STATUS",
-
-                action_label:
-                    "Update Status SK",
-
-                old_status:
-                    "TERVERIFIKASI",
-
-                new_status:
-                    "PEMBUATAN_SK",
-
-                note:
-                    "Dokumen siap masuk tahap pembuatan SK.",
-
-                created_at:
-                    "2 Sep 2026, 09.10",
-
-                timestamp:
-                    1788311400000
-            },
-
-
-            {
-                id:
-                    1004,
-
-                admin_username:
-                    "ciko_admin",
-
-                admin_role:
-                    "ADMIN",
-
-                pengajuan_id:
-                    4,
-
-                kode_pengajuan:
-                    "YDS-2026-0004",
-
-                nim:
-                    "2301110004",
-
-                mahasiswa:
-                    "Eva Natalia",
-
-                jurusan:
-                    "Manajemen",
-
-                action:
-                    "UPDATE_SK_STATUS",
-
-                action_label:
-                    "Update Status SK",
-
-                old_status:
-                    "PEMBUATAN_SK",
-
-                new_status:
-                    "TTD_WAKIL_DEKAN",
-
-                note:
-                    null,
-
-                created_at:
-                    "2 Sep 2026, 09.25",
-
-                timestamp:
-                    1788312300000
-            },
-
-
-            {
-                id:
-                    1005,
-
-                admin_username:
-                    "superadmin",
-
-                admin_role:
-                    "SUPER_ADMIN",
-
-                pengajuan_id:
-                    5,
-
-                kode_pengajuan:
-                    "YDS-2026-0005",
-
-                nim:
-                    "2301120005",
-
-                mahasiswa:
-                    "Fajar Rahman",
-
-                jurusan:
-                    "Akuntansi",
-
-                action:
-                    "REVISION",
-
-                action_label:
-                    "Review Revisi",
-
-                old_status:
-                    "REVISI_DIKIRIM",
-
-                new_status:
-                    "TERVERIFIKASI",
-
-                note:
-                    "Seluruh perbaikan mahasiswa telah diterima.",
-
-                created_at:
-                    "2 Sep 2026, 09.50",
-
-                timestamp:
-                    1788313800000
-            },
-
-
-            {
-                id:
-                    1006,
-
-                admin_username:
-                    "superadmin",
-
-                admin_role:
-                    "SUPER_ADMIN",
-
-                pengajuan_id:
-                    6,
-
-                kode_pengajuan:
-                    "YDS-2026-0006",
-
-                nim:
-                    "2301110006",
-
-                mahasiswa:
-                    "Grace Amelia",
-
-                jurusan:
-                    "Manajemen",
-
-                action:
-                    "UPDATE_SK_STATUS",
-
-                action_label:
-                    "Update Status SK",
-
-                old_status:
-                    "TTD_WAKIL_DEKAN",
-
-                new_status:
-                    "TTD_DEKAN",
-
-                note:
-                    "Dokumen diteruskan ke Dekan.",
-
-                created_at:
-                    "2 Sep 2026, 10.05",
-
-                timestamp:
-                    1788314700000
-            }
-
-        ];
-
-
-        /* =====================================
-           STORAGE
-        ===================================== */
-
-        function loadStoredActivities() {
-
-            try {
-
-                const saved =
-                    localStorage.getItem(
-                        STORAGE_KEY
-                    );
-
-
-                if (
-                    !saved
-                ) {
-
-                    return [];
-
-                }
-
-
-                const parsed =
-                    JSON.parse(
-                        saved
-                    );
-
-
-                return Array.isArray(
-                    parsed
-                )
-                    ?
-                    parsed
-                    :
-                    [];
-
-            } catch (
-                error
-            ) {
-
-                console.error(
-                    "Gagal membaca history:",
-                    error
-                );
-
-
-                return [];
-
-            }
-
-        }
-
-
-
-        function getAllActivities() {
-
-            const storedActivities =
-                loadStoredActivities();
-
-
-            /*
-             * Gabungkan mock dengan aktivitas
-             * yang dibuat dari halaman Proses SK.
-             */
-
-            const combined =
-                [
-                    ...storedActivities,
-                    ...mockActivities
-                ];
-
-
-            /*
-             * Hilangkan duplikat ID.
-             */
-
-            const map =
-                new Map();
-
-
-            combined.forEach(
-                function (activity) {
-
-                    const key =
-                        String(
-                            activity.id
-                        );
-
-
-                    if (
-                        !map.has(
-                            key
-                        )
-                    ) {
-
-                        map.set(
-                            key,
-                            activity
-                        );
-
-                    }
-
-                }
+        const sidebarRevisionCount =
+            document.getElementById(
+                "historySidebarRevisionCount"
             );
 
 
-            return Array.from(
-                map.values()
-            ).sort(
-                function (
-                    a,
-                    b
-                ) {
+        let allActivities =
+            [];
 
-                    return (
-                        Number(
-                            b.timestamp ||
-                            b.id
-                        ) -
-                        Number(
-                            a.timestamp ||
-                            a.id
-                        )
-                    );
-
-                }
-            );
-
-        }
-
-
-        const allActivities =
-            getAllActivities();
-
-
-        /* =====================================
-           ROLE UI
-        ===================================== */
-
-        function setupRoleUI() {
-
-            if (
-                isSuperAdmin
-            ) {
-
-                pageTitle.textContent =
-                    "History Seluruh Admin";
-
-
-                pageDescription.textContent =
-                    "Lihat aktivitas Anda dan seluruh admin yang menggunakan sistem.";
-
-
-                roleTitle.textContent =
-                    "Akses Super Admin";
-
-
-                roleDescription.textContent =
-                    "Super Admin dapat melihat history miliknya sendiri maupun aktivitas seluruh admin.";
-
-
-                adminFilterGroup.style.display =
-                    "flex";
-
-
-                adminColumnHeader.style.display =
-                    "";
-
-
-            } else {
-
-                pageTitle.textContent =
-                    "History Aktivitas Saya";
-
-
-                pageDescription.textContent =
-                    "Riwayat aktivitas yang dilakukan menggunakan akun Anda.";
-
-
-                roleTitle.textContent =
-                    "History akun Anda";
-
-
-                roleDescription.textContent =
-                    "Admin hanya dapat melihat aktivitas yang dilakukan menggunakan akun sendiri.";
-
-
-                adminFilterGroup.style.display =
-                    "none";
-
-
-                adminColumnHeader.style.display =
-                    "none";
-
-            }
-
-        }
-
-
-        setupRoleUI();
-
-
-        /* =====================================
-           ADMIN FILTER OPTIONS
-        ===================================== */
-
-        function populateAdminFilter() {
-
-            if (
-                !isSuperAdmin
-            ) {
-
-                return;
-
-            }
-
-
-            const usernames =
-                [
-                    ...new Set(
-                        allActivities.map(
-                            function (
-                                activity
-                            ) {
-
-                                return (
-                                    activity
-                                        .admin_username
-                                );
-
-                            }
-                        )
-                    )
-                ].sort();
-
-
-            usernames.forEach(
-                function (
-                    username
-                ) {
-
-                    const option =
-                        document.createElement(
-                            "option"
-                        );
-
-
-                    option.value =
-                        username;
-
-
-                    option.textContent =
-                        username;
-
-
-                    adminFilter.appendChild(
-                        option
-                    );
-
-                }
-            );
-
-        }
-
-
-        populateAdminFilter();
-
-
-        /* =====================================
-           BASE ROLE ACCESS
-        ===================================== */
-
-        function getRoleAccessibleActivities() {
-
-            if (
-                isSuperAdmin
-            ) {
-
-                return [
-                    ...allActivities
-                ];
-
-            }
-
-
-            return allActivities.filter(
-                function (
-                    activity
-                ) {
-
-                    return (
-                        activity
-                            .admin_username ===
-                        currentUsername
-                    );
-
-                }
-            );
-
-        }
-
-
-        const roleActivities =
-            getRoleAccessibleActivities();
-
-
-        /* =====================================
-           APPLIED FILTER
-        ===================================== */
 
         let appliedSearch =
             "";
 
-
         let appliedAdmin =
             "";
-
 
         let appliedAction =
             "";
 
 
-        /* =====================================
-           LABEL
-        ===================================== */
+        /* =====================================================
+           HELPERS
+        ===================================================== */
 
-        function getActionLabel(
-            activity
-        ) {
+        function escapeHtml(value) {
+
+            return String(
+                value ?? ""
+            )
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+
+        }
+
+
+        function getActionLabel(activity) {
 
             if (
-                activity.action_label
+                activity.actionLabel
             ) {
 
-                return (
-                    activity.action_label
-                );
+                return activity.actionLabel;
 
             }
 
@@ -807,7 +220,7 @@ document.addEventListener(
                     "Revisi Pengajuan",
 
                 UPDATE_SK_STATUS:
-                    "Update Status SK"
+                    "Proses SK"
 
             };
 
@@ -816,16 +229,13 @@ document.addEventListener(
                 labels[
                     activity.action
                 ] ||
-                activity.action
+                "Aktivitas"
             );
 
         }
 
 
-
-        function getActionCategory(
-            action
-        ) {
+        function getActionCategory(action) {
 
             if (
                 action ===
@@ -852,133 +262,322 @@ document.addEventListener(
         }
 
 
+        function getStatusLabel(status) {
 
-        function formatStatus(
-            status
-        ) {
-
-            if (
-                !status
-            ) {
+            if (!status) {
 
                 return "-";
 
             }
 
 
-            const labels = {
-
-                DIAJUKAN:
-                    "Diajukan",
-
-                VERIFIKASI_ADMIN:
-                    "Verifikasi Admin",
-
-                PERLU_REVISI:
-                    "Perlu Revisi",
-
-                REVISI_DIKIRIM:
-                    "Revisi Dikirim",
-
-                TERVERIFIKASI:
-                    "Terverifikasi",
-
-                PEMBUATAN_SK:
-                    "Pembuatan SK",
-
-                TTD_WAKIL_DEKAN:
-                    "TTD Wakil Dekan",
-
-                TTD_DEKAN:
-                    "TTD Dekan",
-
-                SK_TERBIT:
-                    "SK Terbit"
-
-            };
-
-
-            return (
-                labels[
+            return API
+                .getStatusLabel(
                     status
-                ] ||
-                status
+                );
+
+        }
+
+
+        function formatDate(value) {
+
+            if (!value) {
+
+                return "-";
+
+            }
+
+
+            const date =
+                new Date(value);
+
+
+            if (
+                Number.isNaN(
+                    date.getTime()
+                )
+            ) {
+
+                return value;
+
+            }
+
+
+            return date
+                .toLocaleString(
+                    "id-ID",
+                    {
+                        day:
+                            "2-digit",
+
+                        month:
+                            "short",
+
+                        year:
+                            "numeric",
+
+                        hour:
+                            "2-digit",
+
+                        minute:
+                            "2-digit"
+                    }
+                );
+
+        }
+
+
+        /* =====================================================
+           ROLE UI
+        ===================================================== */
+
+        function setupRoleUI() {
+
+            if (
+                isSuperAdmin
+            ) {
+
+                pageTitle.textContent =
+                    "History Seluruh Admin";
+
+
+                pageDescription.textContent =
+                    "Lihat aktivitas administrasi seluruh akun Admin FEB UPR.";
+
+
+                roleTitle.textContent =
+                    "Akses Super Admin";
+
+
+                roleDescription.textContent =
+                    "Super Admin dapat melihat aktivitas seluruh admin pada sistem.";
+
+
+                if (
+                    adminFilterGroup
+                ) {
+
+                    adminFilterGroup.style.display =
+                        "flex";
+
+                }
+
+
+                if (
+                    adminColumnHeader
+                ) {
+
+                    adminColumnHeader.style.display =
+                        "";
+
+                }
+
+            } else {
+
+                pageTitle.textContent =
+                    "History Aktivitas Saya";
+
+
+                pageDescription.textContent =
+                    "Riwayat aktivitas yang dilakukan menggunakan akun Anda.";
+
+
+                roleTitle.textContent =
+                    "History akun Anda";
+
+
+                roleDescription.textContent =
+                    "Admin hanya dapat melihat aktivitas yang dilakukan menggunakan akun sendiri.";
+
+
+                if (
+                    adminFilterGroup
+                ) {
+
+                    adminFilterGroup.style.display =
+                        "none";
+
+                }
+
+
+                if (
+                    adminColumnHeader
+                ) {
+
+                    adminColumnHeader.style.display =
+                        "none";
+
+                }
+
+            }
+
+        }
+
+
+        /* =====================================================
+           ROLE ACCESS
+        ===================================================== */
+
+        function getRoleActivities() {
+
+            if (
+                isSuperAdmin
+            ) {
+
+                return [
+                    ...allActivities
+                ];
+
+            }
+
+
+            return allActivities.filter(
+                function (activity) {
+
+                    return (
+                        activity.adminUsername ===
+                        currentUsername
+                    );
+
+                }
             );
 
         }
 
 
-        /* =====================================
+        /* =====================================================
+           ADMIN FILTER
+        ===================================================== */
+
+        function populateAdminFilter() {
+
+            if (
+                !isSuperAdmin ||
+                !adminFilter
+            ) {
+
+                return;
+
+            }
+
+
+            adminFilter.innerHTML =
+                `
+                <option value="">
+                    Semua Admin
+                </option>
+                `;
+
+
+            const usernames =
+                [
+                    ...new Set(
+                        allActivities
+                            .map(
+                                function (activity) {
+
+                                    return activity
+                                        .adminUsername;
+
+                                }
+                            )
+                            .filter(Boolean)
+                    )
+                ]
+                    .sort();
+
+
+            usernames.forEach(
+                function (username) {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+
+                    option.value =
+                        username;
+
+
+                    option.textContent =
+                        username;
+
+
+                    adminFilter.appendChild(
+                        option
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
            FILTER
-        ===================================== */
+        ===================================================== */
 
         function getFilteredActivities() {
 
+            const roleActivities =
+                getRoleActivities();
+
+
             const search =
                 appliedSearch
+                    .trim()
                     .toLowerCase();
 
 
             return roleActivities.filter(
-                function (
-                    activity
-                ) {
+                function (activity) {
 
-                    const student =
-                        String(
-                            activity.mahasiswa ||
-                            ""
-                        ).toLowerCase();
+                    const searchable = [
 
+                        activity.studentName,
+                        activity.nim,
+                        activity.submissionCode,
+                        activity.adminUsername,
+                        activity.department
 
-                    const nim =
-                        String(
-                            activity.nim ||
-                            ""
-                        ).toLowerCase();
+                    ]
+                        .map(
+                            function (value) {
 
+                                return String(
+                                    value || ""
+                                )
+                                    .toLowerCase();
 
-                    const code =
-                        String(
-                            activity.kode_pengajuan ||
-                            ""
-                        ).toLowerCase();
-
-
-                    const username =
-                        String(
-                            activity.admin_username ||
-                            ""
-                        ).toLowerCase();
+                            }
+                        );
 
 
                     const matchSearch =
-                        search === "" ||
-                        student.includes(
-                            search
-                        ) ||
-                        nim.includes(
-                            search
-                        ) ||
-                        code.includes(
-                            search
-                        ) ||
-                        username.includes(
-                            search
+                        !search ||
+                        searchable.some(
+                            function (value) {
+
+                                return value.includes(
+                                    search
+                                );
+
+                            }
                         );
 
 
                     const matchAdmin =
                         !isSuperAdmin ||
-                        appliedAdmin === "" ||
-                        activity.admin_username ===
-                        appliedAdmin;
+                        !appliedAdmin ||
+                        activity.adminUsername ===
+                            appliedAdmin;
 
 
                     const matchAction =
-                        appliedAction === "" ||
+                        !appliedAction ||
                         activity.action ===
-                        appliedAction;
+                            appliedAction;
 
 
                     return (
@@ -993,18 +592,28 @@ document.addEventListener(
         }
 
 
-        /* =====================================
-           ACTIVE FILTER
-        ===================================== */
+        /* =====================================================
+           FILTER LABEL
+        ===================================================== */
 
         function updateActiveFilter() {
+
+            if (
+                !activeFilterText ||
+                !activeFilterBox
+            ) {
+
+                return;
+
+            }
+
 
             const parts =
                 [];
 
 
             if (
-                appliedSearch !== ""
+                appliedSearch
             ) {
 
                 parts.push(
@@ -1018,7 +627,7 @@ document.addEventListener(
 
             if (
                 isSuperAdmin &&
-                appliedAdmin !== ""
+                appliedAdmin
             ) {
 
                 parts.push(
@@ -1030,10 +639,10 @@ document.addEventListener(
 
 
             if (
-                appliedAction !== ""
+                appliedAction
             ) {
 
-                const labelMap = {
+                const labels = {
 
                     VERIFICATION:
                         "Verifikasi",
@@ -1049,36 +658,35 @@ document.addEventListener(
 
                 parts.push(
                     "Aktivitas " +
-                    labelMap[
+                    (
+                        labels[
+                            appliedAction
+                        ] ||
                         appliedAction
-                    ]
+                    )
                 );
 
             }
 
 
             activeFilterText.textContent =
-                parts.length > 0
-                    ?
-                    parts.join(
+                parts.length
+                    ? parts.join(
                         " • "
                     )
-                    :
-                    "Semua aktivitas";
+                    : "Semua aktivitas";
 
 
-            activeFilterBox
-                .classList
-                .add(
-                    "active"
-                );
+            activeFilterBox.classList.add(
+                "active"
+            );
 
         }
 
 
-        /* =====================================
+        /* =====================================================
            SUMMARY
-        ===================================== */
+        ===================================================== */
 
         function updateSummary(
             activities
@@ -1086,12 +694,10 @@ document.addEventListener(
 
             const verification =
                 activities.filter(
-                    function (
-                        activity
-                    ) {
+                    function (item) {
 
                         return (
-                            activity.action ===
+                            item.action ===
                             "VERIFICATION"
                         );
 
@@ -1101,12 +707,10 @@ document.addEventListener(
 
             const revision =
                 activities.filter(
-                    function (
-                        activity
-                    ) {
+                    function (item) {
 
                         return (
-                            activity.action ===
+                            item.action ===
                             "REVISION"
                         );
 
@@ -1116,12 +720,10 @@ document.addEventListener(
 
             const process =
                 activities.filter(
-                    function (
-                        activity
-                    ) {
+                    function (item) {
 
                         return (
-                            activity.action ===
+                            item.action ===
                             "UPDATE_SK_STATUS"
                         );
 
@@ -1147,11 +749,72 @@ document.addEventListener(
         }
 
 
-        /* =====================================
+        /* =====================================================
+           SIDEBAR COUNT
+        ===================================================== */
+
+        async function updateSidebarCount() {
+
+            if (
+                !sidebarRevisionCount
+            ) {
+
+                return;
+
+            }
+
+
+            try {
+
+                const submissions =
+                    await API
+                        .getSubmissions();
+
+
+                const count =
+                    submissions.filter(
+                        function (submission) {
+
+                            return [
+
+                                API.STATUS
+                                    .PERLU_REVISI,
+
+                                API.STATUS
+                                    .REVISI_DIKIRIM
+
+                            ].includes(
+                                submission.status
+                            );
+
+                        }
+                    ).length;
+
+
+                sidebarRevisionCount
+                    .textContent =
+                    count;
+
+            } catch (error) {
+
+                sidebarRevisionCount
+                    .textContent =
+                    "0";
+
+            }
+
+        }
+
+
+        /* =====================================================
            RENDER
-        ===================================== */
+        ===================================================== */
 
         function renderHistory() {
+
+            const roleActivities =
+                getRoleActivities();
+
 
             const activities =
                 getFilteredActivities();
@@ -1196,9 +859,7 @@ document.addEventListener(
 
 
             activities.forEach(
-                function (
-                    activity
-                ) {
+                function (activity) {
 
                     const row =
                         document.createElement(
@@ -1214,31 +875,40 @@ document.addEventListener(
 
                     const adminCell =
                         isSuperAdmin
-                            ?
-                            `
+                            ? `
                             <td class="history-admin-cell">
 
                                 <strong>
-                                    ${activity.admin_username}
+                                    ${escapeHtml(
+                                        activity.adminUsername ||
+                                        "-"
+                                    )}
                                 </strong>
 
                                 <span>
-                                    ${activity.admin_role || "ADMIN"}
+                                    ${escapeHtml(
+                                        activity.adminRole ||
+                                        "ADMIN"
+                                    )}
                                 </span>
 
                             </td>
                             `
-                            :
-                            "";
+                            : "";
 
 
-                    row.innerHTML = `
+                    row.innerHTML =
+                        `
                         <td>
 
                             <div class="history-time">
 
                                 <strong>
-                                    ${activity.created_at || "-"}
+                                    ${escapeHtml(
+                                        formatDate(
+                                            activity.createdAt
+                                        )
+                                    )}
                                 </strong>
 
                             </div>
@@ -1254,15 +924,24 @@ document.addEventListener(
                             <div class="history-student">
 
                                 <strong>
-                                    ${activity.mahasiswa || "-"}
+                                    ${escapeHtml(
+                                        activity.studentName ||
+                                        "-"
+                                    )}
                                 </strong>
 
                                 <span>
-                                    ${activity.nim || "-"}
+                                    ${escapeHtml(
+                                        activity.nim ||
+                                        "-"
+                                    )}
                                 </span>
 
                                 <small>
-                                    ${activity.kode_pengajuan || "-"}
+                                    ${escapeHtml(
+                                        activity.submissionCode ||
+                                        "-"
+                                    )}
                                 </small>
 
                             </div>
@@ -1273,10 +952,14 @@ document.addEventListener(
                         <td>
 
                             <span
-                                class="history-action-badge ${category}"
+                                class="history-action-badge ${escapeHtml(
+                                    category
+                                )}"
                             >
-                                ${getActionLabel(
-                                    activity
+                                ${escapeHtml(
+                                    getActionLabel(
+                                        activity
+                                    )
                                 )}
                             </span>
 
@@ -1288,8 +971,10 @@ document.addEventListener(
                             <div class="history-change">
 
                                 <span>
-                                    ${formatStatus(
-                                        activity.old_status
+                                    ${escapeHtml(
+                                        getStatusLabel(
+                                            activity.previousStatus
+                                        )
                                     )}
                                 </span>
 
@@ -1298,8 +983,10 @@ document.addEventListener(
                                 </b>
 
                                 <strong>
-                                    ${formatStatus(
-                                        activity.new_status
+                                    ${escapeHtml(
+                                        getStatusLabel(
+                                            activity.newStatus
+                                        )
                                     )}
                                 </strong>
 
@@ -1311,14 +998,16 @@ document.addEventListener(
                         <td>
 
                             <a
-                                href="detail_history.html?id=${activity.id}"
+                                href="detail_history.html?id=${encodeURIComponent(
+                                    activity.id
+                                )}"
                                 class="history-detail-button"
                             >
                                 Lihat Detail
                             </a>
 
                         </td>
-                    `;
+                        `;
 
 
                     tableBody.appendChild(
@@ -1331,120 +1020,193 @@ document.addEventListener(
         }
 
 
-        /* =====================================
-           APPLY FILTER
-        ===================================== */
+        /* =====================================================
+           EVENTS
+        ===================================================== */
 
-        applyFilterButton.addEventListener(
-            "click",
-            function () {
+        applyFilterButton
+            ?.addEventListener(
+                "click",
+                function () {
 
-                appliedSearch =
-                    searchInput.value
-                        .trim();
+                    appliedSearch =
+                        searchInput
+                            ?.value
+                            .trim() ||
+                        "";
 
 
-                appliedAction =
-                    actionFilter.value;
+                    appliedAction =
+                        actionFilter
+                            ?.value ||
+                        "";
 
-
-                if (
-                    isSuperAdmin
-                ) {
 
                     appliedAdmin =
-                        adminFilter.value;
+                        isSuperAdmin
+                            ? (
+                                adminFilter
+                                    ?.value ||
+                                ""
+                            )
+                            : "";
 
-                } else {
+
+                    renderHistory();
+
+                }
+            );
+
+
+        resetFilterButton
+            ?.addEventListener(
+                "click",
+                function () {
+
+                    if (
+                        searchInput
+                    ) {
+
+                        searchInput.value =
+                            "";
+
+                    }
+
+
+                    if (
+                        actionFilter
+                    ) {
+
+                        actionFilter.value =
+                            "";
+
+                    }
+
+
+                    if (
+                        adminFilter
+                    ) {
+
+                        adminFilter.value =
+                            "";
+
+                    }
+
+
+                    appliedSearch =
+                        "";
+
+                    appliedAction =
+                        "";
 
                     appliedAdmin =
                         "";
 
+
+                    renderHistory();
+
                 }
+            );
+
+
+        searchInput
+            ?.addEventListener(
+                "keydown",
+                function (event) {
+
+                    if (
+                        event.key ===
+                        "Enter"
+                    ) {
+
+                        event.preventDefault();
+
+
+                        applyFilterButton
+                            ?.click();
+
+                    }
+
+                }
+            );
+
+
+        /* =====================================================
+           LOAD
+        ===================================================== */
+
+        async function loadHistory() {
+
+            setupRoleUI();
+
+
+            try {
+
+                /*
+                 * Frontend tetap melakukan role guard.
+                 * Backend nantinya WAJIB tetap menerapkan
+                 * authorization sendiri.
+                 */
+
+                const params =
+                    !isSuperAdmin &&
+                    currentUsername
+                        ? {
+                            admin_username:
+                                currentUsername
+                        }
+                        : {};
+
+
+                allActivities =
+                    await API
+                        .getHistory(
+                            params
+                        );
+
+
+                populateAdminFilter();
 
 
                 renderHistory();
 
-            }
-        );
+
+                await updateSidebarCount();
+
+            } catch (error) {
+
+                console.error(
+                    "Gagal memuat History:",
+                    error
+                );
 
 
-        /* =====================================
-           ENTER SEARCH
-        ===================================== */
-
-        searchInput.addEventListener(
-            "keydown",
-            function (
-                event
-            ) {
-
-                if (
-                    event.key ===
-                    "Enter"
-                ) {
-
-                    event.preventDefault();
+                allActivities =
+                    [];
 
 
-                    applyFilterButton
-                        .click();
-
-                }
-
-            }
-        );
-
-
-        /* =====================================
-           RESET
-        ===================================== */
-
-        resetFilterButton.addEventListener(
-            "click",
-            function () {
-
-                searchInput.value =
-                    "";
-
-
-                actionFilter.value =
-                    "";
-
-
-                if (
-                    isSuperAdmin
-                ) {
-
-                    adminFilter.value =
-                        "";
-
-                }
-
-
-                appliedSearch =
-                    "";
-
-
-                appliedAdmin =
-                    "";
-
-
-                appliedAction =
-                    "";
+                populateAdminFilter();
 
 
                 renderHistory();
 
+
+                if (
+                    sidebarRevisionCount
+                ) {
+
+                    sidebarRevisionCount
+                        .textContent =
+                        "0";
+
+                }
+
             }
-        );
+
+        }
 
 
-        /* =====================================
-           INITIAL RENDER
-        ===================================== */
-
-        renderHistory();
+        await loadHistory();
 
     }
 );

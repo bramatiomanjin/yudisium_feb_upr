@@ -1,10 +1,13 @@
 document.addEventListener(
     "DOMContentLoaded",
-    function () {
+    async function () {
 
-        console.log(
-            "Admin verifikasi aktif"
-        );
+        "use strict";
+
+
+        if (!window.YudisiumAPI) {
+            return;
+        }
 
 
         const params =
@@ -13,287 +16,113 @@ document.addEventListener(
             );
 
 
-        const submission =
-            window.YudisiumMockDB
-                .getSubmission(
-                    params.get("id") || 1
-                );
+        const id =
+            params.get("id");
 
 
-        if (
-            !submission
-        ) {
+        if (!id) {
 
             window.location.href =
                 "pengajuan.html";
-
 
             return;
 
         }
 
 
-        document.querySelector(
-            ".verification-back a"
-        ).href =
-            "detail_pengajuan.html?id=" +
-            submission.id;
+        const submission =
+            await window.YudisiumAPI
+                .getSubmission(id);
 
 
-        document.querySelector(
-            ".verification-header h1"
-        ).textContent =
-            submission.code;
+        if (!submission) {
+
+            window.location.href =
+                "pengajuan.html";
+
+            return;
+
+        }
 
 
-        document.querySelector(
-            ".verification-student-avatar"
-        ).textContent =
-            window.YudisiumMockDB
-                .getInitials(
-                    submission.name
+        if (
+            submission.status !==
+            window.YudisiumAPI
+                .STATUS
+                .MENUNGGU_VERIFIKASI
+        ) {
+
+            window.location.href =
+                "detail_pengajuan.html?id=" +
+                submission.id;
+
+            return;
+
+        }
+
+
+        const documents =
+            await window.YudisiumAPI
+                .getDocuments(
+                    submission.id
                 );
 
 
-        document.querySelector(
-            ".verification-student-info h2"
-        ).textContent =
-            submission.name;
+        function setText(
+            selector,
+            value
+        ) {
+
+            const element =
+                document.querySelector(
+                    selector
+                );
 
 
-        document.querySelector(
-            ".verification-student-info p"
-        ).textContent =
+            if (element) {
+
+                element.textContent =
+                    value || "-";
+
+            }
+
+        }
+
+
+        setText(
+            ".verification-header h1",
+            submission.code
+        );
+
+        setText(
+            ".verification-student-avatar",
+            window.YudisiumAPI
+                .getInitials(
+                    submission.name
+                )
+        );
+
+        setText(
+            ".verification-student-info h2",
+            submission.name
+        );
+
+        setText(
+            ".verification-student-info p",
+
             "NIM " +
             submission.nim +
             " • " +
             submission.department +
             " • Angkatan " +
-            submission.year;
+            submission.year
 
+        );
 
-        /* =====================================
-           DOCUMENT DATA
-        ===================================== */
 
-        const documents = [
-
-            {
-                key:
-                    "formulir_yudisium",
-
-                title:
-                    "Formulir Pendaftaran Yudisium",
-
-                filename:
-                    "formulir_yudisium.pdf",
-
-                size:
-                    "650 KB"
-            },
-
-            {
-                key:
-                    "foto_3x4",
-
-                title:
-                    "Foto 3x4 Berwarna",
-
-                filename:
-                    "foto_3x4.pdf",
-
-                size:
-                    "420 KB"
-            },
-
-            {
-                key:
-                    "ijazah_slta",
-
-                title:
-                    "Ijazah SLTA",
-
-                filename:
-                    "ijazah_slta.pdf",
-
-                size:
-                    "830 KB"
-            },
-
-            {
-                key:
-                    "berita_acara",
-
-                title:
-                    "Berita Acara Ujian Skripsi / Artikel",
-
-                filename:
-                    "berita_acara.pdf",
-
-                size:
-                    "790 KB"
-            },
-
-            {
-                key:
-                    "rekap_nilai",
-
-                title:
-                    "Rekapitulasi Nilai Ujian",
-
-                filename:
-                    "rekap_nilai.pdf",
-
-                size:
-                    "740 KB"
-            },
-
-            {
-                key:
-                    "blanko_revisi",
-
-                title:
-                    "Blanko Revisi",
-
-                filename:
-                    "blanko_revisi.pdf",
-
-                size:
-                    "510 KB"
-            },
-
-            {
-                key:
-                    "tanda_terima",
-
-                title:
-                    "Tanda Terima Skripsi / Artikel",
-
-                filename:
-                    "tanda_terima.pdf",
-
-                size:
-                    "1.2 MB"
-            },
-
-            {
-                key:
-                    "pernyataan_ijazah",
-
-                title:
-                    "Surat Pernyataan Penulisan Ijazah",
-
-                filename:
-                    "pernyataan_ijazah.pdf",
-
-                size:
-                    "560 KB"
-            },
-
-            {
-                key:
-                    "bebas_pinjam_universitas",
-
-                title:
-                    "Surat Bebas Pinjam Perpustakaan Universitas",
-
-                filename:
-                    "bebas_pinjam_univ.pdf",
-
-                size:
-                    "690 KB"
-            },
-
-            {
-                key:
-                    "bebas_pinjam_fakultas",
-
-                title:
-                    "Surat Bebas Pinjam Perpustakaan Fakultas",
-
-                filename:
-                    "bebas_pinjam_fakultas.pdf",
-
-                size:
-                    "620 KB"
-            },
-
-            {
-                key:
-                    "khs",
-
-                title:
-                    "KHS Semester 1 s/d Terbaru",
-
-                filename:
-                    "khs.pdf",
-
-                size:
-                    "880 KB"
-            },
-
-            {
-                key:
-                    "transkrip",
-
-                title:
-                    "Transkrip Nilai Ujian Skripsi",
-
-                filename:
-                    "transkrip.pdf",
-
-                size:
-                    "710 KB"
-            },
-
-            {
-                key:
-                    "surat_tugas_pembimbing",
-
-                title:
-                    "Surat Tugas Dosen Pembimbing",
-
-                filename:
-                    "surat_tugas_pembimbing.pdf",
-
-                size:
-                    "1.4 MB"
-            },
-
-            {
-                key:
-                    "bebas_tunggakan",
-
-                title:
-                    "Surat Verifikasi Bebas Tunggakan",
-
-                filename:
-                    "bebas_tunggakan.pdf",
-
-                size:
-                    "530 KB"
-            },
-
-            {
-                key:
-                    "jurnal_manajemen",
-
-                title:
-                    "Bukti Pengisian Jurnal Manajemen",
-
-                filename:
-                    "jurnal_manajemen.pdf",
-
-                size:
-                    "680 KB"
-            }
-
-        ];
-
-
-        /* =====================================
-           ELEMENTS
-        ===================================== */
+        /* =====================================================
+           DOCUMENT RENDER
+        ===================================================== */
 
         const documentContainer =
             document.getElementById(
@@ -301,156 +130,71 @@ document.addEventListener(
             );
 
 
-        const submitButton =
-            document.getElementById(
-                "submitVerification"
-            );
+        if (documentContainer) {
 
+            documentContainer.innerHTML =
+                "";
 
-        const confirmation =
-            document.getElementById(
-                "verificationConfirmation"
-            );
-
-
-        const confirmationError =
-            document.getElementById(
-                "verificationConfirmationError"
-            );
-
-
-        const approvedCountElement =
-            document.getElementById(
-                "approvedCount"
-            );
-
-
-        const revisionCountElement =
-            document.getElementById(
-                "revisionCount"
-            );
-
-
-        const pendingCountElement =
-            document.getElementById(
-                "pendingCount"
-            );
-
-
-        const progressText =
-            document.getElementById(
-                "verificationProgressText"
-            );
-
-
-        const progressFill =
-            document.getElementById(
-                "verificationProgressFill"
-            );
-
-
-        const resultBadge =
-            document.getElementById(
-                "verificationResultBadge"
-            );
-
-
-        const successModal =
-            document.getElementById(
-                "verificationSuccessModal"
-            );
-
-
-        const successTitle =
-            document.getElementById(
-                "verificationSuccessTitle"
-            );
-
-
-        const successMessage =
-            document.getElementById(
-                "verificationSuccessMessage"
-            );
-
-
-        const successButton =
-            document.getElementById(
-                "verificationSuccessButton"
-            );
-
-
-        /* =====================================
-           RENDER DOCUMENTS
-        ===================================== */
-
-        function renderDocuments() {
 
             documents.forEach(
-                function (documentData) {
+                function (doc) {
 
-                    const article =
+                    const item =
                         document.createElement(
                             "article"
                         );
 
 
-                    article.className =
+                    item.className =
                         "verification-item verification-document-item";
 
 
-                    article.setAttribute(
-                        "data-verification-item",
-                        ""
-                    );
+                    item.dataset.verificationItem =
+                        "";
 
-
-                    article.dataset.itemType =
+                    item.dataset.itemType =
                         "document";
 
+                    item.dataset.itemKey =
+                        doc.key ||
+                        doc.id;
 
-                    article.dataset.itemKey =
-                        documentData.key;
 
-
-                    article.innerHTML = `
+                    item.innerHTML =
+                        `
                         <div class="verification-document-main">
 
                             <div class="verification-document-icon">
-                                PDF
+                                FILE
                             </div>
 
-                            <div class="verification-item-content">
-
-                                <span class="verification-item-label">
-                                    ${documentData.title}
-                                </span>
+                            <div class="verification-document-info">
 
                                 <strong>
-                                    ${documentData.filename}
+                                    ${doc.title || doc.label || "-"}
                                 </strong>
 
-                                <small>
-                                    ${documentData.size}
-                                </small>
+                                <span>
+                                    ${doc.filename || "-"}
+                                </span>
 
                             </div>
 
+                            ${
+                                doc.url
+                                    ? `
+                                        <a
+                                            href="${doc.url}"
+                                            target="_blank"
+                                            class="verification-preview-button"
+                                        >
+                                            Preview
+                                        </a>
+                                    `
+                                    : ""
+                            }
+
                         </div>
-
-
-                        <div class="verification-document-tools">
-
-                            <button
-                                type="button"
-                                class="verification-preview-button"
-                                data-preview-title="${documentData.title}"
-                                data-preview-file="${documentData.filename}"
-                            >
-                                Preview
-                            </button>
-
-                        </div>
-
 
                         <div class="verification-decision">
 
@@ -472,7 +216,6 @@ document.addEventListener(
 
                         </div>
 
-
                         <div class="verification-feedback">
 
                             <label>
@@ -480,20 +223,21 @@ document.addEventListener(
                             </label>
 
                             <textarea
-                                placeholder="Jelaskan bagian dokumen yang harus diperbaiki mahasiswa..."
+                                placeholder="Jelaskan bagian yang harus diperbaiki mahasiswa..."
                             ></textarea>
 
                             <span class="verification-feedback-error">
-                                Feedback wajib diisi untuk dokumen yang direvisi.
+                                Feedback wajib diisi.
                             </span>
 
                         </div>
-                    `;
+                        `;
 
 
-                    documentContainer.appendChild(
-                        article
-                    );
+                    documentContainer
+                        .appendChild(
+                            item
+                        );
 
                 }
             );
@@ -501,564 +245,137 @@ document.addEventListener(
         }
 
 
-        renderDocuments();
-
-
-        /* =====================================
-           GET ITEMS
-        ===================================== */
-
-        function getVerificationItems() {
-
-            return Array.from(
+        const items =
+            Array.from(
                 document.querySelectorAll(
                     "[data-verification-item]"
                 )
             );
 
-        }
+
+        const confirmation =
+            document.getElementById(
+                "verificationConfirmation"
+            );
 
 
-        /* =====================================
-           DECISION LOGIC
-        ===================================== */
-
-        function setupVerificationItems() {
-
-            const items =
-                getVerificationItems();
+        const submitButton =
+            document.getElementById(
+                "submitVerification"
+            );
 
 
-            items.forEach(
-                function (item) {
+        items.forEach(
+            function (item) {
 
-                    const buttons =
-                        item.querySelectorAll(
-                            ".verification-choice"
-                        );
-
-
-                    const feedbackBox =
-                        item.querySelector(
-                            ".verification-feedback"
-                        );
+                const buttons =
+                    item.querySelectorAll(
+                        ".verification-choice"
+                    );
 
 
-                    const textarea =
-                        feedbackBox.querySelector(
+                const feedback =
+                    item.querySelector(
+                        ".verification-feedback"
+                    );
+
+
+                const textarea =
+                    feedback
+                        ?.querySelector(
                             "textarea"
                         );
 
 
-                    const error =
-                        feedbackBox.querySelector(
-                            ".verification-feedback-error"
-                        );
+                buttons.forEach(
+                    function (button) {
 
+                        button.addEventListener(
+                            "click",
+                            function () {
 
-                    buttons.forEach(
-                        function (button) {
+                                buttons.forEach(
+                                    function (other) {
 
-                            button.addEventListener(
-                                "click",
-                                function () {
-
-                                    const choice =
-                                        this.dataset.choice;
-
-
-                                    buttons.forEach(
-                                        function (
-                                            otherButton
-                                        ) {
-
-                                            otherButton
-                                                .classList
-                                                .remove(
-                                                    "selected"
-                                                );
-
-                                        }
-                                    );
-
-
-                                    this.classList.add(
-                                        "selected"
-                                    );
-
-
-                                    item.dataset.decision =
-                                        choice;
-
-
-                                    item.classList.remove(
-                                        "approved",
-                                        "revision"
-                                    );
-
-
-                                    item.classList.add(
-                                        choice ===
-                                        "approved"
-                                            ?
-                                            "approved"
-                                            :
-                                            "revision"
-                                    );
-
-
-                                    if (
-                                        choice ===
-                                        "revision"
-                                    ) {
-
-                                        feedbackBox
-                                            .classList
-                                            .add(
-                                                "active"
-                                            );
-
-                                    } else {
-
-                                        feedbackBox
-                                            .classList
+                                        other.classList
                                             .remove(
-                                                "active"
+                                                "selected"
                                             );
 
+                                    }
+                                );
+
+
+                                button.classList.add(
+                                    "selected"
+                                );
+
+
+                                item.dataset.decision =
+                                    button.dataset.choice;
+
+
+                                if (
+                                    button.dataset.choice ===
+                                    "revision"
+                                ) {
+
+                                    feedback
+                                        ?.classList
+                                        .add(
+                                            "active"
+                                        );
+
+                                } else {
+
+                                    feedback
+                                        ?.classList
+                                        .remove(
+                                            "active"
+                                        );
+
+                                    if (textarea) {
 
                                         textarea.value =
                                             "";
 
-
-                                        error
-                                            .classList
-                                            .remove(
-                                                "active"
-                                            );
-
                                     }
 
-
-                                    updateVerificationSummary();
-
                                 }
-                            );
-
-                        }
-                    );
-
-
-                    textarea.addEventListener(
-                        "input",
-                        function () {
-
-                            if (
-                                this.value
-                                    .trim() !==
-                                ""
-                            ) {
-
-                                error
-                                    .classList
-                                    .remove(
-                                        "active"
-                                    );
 
                             }
-
-                        }
-                    );
-
-                }
-            );
-
-        }
-
-
-        setupVerificationItems();
-
-
-        /* =====================================
-           SUMMARY
-        ===================================== */
-
-        function updateVerificationSummary() {
-
-            const items =
-                getVerificationItems();
-
-
-            let approved =
-                0;
-
-
-            let revision =
-                0;
-
-
-            let pending =
-                0;
-
-
-            items.forEach(
-                function (item) {
-
-                    if (
-                        item.dataset.decision ===
-                        "approved"
-                    ) {
-
-                        approved++;
-
-                    } else if (
-                        item.dataset.decision ===
-                        "revision"
-                    ) {
-
-                        revision++;
-
-                    } else {
-
-                        pending++;
-
-                    }
-
-                }
-            );
-
-
-            approvedCountElement.textContent =
-                approved;
-
-
-            revisionCountElement.textContent =
-                revision;
-
-
-            pendingCountElement.textContent =
-                pending;
-
-
-            const completed =
-                approved +
-                revision;
-
-
-            const total =
-                items.length;
-
-
-            progressText.textContent =
-                completed +
-                " / " +
-                total +
-                " item";
-
-
-            const percentage =
-                total === 0
-                    ?
-                    0
-                    :
-                    (
-                        completed /
-                        total
-                    ) * 100;
-
-
-            progressFill.style.width =
-                percentage +
-                "%";
-
-
-            resultBadge.className =
-                "verification-result-badge";
-
-
-            if (
-                pending > 0
-            ) {
-
-                resultBadge
-                    .classList
-                    .add(
-                        "pending"
-                    );
-
-
-                resultBadge.textContent =
-                    "Belum Lengkap";
-
-            } else if (
-                revision > 0
-            ) {
-
-                resultBadge
-                    .classList
-                    .add(
-                        "revision"
-                    );
-
-
-                resultBadge.textContent =
-                    "Perlu Revisi";
-
-            } else {
-
-                resultBadge
-                    .classList
-                    .add(
-                        "approved"
-                    );
-
-
-                resultBadge.textContent =
-                    "Terverifikasi";
-
-            }
-
-        }
-
-
-        updateVerificationSummary();
-
-
-        /* =====================================
-           PREVIEW
-        ===================================== */
-
-        const previewModal =
-            document.getElementById(
-                "verificationPreviewModal"
-            );
-
-
-        const previewTitle =
-            document.getElementById(
-                "verificationPreviewTitle"
-            );
-
-
-        const previewFilename =
-            document.getElementById(
-                "verificationPreviewFilename"
-            );
-
-
-        const closePreview =
-            document.getElementById(
-                "closeVerificationPreview"
-            );
-
-
-        const openNewTab =
-            document.getElementById(
-                "verificationOpenNewTab"
-            );
-
-
-        let currentPreviewFile =
-            "";
-
-
-        document.addEventListener(
-            "click",
-            function (event) {
-
-                const previewButton =
-                    event.target.closest(
-                        ".verification-preview-button"
-                    );
-
-
-                if (
-                    !previewButton
-                ) {
-
-                    return;
-
-                }
-
-
-                previewTitle.textContent =
-                    previewButton.dataset
-                        .previewTitle;
-
-
-                previewFilename.textContent =
-                    previewButton.dataset
-                        .previewFile;
-
-
-                currentPreviewFile =
-                    previewButton.dataset
-                        .previewFile;
-
-
-                previewModal
-                    .classList
-                    .add(
-                        "active"
-                    );
-
-
-                document.body.style.overflow =
-                    "hidden";
-
-            }
-        );
-
-
-        function closePreviewModal() {
-
-            previewModal
-                .classList
-                .remove(
-                    "active"
-                );
-
-
-            document.body.style.overflow =
-                "";
-
-
-            currentPreviewFile =
-                "";
-
-        }
-
-
-        closePreview.addEventListener(
-            "click",
-            closePreviewModal
-        );
-
-
-        previewModal.addEventListener(
-            "click",
-            function (event) {
-
-                if (
-                    event.target ===
-                    previewModal
-                ) {
-
-                    closePreviewModal();
-
-                }
-
-            }
-        );
-
-
-        document.addEventListener(
-            "keydown",
-            function (event) {
-
-                if (
-                    event.key ===
-                    "Escape" &&
-                    previewModal.classList
-                        .contains(
-                            "active"
-                        )
-                ) {
-
-                    closePreviewModal();
-
-                }
-
-            }
-        );
-
-
-        openNewTab.addEventListener(
-            "click",
-            function () {
-
-                if (
-                    currentPreviewFile ===
-                    ""
-                ) {
-
-                    return;
-
-                }
-
-
-                alert(
-                    "File " +
-                    currentPreviewFile +
-                    " akan dibuka melalui URL file dari Laravel setelah integrasi backend."
-                );
-
-            }
-        );
-
-
-        /* =====================================
-           VALIDATE BEFORE SUBMIT
-        ===================================== */
-
-        function validateVerification() {
-
-            const items =
-                getVerificationItems();
-
-
-            let valid =
-                true;
-
-
-            let firstInvalidItem =
-                null;
-
-
-            items.forEach(
-                function (item) {
-
-                    const decision =
-                        item.dataset.decision;
-
-
-                    item.classList.remove(
-                        "verification-error"
-                    );
-
-
-                    if (
-                        !decision
-                    ) {
-
-                        valid =
-                            false;
-
-
-                        item.classList.add(
-                            "verification-error"
                         );
 
-
-                        if (
-                            !firstInvalidItem
-                        ) {
-
-                            firstInvalidItem =
-                                item;
-
-                        }
-
-
-                        return;
-
                     }
+                );
+
+            }
+        );
 
 
-                    if (
-                        decision ===
-                        "revision"
-                    ) {
+        if (!submitButton) {
+            return;
+        }
+
+
+        submitButton.addEventListener(
+            "click",
+            async function () {
+
+                const result =
+                    [];
+
+
+                let valid =
+                    true;
+
+
+                items.forEach(
+                    function (item) {
+
+                        const decision =
+                            item.dataset.decision;
+
 
                         const textarea =
                             item.querySelector(
@@ -1066,330 +383,114 @@ document.addEventListener(
                             );
 
 
-                        const error =
-                            item.querySelector(
-                                ".verification-feedback-error"
-                            );
+                        if (!decision) {
+
+                            valid =
+                                false;
+
+                            return;
+
+                        }
 
 
                         if (
-                            textarea.value
-                                .trim() ===
-                            ""
+                            decision ===
+                            "revision" &&
+                            (
+                                !textarea ||
+                                textarea.value
+                                    .trim() ===
+                                    ""
+                            )
                         ) {
 
                             valid =
                                 false;
 
-
-                            error.classList.add(
-                                "active"
-                            );
-
-
-                            item.classList.add(
-                                "verification-error"
-                            );
-
-
-                            if (
-                                !firstInvalidItem
-                            ) {
-
-                                firstInvalidItem =
-                                    item;
-
-                            }
-
-                        }
-
-                    }
-
-                }
-            );
-
-
-            if (
-                firstInvalidItem
-            ) {
-
-                firstInvalidItem
-                    .scrollIntoView(
-                        {
-                            behavior:
-                                "smooth",
-
-                            block:
-                                "center"
-                        }
-                    );
-
-            }
-
-
-            return valid;
-
-        }
-
-
-        /* =====================================
-           SUBMIT
-        ===================================== */
-
-        submitButton.addEventListener(
-            "click",
-            function () {
-
-                confirmationError
-                    .classList
-                    .remove(
-                        "active"
-                    );
-
-
-                if (
-                    !validateVerification()
-                ) {
-
-                    return;
-
-                }
-
-
-                if (
-                    !confirmation.checked
-                ) {
-
-                    confirmationError
-                        .classList
-                        .add(
-                            "active"
-                        );
-
-
-                    return;
-
-                }
-
-
-                const items =
-                    getVerificationItems();
-
-
-                const result =
-                    [];
-
-
-                let revisionCount =
-                    0;
-
-
-                items.forEach(
-                    function (item) {
-
-                        const decision =
-                            item.dataset
-                                .decision;
-
-
-                        const feedback =
-                            item.querySelector(
-                                ".verification-feedback textarea"
-                            );
-
-
-                        if (
-                            decision ===
-                            "revision"
-                        ) {
-
-                            revisionCount++;
+                            return;
 
                         }
 
 
-                        result.push(
-                            {
-                                type:
-                                    item.dataset
-                                        .itemType,
+                        result.push({
 
-                                key:
-                                    item.dataset
-                                        .itemKey,
+                            type:
+                                item.dataset.itemType,
 
-                                status:
-                                    decision ===
-                                    "approved"
-                                        ?
-                                        "DISETUJUI"
-                                        :
-                                        "REVISI",
+                            key:
+                                item.dataset.itemKey,
 
-                                feedback:
-                                    decision ===
+                            decision:
+                                decision,
+
+                            feedback:
+                                decision ===
                                     "revision"
-                                        ?
-                                        feedback.value
-                                            .trim()
-                                        :
-                                        null
+                                    ? textarea.value.trim()
+                                    : null
+
+                        });
+
+                    }
+                );
+
+
+                if (
+                    !confirmation?.checked
+                ) {
+
+                    valid =
+                        false;
+
+                }
+
+
+                if (!valid) {
+
+                    alert(
+                        "Lengkapi seluruh keputusan verifikasi dan feedback revisi."
+                    );
+
+                    return;
+
+                }
+
+
+                try {
+
+                    submitButton.disabled =
+                        true;
+
+
+                    await window.YudisiumAPI
+                        .verifySubmission(
+                            submission.id,
+                            {
+                                items:
+                                    result
                             }
                         );
 
-                    }
-                );
 
+                    window.location.href =
+                        "detail_pengajuan.html?id=" +
+                        submission.id;
 
-                const finalStatus =
-                    revisionCount > 0
-                        ?
-                        "PERLU_REVISI"
-                        :
-                        "TERVERIFIKASI";
+                } catch (error) {
 
-
-                /*
-                 * SIMULASI PAYLOAD FRONTEND
-                 *
-                 * Nanti payload ini dikirim
-                 * ke Laravel.
-                 */
-
-                console.log(
-                    {
-                        pengajuan_id:
-                            submission.id,
-
-                        kode_pengajuan:
-                            submission.code,
-
-                        final_status:
-                            finalStatus,
-
-                        verification:
-                            result
-                    }
-                );
-
-
-                const storedStatus =
-                    finalStatus ===
-                    "PERLU_REVISI"
-                        ?
-                        "perlu revisi"
-                        :
-                        "terverifikasi";
-
-
-                window.YudisiumMockDB
-                    .setSubmissionStatus(
-                        submission.id,
-                        storedStatus
+                    alert(
+                        "Backend belum terhubung. Hasil verifikasi belum dapat disimpan."
                     );
 
 
-                window.YudisiumMockDB
-                    .saveActivity(
-                        {
-                            pengajuan_id:
-                                submission.id,
+                    console.error(error);
 
-                            action:
-                                finalStatus ===
-                                "PERLU_REVISI"
-                                    ?
-                                    "REVISION"
-                                    :
-                                    "VERIFICATION",
+                } finally {
 
-                            action_label:
-                                finalStatus ===
-                                "PERLU_REVISI"
-                                    ?
-                                    "Permintaan Revisi"
-                                    :
-                                    "Verifikasi Pengajuan",
-
-                            old_status:
-                                "VERIFIKASI_ADMIN",
-
-                            new_status:
-                                finalStatus,
-
-                            note:
-                                finalStatus ===
-                                "PERLU_REVISI"
-                                    ?
-                                    "Terdapat " +
-                                    revisionCount +
-                                    " item yang perlu diperbaiki mahasiswa."
-                                    :
-                                    "Seluruh data dan dokumen mahasiswa telah disetujui."
-                        }
-                    );
-
-
-                if (
-                    finalStatus ===
-                    "PERLU_REVISI"
-                ) {
-
-                    successTitle.textContent =
-                        "Revisi Dikirim";
-
-
-                    successMessage.textContent =
-                        "Pengajuan ditandai Perlu Revisi. Mahasiswa hanya akan dapat memperbaiki item yang ditandai revisi.";
-
-                } else {
-
-                    successTitle.textContent =
-                        "Pengajuan Terverifikasi";
-
-
-                    successMessage.textContent =
-                        "Seluruh data dan dokumen telah disetujui. Pengajuan dapat dilanjutkan ke proses SK.";
+                    submitButton.disabled =
+                        false;
 
                 }
-
-
-                successModal
-                    .classList
-                    .add(
-                        "active"
-                    );
-
-            }
-        );
-
-
-        confirmation.addEventListener(
-            "change",
-            function () {
-
-                if (
-                    this.checked
-                ) {
-
-                    confirmationError
-                        .classList
-                        .remove(
-                            "active"
-                        );
-
-                }
-
-            }
-        );
-
-
-        successButton.addEventListener(
-            "click",
-            function () {
-
-                window.location.href =
-                    "pengajuan.html";
 
             }
         );

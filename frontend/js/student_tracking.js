@@ -2,14 +2,13 @@ document.addEventListener(
     "DOMContentLoaded",
     function () {
 
-        console.log(
-            "Tracking Yudisium aktif"
-        );
+        "use strict";
 
 
-        /* =====================================================
-           CEK HALAMAN
-        ===================================================== */
+        if (!window.YudisiumAPI) {
+            return;
+        }
+
 
         const trackingForm =
             document.getElementById(
@@ -17,265 +16,60 @@ document.addEventListener(
             );
 
 
-        const trackingTimeline =
+        const timeline =
             document.getElementById(
                 "trackingTimeline"
             );
 
 
-        /*
-         * tracking.html
-         */
         if (trackingForm) {
 
-            initTrackingSearch();
+            initSearch();
 
         }
 
 
-        /*
-         * detail_tracking.html
-         */
-        if (trackingTimeline) {
+        if (timeline) {
 
-            initTrackingDetail();
+            initDetail();
 
         }
-
 
 
         /* =====================================================
-           HALAMAN PENCARIAN
+           SEARCH
         ===================================================== */
 
-        function initTrackingSearch() {
+        function initSearch() {
 
-            const trackingNim =
+            const nim =
                 document.getElementById(
                     "tracking_nim"
                 );
 
 
-            const kodePengajuan =
+            const code =
                 document.getElementById(
                     "kode_pengajuan"
                 );
 
 
-            const trackingLoading =
+            const errorBox =
                 document.getElementById(
-                    "trackingLoading"
+                    "trackingLookupError"
                 );
 
-
-            /* =====================================
-               ERROR STATE
-            ===================================== */
-
-            function setError(
-                field,
-                hasError
-            ) {
-
-                if (!field) {
-
-                    return;
-
-                }
-
-
-                const formGroup =
-                    field.closest(
-                        ".form-group"
-                    );
-
-
-                if (hasError) {
-
-                    field
-                        .classList
-                        .add(
-                            "form-control-error"
-                        );
-
-
-                    if (formGroup) {
-
-                        formGroup
-                            .classList
-                            .add(
-                                "has-error"
-                            );
-
-                    }
-
-                } else {
-
-                    field
-                        .classList
-                        .remove(
-                            "form-control-error"
-                        );
-
-
-                    if (formGroup) {
-
-                        formGroup
-                            .classList
-                            .remove(
-                                "has-error"
-                            );
-
-                    }
-
-                }
-
-            }
-
-
-
-            /* =====================================
-               VALIDASI NIM
-            ===================================== */
-
-            function validateNim() {
-
-                const nim =
-                    trackingNim
-                        .value
-                        .trim();
-
-
-                let valid = true;
-
-
-                if (nim === "") {
-
-                    valid = false;
-
-                }
-
-
-                if (
-                    nim !== "" &&
-                    !/^\d+$/.test(nim)
-                ) {
-
-                    valid = false;
-
-                }
-
-
-                setError(
-                    trackingNim,
-                    !valid
-                );
-
-
-                return valid;
-
-            }
-
-
-
-            /* =====================================
-               VALIDASI KODE
-            ===================================== */
-
-            function validateKode() {
-
-                const kode =
-                    kodePengajuan
-                        .value
-                        .trim();
-
-
-                let valid = true;
-
-
-                if (kode === "") {
-
-                    valid = false;
-
-                }
-
-
-                setError(
-                    kodePengajuan,
-                    !valid
-                );
-
-
-                return valid;
-
-            }
-
-
-
-            /* =====================================
-               INPUT NIM
-            ===================================== */
-
-            trackingNim.addEventListener(
-                "input",
-                function () {
-
-                    this.value =
-                        this.value.replace(
-                            /\D/g,
-                            ""
-                        );
-
-
-                    validateNim();
-
-                }
-            );
-
-
-
-            /* =====================================
-               INPUT KODE
-            ===================================== */
-
-            kodePengajuan.addEventListener(
-                "input",
-                function () {
-
-                    this.value =
-                        this.value
-                            .toUpperCase();
-
-
-                    validateKode();
-
-                }
-            );
-
-
-
-            /* =====================================
-               SUBMIT TRACKING
-            ===================================== */
 
             trackingForm.addEventListener(
                 "submit",
-                function (event) {
+                async function (event) {
 
                     event.preventDefault();
 
 
-                    const nimValid =
-                        validateNim();
-
-
-                    const kodeValid =
-                        validateKode();
-
-
                     if (
-                        !nimValid ||
-                        !kodeValid
+                        !nim.value.trim() ||
+                        !code.value.trim()
                     ) {
 
                         return;
@@ -283,59 +77,73 @@ document.addEventListener(
                     }
 
 
-                    if (trackingLoading) {
+                    try {
 
-                        trackingLoading
-                            .classList
-                            .add(
-                                "active"
-                            );
+                        const submission =
+                            await window.YudisiumAPI
+                                .findSubmission(
+                                    nim.value,
+                                    code.value
+                                );
+
+
+                        if (!submission) {
+
+                            if (errorBox) {
+
+                                errorBox.style.display =
+                                    "block";
+
+                                errorBox.textContent =
+                                    window.YudisiumAPI
+                                        .config
+                                        .backendConnected
+                                        ? "NIM dan Kode SK Yudisium tidak ditemukan."
+                                        : "Sistem tracking belum terhubung ke backend.";
+
+                            }
+
+                            return;
+
+                        }
+
+
+                        sessionStorage.setItem(
+                            "tracking_nim",
+                            submission.nim
+                        );
+
+
+                        sessionStorage.setItem(
+                            "tracking_kode",
+                            submission.code
+                        );
+
+
+                        sessionStorage.setItem(
+                            "tracking_submission_id",
+                            String(
+                                submission.id
+                            )
+                        );
+
+
+                        window.location.href =
+                            "detail_tracking.html";
+
+                    } catch (error) {
+
+                        if (errorBox) {
+
+                            errorBox.style.display =
+                                "block";
+
+                            errorBox.textContent =
+                                "Sistem belum dapat mengakses data pengajuan.";
+
+                        }
 
                     }
-
-
-                    /*
-                     * Data simulasi frontend.
-                     *
-                     * Nantinya validasi NIM + kode
-                     * dilakukan Laravel/database.
-                     */
-                    sessionStorage.setItem(
-                        "tracking_nim",
-                        trackingNim.value
-                    );
-
-
-                    sessionStorage.setItem(
-                        "tracking_kode",
-                        kodePengajuan.value
-                    );
-
-
-                    /*
-                     * Kalau mahasiswa melakukan
-                     * pencarian baru, status revisi
-                     * simulasi lama dibersihkan.
-                     */
-                    sessionStorage.removeItem(
-                        "revision_submitted"
-                    );
-
-
-                    sessionStorage.removeItem(
-                        "revision_submitted_at"
-                    );
-
-
-                    setTimeout(
-                        function () {
-
-                            window.location.href =
-                                "detail_tracking.html";
-
-                        },
-                        700
-                    );
 
                 }
             );
@@ -343,18 +151,11 @@ document.addEventListener(
         }
 
 
-
         /* =====================================================
-           HALAMAN DETAIL TRACKING
+           DETAIL
         ===================================================== */
 
-        function initTrackingDetail() {
-
-            const kode =
-                sessionStorage.getItem(
-                    "tracking_kode"
-                );
-
+        async function initDetail() {
 
             const nim =
                 sessionStorage.getItem(
@@ -362,228 +163,119 @@ document.addEventListener(
                 );
 
 
-            /*
-             * Tidak boleh membuka detail
-             * tanpa NIM + Kode SK.
-             */
+            const code =
+                sessionStorage.getItem(
+                    "tracking_kode"
+                );
+
+
             if (
-                !kode ||
-                !nim
+                !nim ||
+                !code
             ) {
 
                 window.location.href =
                     "tracking.html";
-
 
                 return;
 
             }
 
 
-
-            /* =================================================
-               STATUS SIMULASI
-            ================================================= */
-
-            let currentStatus =
-                "TTD_WAKIL_DEKAN";
-
-
-            /*
-             * Kalau mahasiswa sudah
-             * mengirim revisi.
-             */
-            const revisionSubmitted =
-                sessionStorage.getItem(
-                    "revision_submitted"
-                ) === "true";
+            const submission =
+                await window.YudisiumAPI
+                    .findSubmission(
+                        nim,
+                        code
+                    );
 
 
-            if (revisionSubmitted) {
+            if (!submission) {
 
-                currentStatus =
-                    "REVISI_DIKIRIM";
+                window.location.href =
+                    "tracking.html";
 
-            } else if (
-                kode.includes(
-                    "REVISI"
-                )
-            ) {
-
-                currentStatus =
-                    "PERLU_REVISI";
-
-            } else if (
-                kode.includes(
-                    "TERBIT"
-                )
-            ) {
-
-                currentStatus =
-                    "SK_TERBIT";
-
-            } else if (
-                kode.includes(
-                    "DEKAN"
-                )
-            ) {
-
-                currentStatus =
-                    "TTD_DEKAN";
-
-            } else if (
-                kode.includes(
-                    "BUATSK"
-                )
-            ) {
-
-                currentStatus =
-                    "PEMBUATAN_SK";
-
-            } else if (
-                kode.includes(
-                    "VERIFIKASI"
-                )
-            ) {
-
-                currentStatus =
-                    "VERIFIKASI_ADMIN";
-
-            } else if (
-                kode.includes(
-                    "VERIFIED"
-                )
-            ) {
-
-                currentStatus =
-                    "TERVERIFIKASI";
-
-            } else if (
-                kode.includes(
-                    "DIAJUKAN"
-                )
-            ) {
-
-                currentStatus =
-                    "DIAJUKAN";
+                return;
 
             }
 
 
-            /*
-             * Nantinya object ini berasal
-             * dari response API Laravel.
-             */
-            const mockData = {
-
-                kodePengajuan:
-                    kode,
-
-                nim:
-                    nim,
-
-                nama:
-                    "Mahasiswa FEB UPR",
-
-                jurusan:
-                    "Manajemen",
-
-                tanggalPengajuan:
-                    "02 September 2026",
-
-                updatedAt:
-                    revisionSubmitted
-                        ? "Revisi baru saja dikirim"
-                        : "02 September 2026, 09.30",
-
-                status:
-                    currentStatus
-
-            };
-
-
-            renderDetail(
-                mockData
-            );
-
-        }
-
-
-
-        /* =====================================================
-           RENDER DETAIL
-        ===================================================== */
-
-        function renderDetail(data) {
-
             setText(
                 "detailKode",
-                data.kodePengajuan
+                submission.code
             );
-
 
             setText(
                 "detailNim",
-                data.nim
+                submission.nim
             );
-
 
             setText(
                 "detailNama",
-                data.nama
+                submission.name
             );
-
 
             setText(
                 "detailJurusan",
-                data.jurusan
+                submission.department
             );
-
 
             setText(
                 "detailTanggal",
-                data.tanggalPengajuan
+                submission.submittedAt
             );
-
 
             setText(
                 "detailUpdated",
-                data.updatedAt
+                submission.updatedAt ||
+                submission.submittedAt
             );
-
 
             setText(
                 "statusUpdatedAt",
-                data.updatedAt
+                submission.updatedAt ||
+                submission.submittedAt
             );
 
 
-            renderCurrentStatus(
-                data.status
+            renderStatus(
+                submission
             );
 
 
             renderTimeline(
-                data.status
+                submission.status
             );
 
 
-            renderRevision(
-                data.status
-            );
+            if (
+                submission.status ===
+                window.YudisiumAPI
+                    .STATUS
+                    .PERLU_REVISI
+            ) {
+
+                const alert =
+                    document.getElementById(
+                        "revisionAlert"
+                    );
 
 
-            renderNextAction(
-                data.status
-            );
+                alert?.classList.add(
+                    "active"
+                );
+
+
+                setText(
+                    "revisionCount",
+                    submission.revisionCount ||
+                    "-"
+                );
+
+            }
 
         }
 
-
-
-        /* =====================================================
-           HELPER SET TEXT
-        ===================================================== */
 
         function setText(
             id,
@@ -591,475 +283,322 @@ document.addEventListener(
         ) {
 
             const element =
-                document.getElementById(
-                    id
-                );
+                document.getElementById(id);
 
 
             if (element) {
 
                 element.textContent =
-                    value;
+                    value || "-";
 
             }
 
         }
 
 
-
-        /* =====================================================
-           CURRENT STATUS
-        ===================================================== */
-
-        function renderCurrentStatus(
-            status
+        function renderStatus(
+            submission
         ) {
 
-            const currentStatus =
+            const STATUS =
+                window.YudisiumAPI.STATUS;
+
+
+            let title =
+                "Pengajuan Diproses";
+
+            let description =
+                "Pengajuan sedang diproses oleh FEB UPR.";
+
+            let icon =
+                "•";
+
+
+            switch (
+                submission.status
+            ) {
+
+                case STATUS.MENUNGGU_VERIFIKASI:
+
+                    title =
+                        "Menunggu Verifikasi";
+
+                    description =
+                        "Pengajuan menunggu pemeriksaan Bagian Akademik.";
+
+                    icon =
+                        "⌕";
+
+                    break;
+
+
+                case STATUS.PERLU_REVISI:
+
+                    title =
+                        "Perlu Revisi";
+
+                    description =
+                        "Terdapat data atau dokumen yang perlu diperbaiki.";
+
+                    icon =
+                        "!";
+
+                    break;
+
+
+                case STATUS.REVISI_DIKIRIM:
+
+                    title =
+                        "Revisi Telah Dikirim";
+
+                    description =
+                        "Revisi menunggu pemeriksaan ulang Admin.";
+
+                    icon =
+                        "✓";
+
+                    break;
+
+
+                case STATUS.TERVERIFIKASI:
+
+                    title =
+                        "Data Terverifikasi";
+
+                    description =
+                        "Pengajuan dinyatakan lengkap dan benar.";
+
+                    icon =
+                        "✓";
+
+                    break;
+
+
+                case STATUS.PEMBUATAN_SK:
+
+                    title =
+                        "Pembuatan SK";
+
+                    description =
+                        "SK Yudisium sedang diproses.";
+
+                    icon =
+                        "⌛";
+
+                    break;
+
+
+                case STATUS.TTD_WAKIL_DEKAN:
+
+                    title =
+                        "Tanda Tangan Wakil Dekan";
+
+                    description =
+                        "SK sedang melalui proses tanda tangan Wakil Dekan.";
+
+                    icon =
+                        "✎";
+
+                    break;
+
+
+                case STATUS.TTD_DEKAN:
+
+                    title =
+                        "Tanda Tangan Dekan";
+
+                    description =
+                        "SK sedang melalui proses tanda tangan Dekan.";
+
+                    icon =
+                        "✎";
+
+                    break;
+
+
+                case STATUS.SK_SIAP_DIAMBIL:
+
+                    title =
+                        "SK Siap Diambil";
+
+                    description =
+                        "SK Yudisium telah selesai diproses. Silakan mengambil SK di Bagian Akademik FEB UPR.";
+
+                    icon =
+                        "✓";
+
+                    break;
+
+            }
+
+
+            setText(
+                "currentStatus",
+                title
+            );
+
+
+            setText(
+                "statusDescription",
+                description
+            );
+
+
+            setText(
+                "statusIcon",
+                icon
+            );
+
+
+            const nextTitle =
                 document.getElementById(
-                    "currentStatus"
+                    "nextActionTitle"
                 );
 
 
-            const statusDescription =
+            const nextDescription =
                 document.getElementById(
-                    "statusDescription"
-                );
-
-
-            const statusIcon =
-                document.getElementById(
-                    "statusIcon"
-                );
-
-
-            const statusCard =
-                document.getElementById(
-                    "statusCard"
+                    "nextActionDescription"
                 );
 
 
             if (
-                !currentStatus ||
-                !statusDescription ||
-                !statusIcon ||
-                !statusCard
+                submission.status ===
+                STATUS.SK_SIAP_DIAMBIL
             ) {
 
-                return;
+                nextTitle.textContent =
+                    "Ambil SK Yudisium di Fakultas";
 
-            }
+                nextDescription.textContent =
+                    "Silakan datang ke Bagian Akademik FEB UPR untuk mengambil SK Yudisium yang telah selesai.";
 
+            } else if (
+                submission.status ===
+                STATUS.PERLU_REVISI
+            ) {
 
-            statusCard.classList.remove(
-                "status-warning",
-                "status-success",
-                "status-progress"
-            );
+                nextTitle.textContent =
+                    "Perbaiki data atau dokumen";
 
+                nextDescription.textContent =
+                    "Buka halaman revisi dan ikuti feedback Admin.";
 
-            switch (status) {
+            } else {
 
+                nextTitle.textContent =
+                    "Tidak ada tindakan yang diperlukan";
 
-                case "DIAJUKAN":
-
-                    currentStatus.textContent =
-                        "Pengajuan Diterima";
-
-
-                    statusDescription.textContent =
-                        "Pengajuan telah diterima dan menunggu pemeriksaan admin.";
-
-
-                    statusIcon.textContent =
-                        "✓";
-
-
-                    statusCard
-                        .classList
-                        .add(
-                            "status-progress"
-                        );
-
-                    break;
-
-
-
-                case "VERIFIKASI_ADMIN":
-
-                    currentStatus.textContent =
-                        "Sedang Diverifikasi Admin";
-
-
-                    statusDescription.textContent =
-                        "Bagian Akademik sedang memeriksa data dan dokumen pengajuan.";
-
-
-                    statusIcon.textContent =
-                        "⌕";
-
-
-                    statusCard
-                        .classList
-                        .add(
-                            "status-progress"
-                        );
-
-                    break;
-
-
-
-                case "PERLU_REVISI":
-
-                    currentStatus.textContent =
-                        "Perlu Revisi";
-
-
-                    statusDescription.textContent =
-                        "Terdapat data atau dokumen yang harus diperbaiki sesuai catatan admin.";
-
-
-                    statusIcon.textContent =
-                        "!";
-
-
-                    statusCard
-                        .classList
-                        .add(
-                            "status-warning"
-                        );
-
-                    break;
-
-
-
-                case "REVISI_DIKIRIM":
-
-                    currentStatus.textContent =
-                        "Revisi Telah Dikirim";
-
-
-                    statusDescription.textContent =
-                        "Perbaikan telah diterima dan sekarang menunggu pemeriksaan ulang admin.";
-
-
-                    statusIcon.textContent =
-                        "✓";
-
-
-                    statusCard
-                        .classList
-                        .add(
-                            "status-progress"
-                        );
-
-                    break;
-
-
-
-                case "TERVERIFIKASI":
-
-                    currentStatus.textContent =
-                        "Data Terverifikasi";
-
-
-                    statusDescription.textContent =
-                        "Data dan dokumen telah dinyatakan lengkap dan benar.";
-
-
-                    statusIcon.textContent =
-                        "✓";
-
-
-                    statusCard
-                        .classList
-                        .add(
-                            "status-success"
-                        );
-
-                    break;
-
-
-
-                case "PEMBUATAN_SK":
-
-                    currentStatus.textContent =
-                        "Pembuatan SK";
-
-
-                    statusDescription.textContent =
-                        "SK Yudisium sedang dipersiapkan oleh Bagian Akademik.";
-
-
-                    statusIcon.textContent =
-                        "⌛";
-
-
-                    statusCard
-                        .classList
-                        .add(
-                            "status-progress"
-                        );
-
-                    break;
-
-
-
-                case "TTD_WAKIL_DEKAN":
-
-                    currentStatus.textContent =
-                        "Proses Tanda Tangan Wakil Dekan";
-
-
-                    statusDescription.textContent =
-                        "SK sedang dalam proses tanda tangan Wakil Dekan.";
-
-
-                    statusIcon.textContent =
-                        "✎";
-
-
-                    statusCard
-                        .classList
-                        .add(
-                            "status-progress"
-                        );
-
-                    break;
-
-
-
-                case "TTD_DEKAN":
-
-                    currentStatus.textContent =
-                        "Proses Tanda Tangan Dekan";
-
-
-                    statusDescription.textContent =
-                        "SK sedang dalam proses tanda tangan Dekan.";
-
-
-                    statusIcon.textContent =
-                        "✎";
-
-
-                    statusCard
-                        .classList
-                        .add(
-                            "status-progress"
-                        );
-
-                    break;
-
-
-
-                case "SK_TERBIT":
-
-                    currentStatus.textContent =
-                        "SK Yudisium Telah Terbit";
-
-
-                    statusDescription.textContent =
-                        "Seluruh proses penerbitan SK Yudisium telah selesai.";
-
-
-                    statusIcon.textContent =
-                        "✓";
-
-
-                    statusCard
-                        .classList
-                        .add(
-                            "status-success"
-                        );
-
-                    break;
-
-
-
-                default:
-
-                    currentStatus.textContent =
-                        "Status Pengajuan";
-
-
-                    statusDescription.textContent =
-                        "Status pengajuan sedang diperbarui.";
-
-
-                    statusIcon.textContent =
-                        "i";
-
-
-                    statusCard
-                        .classList
-                        .add(
-                            "status-progress"
-                        );
-
-                    break;
+                nextDescription.textContent =
+                    "Silakan pantau perkembangan pengajuan melalui halaman ini.";
 
             }
 
         }
 
 
-
-        /* =====================================================
-           TIMELINE
-        ===================================================== */
-
         function renderTimeline(
-            currentStatus
+            status
         ) {
 
-            const timeline =
-                document.getElementById(
-                    "trackingTimeline"
-                );
-
-
-            if (!timeline) {
-
-                return;
-
-            }
-
-
-            timeline.innerHTML =
-                "";
+            const STATUS =
+                window.YudisiumAPI.STATUS;
 
 
             const steps = [
 
                 {
                     key:
-                        "DIAJUKAN",
+                        STATUS.MENUNGGU_VERIFIKASI,
 
                     title:
-                        "Pengajuan Diterima",
-
-                    description:
-                        "Pengajuan berhasil dikirim ke sistem."
+                        "Pengajuan Diterima"
                 },
-
 
                 {
                     key:
-                        "VERIFIKASI_ADMIN",
+                        STATUS.TERVERIFIKASI,
 
                     title:
-                        "Verifikasi Admin",
-
-                    description:
-                        "Data dan dokumen diperiksa oleh Bagian Akademik."
+                        "Data Terverifikasi"
                 },
-
 
                 {
                     key:
-                        "TERVERIFIKASI",
+                        STATUS.PEMBUATAN_SK,
 
                     title:
-                        "Data Terverifikasi",
-
-                    description:
-                        "Seluruh persyaratan telah dinyatakan benar."
+                        "Pembuatan SK"
                 },
-
 
                 {
                     key:
-                        "PEMBUATAN_SK",
+                        STATUS.TTD_WAKIL_DEKAN,
 
                     title:
-                        "Pembuatan SK",
-
-                    description:
-                        "Dokumen SK Yudisium mulai diproses."
+                        "TTD Wakil Dekan"
                 },
-
 
                 {
                     key:
-                        "TTD_WAKIL_DEKAN",
+                        STATUS.TTD_DEKAN,
 
                     title:
-                        "Tanda Tangan Wakil Dekan",
-
-                    description:
-                        "SK diajukan untuk tanda tangan Wakil Dekan."
+                        "TTD Dekan"
                 },
-
 
                 {
                     key:
-                        "TTD_DEKAN",
+                        STATUS.SK_SIAP_DIAMBIL,
 
                     title:
-                        "Tanda Tangan Dekan",
-
-                    description:
-                        "SK diajukan untuk tanda tangan Dekan."
-                },
-
-
-                {
-                    key:
-                        "SK_TERBIT",
-
-                    title:
-                        "SK Terbit",
-
-                    description:
-                        "Proses penerbitan SK Yudisium selesai."
+                        "SK Siap Diambil"
                 }
 
             ];
 
 
-            const statusOrder = {
+            const order = {
 
-                DIAJUKAN:
+                [STATUS.MENUNGGU_VERIFIKASI]:
                     0,
 
-                VERIFIKASI_ADMIN:
+                [STATUS.PERLU_REVISI]:
+                    0,
+
+                [STATUS.REVISI_DIKIRIM]:
+                    0,
+
+                [STATUS.TERVERIFIKASI]:
                     1,
 
-                PERLU_REVISI:
-                    1,
-
-                REVISI_DIKIRIM:
-                    1,
-
-                TERVERIFIKASI:
+                [STATUS.PEMBUATAN_SK]:
                     2,
 
-                PEMBUATAN_SK:
+                [STATUS.TTD_WAKIL_DEKAN]:
                     3,
 
-                TTD_WAKIL_DEKAN:
+                [STATUS.TTD_DEKAN]:
                     4,
 
-                TTD_DEKAN:
-                    5,
-
-                SK_TERBIT:
-                    6
+                [STATUS.SK_SIAP_DIAMBIL]:
+                    5
 
             };
 
 
-            const currentIndex =
-                statusOrder[
-                    currentStatus
-                ] ?? 0;
+            const index =
+                order[status] || 0;
+
+
+            timeline.innerHTML =
+                "";
 
 
             steps.forEach(
                 function (
                     step,
-                    index
+                    i
                 ) {
 
                     const item =
@@ -1072,13 +611,7 @@ document.addEventListener(
                         "timeline-item";
 
 
-                    /*
-                     * Tahap sudah selesai.
-                     */
-                    if (
-                        index <
-                        currentIndex
-                    ) {
+                    if (i < index) {
 
                         item.classList.add(
                             "completed"
@@ -1087,15 +620,7 @@ document.addEventListener(
                     }
 
 
-                    /*
-                     * Tahap aktif normal.
-                     */
-                    if (
-                        index ===
-                            currentIndex &&
-                        currentStatus !==
-                            "PERLU_REVISI"
-                    ) {
+                    if (i === index) {
 
                         item.classList.add(
                             "current"
@@ -1104,127 +629,18 @@ document.addEventListener(
                     }
 
 
-                    /*
-                     * Tahap verifikasi
-                     * sedang membutuhkan revisi.
-                     */
-                    if (
-                        currentStatus ===
-                            "PERLU_REVISI" &&
-                        index === 1
-                    ) {
+                    item.innerHTML =
+                        `
+                        <div class="timeline-marker">
+                            ${i < index ? "✓" : i + 1}
+                        </div>
 
-                        item.classList.add(
-                            "revision"
-                        );
-
-                    }
-
-
-                    const marker =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    marker.className =
-                        "timeline-marker";
-
-
-                    if (
-                        index <
-                        currentIndex
-                    ) {
-
-                        marker.textContent =
-                            "✓";
-
-                    } else if (
-                        currentStatus ===
-                            "PERLU_REVISI" &&
-                        index === 1
-                    ) {
-
-                        marker.textContent =
-                            "!";
-
-                    } else if (
-                        currentStatus ===
-                            "REVISI_DIKIRIM" &&
-                        index === 1
-                    ) {
-
-                        marker.textContent =
-                            "✓";
-
-                    } else {
-
-                        marker.textContent =
-                            index + 1;
-
-                    }
-
-
-                    const content =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    content.className =
-                        "timeline-content";
-
-
-                    const title =
-                        document.createElement(
-                            "h3"
-                        );
-
-
-                    title.textContent =
-                        (
-                            currentStatus ===
-                                "REVISI_DIKIRIM" &&
-                            index === 1
-                        )
-                            ? "Revisi Dikirim"
-                            : step.title;
-
-
-                    const description =
-                        document.createElement(
-                            "p"
-                        );
-
-
-                    description.textContent =
-                        (
-                            currentStatus ===
-                                "REVISI_DIKIRIM" &&
-                            index === 1
-                        )
-                            ? "Perbaikan telah dikirim dan menunggu verifikasi ulang admin."
-                            : step.description;
-
-
-                    content.appendChild(
-                        title
-                    );
-
-
-                    content.appendChild(
-                        description
-                    );
-
-
-                    item.appendChild(
-                        marker
-                    );
-
-
-                    item.appendChild(
-                        content
-                    );
+                        <div class="timeline-content">
+                            <h3>
+                                ${step.title}
+                            </h3>
+                        </div>
+                        `;
 
 
                     timeline.appendChild(
@@ -1233,236 +649,6 @@ document.addEventListener(
 
                 }
             );
-
-        }
-
-
-
-        /* =====================================================
-           NEXT ACTION
-        ===================================================== */
-
-        function renderNextAction(
-            status
-        ) {
-
-            const title =
-                document.getElementById(
-                    "nextActionTitle"
-                );
-
-
-            const description =
-                document.getElementById(
-                    "nextActionDescription"
-                );
-
-
-            const card =
-                document.getElementById(
-                    "nextActionCard"
-                );
-
-
-            if (
-                !title ||
-                !description ||
-                !card
-            ) {
-
-                return;
-
-            }
-
-
-            card.classList.remove(
-                "needs-action"
-            );
-
-
-            switch (status) {
-
-
-                case "PERLU_REVISI":
-
-                    title.textContent =
-                        "Perbaiki data yang ditandai admin";
-
-
-                    description.textContent =
-                        "Buka halaman revisi, ikuti catatan admin, lalu kirim kembali perbaikan Anda.";
-
-
-                    card.classList.add(
-                        "needs-action"
-                    );
-
-                    break;
-
-
-
-                case "REVISI_DIKIRIM":
-
-                    title.textContent =
-                        "Revisi sudah berhasil dikirim";
-
-
-                    description.textContent =
-                        "Perbaikan sedang menunggu pemeriksaan ulang admin. Anda tidak perlu mengirim ulang revisi.";
-
-                    break;
-
-
-
-                case "SK_TERBIT":
-
-                    title.textContent =
-                        "Proses telah selesai";
-
-
-                    description.textContent =
-                        "SK Yudisium telah terbit. Ikuti informasi Bagian Akademik mengenai akses atau pengambilan dokumen.";
-
-                    break;
-
-
-
-                case "DIAJUKAN":
-
-                    title.textContent =
-                        "Tunggu pemeriksaan admin";
-
-
-                    description.textContent =
-                        "Pengajuan sudah masuk ke sistem. Belum ada tindakan yang perlu Anda lakukan.";
-
-                    break;
-
-
-
-                case "VERIFIKASI_ADMIN":
-
-                    title.textContent =
-                        "Pengajuan sedang diperiksa";
-
-
-                    description.textContent =
-                        "Admin sedang memeriksa data dan dokumen Anda. Pantau halaman ini untuk melihat hasil verifikasi.";
-
-                    break;
-
-
-
-                case "TERVERIFIKASI":
-
-                    title.textContent =
-                        "Tidak ada tindakan yang diperlukan";
-
-
-                    description.textContent =
-                        "Data sudah terverifikasi. Proses berikutnya akan dilakukan oleh Bagian Akademik.";
-
-                    break;
-
-
-
-                case "PEMBUATAN_SK":
-
-                    title.textContent =
-                        "SK sedang dipersiapkan";
-
-
-                    description.textContent =
-                        "Anda cukup menunggu proses pembuatan SK selesai.";
-
-                    break;
-
-
-
-                case "TTD_WAKIL_DEKAN":
-
-                    title.textContent =
-                        "Menunggu tanda tangan Wakil Dekan";
-
-
-                    description.textContent =
-                        "Tidak ada tindakan yang perlu dilakukan. SK sedang diproses untuk tanda tangan Wakil Dekan.";
-
-                    break;
-
-
-
-                case "TTD_DEKAN":
-
-                    title.textContent =
-                        "Menunggu tanda tangan Dekan";
-
-
-                    description.textContent =
-                        "Tidak ada tindakan yang perlu dilakukan. SK sedang diproses untuk tanda tangan Dekan.";
-
-                    break;
-
-
-
-                default:
-
-                    title.textContent =
-                        "Tidak ada tindakan yang diperlukan";
-
-
-                    description.textContent =
-                        "Pengajuan sedang diproses. Anda cukup memantau pembaruan status pada halaman ini.";
-
-                    break;
-
-            }
-
-        }
-
-
-
-        /* =====================================================
-           REVISION ALERT
-        ===================================================== */
-
-        function renderRevision(
-            status
-        ) {
-
-            const revisionAlert =
-                document.getElementById(
-                    "revisionAlert"
-                );
-
-
-            if (!revisionAlert) {
-
-                return;
-
-            }
-
-
-            if (
-                status ===
-                    "PERLU_REVISI"
-            ) {
-
-                revisionAlert
-                    .classList
-                    .add(
-                        "active"
-                    );
-
-            } else {
-
-                revisionAlert
-                    .classList
-                    .remove(
-                        "active"
-                    );
-
-            }
 
         }
 

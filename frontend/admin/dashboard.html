@@ -2,6 +2,7 @@
 <html lang="id">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -13,6 +14,7 @@
         Dashboard Admin - Yudisium FEB UPR
     </title>
 
+
     <link
         rel="stylesheet"
         href="../css/style.css"
@@ -22,16 +24,24 @@
         rel="stylesheet"
         href="../css/admin.css"
     >
-    <link rel="stylesheet" href="../css/admin_theme.css">
+
+    <link
+        rel="stylesheet"
+        href="../css/admin_theme.css"
+    >
+
 </head>
+
 
 <body>
 
     <div class="admin-layout">
 
-        <!-- =====================================
+
+        <!-- =====================================================
              SIDEBAR
-        ====================================== -->
+        ====================================================== -->
+
         <aside class="admin-sidebar">
 
             <div class="admin-sidebar-brand">
@@ -57,10 +67,12 @@
 
             <nav class="admin-sidebar-nav">
 
+
                 <a
                     href="dashboard.html"
                     class="admin-nav-item active"
                 >
+
                     <span class="admin-nav-icon">
                         ▦
                     </span>
@@ -68,6 +80,7 @@
                     <span>
                         Dashboard
                     </span>
+
                 </a>
 
 
@@ -75,6 +88,7 @@
                     href="pengajuan.html"
                     class="admin-nav-item"
                 >
+
                     <span class="admin-nav-icon">
                         ☷
                     </span>
@@ -82,6 +96,7 @@
                     <span>
                         Pengajuan
                     </span>
+
                 </a>
 
 
@@ -90,6 +105,7 @@
                     class="admin-nav-item"
                     id="dashboardRevisionMenu"
                 >
+
                     <span class="admin-nav-icon">
                         !
                     </span>
@@ -98,12 +114,14 @@
                         Perlu Revisi
                     </span>
 
+
                     <span
                         class="admin-nav-count"
                         id="sidebarRevisionCount"
                     >
-                        3
+                        0
                     </span>
+
                 </a>
 
 
@@ -112,6 +130,7 @@
                     class="admin-nav-item"
                     id="dashboardSkMenu"
                 >
+
                     <span class="admin-nav-icon">
                         ◷
                     </span>
@@ -119,6 +138,7 @@
                     <span>
                         Proses SK
                     </span>
+
                 </a>
 
 
@@ -126,6 +146,7 @@
                     href="history.html"
                     class="admin-nav-item"
                 >
+
                     <span class="admin-nav-icon">
                         ↺
                     </span>
@@ -133,10 +154,12 @@
                     <span>
                         History
                     </span>
+
                 </a>
 
 
-                <div class="admin-nav-divider"></div>
+                <div class="admin-nav-divider">
+                </div>
 
 
                 <a
@@ -144,6 +167,7 @@
                     class="admin-nav-item super-admin-only"
                     id="manageAdminMenu"
                 >
+
                     <span class="admin-nav-icon">
                         ♙
                     </span>
@@ -151,6 +175,7 @@
                     <span>
                         Kelola Admin
                     </span>
+
                 </a>
 
             </nav>
@@ -192,12 +217,18 @@
         </aside>
 
 
-        <!-- =====================================
+
+        <!-- =====================================================
              MAIN
-        ====================================== -->
+        ====================================================== -->
+
         <main class="admin-main">
 
-            <!-- TOPBAR -->
+
+            <!-- =================================================
+                 TOPBAR
+            ================================================== -->
+
             <header class="admin-topbar">
 
                 <div>
@@ -215,8 +246,11 @@
 
                 <div class="admin-topbar-actions">
 
-                    <span class="admin-date">
-                        02 September 2026
+                    <span
+                        class="admin-date"
+                        id="dashboardDate"
+                    >
+                        -
                     </span>
 
 
@@ -245,10 +279,15 @@
             </header>
 
 
-            <!-- =====================================
+
+            <!-- =================================================
                  STATISTICS
-            ====================================== -->
+            ================================================== -->
+
             <section class="admin-stats-grid">
+
+
+                <!-- TOTAL -->
 
                 <article class="admin-stat-card">
 
@@ -265,8 +304,11 @@
                     </div>
 
 
-                    <strong class="admin-stat-value">
-                        124
+                    <strong
+                        class="admin-stat-value"
+                        id="dashboardTotalCount"
+                    >
+                        0
                     </strong>
 
 
@@ -276,6 +318,9 @@
 
                 </article>
 
+
+
+                <!-- MENUNGGU -->
 
                 <article class="admin-stat-card">
 
@@ -292,8 +337,11 @@
                     </div>
 
 
-                    <strong class="admin-stat-value">
-                        18
+                    <strong
+                        class="admin-stat-value"
+                        id="dashboardPendingCount"
+                    >
+                        0
                     </strong>
 
 
@@ -303,6 +351,9 @@
 
                 </article>
 
+
+
+                <!-- REVISI -->
 
                 <article class="admin-stat-card warning">
 
@@ -319,8 +370,11 @@
                     </div>
 
 
-                    <strong class="admin-stat-value">
-                        3
+                    <strong
+                        class="admin-stat-value"
+                        id="dashboardRevisionCount"
+                    >
+                        0
                     </strong>
 
 
@@ -330,6 +384,9 @@
 
                 </article>
 
+
+
+                <!-- TERVERIFIKASI -->
 
                 <article class="admin-stat-card success">
 
@@ -346,8 +403,11 @@
                     </div>
 
 
-                    <strong class="admin-stat-value">
-                        67
+                    <strong
+                        class="admin-stat-value"
+                        id="dashboardVerifiedCount"
+                    >
+                        0
                     </strong>
 
 
@@ -357,6 +417,9 @@
 
                 </article>
 
+
+
+                <!-- PROSES SK -->
 
                 <article class="admin-stat-card">
 
@@ -373,8 +436,11 @@
                     </div>
 
 
-                    <strong class="admin-stat-value">
-                        26
+                    <strong
+                        class="admin-stat-value"
+                        id="dashboardProcessCount"
+                    >
+                        0
                     </strong>
 
 
@@ -385,12 +451,15 @@
                 </article>
 
 
+
+                <!-- SK SIAP DIAMBIL -->
+
                 <article class="admin-stat-card success">
 
                     <div class="admin-stat-header">
 
                         <span>
-                            SK Terbit
+                            SK Siap Diambil
                         </span>
 
                         <span class="admin-stat-icon">
@@ -400,13 +469,16 @@
                     </div>
 
 
-                    <strong class="admin-stat-value">
-                        10
+                    <strong
+                        class="admin-stat-value"
+                        id="dashboardPublishedCount"
+                    >
+                        0
                     </strong>
 
 
                     <p>
-                        Proses telah selesai
+                        SK selesai diproses dan siap diambil mahasiswa
                     </p>
 
                 </article>
@@ -414,12 +486,18 @@
             </section>
 
 
-            <!-- =====================================
+
+            <!-- =================================================
                  DASHBOARD GRID
-            ====================================== -->
+            ================================================== -->
+
             <section class="admin-dashboard-grid">
 
-                <!-- PENGAJUAN TERBARU -->
+
+                <!-- =============================================
+                     PENGAJUAN TERBARU
+                ============================================== -->
+
                 <div class="admin-dashboard-card admin-dashboard-large">
 
                     <div class="admin-card-header">
@@ -431,7 +509,8 @@
                             </h2>
 
                             <p>
-                                Pengajuan mahasiswa yang baru masuk.
+                                Data pengajuan mahasiswa terbaru
+                                dari sistem.
                             </p>
 
                         </div>
@@ -480,161 +559,42 @@
                             </thead>
 
 
-                            <tbody>
+                            <!--
+                                Tidak ada dummy hardcode.
+                                Data dibuat admin_dashboard.js
+                            -->
 
-                                <tr>
-
-                                    <td>
-                                        Andi Saputra
-                                    </td>
-
-                                    <td>
-                                        2301110001
-                                    </td>
-
-                                    <td>
-                                        Manajemen
-                                    </td>
-
-                                    <td>
-
-                                        <span class="admin-status-badge pending">
-                                            Menunggu Verifikasi
-                                        </span>
-
-                                    </td>
-
-                                    <td>
-
-                                        <a
-                                            href="detail_pengajuan.html?id=1"
-                                            class="admin-table-link"
-                                        >
-                                            Lihat
-                                        </a>
-
-                                    </td>
-
-                                </tr>
-
-
-                                <tr>
-
-                                    <td>
-                                        Citra Lestari
-                                    </td>
-
-                                    <td>
-                                        2301120002
-                                    </td>
-
-                                    <td>
-                                        Akuntansi
-                                    </td>
-
-                                    <td>
-
-                                        <span class="admin-status-badge revision">
-                                            Perlu Revisi
-                                        </span>
-
-                                    </td>
-
-                                    <td>
-
-                                        <a
-                                            href="detail_pengajuan.html?id=2"
-                                            class="admin-table-link"
-                                        >
-                                            Lihat
-                                        </a>
-
-                                    </td>
-
-                                </tr>
-
-
-                                <tr>
-
-                                    <td>
-                                        Deni Pratama
-                                    </td>
-
-                                    <td>
-                                        2301130003
-                                    </td>
-
-                                    <td>
-                                        Ekonomi Pembangunan
-                                    </td>
-
-                                    <td>
-
-                                        <span class="admin-status-badge verified">
-                                            Terverifikasi
-                                        </span>
-
-                                    </td>
-
-                                    <td>
-
-                                        <a
-                                            href="detail_pengajuan.html?id=3"
-                                            class="admin-table-link"
-                                        >
-                                            Lihat
-                                        </a>
-
-                                    </td>
-
-                                </tr>
-
-
-                                <tr>
-
-                                    <td>
-                                        Eva Natalia
-                                    </td>
-
-                                    <td>
-                                        2301110004
-                                    </td>
-
-                                    <td>
-                                        Manajemen
-                                    </td>
-
-                                    <td>
-
-                                        <span class="admin-status-badge process">
-                                            TTD Wakil Dekan
-                                        </span>
-
-                                    </td>
-
-                                    <td>
-
-                                        <a
-                                            href="detail_pengajuan.html?id=4"
-                                            class="admin-table-link"
-                                        >
-                                            Lihat
-                                        </a>
-
-                                    </td>
-
-                                </tr>
-
+                            <tbody id="dashboardSubmissionTableBody">
                             </tbody>
 
                         </table>
 
                     </div>
 
+
+                    <div
+                        id="dashboardEmptyState"
+                        style="
+                            display: none;
+                            padding: 30px 20px;
+                            text-align: center;
+                        "
+                    >
+
+                        <strong>
+                            Belum ada pengajuan
+                        </strong>
+
+                    </div>
+
                 </div>
 
 
-                <!-- QUICK ACTION -->
+
+                <!-- =============================================
+                     QUICK ACTION
+                ============================================== -->
+
                 <div class="admin-dashboard-card">
 
                     <div class="admin-card-header">
@@ -656,6 +616,9 @@
 
                     <div class="admin-quick-actions">
 
+
+                        <!-- MENUNGGU -->
+
                         <a
                             href="pengajuan.html?filter=menunggu"
                             class="admin-quick-action"
@@ -665,20 +628,24 @@
                                 ◷
                             </div>
 
+
                             <div>
 
                                 <strong>
                                     Verifikasi Pengajuan
                                 </strong>
 
-                                <span>
-                                    18 pengajuan menunggu
+                                <span id="dashboardQuickPendingText">
+                                    0 pengajuan menunggu
                                 </span>
 
                             </div>
 
                         </a>
 
+
+
+                        <!-- REVISI -->
 
                         <a
                             href="pengajuan.html?filter=revisi"
@@ -690,20 +657,24 @@
                                 !
                             </div>
 
+
                             <div>
 
                                 <strong>
                                     Periksa Revisi
                                 </strong>
 
-                                <span>
-                                    3 mahasiswa perlu revisi
+                                <span id="dashboardQuickRevisionText">
+                                    0 mahasiswa perlu revisi
                                 </span>
 
                             </div>
 
                         </a>
 
+
+
+                        <!-- TERVERIFIKASI -->
 
                         <a
                             href="pengajuan.html?filter=terverifikasi"
@@ -714,20 +685,24 @@
                                 ✓
                             </div>
 
+
                             <div>
 
                                 <strong>
                                     Data Terverifikasi
                                 </strong>
 
-                                <span>
-                                    Siap diproses ke SK
+                                <span id="dashboardQuickVerifiedText">
+                                    0 pengajuan siap diproses
                                 </span>
 
                             </div>
 
                         </a>
 
+
+
+                        <!-- PROSES SK -->
 
                         <a
                             href="pengajuan.html?filter=proses-sk"
@@ -739,20 +714,24 @@
                                 ◷
                             </div>
 
+
                             <div>
 
                                 <strong>
                                     Proses SK
                                 </strong>
 
-                                <span>
-                                    Lihat pengajuan dalam proses SK
+                                <span id="dashboardQuickProcessText">
+                                    0 pengajuan dalam proses SK
                                 </span>
 
                             </div>
 
                         </a>
 
+
+
+                        <!-- HISTORY -->
 
                         <a
                             href="history.html"
@@ -762,6 +741,7 @@
                             <div class="admin-quick-icon">
                                 ↺
                             </div>
+
 
                             <div>
 
@@ -778,6 +758,9 @@
                         </a>
 
 
+
+                        <!-- EXPORT -->
+
                         <button
                             type="button"
                             class="admin-quick-action button-action"
@@ -787,6 +770,7 @@
                             <div class="admin-quick-icon">
                                 ↓
                             </div>
+
 
                             <div>
 
@@ -809,9 +793,11 @@
             </section>
 
 
-            <!-- =====================================
+
+            <!-- =================================================
                  SUPER ADMIN
-            ====================================== -->
+            ================================================== -->
+
             <section
                 class="admin-dashboard-card super-admin-section"
                 id="superAdminDashboardSection"
@@ -826,7 +812,8 @@
                         </h2>
 
                         <p>
-                            Akun baru yang menunggu persetujuan Super Admin.
+                            Akun baru yang menunggu persetujuan
+                            Super Admin.
                         </p>
 
                     </div>
@@ -910,7 +897,11 @@
     </div>
 
 
-    <!-- EXPORT MODAL -->
+
+    <!-- =====================================================
+         EXPORT MODAL
+    ====================================================== -->
+
     <div
         class="modal-overlay"
         id="exportModal"
@@ -922,15 +913,18 @@
                 ↓
             </div>
 
+
             <h2>
                 Export Data
             </h2>
+
 
             <p>
                 Fitur export akan mengunduh data pengajuan
                 dalam format Excel setelah terhubung
                 dengan Laravel.
             </p>
+
 
             <button
                 type="button"
@@ -945,8 +939,21 @@
     </div>
 
 
-    <script src="../js/admin_data.js"></script>
+
+    <!-- =====================================================
+         SCRIPT
+
+         1. yudisium_api.js = service API frontend
+         2. admin.js = login/sidebar/admin global
+         3. admin_dashboard.js = renderer dashboard
+    ====================================================== -->
+
+    <script src="../js/yudisium_api.js"></script>
+
     <script src="../js/admin.js"></script>
+
+    <script src="../js/admin_dashboard.js"></script>
+
 
 </body>
 

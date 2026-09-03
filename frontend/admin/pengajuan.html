@@ -2,6 +2,7 @@
 <html lang="id">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -22,16 +23,24 @@
         rel="stylesheet"
         href="../css/admin.css"
     >
-    <link rel="stylesheet" href="../css/admin_theme.css">
+
+    <link
+        rel="stylesheet"
+        href="../css/admin_theme.css"
+    >
+
 </head>
+
 
 <body>
 
     <div class="admin-layout">
 
-        <!-- =====================================
+
+        <!-- =====================================================
              SIDEBAR
-        ====================================== -->
+        ====================================================== -->
+
         <aside class="admin-sidebar">
 
             <div class="admin-sidebar-brand">
@@ -41,6 +50,7 @@
                 </div>
 
                 <div>
+
                     <strong>
                         Yudisium FEB
                     </strong>
@@ -48,6 +58,7 @@
                     <span>
                         Admin Panel
                     </span>
+
                 </div>
 
             </div>
@@ -59,6 +70,7 @@
                     href="dashboard.html"
                     class="admin-nav-item"
                 >
+
                     <span class="admin-nav-icon">
                         ▦
                     </span>
@@ -66,6 +78,7 @@
                     <span>
                         Dashboard
                     </span>
+
                 </a>
 
 
@@ -73,6 +86,7 @@
                     href="pengajuan.html"
                     class="admin-nav-item active"
                 >
+
                     <span class="admin-nav-icon">
                         ☷
                     </span>
@@ -80,6 +94,7 @@
                     <span>
                         Pengajuan
                     </span>
+
                 </a>
 
 
@@ -87,6 +102,7 @@
                     href="pengajuan.html?filter=revisi"
                     class="admin-nav-item"
                 >
+
                     <span class="admin-nav-icon">
                         !
                     </span>
@@ -95,9 +111,13 @@
                         Perlu Revisi
                     </span>
 
-                    <span class="admin-nav-count">
-                        3
+                    <span
+                        class="admin-nav-count"
+                        id="revisionSidebarCount"
+                    >
+                        0
                     </span>
+
                 </a>
 
 
@@ -105,6 +125,7 @@
                     href="pengajuan.html?filter=proses-sk"
                     class="admin-nav-item"
                 >
+
                     <span class="admin-nav-icon">
                         ◷
                     </span>
@@ -112,6 +133,7 @@
                     <span>
                         Proses SK
                     </span>
+
                 </a>
 
 
@@ -119,6 +141,7 @@
                     href="history.html"
                     class="admin-nav-item"
                 >
+
                     <span class="admin-nav-icon">
                         ↺
                     </span>
@@ -126,6 +149,7 @@
                     <span>
                         History
                     </span>
+
                 </a>
 
 
@@ -137,6 +161,7 @@
                     class="admin-nav-item super-admin-only"
                     id="manageAdminMenu"
                 >
+
                     <span class="admin-nav-icon">
                         ♙
                     </span>
@@ -144,6 +169,7 @@
                     <span>
                         Kelola Admin
                     </span>
+
                 </a>
 
             </nav>
@@ -185,12 +211,16 @@
         </aside>
 
 
-        <!-- =====================================
-             MAIN CONTENT
-        ====================================== -->
+
+        <!-- =====================================================
+             MAIN
+        ====================================================== -->
+
         <main class="admin-main">
 
+
             <!-- TOPBAR -->
+
             <header class="admin-topbar">
 
                 <div>
@@ -233,9 +263,11 @@
             </header>
 
 
-            <!-- =====================================
-                 MINI STATISTICS
-            ====================================== -->
+
+            <!-- =================================================
+                 MINI STATS
+            ================================================== -->
+
             <section class="submission-mini-stats">
 
                 <div class="submission-mini-card">
@@ -244,8 +276,8 @@
                         Total
                     </span>
 
-                    <strong>
-                        124
+                    <strong id="submissionStatTotal">
+                        0
                     </strong>
 
                 </div>
@@ -257,8 +289,8 @@
                         Menunggu
                     </span>
 
-                    <strong>
-                        18
+                    <strong id="submissionStatPending">
+                        0
                     </strong>
 
                 </div>
@@ -270,8 +302,8 @@
                         Revisi
                     </span>
 
-                    <strong>
-                        3
+                    <strong id="submissionStatRevision">
+                        0
                     </strong>
 
                 </div>
@@ -283,8 +315,8 @@
                         Terverifikasi
                     </span>
 
-                    <strong>
-                        67
+                    <strong id="submissionStatVerified">
+                        0
                     </strong>
 
                 </div>
@@ -292,9 +324,11 @@
             </section>
 
 
-            <!-- =====================================
-                 SEARCH & FILTER
-            ====================================== -->
+
+            <!-- =================================================
+                 FILTER
+            ================================================== -->
+
             <section class="admin-dashboard-card">
 
                 <div class="admin-card-header">
@@ -316,7 +350,9 @@
 
                 <div class="submission-filter-grid">
 
+
                     <!-- SEARCH -->
+
                     <div class="submission-filter-group submission-search">
 
                         <label for="submissionSearch">
@@ -326,13 +362,14 @@
                         <input
                             type="text"
                             id="submissionSearch"
-                            placeholder="Nama, NIM, atau kode pengajuan"
+                            placeholder="Nama, NIM, atau Kode SK Yudisium"
                         >
 
                     </div>
 
 
                     <!-- JURUSAN -->
+
                     <div class="submission-filter-group">
 
                         <label for="submissionDepartment">
@@ -363,6 +400,7 @@
 
 
                     <!-- STATUS -->
+
                     <div class="submission-filter-group">
 
                         <label for="submissionStatus">
@@ -403,8 +441,8 @@
                                 TTD Dekan
                             </option>
 
-                            <option value="sk terbit">
-                                SK Terbit
+                            <option value="sk_siap_diambil">
+                                SK Siap Diambil
                             </option>
 
                         </select>
@@ -414,7 +452,6 @@
                 </div>
 
 
-                <!-- FILTER BUTTON -->
                 <div class="submission-filter-actions">
 
                     <button
@@ -437,7 +474,6 @@
                 </div>
 
 
-                <!-- ACTIVE FILTER -->
                 <div
                     class="active-filter-box"
                     id="activeFilterBox"
@@ -464,9 +500,11 @@
             </section>
 
 
-            <!-- =====================================
+
+            <!-- =================================================
                  TABLE
-            ====================================== -->
+            ================================================== -->
+
             <section class="admin-dashboard-card submission-table-card">
 
                 <div class="admin-card-header">
@@ -478,7 +516,7 @@
                         </h2>
 
                         <p id="submissionResultCount">
-                            Menampilkan 8 pengajuan
+                            Menampilkan 0 pengajuan
                         </p>
 
                     </div>
@@ -532,495 +570,15 @@
                         </thead>
 
 
-                        <tbody id="submissionTableBody">
-
-                            <!-- 1 -->
-                            <tr
-                                data-name="Andi Saputra"
-                                data-nim="2301110001"
-                                data-code="YDS-2026-0001"
-                                data-department="manajemen"
-                                data-status="menunggu verifikasi"
-                            >
-
-                                <td>
-                                    <strong>
-                                        YDS-2026-0001
-                                    </strong>
-                                </td>
-
-                                <td>
-
-                                    <div class="submission-student">
-
-                                        <strong>
-                                            Andi Saputra
-                                        </strong>
-
-                                        <span>
-                                            2301110001
-                                        </span>
-
-                                    </div>
-
-                                </td>
-
-                                <td>
-                                    Manajemen
-                                </td>
-
-                                <td>
-                                    02 Sep 2026
-                                </td>
-
-                                <td>
-
-                                    <span class="admin-status-badge pending">
-                                        Menunggu Verifikasi
-                                    </span>
-
-                                </td>
-
-                                <td>
-
-                                    <a
-                                        href="detail_pengajuan.html?id=1"
-                                        class="admin-detail-button"
-                                    >
-                                        Detail
-                                    </a>
-
-                                </td>
-
-                            </tr>
-
-
-                            <!-- 2 -->
-                            <tr
-                                data-name="Citra Lestari"
-                                data-nim="2301120002"
-                                data-code="YDS-2026-0002"
-                                data-department="akuntansi"
-                                data-status="perlu revisi"
-                            >
-
-                                <td>
-                                    <strong>
-                                        YDS-2026-0002
-                                    </strong>
-                                </td>
-
-                                <td>
-
-                                    <div class="submission-student">
-
-                                        <strong>
-                                            Citra Lestari
-                                        </strong>
-
-                                        <span>
-                                            2301120002
-                                        </span>
-
-                                    </div>
-
-                                </td>
-
-                                <td>
-                                    Akuntansi
-                                </td>
-
-                                <td>
-                                    02 Sep 2026
-                                </td>
-
-                                <td>
-
-                                    <span class="admin-status-badge revision">
-                                        Perlu Revisi
-                                    </span>
-
-                                </td>
-
-                                <td>
-
-                                    <a
-                                        href="detail_pengajuan.html?id=2"
-                                        class="admin-detail-button"
-                                    >
-                                        Detail
-                                    </a>
-
-                                </td>
-
-                            </tr>
-
-
-                            <!-- 3 -->
-                            <tr
-                                data-name="Deni Pratama"
-                                data-nim="2301130003"
-                                data-code="YDS-2026-0003"
-                                data-department="ekonomi pembangunan"
-                                data-status="terverifikasi"
-                            >
-
-                                <td>
-                                    <strong>
-                                        YDS-2026-0003
-                                    </strong>
-                                </td>
-
-                                <td>
-
-                                    <div class="submission-student">
-
-                                        <strong>
-                                            Deni Pratama
-                                        </strong>
-
-                                        <span>
-                                            2301130003
-                                        </span>
-
-                                    </div>
-
-                                </td>
-
-                                <td>
-                                    Ekonomi Pembangunan
-                                </td>
-
-                                <td>
-                                    01 Sep 2026
-                                </td>
-
-                                <td>
-
-                                    <span class="admin-status-badge verified">
-                                        Terverifikasi
-                                    </span>
-
-                                </td>
-
-                                <td>
-
-                                    <a
-                                        href="detail_pengajuan.html?id=3"
-                                        class="admin-detail-button"
-                                    >
-                                        Detail
-                                    </a>
-
-                                </td>
-
-                            </tr>
-
-
-                            <!-- 4 -->
-                            <tr
-                                data-name="Eva Natalia"
-                                data-nim="2301110004"
-                                data-code="YDS-2026-0004"
-                                data-department="manajemen"
-                                data-status="ttd wakil dekan"
-                            >
-
-                                <td>
-                                    <strong>
-                                        YDS-2026-0004
-                                    </strong>
-                                </td>
-
-                                <td>
-
-                                    <div class="submission-student">
-
-                                        <strong>
-                                            Eva Natalia
-                                        </strong>
-
-                                        <span>
-                                            2301110004
-                                        </span>
-
-                                    </div>
-
-                                </td>
-
-                                <td>
-                                    Manajemen
-                                </td>
-
-                                <td>
-                                    01 Sep 2026
-                                </td>
-
-                                <td>
-
-                                    <span class="admin-status-badge process">
-                                        TTD Wakil Dekan
-                                    </span>
-
-                                </td>
-
-                                <td>
-
-                                    <a
-                                        href="detail_pengajuan.html?id=4"
-                                        class="admin-detail-button"
-                                    >
-                                        Detail
-                                    </a>
-
-                                </td>
-
-                            </tr>
-
-
-                            <!-- 5 -->
-                            <tr
-                                data-name="Fajar Rahman"
-                                data-nim="2301120005"
-                                data-code="YDS-2026-0005"
-                                data-department="akuntansi"
-                                data-status="revisi dikirim"
-                            >
-
-                                <td>
-                                    <strong>
-                                        YDS-2026-0005
-                                    </strong>
-                                </td>
-
-                                <td>
-
-                                    <div class="submission-student">
-
-                                        <strong>
-                                            Fajar Rahman
-                                        </strong>
-
-                                        <span>
-                                            2301120005
-                                        </span>
-
-                                    </div>
-
-                                </td>
-
-                                <td>
-                                    Akuntansi
-                                </td>
-
-                                <td>
-                                    31 Agu 2026
-                                </td>
-
-                                <td>
-
-                                    <span class="admin-status-badge revision-submitted">
-                                        Revisi Dikirim
-                                    </span>
-
-                                </td>
-
-                                <td>
-
-                                    <a
-                                        href="detail_pengajuan.html?id=5"
-                                        class="admin-detail-button"
-                                    >
-                                        Detail
-                                    </a>
-
-                                </td>
-
-                            </tr>
-
-
-                            <!-- 6 -->
-                            <tr
-                                data-name="Grace Amelia"
-                                data-nim="2301110006"
-                                data-code="YDS-2026-0006"
-                                data-department="manajemen"
-                                data-status="pembuatan sk"
-                            >
-
-                                <td>
-                                    <strong>
-                                        YDS-2026-0006
-                                    </strong>
-                                </td>
-
-                                <td>
-
-                                    <div class="submission-student">
-
-                                        <strong>
-                                            Grace Amelia
-                                        </strong>
-
-                                        <span>
-                                            2301110006
-                                        </span>
-
-                                    </div>
-
-                                </td>
-
-                                <td>
-                                    Manajemen
-                                </td>
-
-                                <td>
-                                    31 Agu 2026
-                                </td>
-
-                                <td>
-
-                                    <span class="admin-status-badge process">
-                                        Pembuatan SK
-                                    </span>
-
-                                </td>
-
-                                <td>
-
-                                    <a
-                                        href="detail_pengajuan.html?id=6"
-                                        class="admin-detail-button"
-                                    >
-                                        Detail
-                                    </a>
-
-                                </td>
-
-                            </tr>
-
-
-                            <!-- 7 -->
-                            <tr
-                                data-name="Hendra Wijaya"
-                                data-nim="2301130007"
-                                data-code="YDS-2026-0007"
-                                data-department="ekonomi pembangunan"
-                                data-status="ttd dekan"
-                            >
-
-                                <td>
-                                    <strong>
-                                        YDS-2026-0007
-                                    </strong>
-                                </td>
-
-                                <td>
-
-                                    <div class="submission-student">
-
-                                        <strong>
-                                            Hendra Wijaya
-                                        </strong>
-
-                                        <span>
-                                            2301130007
-                                        </span>
-
-                                    </div>
-
-                                </td>
-
-                                <td>
-                                    Ekonomi Pembangunan
-                                </td>
-
-                                <td>
-                                    30 Agu 2026
-                                </td>
-
-                                <td>
-
-                                    <span class="admin-status-badge process">
-                                        TTD Dekan
-                                    </span>
-
-                                </td>
-
-                                <td>
-
-                                    <a
-                                        href="detail_pengajuan.html?id=7"
-                                        class="admin-detail-button"
-                                    >
-                                        Detail
-                                    </a>
-
-                                </td>
-
-                            </tr>
-
-
-                            <!-- 8 -->
-                            <tr
-                                data-name="Intan Permata"
-                                data-nim="2301120008"
-                                data-code="YDS-2026-0008"
-                                data-department="akuntansi"
-                                data-status="sk terbit"
-                            >
-
-                                <td>
-                                    <strong>
-                                        YDS-2026-0008
-                                    </strong>
-                                </td>
-
-                                <td>
-
-                                    <div class="submission-student">
-
-                                        <strong>
-                                            Intan Permata
-                                        </strong>
-
-                                        <span>
-                                            2301120008
-                                        </span>
-
-                                    </div>
-
-                                </td>
-
-                                <td>
-                                    Akuntansi
-                                </td>
-
-                                <td>
-                                    30 Agu 2026
-                                </td>
-
-                                <td>
-
-                                    <span class="admin-status-badge completed">
-                                        SK Terbit
-                                    </span>
-
-                                </td>
-
-                                <td>
-
-                                    <a
-                                        href="detail_pengajuan.html?id=8"
-                                        class="admin-detail-button"
-                                    >
-                                        Detail
-                                    </a>
-
-                                </td>
-
-                            </tr>
-
+                        <!--
+                            PENTING:
+                            Tidak ada dummy hardcode di sini.
+
+                            Semua data berasal dari:
+                            ../js/yudisium_api.js
+                        -->
+
+                        <tbody id="centralSubmissionTableBody">
                         </tbody>
 
                     </table>
@@ -1029,27 +587,26 @@
 
 
                 <!-- EMPTY STATE -->
+
                 <div
                     class="submission-empty-state"
                     id="submissionEmptyState"
+                    style="display: none;"
                 >
 
-                    <div>
-                        ⌕
-                    </div>
-
                     <strong>
-                        Pengajuan tidak ditemukan
+                        Tidak ada pengajuan ditemukan
                     </strong>
 
-                    <p>
-                        Tidak ada data yang sesuai dengan filter yang diterapkan.
-                    </p>
+                    <span>
+                        Coba ubah kata kunci atau filter pencarian.
+                    </span>
 
                 </div>
 
 
                 <!-- PAGINATION -->
+
                 <div class="admin-pagination">
 
                     <span>
@@ -1090,9 +647,11 @@
     </div>
 
 
-    <!-- =====================================
+
+    <!-- =====================================================
          EXPORT MODAL
-    ====================================== -->
+    ====================================================== -->
+
     <div
         class="modal-overlay"
         id="submissionExportModal"
@@ -1126,8 +685,21 @@
     </div>
 
 
-    <script src="../js/admin_data.js"></script>
+
+    <!-- =====================================================
+         SCRIPT
+
+         yudisium_api.js     = service API frontend
+         admin.js            = auth/sidebar umum
+         admin_pengajuan.js  = renderer halaman pengajuan
+    ====================================================== -->
+
+    <script src="../js/yudisium_api.js"></script>
+
     <script src="../js/admin.js"></script>
+
+    <script src="../js/admin_pengajuan.js"></script>
+
 
 </body>
 

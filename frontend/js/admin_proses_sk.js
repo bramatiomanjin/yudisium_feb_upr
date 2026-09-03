@@ -1,15 +1,28 @@
 document.addEventListener(
     "DOMContentLoaded",
-    function () {
+    async function () {
 
-        console.log(
-            "Admin proses SK aktif"
-        );
+        "use strict";
 
 
-        /* =====================================
-           CONFIG
-        ===================================== */
+        if (!window.YudisiumAPI) {
+
+            console.error(
+                "YudisiumAPI tidak ditemukan."
+            );
+
+            return;
+
+        }
+
+
+        const API =
+            window.YudisiumAPI;
+
+
+        const STATUS =
+            API.STATUS;
+
 
         const params =
             new URLSearchParams(
@@ -17,175 +30,123 @@ document.addEventListener(
             );
 
 
-        const submissionData =
-            window.YudisiumMockDB
-                .getSubmission(
-                    params.get("id") || 6
-                );
+        const submissionId =
+            params.get("id");
 
 
-        if (
-            !submissionData
-        ) {
+        if (!submissionId) {
 
             window.location.href =
-                "pengajuan.html";
-
+                "pengajuan.html?filter=proses-sk";
 
             return;
 
         }
 
 
-        const submission = {
-            id: submissionData.id,
-            code: submissionData.code,
-            nim: submissionData.nim,
-            student: submissionData.name,
-            department: submissionData.department,
-            year: submissionData.year,
-            submittedAt: submissionData.submittedAt,
-            status: submissionData.status
-        };
-
-
-        document.querySelector(
-            ".sk-process-header h1"
-        ).textContent =
-            submission.code;
-
-
-        document.querySelector(
-            ".sk-student-avatar"
-        ).textContent =
-            window.YudisiumMockDB
-                .getInitials(
-                    submission.student
-                );
-
-
-        document.querySelector(
-            ".sk-student-main h2"
-        ).textContent =
-            submission.student;
-
-
-        document.querySelector(
-            ".sk-student-main p"
-        ).textContent =
-            "NIM " + submission.nim;
-
-
-        const studentMeta =
-            document.querySelectorAll(
-                ".sk-student-meta strong"
+        let submission =
+            await API.getSubmission(
+                submissionId
             );
 
 
-        studentMeta[0].textContent =
-            submission.department;
+        if (!submission) {
+
+            window.location.href =
+                "pengajuan.html?filter=proses-sk";
+
+            return;
+
+        }
 
 
-        studentMeta[1].textContent =
-            submission.year;
+        const allowedStatuses = [
 
-
-        studentMeta[2].textContent =
-            submission.submittedAt;
-
-
-        const stages = [
-
-            {
-                key:
-                    "TERVERIFIKASI",
-
-                title:
-                    "Pengajuan Terverifikasi",
-
-                nextButton:
-                    ""
-            },
-
-            {
-                key:
-                    "PEMBUATAN_SK",
-
-                title:
-                    "Pembuatan SK",
-
-                nextButton:
-                    "Lanjutkan ke Pembuatan SK"
-            },
-
-            {
-                key:
-                    "TTD_WAKIL_DEKAN",
-
-                title:
-                    "TTD Wakil Dekan",
-
-                nextButton:
-                    "Lanjutkan ke TTD Wakil Dekan"
-            },
-
-            {
-                key:
-                    "TTD_DEKAN",
-
-                title:
-                    "TTD Dekan",
-
-                nextButton:
-                    "Lanjutkan ke TTD Dekan"
-            },
-
-            {
-                key:
-                    "SK_TERBIT",
-
-                title:
-                    "SK Terbit",
-
-                nextButton:
-                    "Tandai SK Telah Terbit"
-            }
+            STATUS.TERVERIFIKASI,
+            STATUS.PEMBUATAN_SK,
+            STATUS.TTD_WAKIL_DEKAN,
+            STATUS.TTD_DEKAN,
+            STATUS.SK_SIAP_DIAMBIL
 
         ];
 
 
-        /*
-         * Status awal untuk simulasi.
-         *
-         * Nanti status ini berasal
-         * dari database Laravel.
-         */
+        if (
+            !allowedStatuses.includes(
+                submission.status
+            )
+        ) {
 
-        let currentStageIndex =
-            0;
+            window.location.href =
+                "detail_pengajuan.html?id=" +
+                submission.id;
+
+            return;
+
+        }
 
 
-        /* =====================================
+        /* =====================================================
            ELEMENTS
-        ===================================== */
+        ===================================================== */
 
-        const stageElements =
-            Array.from(
-                document.querySelectorAll(
-                    ".sk-stage-item"
-                )
+        const studentAvatar =
+            document.getElementById(
+                "skStudentAvatar"
             );
 
 
-        const headerStatus =
+        const studentName =
             document.getElementById(
-                "skHeaderStatus"
+                "skStudentName"
             );
 
 
-        const progressText =
+        const studentSummary =
             document.getElementById(
-                "skProgressText"
+                "skStudentSummary"
+            );
+
+
+        const code =
+            document.getElementById(
+                "skCode"
+            );
+
+
+        const nim =
+            document.getElementById(
+                "skNim"
+            );
+
+
+        const department =
+            document.getElementById(
+                "skDepartment"
+            );
+
+
+        const submittedAt =
+            document.getElementById(
+                "skSubmittedAt"
+            );
+
+
+        const statusBadge =
+            document.getElementById(
+                "skStatusBadge"
+            );
+
+
+        const timeline =
+            document.getElementById(
+                "skProcessTimeline"
+            );
+
+
+        const percentage =
+            document.getElementById(
+                "skProgressPercentage"
             );
 
 
@@ -195,804 +156,703 @@ document.addEventListener(
             );
 
 
-        const actionCard =
+        const currentStatus =
             document.getElementById(
-                "skActionCard"
+                "skCurrentStatusText"
             );
 
 
-        const completedCard =
+        const actionTitle =
             document.getElementById(
-                "skCompletedCard"
+                "skActionTitle"
             );
 
 
-        const nextStageTitle =
+        const actionDescription =
             document.getElementById(
-                "skNextStageTitle"
+                "skActionDescription"
             );
 
 
-        const nextStageDescription =
+        const primaryAction =
             document.getElementById(
-                "skNextStageDescription"
+                "skPrimaryAction"
             );
 
 
-        const nextStatus =
+        const actionBox =
             document.getElementById(
-                "skNextStatus"
+                "skActionBox"
             );
 
 
-        const note =
+        const readySection =
             document.getElementById(
-                "skProcessNote"
+                "skReadySection"
             );
 
 
-        const confirmation =
-            document.getElementById(
-                "skProcessConfirmation"
-            );
-
-
-        const confirmationError =
-            document.getElementById(
-                "skConfirmationError"
-            );
-
-
-        const advanceButton =
-            document.getElementById(
-                "advanceSkProcess"
-            );
-
-
-        const confirmModal =
+        const modal =
             document.getElementById(
                 "skConfirmModal"
             );
 
 
-        const confirmStatus =
+        const confirmMessage =
             document.getElementById(
-                "skConfirmStatus"
+                "skConfirmMessage"
             );
 
 
-        const cancelUpdate =
+        const confirmButton =
             document.getElementById(
-                "cancelSkUpdate"
+                "confirmSkAction"
             );
 
 
-        const confirmUpdate =
+        const cancelButton =
             document.getElementById(
-                "confirmSkUpdate"
+                "cancelSkAction"
             );
 
 
-        const successModal =
+        const sidebarRevisionCount =
             document.getElementById(
-                "skSuccessModal"
+                "processSidebarRevisionCount"
             );
 
 
-        const successMessage =
-            document.getElementById(
-                "skSuccessMessage"
-            );
+        let pendingStatus =
+            null;
 
 
-        const closeSuccess =
-            document.getElementById(
-                "closeSkSuccess"
-            );
+        /* =====================================================
+           FLOW
+        ===================================================== */
 
+        const steps = [
 
-        const activityList =
-            document.getElementById(
-                "skActivityList"
-            );
+            {
+                status:
+                    STATUS.TERVERIFIKASI,
 
+                title:
+                    "Data Terverifikasi",
 
-        /* =====================================
-           ADMIN
-        ===================================== */
+                description:
+                    "Data pengajuan telah dinyatakan lengkap."
+            },
 
-        function getCurrentAdmin() {
+            {
+                status:
+                    STATUS.PEMBUATAN_SK,
 
-            const username =
-                sessionStorage.getItem(
-                    "admin_username"
-                ) || "admin";
-
-
-            const role =
-                sessionStorage.getItem(
-                    "admin_role"
-                ) || "ADMIN";
-
-
-            return {
-                username:
-                    username,
-
-                role:
-                    role
-            };
-
-        }
-
-
-        /* =====================================
-           DATE
-        ===================================== */
-
-        function getCurrentDateTime() {
-
-            const date =
-                new Date();
-
-
-            return new Intl
-                .DateTimeFormat(
-                    "id-ID",
-                    {
-                        dateStyle:
-                            "medium",
-
-                        timeStyle:
-                            "short"
-                    }
-                )
-                .format(
-                    date
-                );
-
-        }
-
-
-        /* =====================================
-           STATUS LABEL
-        ===================================== */
-
-        function getStageDescription(
-            key
-        ) {
-
-            const descriptions = {
-
-                PEMBUATAN_SK:
-                    "Tandai bahwa proses pembuatan SK telah dimulai.",
-
-                TTD_WAKIL_DEKAN:
-                    "Tandai bahwa SK telah masuk ke proses tanda tangan Wakil Dekan.",
-
-                TTD_DEKAN:
-                    "Tandai bahwa SK telah masuk ke proses tanda tangan Dekan.",
-
-                SK_TERBIT:
-                    "Konfirmasi bahwa seluruh proses selesai dan SK telah terbit."
-
-            };
-
-
-            return (
-                descriptions[key] ||
-                ""
-            );
-
-        }
-
-
-
-        function getHeaderClass(
-            status
-        ) {
-
-            if (
-                status ===
-                "TERVERIFIKASI"
-            ) {
-
-                return "verified";
-
-            }
-
-
-            if (
-                status ===
-                "SK_TERBIT"
-            ) {
-
-                return "completed";
-
-            }
-
-
-            return "process";
-
-        }
-
-
-
-        function formatStatus(
-            status
-        ) {
-
-            const labels = {
-
-                TERVERIFIKASI:
-                    "Terverifikasi",
-
-                PEMBUATAN_SK:
+                title:
                     "Pembuatan SK",
 
-                TTD_WAKIL_DEKAN:
+                description:
+                    "Data digunakan untuk penyusunan dokumen SK."
+            },
+
+            {
+                status:
+                    STATUS.TTD_WAKIL_DEKAN,
+
+                title:
                     "TTD Wakil Dekan",
 
-                TTD_DEKAN:
+                description:
+                    "SK melalui proses tanda tangan Wakil Dekan."
+            },
+
+            {
+                status:
+                    STATUS.TTD_DEKAN,
+
+                title:
                     "TTD Dekan",
 
-                SK_TERBIT:
-                    "SK Terbit"
+                description:
+                    "SK melalui proses tanda tangan Dekan."
+            },
 
-            };
+            {
+                status:
+                    STATUS.SK_SIAP_DIAMBIL,
 
+                title:
+                    "SK Siap Diambil",
 
-            return (
-                labels[status] ||
-                status
-            );
+                description:
+                    "SK selesai dan dapat diambil mahasiswa."
+            }
 
-        }
-
-
-        /* =====================================
-           LOCAL HISTORY
-        ===================================== */
-
-        function getActivityStorageKey() {
-
-            return (
-                "yudisium_sk_activity_" +
-                submission.id
-            );
-
-        }
+        ];
 
 
+        const flow = {
 
-        function loadActivities() {
+            [STATUS.TERVERIFIKASI]: {
 
-            try {
+                next:
+                    STATUS.PEMBUATAN_SK,
 
-                const saved =
-                    localStorage.getItem(
-                        getActivityStorageKey()
-                    );
+                title:
+                    "Mulai Pembuatan SK",
 
+                description:
+                    "Data mahasiswa telah terverifikasi. Lanjutkan ketika data sudah siap digunakan dalam proses penyusunan SK.",
 
-                if (
-                    !saved
-                ) {
+                button:
+                    "Mulai Pembuatan SK"
 
-                    return [];
-
-                }
-
-
-                return JSON.parse(
-                    saved
-                );
-
-            } catch (
-                error
-            ) {
-
-                console.error(
-                    "Gagal membaca history",
-                    error
-                );
+            },
 
 
-                return [];
+            [STATUS.PEMBUATAN_SK]: {
+
+                next:
+                    STATUS.TTD_WAKIL_DEKAN,
+
+                title:
+                    "Lanjut ke Tanda Tangan Wakil Dekan",
+
+                description:
+                    "Pastikan dokumen SK telah selesai disusun sebelum mengirimkannya ke tahap tanda tangan Wakil Dekan.",
+
+                button:
+                    "Lanjut ke TTD Wakil Dekan"
+
+            },
+
+
+            [STATUS.TTD_WAKIL_DEKAN]: {
+
+                next:
+                    STATUS.TTD_DEKAN,
+
+                title:
+                    "Lanjut ke Tanda Tangan Dekan",
+
+                description:
+                    "Pastikan proses tanda tangan Wakil Dekan sudah selesai sebelum melanjutkan SK ke Dekan.",
+
+                button:
+                    "Lanjut ke TTD Dekan"
+
+            },
+
+
+            [STATUS.TTD_DEKAN]: {
+
+                next:
+                    STATUS.SK_SIAP_DIAMBIL,
+
+                title:
+                    "Finalisasi Proses SK",
+
+                description:
+                    "Jika seluruh tanda tangan dan administrasi telah selesai, tandai SK sebagai siap diambil mahasiswa.",
+
+                button:
+                    "Tandai SK Siap Diambil"
+
+            },
+
+
+            [STATUS.SK_SIAP_DIAMBIL]: {
+
+                next:
+                    null,
+
+                title:
+                    "Proses Administrasi Selesai",
+
+                description:
+                    "SK Yudisium telah selesai diproses dan dapat diambil mahasiswa di Bagian Akademik FEB UPR.",
+
+                button:
+                    null
+
+            }
+
+        };
+
+
+        /* =====================================================
+           HELPERS
+        ===================================================== */
+
+        function setText(
+            element,
+            value
+        ) {
+
+            if (element) {
+
+                element.textContent =
+                    value || "-";
 
             }
 
         }
 
 
+        function getCurrentIndex() {
 
-        function saveActivities(
-            activities
-        ) {
+            return steps.findIndex(
+                function (step) {
 
-            localStorage.setItem(
-                getActivityStorageKey(),
-                JSON.stringify(
-                    activities
-                )
-            );
-
-        }
-
-
-
-        function saveGlobalActivity(
-            activity
-        ) {
-
-            const key =
-                "yudisium_admin_activity";
-
-
-            let activities =
-                [];
-
-
-            try {
-
-                const saved =
-                    localStorage.getItem(
-                        key
+                    return (
+                        step.status ===
+                        submission.status
                     );
 
-
-                if (
-                    saved
-                ) {
-
-                    activities =
-                        JSON.parse(
-                            saved
-                        );
-
                 }
-
-            } catch (
-                error
-            ) {
-
-                activities =
-                    [];
-
-            }
-
-
-            activities.unshift(
-                activity
             );
 
+        }
 
-            localStorage.setItem(
-                key,
-                JSON.stringify(
-                    activities
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        function renderStudent() {
+
+            setText(
+                studentAvatar,
+                API.getInitials(
+                    submission.name
                 )
             );
 
-        }
 
-
-
-        function addActivity(
-            fromStatus,
-            toStatus,
-            processNote
-        ) {
-
-            const admin =
-                getCurrentAdmin();
-
-
-            const activity = {
-
-                id:
-                    Date.now(),
-
-                admin_username:
-                    admin.username,
-
-                admin_role:
-                    admin.role,
-
-                pengajuan_id:
-                    submission.id,
-
-                kode_pengajuan:
-                    submission.code,
-
-                nim:
-                    submission.nim,
-
-                mahasiswa:
-                    submission.student,
-
-                action:
-                    "UPDATE_SK_STATUS",
-
-                action_label:
-                    "Update Status SK",
-
-                old_status:
-                    fromStatus,
-
-                new_status:
-                    toStatus,
-
-                note:
-                    processNote || null,
-
-                created_at:
-                    getCurrentDateTime(),
-
-                timestamp:
-                    Date.now()
-
-            };
-
-
-            const activities =
-                loadActivities();
-
-
-            activities.unshift(
-                activity
+            setText(
+                studentName,
+                submission.name
             );
 
 
-            saveActivities(
-                activities
+            setText(
+                studentSummary,
+                submission.nim +
+                " • " +
+                submission.department
             );
 
 
-            saveGlobalActivity(
-                activity
+            setText(
+                code,
+                submission.code
             );
+
+
+            setText(
+                nim,
+                submission.nim
+            );
+
+
+            setText(
+                department,
+                submission.department
+            );
+
+
+            setText(
+                submittedAt,
+                submission.submittedAt
+            );
+
+
+            const meta =
+                API.getStatusMeta(
+                    submission.status
+                );
+
+
+            statusBadge.textContent =
+                meta.label;
+
+
+            statusBadge.className =
+                "admin-status-badge " +
+                meta.className;
 
         }
 
 
-        /* =====================================
-           RENDER ACTIVITY
-        ===================================== */
+        /* =====================================================
+           PROGRESS
+        ===================================================== */
 
-        function renderActivities() {
+        function renderProgress() {
 
-            const activities =
-                loadActivities();
+            const currentIndex =
+                getCurrentIndex();
 
 
-            activityList.innerHTML =
+            const safeIndex =
+                Math.max(
+                    currentIndex,
+                    0
+                );
+
+
+            const progress =
+                Math.round(
+                    (
+                        (
+                            safeIndex +
+                            1
+                        ) /
+                        steps.length
+                    ) *
+                    100
+                );
+
+
+            percentage.textContent =
+                progress +
+                "%";
+
+
+            progressFill.style.width =
+                progress +
+                "%";
+
+
+            timeline.innerHTML =
                 "";
 
 
-            if (
-                activities.length ===
-                0
-            ) {
-
-                activityList.innerHTML =
-                    `
-                    <div class="sk-activity-empty">
-                        Belum ada aktivitas tambahan.
-                    </div>
-                    `;
-
-
-                return;
-
-            }
-
-
-            activities.forEach(
-                function (activity) {
-
-                    const item =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    item.className =
-                        "sk-activity-item";
-
-
-                    item.innerHTML = `
-                        <div class="sk-activity-marker">
-                            ✓
-                        </div>
-
-                        <div class="sk-activity-content">
-
-                            <strong>
-                                ${formatStatus(
-                                    activity.new_status
-                                )}
-                            </strong>
-
-                            <p>
-                                Status diubah dari
-                                ${formatStatus(
-                                    activity.old_status
-                                )}
-                                menjadi
-                                ${formatStatus(
-                                    activity.new_status
-                                )}.
-                            </p>
-
-                            ${
-                                activity.note
-                                    ?
-                                    `
-                                    <div class="sk-activity-note">
-                                        ${activity.note}
-                                    </div>
-                                    `
-                                    :
-                                    ""
-                            }
-
-                            <span>
-                                ${activity.admin_username}
-                                •
-                                ${activity.created_at}
-                            </span>
-
-                        </div>
-                    `;
-
-
-                    activityList.appendChild(
-                        item
-                    );
-
-                }
-            );
-
-        }
-
-
-        /* =====================================
-           RESTORE STATE
-        ===================================== */
-
-        function restoreStageFromActivities() {
-
-            const activities =
-                loadActivities();
-
-
-            if (
-                activities.length ===
-                0
-            ) {
-
-                const statusMap = {
-                    "terverifikasi": "TERVERIFIKASI",
-                    "pembuatan sk": "PEMBUATAN_SK",
-                    "ttd wakil dekan": "TTD_WAKIL_DEKAN",
-                    "ttd dekan": "TTD_DEKAN",
-                    "sk terbit": "SK_TERBIT"
-                };
-
-
-                const initialStatus =
-                    statusMap[
-                        submission.status
-                    ] ||
-                    "TERVERIFIKASI";
-
-
-                currentStageIndex =
-                    Math.max(
-                        0,
-                        stages.findIndex(
-                            function (stage) {
-
-                                return (
-                                    stage.key ===
-                                    initialStatus
-                                );
-
-                            }
-                        )
-                    );
-
-
-                return;
-
-            }
-
-
-            const latestStatus =
-                activities[0]
-                    .new_status;
-
-
-            const index =
-                stages.findIndex(
-                    function (stage) {
-
-                        return (
-                            stage.key ===
-                            latestStatus
-                        );
-
-                    }
-                );
-
-
-            if (
-                index >=
-                0
-            ) {
-
-                currentStageIndex =
-                    index;
-
-            }
-
-        }
-
-
-        /* =====================================
-           UPDATE UI
-        ===================================== */
-
-        function updateStageUI() {
-
-            const currentStage =
-                stages[
-                    currentStageIndex
-                ];
-
-
-            stageElements.forEach(
+            steps.forEach(
                 function (
-                    element,
+                    step,
                     index
                 ) {
 
-                    const badge =
-                        element.querySelector(
-                            ".sk-stage-badge"
+                    const card =
+                        document.createElement(
+                            "article"
                         );
 
 
-                    const date =
-                        element.querySelector(
-                            ".sk-stage-date"
-                        );
-
-
-                    const admin =
-                        element.querySelector(
-                            ".sk-stage-admin"
-                        );
-
-
-                    element.classList.remove(
-                        "completed",
-                        "current",
-                        "waiting"
-                    );
+                    card.className =
+                        "sk-process-step";
 
 
                     if (
                         index <
-                        currentStageIndex
+                        safeIndex
                     ) {
 
-                        element
-                            .classList
-                            .add(
-                                "completed"
-                            );
-
-
-                        badge.textContent =
-                            "Selesai";
-
-
-                        badge.className =
-                            "sk-stage-badge completed";
-
-
-                    } else if (
-                        index ===
-                        currentStageIndex
-                    ) {
-
-                        element
-                            .classList
-                            .add(
-                                "current"
-                            );
-
-
-                        badge.textContent =
-                            currentStage.key ===
-                            "SK_TERBIT"
-                                ?
-                                "Selesai"
-                                :
-                                "Status Saat Ini";
-
-
-                        badge.className =
-                            currentStage.key ===
-                            "SK_TERBIT"
-                                ?
-                                "sk-stage-badge completed"
-                                :
-                                "sk-stage-badge current";
-
-
-                    } else {
-
-                        element
-                            .classList
-                            .add(
-                                "waiting"
-                            );
-
-
-                        badge.textContent =
-                            "Menunggu";
-
-
-                        badge.className =
-                            "sk-stage-badge waiting";
+                        card.classList.add(
+                            "completed"
+                        );
 
                     }
 
 
-                    date.textContent =
-                        "-";
+                    if (
+                        index ===
+                        safeIndex
+                    ) {
+
+                        card.classList.add(
+                            "current"
+                        );
+
+                    }
 
 
-                    admin.textContent =
-                        "-";
+                    const marker =
+                        index <
+                        safeIndex
+                            ? "✓"
+                            : index + 1;
+
+
+                    card.innerHTML =
+                        `
+                        <div class="sk-process-step-number">
+                            ${marker}
+                        </div>
+
+                        <h3>
+                            ${step.title}
+                        </h3>
+
+                        <p>
+                            ${step.description}
+                        </p>
+                        `;
+
+
+                    timeline.appendChild(
+                        card
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           ACTION
+        ===================================================== */
+
+        function renderAction() {
+
+            const current =
+                flow[
+                    submission.status
+                ];
+
+
+            const meta =
+                API.getStatusMeta(
+                    submission.status
+                );
+
+
+            setText(
+                currentStatus,
+                meta.label
+            );
+
+
+            setText(
+                actionTitle,
+                current.title
+            );
+
+
+            setText(
+                actionDescription,
+                current.description
+            );
+
+
+            if (
+                current.button
+            ) {
+
+                primaryAction.hidden =
+                    false;
+
+
+                primaryAction.textContent =
+                    current.button;
+
+
+                actionBox.hidden =
+                    false;
+
+
+                readySection.hidden =
+                    true;
+
+            } else {
+
+                primaryAction.hidden =
+                    true;
+
+
+                actionBox.hidden =
+                    true;
+
+
+                readySection.hidden =
+                    false;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        async function updateSidebarRevisionCount() {
+
+            if (
+                !sidebarRevisionCount
+            ) {
+
+                return;
+
+            }
+
+
+            try {
+
+                const submissions =
+                    await API
+                        .getSubmissions();
+
+
+                const count =
+                    submissions.filter(
+                        function (item) {
+
+                            return [
+
+                                STATUS.PERLU_REVISI,
+                                STATUS.REVISI_DIKIRIM
+
+                            ].includes(
+                                item.status
+                            );
+
+                        }
+                    ).length;
+
+
+                sidebarRevisionCount.textContent =
+                    count;
+
+            } catch (error) {
+
+                sidebarRevisionCount.textContent =
+                    "0";
+
+            }
+
+        }
+
+
+        /* =====================================================
+           RENDER
+        ===================================================== */
+
+        function render() {
+
+            renderStudent();
+
+            renderProgress();
+
+            renderAction();
+
+        }
+
+
+        /* =====================================================
+           MODAL
+        ===================================================== */
+
+        function openConfirm(
+            nextStatus
+        ) {
+
+            const nextMeta =
+                API.getStatusMeta(
+                    nextStatus
+                );
+
+
+            pendingStatus =
+                nextStatus;
+
+
+            confirmMessage.textContent =
+                "Pastikan proses pada tahap saat ini telah selesai. Status akan diubah menjadi “" +
+                nextMeta.label +
+                "”.";
+
+
+            modal.classList.add(
+                "active"
+            );
+
+
+            modal.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+
+        }
+
+
+        function closeConfirm() {
+
+            pendingStatus =
+                null;
+
+
+            modal.classList.remove(
+                "active"
+            );
+
+
+            modal.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+        }
+
+
+        primaryAction
+            ?.addEventListener(
+                "click",
+                function () {
+
+                    const current =
+                        flow[
+                            submission.status
+                        ];
+
+
+                    if (
+                        current?.next
+                    ) {
+
+                        openConfirm(
+                            current.next
+                        );
+
+                    }
 
                 }
             );
 
 
-            /*
-             * Isi metadata berdasarkan
-             * aktivitas yang tersimpan.
-             */
-
-            const activities =
-                loadActivities();
+        cancelButton
+            ?.addEventListener(
+                "click",
+                closeConfirm
+            );
 
 
-            activities.forEach(
-                function (activity) {
-
-                    const element =
-                        stageElements.find(
-                            function (
-                                stageElement
-                            ) {
-
-                                return (
-                                    stageElement.dataset
-                                        .stage ===
-                                    activity.new_status
-                                );
-
-                            }
-                        );
-
+        modal
+            ?.addEventListener(
+                "click",
+                function (event) {
 
                     if (
-                        !element
+                        event.target ===
+                        modal
+                    ) {
+
+                        closeConfirm();
+
+                    }
+
+                }
+            );
+
+
+        confirmButton
+            ?.addEventListener(
+                "click",
+                async function () {
+
+                    if (
+                        !pendingStatus
                     ) {
 
                         return;
@@ -1000,417 +860,58 @@ document.addEventListener(
                     }
 
 
-                    element.querySelector(
-                        ".sk-stage-date"
-                    ).textContent =
-                        activity.created_at;
+                    try {
+
+                        confirmButton.disabled =
+                            true;
 
 
-                    element.querySelector(
-                        ".sk-stage-admin"
-                    ).textContent =
-                        "oleh " +
-                        activity.admin_username;
+                        await API
+                            .updateSkStatus(
+                                submission.id,
+                                pendingStatus
+                            );
+
+
+                        submission.status =
+                            pendingStatus;
+
+
+                        closeConfirm();
+
+
+                        render();
+
+                    } catch (error) {
+
+                        console.error(
+                            "Gagal memperbarui status SK:",
+                            error
+                        );
+
+
+                        alert(
+                            "Status belum dapat diperbarui karena backend belum terhubung."
+                        );
+
+                    } finally {
+
+                        confirmButton.disabled =
+                            false;
+
+                    }
 
                 }
             );
 
 
-            /*
-             * Status terverifikasi awal.
-             */
+        /* =====================================================
+           INITIAL
+        ===================================================== */
 
-            const firstElement =
-                stageElements[0];
+        render();
 
-
-            if (
-                firstElement.querySelector(
-                    ".sk-stage-date"
-                ).textContent ===
-                "-"
-            ) {
-
-                firstElement.querySelector(
-                    ".sk-stage-date"
-                ).textContent =
-                    "31 Agu 2026";
-
-
-                firstElement.querySelector(
-                    ".sk-stage-admin"
-                ).textContent =
-                    "Pengajuan telah terverifikasi";
-
-            }
-
-
-            /* HEADER */
-
-            headerStatus.className =
-                "admin-status-badge " +
-                getHeaderClass(
-                    currentStage.key
-                );
-
-
-            headerStatus.textContent =
-                formatStatus(
-                    currentStage.key
-                );
-
-
-            /* PROGRESS */
-
-            progressText.textContent =
-                (
-                    currentStageIndex +
-                    1
-                ) +
-                " / " +
-                stages.length;
-
-
-            progressFill.style.width =
-                (
-                    (
-                        currentStageIndex +
-                        1
-                    ) /
-                    stages.length *
-                    100
-                ) +
-                "%";
-
-
-            /* NEXT */
-
-            if (
-                currentStageIndex >=
-                stages.length -
-                1
-            ) {
-
-                actionCard.style.display =
-                    "none";
-
-
-                completedCard
-                    .classList
-                    .add(
-                        "active"
-                    );
-
-
-                return;
-
-            }
-
-
-            completedCard
-                .classList
-                .remove(
-                    "active"
-                );
-
-
-            actionCard.style.display =
-                "block";
-
-
-            const upcomingStage =
-                stages[
-                    currentStageIndex +
-                    1
-                ];
-
-
-            nextStageTitle.textContent =
-                upcomingStage.title;
-
-
-            nextStageDescription.textContent =
-                getStageDescription(
-                    upcomingStage.key
-                );
-
-
-            nextStatus.textContent =
-                upcomingStage.key;
-
-
-            advanceButton.textContent =
-                upcomingStage.nextButton;
-
-        }
-
-
-        /* =====================================
-           OPEN CONFIRMATION
-        ===================================== */
-
-        advanceButton.addEventListener(
-            "click",
-            function () {
-
-                confirmationError
-                    .classList
-                    .remove(
-                        "active"
-                    );
-
-
-                if (
-                    !confirmation.checked
-                ) {
-
-                    confirmationError
-                        .classList
-                        .add(
-                            "active"
-                        );
-
-
-                    return;
-
-                }
-
-
-                if (
-                    currentStageIndex >=
-                    stages.length -
-                    1
-                ) {
-
-                    return;
-
-                }
-
-
-                const upcomingStage =
-                    stages[
-                        currentStageIndex +
-                        1
-                    ];
-
-
-                confirmStatus.textContent =
-                    formatStatus(
-                        upcomingStage.key
-                    );
-
-
-                confirmModal
-                    .classList
-                    .add(
-                        "active"
-                    );
-
-            }
-        );
-
-
-        confirmation.addEventListener(
-            "change",
-            function () {
-
-                if (
-                    this.checked
-                ) {
-
-                    confirmationError
-                        .classList
-                        .remove(
-                            "active"
-                        );
-
-                }
-
-            }
-        );
-
-
-        /* =====================================
-           CANCEL
-        ===================================== */
-
-        cancelUpdate.addEventListener(
-            "click",
-            function () {
-
-                confirmModal
-                    .classList
-                    .remove(
-                        "active"
-                    );
-
-            }
-        );
-
-
-        confirmModal.addEventListener(
-            "click",
-            function (event) {
-
-                if (
-                    event.target ===
-                    confirmModal
-                ) {
-
-                    confirmModal
-                        .classList
-                        .remove(
-                            "active"
-                        );
-
-                }
-
-            }
-        );
-
-
-        /* =====================================
-           CONFIRM UPDATE
-        ===================================== */
-
-        confirmUpdate.addEventListener(
-            "click",
-            function () {
-
-                if (
-                    currentStageIndex >=
-                    stages.length -
-                    1
-                ) {
-
-                    return;
-
-                }
-
-
-                const oldStage =
-                    stages[
-                        currentStageIndex
-                    ];
-
-
-                const newStage =
-                    stages[
-                        currentStageIndex +
-                        1
-                    ];
-
-
-                const processNote =
-                    note.value
-                        .trim();
-
-
-                /*
-                 * NANTI BACKEND:
-                 *
-                 * UPDATE pengajuan_yudisium
-                 * SET status = newStage.key
-                 *
-                 * INSERT riwayat_status
-                 *
-                 * INSERT activity_logs
-                 */
-
-                addActivity(
-                    oldStage.key,
-                    newStage.key,
-                    processNote
-                );
-
-
-                const storedStatus = {
-                    TERVERIFIKASI: "terverifikasi",
-                    PEMBUATAN_SK: "pembuatan sk",
-                    TTD_WAKIL_DEKAN: "ttd wakil dekan",
-                    TTD_DEKAN: "ttd dekan",
-                    SK_TERBIT: "sk terbit"
-                }[
-                    newStage.key
-                ];
-
-
-                window.YudisiumMockDB
-                    .setSubmissionStatus(
-                        submission.id,
-                        storedStatus
-                    );
-
-
-                currentStageIndex++;
-
-
-                confirmModal
-                    .classList
-                    .remove(
-                        "active"
-                    );
-
-
-                note.value =
-                    "";
-
-
-                confirmation.checked =
-                    false;
-
-
-                updateStageUI();
-
-
-                renderActivities();
-
-
-                successMessage.textContent =
-                    "Status pengajuan berhasil diperbarui menjadi " +
-                    formatStatus(
-                        newStage.key
-                    ) +
-                    ".";
-
-
-                successModal
-                    .classList
-                    .add(
-                        "active"
-                    );
-
-            }
-        );
-
-
-        /* =====================================
-           SUCCESS
-        ===================================== */
-
-        closeSuccess.addEventListener(
-            "click",
-            function () {
-
-                successModal
-                    .classList
-                    .remove(
-                        "active"
-                    );
-
-            }
-        );
-
-
-        /* =====================================
-           INITIALIZE
-        ===================================== */
-
-        restoreStageFromActivities();
-
-        updateStageUI();
-
-        renderActivities();
+        await updateSidebarRevisionCount();
 
     }
 );

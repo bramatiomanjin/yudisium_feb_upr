@@ -1,10 +1,13 @@
 document.addEventListener(
     "DOMContentLoaded",
-    function () {
+    async function () {
 
-        console.log(
-            "Admin detail pengajuan aktif"
-        );
+        "use strict";
+
+
+        if (!window.YudisiumAPI) {
+            return;
+        }
 
 
         const params =
@@ -13,42 +16,33 @@ document.addEventListener(
             );
 
 
-        const submission =
-            window.YudisiumMockDB
-                ?
-                window.YudisiumMockDB
-                    .getSubmission(
-                        params.get("id")
-                    )
-                :
-                null;
+        const id =
+            params.get("id");
 
 
-        if (
-            !submission
-        ) {
+        if (!id) {
 
             window.location.href =
                 "pengajuan.html";
-
 
             return;
 
         }
 
 
-        const statusMeta =
-            window.YudisiumMockDB
-                .statusMeta[
-                    submission.status
-                ];
+        const submission =
+            await window.YudisiumAPI
+                .getSubmission(id);
 
 
-        const action =
-            window.YudisiumMockDB
-                .getAction(
-                    submission
-                );
+        if (!submission) {
+
+            window.location.href =
+                "pengajuan.html";
+
+            return;
+
+        }
 
 
         function setText(
@@ -60,12 +54,10 @@ document.addEventListener(
                 document.getElementById(id);
 
 
-            if (
-                element
-            ) {
+            if (element) {
 
                 element.textContent =
-                    value;
+                    value || "-";
 
             }
 
@@ -77,111 +69,89 @@ document.addEventListener(
             submission.code
         );
 
-
         setText(
             "detailStudentAvatar",
-            window.YudisiumMockDB
+            window.YudisiumAPI
                 .getInitials(
                     submission.name
                 )
         );
-
 
         setText(
             "detailStudentName",
             submission.name
         );
 
-
         setText(
             "detailStudentNimSummary",
-            "NIM " + submission.nim
+            "NIM " +
+            submission.nim
         );
-
 
         setText(
             "detailStudentDepartmentSummary",
             submission.department
         );
 
-
         setText(
             "detailSubmittedAt",
             submission.submittedAt
         );
-
-
-        setText(
-            "detailSubmissionStatusText",
-            statusMeta.label
-        );
-
 
         setText(
             "detailStudentFullName",
             submission.name
         );
 
-
         setText(
             "detailStudentNim",
             submission.nim
         );
-
 
         setText(
             "detailStudentEmail",
             submission.email
         );
 
-
         setText(
             "detailStudentWhatsapp",
             submission.whatsapp
         );
-
 
         setText(
             "detailStudentYear",
             submission.year
         );
 
-
         setText(
             "detailStudentEntryRoute",
             submission.entryRoute
         );
-
 
         setText(
             "detailStudentDepartment",
             submission.department
         );
 
-
         setText(
             "detailWorkType",
             submission.workType
         );
-
 
         setText(
             "detailWorkTitle",
             submission.title
         );
 
-
         setText(
             "detailExamDate",
             submission.examDate
         );
 
-
         setText(
             "detailExamScore",
             submission.examScore
         );
-
 
         setText(
             "detailLetterGrade",
@@ -189,308 +159,227 @@ document.addEventListener(
         );
 
 
-        setText(
-            "detailActionTitle",
-            action.title
-        );
+        const meta =
+            window.YudisiumAPI
+                .getStatusMeta(
+                    submission.status
+                );
 
 
         setText(
-            "detailActionDescription",
-            action.description
+            "detailSubmissionStatusText",
+            meta.label
         );
 
 
-        const headerStatus =
+        const badge =
             document.getElementById(
                 "detailSubmissionStatusBadge"
             );
 
 
-        if (
-            headerStatus
-        ) {
+        if (badge) {
 
-            headerStatus.textContent =
-                statusMeta.label;
+            badge.textContent =
+                meta.label;
 
-
-            headerStatus.className =
+            badge.className =
                 "admin-status-badge " +
-                statusMeta.className;
+                meta.className;
 
         }
 
 
-        const primaryAction =
+        const action =
             document.getElementById(
                 "detailPrimaryAction"
             );
 
 
-        if (
-            primaryAction
-        ) {
+        if (action) {
 
-            primaryAction.textContent =
-                action.label;
-
-
-            primaryAction.href =
-                action.href;
+            action.href =
+                window.YudisiumAPI
+                    .getRoute(
+                        submission
+                    );
 
 
-            if (
-                action.disabled
+            switch (
+                submission.status
             ) {
 
-                primaryAction.setAttribute(
-                    "aria-disabled",
-                    "true"
-                );
+                case window.YudisiumAPI
+                    .STATUS
+                    .MENUNGGU_VERIFIKASI:
+
+                    action.textContent =
+                        "Mulai Verifikasi";
+
+                    break;
 
 
-                primaryAction.style.opacity =
-                    "0.6";
+                case window.YudisiumAPI
+                    .STATUS
+                    .PERLU_REVISI:
+
+                    action.textContent =
+                        "Menunggu Revisi Mahasiswa";
+
+                    action.style.pointerEvents =
+                        "none";
+
+                    action.style.opacity =
+                        ".55";
+
+                    break;
 
 
-                primaryAction.style.pointerEvents =
-                    "none";
+                case window.YudisiumAPI
+                    .STATUS
+                    .REVISI_DIKIRIM:
+
+                    action.textContent =
+                        "Review Revisi";
+
+                    break;
+
+
+                case window.YudisiumAPI
+                    .STATUS
+                    .SK_SIAP_DIAMBIL:
+
+                    action.textContent =
+                        "Lihat Status SK";
+
+                    break;
+
+
+                default:
+
+                    action.textContent =
+                        "Proses SK";
 
             }
 
         }
 
 
-        const previewButtons =
-            document.querySelectorAll(
-                ".preview-document-button"
+        /* =====================================================
+           DOCUMENT
+        ===================================================== */
+
+        const documents =
+            await window.YudisiumAPI
+                .getDocuments(
+                    submission.id
+                );
+
+
+        const list =
+            document.querySelector(
+                ".detail-document-list"
             );
 
 
-        const previewModal =
-            document.getElementById(
-                "documentPreviewModal"
+        const count =
+            document.querySelector(
+                ".detail-document-count"
             );
 
 
-        const previewTitle =
-            document.getElementById(
-                "documentPreviewTitle"
-            );
+        if (count) {
+
+            count.textContent =
+                documents.length +
+                " Dokumen";
+
+        }
 
 
-        const previewFilename =
-            document.getElementById(
-                "documentPreviewFilename"
-            );
+        if (!list) {
+            return;
+        }
 
 
-        const previewFrame =
-            document.getElementById(
-                "documentPreviewFrame"
-            );
-
-
-        const previewPlaceholder =
-            document.getElementById(
-                "documentPreviewPlaceholder"
-            );
-
-
-        const closePreview =
-            document.getElementById(
-                "closeDocumentPreview"
-            );
-
-
-        const openNewTab =
-            document.getElementById(
-                "openDocumentNewTab"
-            );
-
-
-        let currentFile =
+        list.innerHTML =
             "";
 
 
-        /* =====================================
-           OPEN PREVIEW
-        ===================================== */
+        if (
+            documents.length === 0
+        ) {
 
-        previewButtons.forEach(
-            function (button) {
+            list.innerHTML =
+                `
+                <div style="padding:24px;text-align:center;">
+                    Dokumen akan tampil setelah data tersedia dari backend.
+                </div>
+                `;
 
-                button.addEventListener(
-                    "click",
-                    function () {
-
-                        const title =
-                            this.dataset.title;
-
-
-                        const file =
-                            this.dataset.file;
-
-
-                        currentFile =
-                            file;
-
-
-                        previewTitle.textContent =
-                            title;
-
-
-                        previewFilename.textContent =
-                            file;
-
-
-                        /*
-                         * Untuk frontend sementara
-                         * kita belum punya file PDF.
-                         *
-                         * Karena itu iframe
-                         * disembunyikan dan
-                         * placeholder ditampilkan.
-                         *
-                         * Nanti ketika Laravel
-                         * sudah memberikan URL file,
-                         * cukup:
-                         *
-                         * previewFrame.src = fileUrl;
-                         */
-
-                        previewFrame.style.display =
-                            "none";
-
-
-                        previewPlaceholder.style.display =
-                            "flex";
-
-
-                        previewModal
-                            .classList
-                            .add(
-                                "active"
-                            );
-
-
-                        document.body.style.overflow =
-                            "hidden";
-
-                    }
-                );
-
-            }
-        );
-
-
-
-        /* =====================================
-           CLOSE PREVIEW
-        ===================================== */
-
-        function closePreviewModal() {
-
-            previewModal
-                .classList
-                .remove(
-                    "active"
-                );
-
-
-            document.body.style.overflow =
-                "";
-
-
-            previewFrame.src =
-                "";
-
-
-            currentFile =
-                "";
+            return;
 
         }
 
 
+        documents.forEach(
+            function (documentData) {
 
-        closePreview.addEventListener(
-            "click",
-            closePreviewModal
-        );
-
-
-
-        previewModal.addEventListener(
-            "click",
-            function (event) {
-
-                if (
-                    event.target ===
-                    previewModal
-                ) {
-
-                    closePreviewModal();
-
-                }
-
-            }
-        );
+                const item =
+                    document.createElement(
+                        "div"
+                    );
 
 
-
-        document.addEventListener(
-            "keydown",
-            function (event) {
-
-                if (
-                    event.key ===
-                    "Escape" &&
-                    previewModal.classList.contains(
-                        "active"
-                    )
-                ) {
-
-                    closePreviewModal();
-
-                }
-
-            }
-        );
+                item.className =
+                    "detail-document-item";
 
 
+                item.innerHTML =
+                    `
+                    <div class="detail-document-info">
 
-        /* =====================================
-           OPEN NEW TAB
-        ===================================== */
+                        <div class="detail-document-icon">
+                            FILE
+                        </div>
 
-        openNewTab.addEventListener(
-            "click",
-            function () {
+                        <div>
+                            <strong>
+                                ${documentData.title || documentData.label || "-"}
+                            </strong>
 
-                /*
-                 * Frontend simulation.
-                 *
-                 * Saat backend sudah aktif:
-                 *
-                 * window.open(
-                 *     currentFileUrl,
-                 *     "_blank"
-                 * );
-                 */
+                            <span>
+                                ${documentData.filename || "-"}
+                            </span>
+                        </div>
 
-                if (
-                    currentFile === ""
-                ) {
-                    return;
-                }
+                    </div>
+
+                    <div class="detail-document-actions">
+
+                        ${
+                            documentData.url
+                                ? `
+                                    <a
+                                        href="${documentData.url}"
+                                        target="_blank"
+                                        class="admin-detail-button"
+                                    >
+                                        Preview
+                                    </a>
+                                `
+                                : `
+                                    <span class="admin-status-badge pending">
+                                        File belum tersedia
+                                    </span>
+                                `
+                        }
+
+                    </div>
+                    `;
 
 
-                alert(
-                    "File " +
-                    currentFile +
-                    " nantinya akan dibuka di tab baru setelah terhubung dengan backend."
-                );
+                list.appendChild(item);
 
             }
         );

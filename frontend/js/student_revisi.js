@@ -1,585 +1,453 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener(
+    "DOMContentLoaded",
+    async function () {
 
-    console.log("Halaman revisi aktif");
-
-
-    /* =========================================================
-       DATA TRACKING
-    ========================================================= */
-
-    const kode =
-        sessionStorage.getItem(
-            "tracking_kode"
-        );
-
-    const nim =
-        sessionStorage.getItem(
-            "tracking_nim"
-        );
+        "use strict";
 
 
-    /*
-     * Kalau halaman revisi dibuka langsung
-     * tanpa proses tracking sebelumnya,
-     * kembalikan mahasiswa ke halaman cek status.
-     */
-    if (!kode || !nim) {
-
-        window.location.href =
-            "tracking.html";
-
-        return;
-
-    }
+        if (!window.YudisiumAPI) {
+            return;
+        }
 
 
-    /* =========================================================
-       ELEMENT
-    ========================================================= */
-
-    const revisionForm =
-        document.getElementById(
-            "revisionForm"
-        );
+        const id =
+            sessionStorage.getItem(
+                "tracking_submission_id"
+            );
 
 
-    const revisionKode =
-        document.getElementById(
-            "revisionKode"
-        );
+        const nim =
+            sessionStorage.getItem(
+                "tracking_nim"
+            );
 
 
-    const revisionNim =
-        document.getElementById(
-            "revisionNim"
-        );
+        const code =
+            sessionStorage.getItem(
+                "tracking_kode"
+            );
 
 
-    const lockedNim =
-        document.getElementById(
-            "lockedNim"
-        );
+        if (
+            !id ||
+            !nim ||
+            !code
+        ) {
 
-
-    const revisiJudul =
-        document.getElementById(
-            "revisi_judul"
-        );
-
-
-    const revisiRekapNilai =
-        document.getElementById(
-            "revisi_rekap_nilai"
-        );
-
-
-    const revisionFileStatus =
-        document.getElementById(
-            "revisionFileStatus"
-        );
-
-
-    const revisionConfirmation =
-        document.getElementById(
-            "revisionConfirmation"
-        );
-
-
-    const revisionConfirmationError =
-        document.getElementById(
-            "revisionConfirmationError"
-        );
-
-
-    const revisionSuccessModal =
-        document.getElementById(
-            "revisionSuccessModal"
-        );
-
-
-    const closeRevisionModal =
-        document.getElementById(
-            "closeRevisionModal"
-        );
-
-
-    /* =========================================================
-       TAMPILKAN IDENTITAS
-    ========================================================= */
-
-    if (revisionKode) {
-
-        revisionKode.textContent =
-            kode;
-
-    }
-
-
-    if (revisionNim) {
-
-        revisionNim.textContent =
-            nim;
-
-    }
-
-
-    if (lockedNim) {
-
-        lockedNim.textContent =
-            nim;
-
-    }
-
-
-    /* =========================================================
-       ERROR STATE
-    ========================================================= */
-
-    function setError(
-        field,
-        hasError
-    ) {
-
-        if (!field) {
+            window.location.href =
+                "tracking.html";
 
             return;
 
         }
 
 
-        const formGroup =
-            field.closest(
-                ".form-group"
-            );
-
-
-        field.classList.toggle(
-            "form-control-error",
-            hasError
-        );
-
-
-        if (formGroup) {
-
-            formGroup.classList.toggle(
-                "has-error",
-                hasError
-            );
-
-        }
-
-    }
-
-
-    /* =========================================================
-       VALIDASI TEXT
-    ========================================================= */
-
-    function validateText(field) {
-
-        if (!field) {
-
-            return false;
-
-        }
-
-
-        const valid =
-            field.value
-                .trim() !== "";
-
-
-        setError(
-            field,
-            !valid
-        );
-
-
-        return valid;
-
-    }
-
-
-    /* =========================================================
-       FORMAT FILE SIZE
-    ========================================================= */
-
-    function formatFileSize(bytes) {
-
-        const kb =
-            bytes / 1024;
-
-
-        if (kb >= 1024) {
-
-            return (
-                kb / 1024
-            ).toFixed(2) +
-                " MB";
-
-        }
-
-
-        return (
-            Math.round(kb) +
-            " KB"
-        );
-
-    }
-
-
-    /* =========================================================
-       STATUS FILE
-    ========================================================= */
-
-    function updateFileStatus(
-        file,
-        valid = true
-    ) {
-
-        if (!revisionFileStatus) {
-
-            return;
-
-        }
-
-
-        revisionFileStatus
-            .classList
-            .remove(
-                "has-file"
-            );
-
-
-        if (!file) {
-
-            revisionFileStatus.textContent =
-                "Belum ada file dipilih";
-
-            return;
-
-        }
-
-
-        if (!valid) {
-
-            revisionFileStatus.textContent =
-                file.name +
-                " — file tidak sesuai ketentuan";
-
-            return;
-
-        }
-
-
-        revisionFileStatus.textContent =
-            "✓ " +
-            file.name +
-            " • " +
-            formatFileSize(
-                file.size
-            );
-
-
-        revisionFileStatus
-            .classList
-            .add(
-                "has-file"
-            );
-
-    }
-
-
-    /* =========================================================
-       VALIDASI FILE
-    ========================================================= */
-
-    function validateFile(field) {
-
-        if (!field) {
-
-            return false;
-
-        }
-
-
-        const file =
-            field.files &&
-            field.files[0]
-                ? field.files[0]
-                : null;
-
-
-        if (!file) {
-
-            setError(
-                field,
-                true
-            );
-
-
-            updateFileStatus(
-                null
-            );
-
-
-            return false;
-
-        }
-
-
-        const fileName =
-            file.name
-                .toLowerCase();
-
-
-        const maxSizeMb =
-            parseFloat(
-                field.dataset.maxSize ||
-                "1"
-            );
-
-
-        const maxSizeBytes =
-            maxSizeMb *
-            1024 *
-            1024;
-
-
-        const valid =
-            fileName.endsWith(
-                ".pdf"
-            ) &&
-            file.size <=
-                maxSizeBytes;
-
-
-        setError(
-            field,
-            !valid
-        );
-
-
-        updateFileStatus(
-            file,
-            valid
-        );
-
-
-        return valid;
-
-    }
-
-
-    /* =========================================================
-       EVENT INPUT JUDUL
-    ========================================================= */
-
-    if (revisiJudul) {
-
-        revisiJudul.addEventListener(
-            "input",
-            function () {
-
-                validateText(
-                    this
+        const submission =
+            await window.YudisiumAPI
+                .findSubmission(
+                    nim,
+                    code
                 );
 
-            }
-        );
 
-    }
+        if (
+            !submission ||
+            submission.status !==
+                window.YudisiumAPI
+                    .STATUS
+                    .PERLU_REVISI
+        ) {
+
+            window.location.href =
+                "detail_tracking.html";
+
+            return;
+
+        }
 
 
-    /* =========================================================
-       EVENT FILE
-    ========================================================= */
-
-    if (revisiRekapNilai) {
-
-        revisiRekapNilai.addEventListener(
-            "change",
-            function () {
-
-                validateFile(
-                    this
+        const verification =
+            await window.YudisiumAPI
+                .getVerificationResult(
+                    submission.id
                 );
 
-            }
-        );
 
-    }
+        if (
+            !verification ||
+            !Array.isArray(
+                verification.items
+            )
+        ) {
+
+            window.location.href =
+                "detail_tracking.html";
+
+            return;
+
+        }
 
 
-    /* =========================================================
-       CHECKBOX KONFIRMASI
-    ========================================================= */
+        const revisions =
+            verification.items.filter(
+                function (item) {
 
-    if (revisionConfirmation) {
-
-        revisionConfirmation
-            .addEventListener(
-                "change",
-                function () {
-
-                    if (
-                        this.checked &&
-                        revisionConfirmationError
-                    ) {
-
-                        revisionConfirmationError
-                            .classList
-                            .remove(
-                                "active"
-                            );
-
-                    }
+                    return (
+                        item.decision ===
+                        "revision"
+                    );
 
                 }
             );
 
-    }
+
+        document.getElementById(
+            "revisionKode"
+        ).textContent =
+            submission.code;
 
 
-    /* =========================================================
-       SUBMIT REVISI
-    ========================================================= */
+        document.getElementById(
+            "revisionNim"
+        ).textContent =
+            submission.nim;
 
-    if (revisionForm) {
 
-        revisionForm.addEventListener(
+        document.getElementById(
+            "revisionFieldCount"
+        ).textContent =
+            revisions.length;
+
+
+        document.getElementById(
+            "revisionBadge"
+        ).textContent =
+            revisions.length +
+            " Perbaikan";
+
+
+        const container =
+            document.getElementById(
+                "revisionItemsContainer"
+            );
+
+
+        container.innerHTML =
+            "";
+
+
+        revisions.forEach(
+            function (
+                item,
+                index
+            ) {
+
+                const config =
+                    window.YudisiumAPI
+                        .getFieldConfig(
+                            item.key
+                        );
+
+
+                const card =
+                    document.createElement(
+                        "article"
+                    );
+
+
+                card.className =
+                    "revision-field-card";
+
+
+                card.dataset.type =
+                    item.type;
+
+                card.dataset.key =
+                    item.key;
+
+
+                const isDocument =
+                    item.type ===
+                    "document";
+
+
+                card.innerHTML =
+                    `
+                    <div class="revision-field-number">
+                        ${index + 1}
+                    </div>
+
+                    <div class="revision-field-content">
+
+                        <div class="revision-field-heading">
+
+                            <div>
+
+                                <span class="revision-field-label">
+                                    ${item.label || config.label}
+                                </span>
+
+                                <span class="revision-field-status">
+                                    Perlu diperbaiki
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="feedback-box">
+
+                            <span class="feedback-label">
+                                Feedback Admin
+                            </span>
+
+                            <p>
+                                ${item.feedback || "-"}
+                            </p>
+
+                        </div>
+
+                        <div class="old-value-box">
+
+                            <span>
+                                ${
+                                    isDocument
+                                        ? "Dokumen Sebelumnya"
+                                        : "Data Sebelumnya"
+                                }
+                            </span>
+
+                            <p>
+                                ${
+                                    item.oldValue ||
+                                    item.filename ||
+                                    "-"
+                                }
+                            </p>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            ${
+                                isDocument
+                                    ? `
+                                        <label>
+                                            Upload Dokumen Perbaikan
+                                            <span class="required">*</span>
+                                        </label>
+
+                                        <input
+                                            type="file"
+                                            data-revision-file
+                                            required
+                                        >
+                                    `
+                                    : `
+                                        <label>
+                                            ${item.label || config.label} Baru
+                                            <span class="required">*</span>
+                                        </label>
+
+                                        ${
+                                            config.type ===
+                                            "textarea"
+                                                ? `
+                                                    <textarea
+                                                        data-revision-input
+                                                        rows="5"
+                                                        required
+                                                    ></textarea>
+                                                `
+                                                : `
+                                                    <input
+                                                        type="${config.type || "text"}"
+                                                        data-revision-input
+                                                        required
+                                                    >
+                                                `
+                                        }
+                                    `
+                            }
+
+                        </div>
+
+                    </div>
+                    `;
+
+
+                container.appendChild(
+                    card
+                );
+
+            }
+        );
+
+
+        const form =
+            document.getElementById(
+                "revisionForm"
+            );
+
+
+        form.addEventListener(
             "submit",
-            function (event) {
+            async function (event) {
 
                 event.preventDefault();
 
 
-                const judulValid =
-                    validateText(
-                        revisiJudul
+                const cards =
+                    Array.from(
+                        document.querySelectorAll(
+                            ".revision-field-card"
+                        )
                     );
 
 
-                const fileValid =
-                    validateFile(
-                        revisiRekapNilai
-                    );
+                const formData =
+                    new FormData();
 
 
-                /*
-                 * Kalau ada field revisi
-                 * yang belum valid.
-                 */
-                if (
-                    !judulValid ||
-                    !fileValid
-                ) {
+                let valid =
+                    true;
 
-                    const firstInvalid =
-                        revisionForm
-                            .querySelector(
-                                ".form-control-error"
+
+                const payload =
+                    [];
+
+
+                cards.forEach(
+                    function (card) {
+
+                        const type =
+                            card.dataset.type;
+
+
+                        const key =
+                            card.dataset.key;
+
+
+                        if (
+                            type ===
+                            "document"
+                        ) {
+
+                            const input =
+                                card.querySelector(
+                                    "[data-revision-file]"
+                                );
+
+
+                            const file =
+                                input.files[0];
+
+
+                            if (!file) {
+
+                                valid =
+                                    false;
+
+                                return;
+
+                            }
+
+
+                            formData.append(
+                                "files[" +
+                                key +
+                                "]",
+                                file
                             );
 
 
-                    if (firstInvalid) {
+                            payload.push({
 
-                        firstInvalid
-                            .scrollIntoView({
-                                behavior:
-                                    "smooth",
+                                key:
+                                    key,
 
-                                block:
-                                    "center"
+                                type:
+                                    "document"
+
                             });
 
+                        } else {
 
-                        firstInvalid.focus();
+                            const input =
+                                card.querySelector(
+                                    "[data-revision-input]"
+                                );
+
+
+                            const value =
+                                input.value.trim();
+
+
+                            if (!value) {
+
+                                valid =
+                                    false;
+
+                                return;
+
+                            }
+
+
+                            payload.push({
+
+                                key:
+                                    key,
+
+                                type:
+                                    "field",
+
+                                value:
+                                    value
+
+                            });
+
+                        }
 
                     }
+                );
 
+
+                if (!valid) {
+
+                    alert(
+                        "Lengkapi seluruh item revisi."
+                    );
 
                     return;
 
                 }
 
 
-                /*
-                 * Wajib konfirmasi.
-                 */
-                if (
-                    !revisionConfirmation
-                        .checked
-                ) {
+                formData.append(
+                    "items",
+                    JSON.stringify(
+                        payload
+                    )
+                );
 
-                    revisionConfirmationError
-                        .classList
-                        .add(
-                            "active"
+
+                try {
+
+                    await window.YudisiumAPI
+                        .submitRevision(
+                            submission.id,
+                            formData
                         );
 
 
-                    revisionConfirmation
-                        .focus();
+                    window.location.href =
+                        "detail_tracking.html";
 
+                } catch (error) {
 
-                    return;
-
-                }
-
-
-                console.log(
-                    "Revisi judul:",
-                    revisiJudul.value
-                );
-
-
-                console.log(
-                    "Revisi dokumen:",
-                    revisiRekapNilai
-                        .files[0]
-                        .name
-                );
-
-
-                /*
-                 * SIMULASI FRONTEND
-                 *
-                 * Nanti ketika Laravel sudah aktif,
-                 * bagian ini akan diganti request
-                 * POST ke backend.
-                 */
-                sessionStorage.setItem(
-                    "revision_submitted",
-                    "true"
-                );
-
-
-                sessionStorage.setItem(
-                    "revision_submitted_at",
-                    new Date()
-                        .toISOString()
-                );
-
-
-                /*
-                 * Tampilkan modal berhasil.
-                 */
-                if (
-                    revisionSuccessModal
-                ) {
-
-                    revisionSuccessModal
-                        .classList
-                        .add(
-                            "active"
-                        );
-
-
-                    document.body
-                        .style
-                        .overflow =
-                            "hidden";
+                    alert(
+                        "Backend belum terhubung. Revisi belum dapat dikirim."
+                    );
 
                 }
 
@@ -587,98 +455,4 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
     }
-
-
-    /* =========================================================
-       KEMBALI KE DETAIL STATUS
-    ========================================================= */
-
-    if (closeRevisionModal) {
-
-        closeRevisionModal
-            .addEventListener(
-                "click",
-                function () {
-
-                    window.location.href =
-                        "detail_tracking.html";
-
-                }
-            );
-
-    }
-
-
-    /* =========================================================
-       CLICK DI LUAR MODAL
-    ========================================================= */
-
-    if (revisionSuccessModal) {
-
-        revisionSuccessModal
-            .addEventListener(
-                "click",
-                function (event) {
-
-                    if (
-                        event.target ===
-                        revisionSuccessModal
-                    ) {
-
-                        revisionSuccessModal
-                            .classList
-                            .remove(
-                                "active"
-                            );
-
-
-                        document.body
-                            .style
-                            .overflow =
-                                "";
-
-                    }
-
-                }
-            );
-
-    }
-
-
-    /* =========================================================
-       ESC MODAL
-    ========================================================= */
-
-    document.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (
-                event.key ===
-                    "Escape" &&
-                revisionSuccessModal &&
-                revisionSuccessModal
-                    .classList
-                    .contains(
-                        "active"
-                    )
-            ) {
-
-                revisionSuccessModal
-                    .classList
-                    .remove(
-                        "active"
-                    );
-
-
-                document.body
-                    .style
-                    .overflow =
-                        "";
-
-            }
-
-        }
-    );
-
-});
+);

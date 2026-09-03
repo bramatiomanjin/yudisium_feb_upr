@@ -1,20 +1,35 @@
 document.addEventListener(
     "DOMContentLoaded",
-    function () {
+    async function () {
 
-        console.log(
-            "Admin detail history aktif"
-        );
+        "use strict";
 
 
-        /* =====================================
+        if (
+            !window.YudisiumAPI
+        ) {
+
+            console.error(
+                "YudisiumAPI tidak ditemukan."
+            );
+
+            return;
+
+        }
+
+
+        const API =
+            window.YudisiumAPI;
+
+
+        /* =====================================================
            SESSION
-        ===================================== */
+        ===================================================== */
 
         const currentUsername =
             sessionStorage.getItem(
                 "admin_username"
-            ) || "admin";
+            ) || "";
 
 
         const currentRole =
@@ -28,9 +43,9 @@ document.addEventListener(
             "SUPER_ADMIN";
 
 
-        /* =====================================
-           QUERY ID
-        ===================================== */
+        /* =====================================================
+           QUERY
+        ===================================================== */
 
         const params =
             new URLSearchParams(
@@ -38,15 +53,27 @@ document.addEventListener(
             );
 
 
-        const requestedId =
+        const historyId =
             params.get(
                 "id"
             );
 
 
-        /* =====================================
+        if (
+            !historyId
+        ) {
+
+            window.location.href =
+                "history.html";
+
+            return;
+
+        }
+
+
+        /* =====================================================
            ELEMENTS
-        ===================================== */
+        ===================================================== */
 
         const content =
             document.getElementById(
@@ -66,1386 +93,772 @@ document.addEventListener(
             );
 
 
-        /* =====================================
-           MOCK HISTORY
-        ===================================== */
-
-        const mockActivities = [
-
-            {
-                id:
-                    1001,
-
-                admin_username:
-                    "adminfeb",
-
-                admin_role:
-                    "ADMIN",
-
-                pengajuan_id:
-                    1,
-
-                kode_pengajuan:
-                    "YDS-2026-0001",
-
-                nim:
-                    "2301110001",
-
-                mahasiswa:
-                    "Andi Saputra",
-
-                jurusan:
-                    "Manajemen",
-
-                action:
-                    "VERIFICATION",
-
-                action_label:
-                    "Verifikasi Pengajuan",
-
-                old_status:
-                    "VERIFIKASI_ADMIN",
-
-                new_status:
-                    "TERVERIFIKASI",
-
-                note:
-                    "Seluruh data dan dokumen mahasiswa telah disetujui.",
-
-                created_at:
-                    "2 Sep 2026, 08.15",
-
-                timestamp:
-                    1788308100000
-            },
-
-            {
-                id:
-                    1002,
-
-                admin_username:
-                    "adminfeb",
-
-                admin_role:
-                    "ADMIN",
-
-                pengajuan_id:
-                    2,
-
-                kode_pengajuan:
-                    "YDS-2026-0002",
-
-                nim:
-                    "2301120002",
-
-                mahasiswa:
-                    "Citra Lestari",
-
-                jurusan:
-                    "Akuntansi",
-
-                action:
-                    "REVISION",
-
-                action_label:
-                    "Permintaan Revisi",
-
-                old_status:
-                    "VERIFIKASI_ADMIN",
-
-                new_status:
-                    "PERLU_REVISI",
-
-                note:
-                    "Judul karya tulis dan dokumen rekap nilai perlu diperbaiki.",
-
-                created_at:
-                    "2 Sep 2026, 08.45",
-
-                timestamp:
-                    1788309900000
-            },
-
-            {
-                id:
-                    1003,
-
-                admin_username:
-                    "ciko_admin",
-
-                admin_role:
-                    "ADMIN",
-
-                pengajuan_id:
-                    3,
-
-                kode_pengajuan:
-                    "YDS-2026-0003",
-
-                nim:
-                    "2301130003",
-
-                mahasiswa:
-                    "Deni Pratama",
-
-                jurusan:
-                    "Ekonomi Pembangunan",
-
-                action:
-                    "UPDATE_SK_STATUS",
-
-                action_label:
-                    "Update Status SK",
-
-                old_status:
-                    "TERVERIFIKASI",
-
-                new_status:
-                    "PEMBUATAN_SK",
-
-                note:
-                    "Dokumen siap masuk tahap pembuatan SK.",
-
-                created_at:
-                    "2 Sep 2026, 09.10",
-
-                timestamp:
-                    1788311400000
-            },
-
-            {
-                id:
-                    1004,
-
-                admin_username:
-                    "ciko_admin",
-
-                admin_role:
-                    "ADMIN",
-
-                pengajuan_id:
-                    4,
-
-                kode_pengajuan:
-                    "YDS-2026-0004",
-
-                nim:
-                    "2301110004",
-
-                mahasiswa:
-                    "Eva Natalia",
-
-                jurusan:
-                    "Manajemen",
-
-                action:
-                    "UPDATE_SK_STATUS",
-
-                action_label:
-                    "Update Status SK",
-
-                old_status:
-                    "PEMBUATAN_SK",
-
-                new_status:
-                    "TTD_WAKIL_DEKAN",
-
-                note:
-                    null,
-
-                created_at:
-                    "2 Sep 2026, 09.25",
-
-                timestamp:
-                    1788312300000
-            },
-
-            {
-                id:
-                    1005,
-
-                admin_username:
-                    "superadmin",
-
-                admin_role:
-                    "SUPER_ADMIN",
-
-                pengajuan_id:
-                    5,
-
-                kode_pengajuan:
-                    "YDS-2026-0005",
-
-                nim:
-                    "2301120005",
-
-                mahasiswa:
-                    "Fajar Rahman",
-
-                jurusan:
-                    "Akuntansi",
-
-                action:
-                    "REVISION",
-
-                action_label:
-                    "Review Revisi",
-
-                old_status:
-                    "REVISI_DIKIRIM",
-
-                new_status:
-                    "TERVERIFIKASI",
-
-                note:
-                    "Seluruh perbaikan mahasiswa telah diterima.",
-
-                created_at:
-                    "2 Sep 2026, 09.50",
-
-                timestamp:
-                    1788313800000
-            },
-
-            {
-                id:
-                    1006,
-
-                admin_username:
-                    "superadmin",
-
-                admin_role:
-                    "SUPER_ADMIN",
-
-                pengajuan_id:
-                    6,
-
-                kode_pengajuan:
-                    "YDS-2026-0006",
-
-                nim:
-                    "2301110006",
-
-                mahasiswa:
-                    "Grace Amelia",
-
-                jurusan:
-                    "Manajemen",
-
-                action:
-                    "UPDATE_SK_STATUS",
-
-                action_label:
-                    "Update Status SK",
-
-                old_status:
-                    "TTD_WAKIL_DEKAN",
-
-                new_status:
-                    "TTD_DEKAN",
-
-                note:
-                    "Dokumen diteruskan ke Dekan.",
-
-                created_at:
-                    "2 Sep 2026, 10.05",
-
-                timestamp:
-                    1788314700000
-            }
-
-        ];
-
-
-        /* =====================================
-           MOCK STUDENTS
-        ===================================== */
-
-        const students = {
-
-            "2301110001": {
-                email:
-                    "andi.saputra@example.com",
-
-                whatsapp:
-                    "081234567890",
-
-                year:
-                    "2023",
-
-                entryRoute:
-                    "Reguler"
-            },
-
-            "2301120002": {
-                email:
-                    "citra.lestari@example.com",
-
-                whatsapp:
-                    "081298761234",
-
-                year:
-                    "2023",
-
-                entryRoute:
-                    "Reguler"
-            },
-
-            "2301130003": {
-                email:
-                    "deni.pratama@example.com",
-
-                whatsapp:
-                    "081377788899",
-
-                year:
-                    "2023",
-
-                entryRoute:
-                    "Reguler"
-            },
-
-            "2301110004": {
-                email:
-                    "eva.natalia@example.com",
-
-                whatsapp:
-                    "082155566677",
-
-                year:
-                    "2023",
-
-                entryRoute:
-                    "Reguler"
-            },
-
-            "2301120005": {
-                email:
-                    "fajar.rahman@example.com",
-
-                whatsapp:
-                    "081344455566",
-
-                year:
-                    "2023",
-
-                entryRoute:
-                    "Reguler"
-            },
-
-            "2301110006": {
-                email:
-                    "grace.amelia@example.com",
-
-                whatsapp:
-                    "082244455599",
-
-                year:
-                    "2023",
-
-                entryRoute:
-                    "Reguler"
-            },
-
-            "2301130007": {
-                email:
-                    "hendra.wijaya@example.com",
-
-                whatsapp:
-                    "081252527777",
-
-                year:
-                    "2023",
-
-                entryRoute:
-                    "Reguler"
-            },
-
-            "2301120008": {
-                email:
-                    "intan.permata@example.com",
-
-                whatsapp:
-                    "082133344488",
-
-                year:
-                    "2023",
-
-                entryRoute:
-                    "Reguler"
-            }
-
-        };
-
-
-        /* =====================================
-           DOCUMENTS
-        ===================================== */
-
-        const documents = [
-
-            {
-                title:
-                    "Formulir Pendaftaran Yudisium",
-
-                filename:
-                    "formulir_yudisium.pdf",
-
-                size:
-                    "650 KB"
-            },
-
-            {
-                title:
-                    "Foto 3x4 Berwarna",
-
-                filename:
-                    "foto_3x4.pdf",
-
-                size:
-                    "420 KB"
-            },
-
-            {
-                title:
-                    "Ijazah SLTA",
-
-                filename:
-                    "ijazah_slta.pdf",
-
-                size:
-                    "830 KB"
-            },
-
-            {
-                title:
-                    "Berita Acara Ujian Skripsi / Artikel",
-
-                filename:
-                    "berita_acara.pdf",
-
-                size:
-                    "790 KB"
-            },
-
-            {
-                title:
-                    "Rekapitulasi Nilai Ujian",
-
-                filename:
-                    "rekap_nilai.pdf",
-
-                size:
-                    "740 KB"
-            },
-
-            {
-                title:
-                    "Blanko Revisi",
-
-                filename:
-                    "blanko_revisi.pdf",
-
-                size:
-                    "510 KB"
-            },
-
-            {
-                title:
-                    "Tanda Terima Skripsi / Artikel",
-
-                filename:
-                    "tanda_terima.pdf",
-
-                size:
-                    "1.2 MB"
-            },
-
-            {
-                title:
-                    "Surat Pernyataan Penulisan Ijazah",
-
-                filename:
-                    "pernyataan_ijazah.pdf",
-
-                size:
-                    "560 KB"
-            },
-
-            {
-                title:
-                    "Surat Bebas Pinjam Perpustakaan Universitas",
-
-                filename:
-                    "bebas_pinjam_universitas.pdf",
-
-                size:
-                    "690 KB"
-            },
-
-            {
-                title:
-                    "Surat Bebas Pinjam Perpustakaan Fakultas",
-
-                filename:
-                    "bebas_pinjam_fakultas.pdf",
-
-                size:
-                    "620 KB"
-            },
-
-            {
-                title:
-                    "KHS Semester 1 s/d Terbaru",
-
-                filename:
-                    "khs.pdf",
-
-                size:
-                    "880 KB"
-            },
-
-            {
-                title:
-                    "Transkrip Nilai Ujian Skripsi",
-
-                filename:
-                    "transkrip.pdf",
-
-                size:
-                    "710 KB"
-            },
-
-            {
-                title:
-                    "Surat Tugas Dosen Pembimbing",
-
-                filename:
-                    "surat_tugas_pembimbing.pdf",
-
-                size:
-                    "1.4 MB"
-            },
-
-            {
-                title:
-                    "Surat Verifikasi Bebas Tunggakan",
-
-                filename:
-                    "bebas_tunggakan.pdf",
-
-                size:
-                    "530 KB"
-            },
-
-            {
-                title:
-                    "Bukti Pengisian Jurnal Jurusan",
-
-                filename:
-                    "bukti_jurnal.pdf",
-
-                size:
-                    "680 KB"
-            }
-
-        ];
-
-
-        /* =====================================
-           LOCAL ACTIVITIES
-        ===================================== */
-
-        function loadStoredActivities() {
-
-            try {
-
-                const saved =
-                    localStorage.getItem(
-                        "yudisium_admin_activity"
-                    );
-
-
-                if (!saved) {
-
-                    return [];
-
-                }
-
-
-                const parsed =
-                    JSON.parse(
-                        saved
-                    );
-
-
-                return Array.isArray(
-                    parsed
-                )
-                    ?
-                    parsed
-                    :
-                    [];
-
-            } catch (
-                error
-            ) {
-
-                console.error(
-                    "Gagal membaca local history",
-                    error
+        const sidebarBadge =
+            document.querySelector(
+                ".admin-sidebar .admin-nav-count"
+            );
+
+
+        /* =====================================================
+           HELPERS
+        ===================================================== */
+
+        function setText(
+            id,
+            value
+        ) {
+
+            const element =
+                document.getElementById(
+                    id
                 );
 
 
-                return [];
+            if (
+                element
+            ) {
+
+                element.textContent =
+                    value ||
+                    "-";
 
             }
 
         }
 
 
-        function getAllActivities() {
+        function escapeHtml(value) {
 
-            const all =
-                [
-                    ...loadStoredActivities(),
-                    ...mockActivities
-                ];
-
-
-            const map =
-                new Map();
-
-
-            all.forEach(
-                function (activity) {
-
-                    const key =
-                        String(
-                            activity.id
-                        );
-
-
-                    if (
-                        !map.has(
-                            key
-                        )
-                    ) {
-
-                        map.set(
-                            key,
-                            activity
-                        );
-
-                    }
-
-                }
-            );
-
-
-            return Array.from(
-                map.values()
-            );
+            return String(
+                value ?? ""
+            )
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
 
         }
 
 
-        /* =====================================
-           FIND ACTIVITY
-        ===================================== */
+        function getActionLabel(activity) {
 
-        const activity =
-            getAllActivities().find(
-                function (item) {
+            if (
+                activity.actionLabel
+            ) {
 
-                    return (
-                        String(
-                            item.id
-                        ) ===
-                        String(
-                            requestedId
-                        )
-                    );
+                return activity.actionLabel;
 
-                }
-            );
+            }
 
-
-        /* =====================================
-           ACCESS
-        ===================================== */
-
-        function denyAccess() {
-
-            content.style.display =
-                "none";
-
-
-            accessError.style.display =
-                "flex";
-
-        }
-
-
-        function allowAccess() {
-
-            accessError.style.display =
-                "none";
-
-
-            content.style.display =
-                "block";
-
-        }
-
-
-        if (
-            !activity
-        ) {
-
-            denyAccess();
-
-            return;
-
-        }
-
-
-        /*
-         * ADMIN:
-         * hanya history sendiri.
-         *
-         * SUPER_ADMIN:
-         * seluruh history.
-         */
-
-        if (
-            !isSuperAdmin &&
-            activity.admin_username !==
-            currentUsername
-        ) {
-
-            denyAccess();
-
-            return;
-
-        }
-
-
-        allowAccess();
-
-
-        /* =====================================
-           FORMAT STATUS
-        ===================================== */
-
-        function formatStatus(
-            status
-        ) {
 
             const labels = {
 
-                DIAJUKAN:
-                    "Diajukan",
+                VERIFICATION:
+                    "Verifikasi Pengajuan",
 
-                VERIFIKASI_ADMIN:
-                    "Verifikasi Admin",
+                REVISION:
+                    "Revisi Pengajuan",
 
-                PERLU_REVISI:
-                    "Perlu Revisi",
-
-                REVISI_DIKIRIM:
-                    "Revisi Dikirim",
-
-                TERVERIFIKASI:
-                    "Terverifikasi",
-
-                PEMBUATAN_SK:
-                    "Pembuatan SK",
-
-                TTD_WAKIL_DEKAN:
-                    "TTD Wakil Dekan",
-
-                TTD_DEKAN:
-                    "TTD Dekan",
-
-                SK_TERBIT:
-                    "SK Terbit"
+                UPDATE_SK_STATUS:
+                    "Proses SK"
 
             };
 
 
             return (
                 labels[
-                    status
+                    activity.action
                 ] ||
-                status ||
-                "-"
+                "Aktivitas Administrasi"
             );
 
         }
 
 
-        function getActivityBadge(
-            action
-        ) {
+        function getActionDescription(activity) {
 
-            if (
-                action ===
-                "VERIFICATION"
-            ) {
-
-                return {
-                    label:
-                        "VERIFIKASI",
-
-                    className:
-                        "verification"
-                };
-
-            }
-
-
-            if (
-                action ===
-                "REVISION"
-            ) {
-
-                return {
-                    label:
-                        "REVISI",
-
-                    className:
-                        "revision"
-                };
-
-            }
-
-
-            return {
-                label:
-                    "PROSES SK",
-
-                className:
-                    "process"
-            };
-
-        }
-
-
-        /* =====================================
-           STUDENT DATA
-        ===================================== */
-
-        const student =
-            students[
-                activity.nim
-            ] || {
-
-                email:
-                    "mahasiswa@example.com",
-
-                whatsapp:
-                    "081234567890",
-
-                year:
-                    "2023",
-
-                entryRoute:
-                    "Reguler"
-            };
-
-
-        /* =====================================
-           INITIAL
-        ===================================== */
-
-        const badge =
-            getActivityBadge(
+            switch (
                 activity.action
-            );
-
-
-        document.getElementById(
-            "detailHistoryCode"
-        ).textContent =
-            activity.kode_pengajuan;
-
-
-        document.getElementById(
-            "detailActivityTitle"
-        ).textContent =
-            activity.action_label ||
-            activity.action;
-
-
-        document.getElementById(
-            "detailActivityDescription"
-        ).textContent =
-            "Aktivitas pada pengajuan " +
-            activity.mahasiswa +
-            ".";
-
-
-        const activityBadge =
-            document.getElementById(
-                "detailActivityBadge"
-            );
-
-
-        activityBadge.textContent =
-            badge.label;
-
-
-        activityBadge.className =
-            "detail-history-status-badge " +
-            badge.className;
-
-
-        document.getElementById(
-            "detailAdminUsername"
-        ).textContent =
-            activity.admin_username;
-
-
-        document.getElementById(
-            "detailAdminRole"
-        ).textContent =
-            activity.admin_role ||
-            "ADMIN";
-
-
-        document.getElementById(
-            "detailActivityTime"
-        ).textContent =
-            activity.created_at ||
-            "-";
-
-
-        document.getElementById(
-            "detailActivityType"
-        ).textContent =
-            activity.action_label ||
-            activity.action;
-
-
-        document.getElementById(
-            "detailOldStatus"
-        ).textContent =
-            formatStatus(
-                activity.old_status
-            );
-
-
-        document.getElementById(
-            "detailNewStatus"
-        ).textContent =
-            formatStatus(
-                activity.new_status
-            );
-
-
-        const noteBox =
-            document.getElementById(
-                "detailHistoryNoteBox"
-            );
-
-
-        if (
-            activity.note
-        ) {
-
-            document.getElementById(
-                "detailHistoryNote"
-            ).textContent =
-                activity.note;
-
-        } else {
-
-            noteBox.style.display =
-                "none";
-
-        }
-
-
-        document.getElementById(
-            "detailStudentName"
-        ).textContent =
-            activity.mahasiswa;
-
-
-        document.getElementById(
-            "detailStudentNim"
-        ).textContent =
-            "NIM " +
-            activity.nim;
-
-
-        document.getElementById(
-            "studentFullName"
-        ).textContent =
-            activity.mahasiswa;
-
-
-        document.getElementById(
-            "studentNim"
-        ).textContent =
-            activity.nim;
-
-
-        document.getElementById(
-            "studentEmail"
-        ).textContent =
-            student.email;
-
-
-        document.getElementById(
-            "studentWhatsapp"
-        ).textContent =
-            student.whatsapp;
-
-
-        document.getElementById(
-            "studentYear"
-        ).textContent =
-            student.year;
-
-
-        document.getElementById(
-            "studentEntryRoute"
-        ).textContent =
-            student.entryRoute;
-
-
-        document.getElementById(
-            "studentDepartment"
-        ).textContent =
-            activity.jurusan ||
-            "Manajemen";
-
-
-        /* =====================================
-           INITIALS
-        ===================================== */
-
-        function getInitials(
-            name
-        ) {
-
-            return String(
-                name
-            )
-                .split(" ")
-                .filter(
-                    function (part) {
-
-                        return (
-                            part !==
-                            ""
-                        );
-
-                    }
-                )
-                .slice(
-                    0,
-                    2
-                )
-                .map(
-                    function (part) {
-
-                        return (
-                            part.charAt(
-                                0
-                            )
-                        );
-
-                    }
-                )
-                .join("")
-                .toUpperCase();
-
-        }
-
-
-        document.querySelector(
-            ".detail-history-avatar"
-        ).textContent =
-            getInitials(
-                activity.mahasiswa
-            );
-
-
-        /* =====================================
-           RENDER DOCUMENTS
-        ===================================== */
-
-        documents.forEach(
-            function (
-                documentData,
-                index
             ) {
 
-                const item =
-                    document.createElement(
-                        "article"
+                case "VERIFICATION":
+
+                    return (
+                        "Admin melakukan pemeriksaan data dan dokumen pengajuan mahasiswa."
                     );
 
 
-                item.className =
-                    "detail-history-document-item";
+                case "REVISION":
+
+                    return (
+                        "Admin melakukan tindakan pada proses revisi pengajuan mahasiswa."
+                    );
 
 
-                item.innerHTML = `
-                    <div class="detail-history-document-info">
+                case "UPDATE_SK_STATUS":
 
-                        <div class="detail-history-document-icon">
-                            PDF
-                        </div>
-
-                        <div>
-
-                            <span>
-                                Dokumen ${index + 1}
-                            </span>
-
-                            <strong>
-                                ${documentData.title}
-                            </strong>
-
-                            <small>
-                                ${documentData.filename}
-                                •
-                                ${documentData.size}
-                            </small>
-
-                        </div>
-
-                    </div>
+                    return (
+                        "Admin memperbarui tahapan proses administrasi SK Yudisium."
+                    );
 
 
-                    <button
-                        type="button"
-                        class="detail-history-preview-button"
-                        data-title="${documentData.title}"
-                        data-file="${documentData.filename}"
-                    >
-                        Preview
-                    </button>
-                `;
+                default:
+
+                    return (
+                        "Aktivitas administrasi pada pengajuan mahasiswa."
+                    );
+
+            }
+
+        }
 
 
-                documentList.appendChild(
-                    item
+        function getActionBadge(activity) {
+
+            switch (
+                activity.action
+            ) {
+
+                case "VERIFICATION":
+
+                    return "VERIFIKASI";
+
+
+                case "REVISION":
+
+                    return "REVISI";
+
+
+                case "UPDATE_SK_STATUS":
+
+                    return "PROSES SK";
+
+
+                default:
+
+                    return "AKTIVITAS";
+
+            }
+
+        }
+
+
+        function formatDate(value) {
+
+            if (!value) {
+
+                return "-";
+
+            }
+
+
+            const date =
+                new Date(value);
+
+
+            if (
+                Number.isNaN(
+                    date.getTime()
+                )
+            ) {
+
+                return value;
+
+            }
+
+
+            return date
+                .toLocaleString(
+                    "id-ID",
+                    {
+
+                        day:
+                            "2-digit",
+
+                        month:
+                            "long",
+
+                        year:
+                            "numeric",
+
+                        hour:
+                            "2-digit",
+
+                        minute:
+                            "2-digit"
+
+                    }
                 );
 
+        }
+
+
+        /* =====================================================
+           ACCESS ERROR
+        ===================================================== */
+
+        function showAccessError() {
+
+            if (
+                content
+            ) {
+
+                content.style.display =
+                    "none";
+
             }
-        );
 
 
-        /* =====================================
-           PREVIEW
-        ===================================== */
+            if (
+                accessError
+            ) {
 
-        const previewModal =
-            document.getElementById(
-                "historyDocumentPreview"
-            );
+                accessError.style.display =
+                    "flex";
 
+            }
 
-        const previewTitle =
-            document.getElementById(
-                "historyPreviewTitle"
-            );
+        }
 
 
-        const previewFilename =
-            document.getElementById(
-                "historyPreviewFilename"
-            );
+        function showContent() {
+
+            if (
+                accessError
+            ) {
+
+                accessError.style.display =
+                    "none";
+
+            }
 
 
-        const footerFilename =
-            document.getElementById(
-                "historyPreviewFooterName"
-            );
+            if (
+                content
+            ) {
+
+                content.style.display =
+                    "";
+
+            }
+
+        }
 
 
-        const previewFrame =
-            document.getElementById(
-                "historyPreviewFrame"
-            );
+        /* =====================================================
+           SIDEBAR REVISION COUNT
+        ===================================================== */
+
+        async function updateSidebarCount() {
+
+            if (
+                !sidebarBadge
+            ) {
+
+                return;
+
+            }
 
 
-        const previewPlaceholder =
-            document.getElementById(
-                "historyPreviewPlaceholder"
-            );
+            try {
+
+                const submissions =
+                    await API
+                        .getSubmissions();
 
 
-        const closePreview =
-            document.getElementById(
-                "closeHistoryPreview"
-            );
+                const count =
+                    submissions.filter(
+                        function (submission) {
+
+                            return [
+
+                                API.STATUS
+                                    .PERLU_REVISI,
+
+                                API.STATUS
+                                    .REVISI_DIKIRIM
+
+                            ].includes(
+                                submission.status
+                            );
+
+                        }
+                    ).length;
 
 
-        const openNewTab =
-            document.getElementById(
-                "openHistoryDocumentNewTab"
-            );
+                sidebarBadge.textContent =
+                    count;
+
+            } catch (error) {
+
+                sidebarBadge.textContent =
+                    "0";
+
+            }
+
+        }
 
 
-        let currentFile =
-            "";
+        /* =====================================================
+           DOCUMENTS
+        ===================================================== */
+
+        function renderDocuments(
+            documents
+        ) {
+
+            if (
+                !documentList
+            ) {
+
+                return;
+
+            }
 
 
-        document.addEventListener(
-            "click",
-            function (event) {
+            documentList.innerHTML =
+                "";
 
-                const button =
-                    event.target.closest(
-                        ".detail-history-preview-button"
+
+            if (
+                !Array.isArray(
+                    documents
+                ) ||
+                documents.length ===
+                    0
+            ) {
+
+                documentList.innerHTML =
+                    `
+                    <div
+                        style="
+                            padding: 26px;
+                            text-align: center;
+                        "
+                    >
+                        <strong>
+                            Tidak ada dokumen untuk ditampilkan
+                        </strong>
+
+                        <p>
+                            Dokumen akan tersedia dari backend ketika pengajuan sudah tersimpan.
+                        </p>
+                    </div>
+                    `;
+
+
+                return;
+
+            }
+
+
+            documents.forEach(
+                function (documentData) {
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    item.className =
+                        "detail-history-document-item";
+
+
+                    item.innerHTML =
+                        `
+                        <div class="detail-history-document-main">
+
+                            <div class="detail-history-document-icon">
+                                FILE
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    ${escapeHtml(
+                                        documentData.title ||
+                                        documentData.label ||
+                                        "Dokumen"
+                                    )}
+                                </strong>
+
+                                <span>
+                                    ${escapeHtml(
+                                        documentData.filename ||
+                                        "-"
+                                    )}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        ${
+                            documentData.url
+                                ? `
+                                <a
+                                    href="${escapeHtml(
+                                        documentData.url
+                                    )}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="detail-history-preview-button"
+                                >
+                                    Preview
+                                </a>
+                                `
+                                : `
+                                <span class="admin-status-badge pending">
+                                    File belum tersedia
+                                </span>
+                                `
+                        }
+                        `;
+
+
+                    documentList.appendChild(
+                        item
                     );
 
+                }
+            );
 
-                if (!button) {
+        }
 
-                    return;
+
+        /* =====================================================
+           RENDER
+        ===================================================== */
+
+        function renderActivity(
+            activity,
+            submission
+        ) {
+
+            setText(
+                "detailHistoryCode",
+                activity.submissionCode ||
+                submission?.code
+            );
+
+
+            setText(
+                "detailActivityTitle",
+                getActionLabel(
+                    activity
+                )
+            );
+
+
+            setText(
+                "detailActivityDescription",
+                getActionDescription(
+                    activity
+                )
+            );
+
+
+            setText(
+                "detailActivityBadge",
+                getActionBadge(
+                    activity
+                )
+            );
+
+
+            setText(
+                "detailAdminUsername",
+                activity.adminName ||
+                activity.adminUsername
+            );
+
+
+            setText(
+                "detailAdminRole",
+                activity.adminRole
+            );
+
+
+            setText(
+                "detailActivityTime",
+                formatDate(
+                    activity.createdAt
+                )
+            );
+
+
+            setText(
+                "detailActivityType",
+                getActionLabel(
+                    activity
+                )
+            );
+
+
+            setText(
+                "detailOldStatus",
+                API.getStatusLabel(
+                    activity.previousStatus
+                )
+            );
+
+
+            setText(
+                "detailNewStatus",
+                API.getStatusLabel(
+                    activity.newStatus
+                )
+            );
+
+
+            const noteBox =
+                document.getElementById(
+                    "detailHistoryNoteBox"
+                );
+
+
+            if (
+                activity.note
+            ) {
+
+                if (
+                    noteBox
+                ) {
+
+                    noteBox.style.display =
+                        "";
 
                 }
 
 
-                currentFile =
-                    button.dataset.file;
+                setText(
+                    "detailHistoryNote",
+                    activity.note
+                );
+
+            } else {
+
+                if (
+                    noteBox
+                ) {
+
+                    noteBox.style.display =
+                        "none";
+
+                }
+
+            }
 
 
-                previewTitle.textContent =
-                    button.dataset.title;
+            const studentName =
+                submission?.name ||
+                activity.studentName;
 
 
-                previewFilename.textContent =
-                    currentFile;
+            const nim =
+                submission?.nim ||
+                activity.nim;
 
 
-                footerFilename.textContent =
-                    currentFile;
+            setText(
+                "detailStudentName",
+                studentName
+            );
+
+
+            setText(
+                "detailStudentNim",
+                nim
+            );
+
+
+            setText(
+                "studentFullName",
+                studentName
+            );
+
+
+            setText(
+                "studentNim",
+                nim
+            );
+
+
+            setText(
+                "studentEmail",
+                submission?.email
+            );
+
+
+            setText(
+                "studentWhatsapp",
+                submission?.whatsapp
+            );
+
+
+            setText(
+                "studentYear",
+                submission?.year
+            );
+
+
+            setText(
+                "studentEntryRoute",
+                submission?.entryRoute
+            );
+
+
+            setText(
+                "studentDepartment",
+                submission?.department ||
+                activity.department
+            );
+
+        }
+
+
+        /* =====================================================
+           LOAD
+        ===================================================== */
+
+        async function loadDetail() {
+
+            /*
+             * Backend offline = tidak ada data palsu.
+             */
+            if (
+                !API.config.backendConnected
+            ) {
+
+                window.location.href =
+                    "history.html";
+
+                return;
+
+            }
+
+
+            try {
+
+                const activity =
+                    await API
+                        .getHistoryDetail(
+                            historyId
+                        );
+
+
+                if (
+                    !activity
+                ) {
+
+                    window.location.href =
+                        "history.html";
+
+                    return;
+
+                }
 
 
                 /*
-                 * Frontend simulation.
-                 *
-                 * Nanti:
-                 *
-                 * previewFrame.src = fileUrl;
-                 * previewFrame.style.display = "block";
-                 * previewPlaceholder.style.display = "none";
+                 * UI guard.
+                 * Laravel tetap WAJIB melakukan authorization.
                  */
-
-                previewFrame.style.display =
-                    "none";
-
-
-                previewPlaceholder.style.display =
-                    "flex";
-
-
-                previewModal.classList.add(
-                    "active"
-                );
-
-
-                document.body.style.overflow =
-                    "hidden";
-
-            }
-        );
-
-
-        function closePreviewModal() {
-
-            previewModal.classList.remove(
-                "active"
-            );
-
-
-            previewFrame.src =
-                "";
-
-
-            currentFile =
-                "";
-
-
-            document.body.style.overflow =
-                "";
-
-        }
-
-
-        closePreview.addEventListener(
-            "click",
-            closePreviewModal
-        );
-
-
-        previewModal.addEventListener(
-            "click",
-            function (event) {
-
                 if (
-                    event.target ===
-                    previewModal
+                    !isSuperAdmin &&
+                    activity.adminUsername !==
+                        currentUsername
                 ) {
 
-                    closePreviewModal();
-
-                }
-
-            }
-        );
-
-
-        document.addEventListener(
-            "keydown",
-            function (event) {
-
-                if (
-                    event.key ===
-                    "Escape" &&
-                    previewModal.classList.contains(
-                        "active"
-                    )
-                ) {
-
-                    closePreviewModal();
-
-                }
-
-            }
-        );
-
-
-        openNewTab.addEventListener(
-            "click",
-            function () {
-
-                if (
-                    currentFile ===
-                    ""
-                ) {
+                    showAccessError();
 
                     return;
 
                 }
 
 
-                alert(
-                    "Dokumen " +
-                    currentFile +
-                    " akan dibuka menggunakan URL file dari Laravel."
+                showContent();
+
+
+                let submission =
+                    null;
+
+
+                let documents =
+                    [];
+
+
+                if (
+                    activity.submissionId
+                ) {
+
+                    [
+                        submission,
+                        documents
+                    ] =
+                        await Promise.all([
+
+                            API.getSubmission(
+                                activity.submissionId
+                            ),
+
+                            API.getDocuments(
+                                activity.submissionId
+                            )
+
+                        ]);
+
+                }
+
+
+                renderActivity(
+                    activity,
+                    submission
                 );
 
+
+                renderDocuments(
+                    documents
+                );
+
+
+                await updateSidebarCount();
+
+            } catch (error) {
+
+                console.error(
+                    "Gagal memuat detail History:",
+                    error
+                );
+
+
+                window.location.href =
+                    "history.html";
+
             }
-        );
+
+        }
+
+
+        await loadDetail();
 
     }
 );
