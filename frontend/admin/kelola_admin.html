@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Kelola Admin - Yudisium FEB UPR
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/admin.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/admin_kelola_admin.css"
+    >
+    <link rel="stylesheet" href="../css/admin_theme.css">
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- =====================================
+             SIDEBAR
+        ====================================== -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-sidebar-brand">
+
+                <div class="admin-sidebar-logo">
+                    FEB
+                </div>
+
+                <div>
+
+                    <strong>
+                        Yudisium FEB
+                    </strong>
+
+                    <span>
+                        Admin Panel
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <nav class="admin-sidebar-nav">
+
+                <a
+                    href="dashboard.html"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ▦
+                    </span>
+
+                    <span>
+                        Dashboard
+                    </span>
+                </a>
+
+
+                <a
+                    href="pengajuan.html"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ☷
+                    </span>
+
+                    <span>
+                        Pengajuan
+                    </span>
+                </a>
+
+
+                <a
+                    href="pengajuan.html?filter=revisi"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        !
+                    </span>
+
+                    <span>
+                        Perlu Revisi
+                    </span>
+
+                    <span class="admin-nav-count">
+                        3
+                    </span>
+                </a>
+
+
+                <a
+                    href="pengajuan.html?filter=proses-sk"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ◷
+                    </span>
+
+                    <span>
+                        Proses SK
+                    </span>
+                </a>
+
+
+                <a
+                    href="history.html"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ↺
+                    </span>
+
+                    <span>
+                        History
+                    </span>
+                </a>
+
+
+                <div class="admin-nav-divider"></div>
+
+
+                <a
+                    href="kelola_admin.html"
+                    class="admin-nav-item active"
+                    id="manageAdminMenu"
+                >
+                    <span class="admin-nav-icon">
+                        ♙
+                    </span>
+
+                    <span>
+                        Kelola Admin
+                    </span>
+
+                    <span
+                        class="admin-nav-count"
+                        id="pendingAdminNavCount"
+                    >
+                        2
+                    </span>
+                </a>
+
+            </nav>
+
+
+            <div class="admin-sidebar-footer">
+
+                <div class="admin-user-mini">
+
+                    <div class="admin-user-avatar">
+                        SA
+                    </div>
+
+                    <div>
+
+                        <strong id="sidebarAdminName">
+                            Superadmin
+                        </strong>
+
+                        <span id="sidebarAdminRole">
+                            SUPER_ADMIN
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="admin-logout-button"
+                    id="adminLogout"
+                >
+                    Keluar
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================
+             MAIN
+        ====================================== -->
+        <main class="admin-main manage-admin-main">
+
+            <!-- HEADER -->
+            <header class="manage-admin-header">
+
+                <div>
+
+                    <p class="admin-page-eyebrow">
+                        SUPER ADMIN
+                    </p>
+
+                    <h1>
+                        Kelola Admin
+                    </h1>
+
+                    <p>
+                        Kelola permintaan akun dan status admin sistem.
+                    </p>
+
+                </div>
+
+
+                <div class="admin-profile-chip">
+
+                    <div class="admin-profile-avatar">
+                        SA
+                    </div>
+
+                    <div>
+
+                        <strong id="topbarAdminName">
+                            Superadmin
+                        </strong>
+
+                        <span id="topbarAdminRole">
+                            SUPER_ADMIN
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- =====================================
+                 ACCESS DENIED
+            ====================================== -->
+            <section
+                class="manage-admin-access-denied"
+                id="manageAdminAccessDenied"
+            >
+
+                <div class="manage-admin-denied-icon">
+                    !
+                </div>
+
+                <h2>
+                    Akses Ditolak
+                </h2>
+
+                <p>
+                    Halaman Kelola Admin hanya dapat diakses oleh Super Admin.
+                </p>
+
+                <a href="dashboard.html">
+                    Kembali ke Dashboard
+                </a>
+
+            </section>
+
+
+            <!-- =====================================
+                 CONTENT
+            ====================================== -->
+            <div id="manageAdminContent">
+
+                <!-- SUMMARY -->
+                <section class="manage-admin-summary-grid">
+
+                    <div class="manage-admin-summary-card pending">
+
+                        <span>
+                            Menunggu Persetujuan
+                        </span>
+
+                        <strong id="pendingAdminCount">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="manage-admin-summary-card active">
+
+                        <span>
+                            Admin Aktif
+                        </span>
+
+                        <strong id="activeAdminCount">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="manage-admin-summary-card inactive">
+
+                        <span>
+                            Admin Nonaktif
+                        </span>
+
+                        <strong id="inactiveAdminCount">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="manage-admin-summary-card">
+
+                        <span>
+                            Total Admin
+                        </span>
+
+                        <strong id="totalAdminCount">
+                            0
+                        </strong>
+
+                    </div>
+
+                </section>
+
+
+                <!-- INFO -->
+                <section class="manage-admin-info">
+
+                    <div>
+                        i
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Super Admin mengelola akses akun
+                        </strong>
+
+                        <p>
+                            Akun baru dari halaman registrasi selalu dibuat
+                            sebagai ADMIN berstatus PENDING. Super Admin dapat
+                            menyetujui, menolak, menonaktifkan, atau
+                            mengaktifkan kembali akun tersebut.
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================
+                     SEARCH
+                ================================== -->
+                <section class="manage-admin-card">
+
+                    <div class="manage-admin-card-header">
+
+                        <div>
+
+                            <h2>
+                                Cari Admin
+                            </h2>
+
+                            <p>
+                                Cari berdasarkan nama, username, atau email.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="manage-admin-search-row">
+
+                        <input
+                            type="text"
+                            id="manageAdminSearch"
+                            placeholder="Cari nama, username, atau email..."
+                        >
+
+
+                        <button
+                            type="button"
+                            class="manage-admin-primary-button"
+                            id="applyAdminSearch"
+                        >
+                            Cari
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="manage-admin-secondary-button"
+                            id="resetAdminSearch"
+                        >
+                            Reset
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        class="manage-admin-filter-info"
+                        id="manageAdminFilterInfo"
+                    >
+
+                        <strong>
+                            Filter aktif:
+                        </strong>
+
+                        <span id="manageAdminFilterText">
+                            Semua admin
+                        </span>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================
+                     PENDING
+                ================================== -->
+                <section class="manage-admin-card">
+
+                    <div class="manage-admin-card-header">
+
+                        <div>
+
+                            <h2>
+                                Permintaan Akun Admin
+                            </h2>
+
+                            <p>
+                                Akun baru yang menunggu persetujuan.
+                            </p>
+
+                        </div>
+
+
+                        <span
+                            class="manage-admin-section-count pending"
+                            id="pendingSectionCount"
+                        >
+                            0 Pending
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="manage-admin-list"
+                        id="pendingAdminList"
+                    >
+                    </div>
+
+
+                    <div
+                        class="manage-admin-empty"
+                        id="pendingAdminEmpty"
+                    >
+
+                        <strong>
+                            Tidak ada permintaan akun
+                        </strong>
+
+                        <p>
+                            Semua permintaan akun sudah diproses.
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================
+                     ACTIVE
+                ================================== -->
+                <section class="manage-admin-card">
+
+                    <div class="manage-admin-card-header">
+
+                        <div>
+
+                            <h2>
+                                Admin Aktif
+                            </h2>
+
+                            <p>
+                                Akun admin yang saat ini dapat masuk ke sistem.
+                            </p>
+
+                        </div>
+
+
+                        <span
+                            class="manage-admin-section-count active"
+                            id="activeSectionCount"
+                        >
+                            0 Aktif
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="manage-admin-list"
+                        id="activeAdminList"
+                    >
+                    </div>
+
+
+                    <div
+                        class="manage-admin-empty"
+                        id="activeAdminEmpty"
+                    >
+
+                        <strong>
+                            Tidak ada admin aktif
+                        </strong>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================
+                     INACTIVE
+                ================================== -->
+                <section class="manage-admin-card">
+
+                    <div class="manage-admin-card-header">
+
+                        <div>
+
+                            <h2>
+                                Admin Nonaktif
+                            </h2>
+
+                            <p>
+                                Akun yang ditolak atau sedang dinonaktifkan.
+                            </p>
+
+                        </div>
+
+
+                        <span
+                            class="manage-admin-section-count inactive"
+                            id="inactiveSectionCount"
+                        >
+                            0 Nonaktif
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="manage-admin-list"
+                        id="inactiveAdminList"
+                    >
+                    </div>
+
+
+                    <div
+                        class="manage-admin-empty"
+                        id="inactiveAdminEmpty"
+                    >
+
+                        <strong>
+                            Tidak ada admin nonaktif
+                        </strong>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- =====================================
+         CONFIRM ACTION MODAL
+    ====================================== -->
+    <div
+        class="manage-admin-modal-overlay"
+        id="adminActionModal"
+    >
+
+        <div class="manage-admin-modal">
+
+            <div
+                class="manage-admin-modal-icon"
+                id="adminActionModalIcon"
+            >
+                ?
+            </div>
+
+
+            <h2 id="adminActionModalTitle">
+                Konfirmasi
+            </h2>
+
+
+            <p id="adminActionModalMessage">
+                Apakah Anda yakin?
+            </p>
+
+
+            <div class="manage-admin-modal-account">
+
+                <strong id="adminActionAccountName">
+                    Admin
+                </strong>
+
+                <span id="adminActionAccountUsername">
+                    username
+                </span>
+
+            </div>
+
+
+            <div class="manage-admin-modal-actions">
+
+                <button
+                    type="button"
+                    class="manage-admin-modal-cancel"
+                    id="cancelAdminAction"
+                >
+                    Batal
+                </button>
+
+
+                <button
+                    type="button"
+                    class="manage-admin-modal-confirm"
+                    id="confirmAdminAction"
+                >
+                    Ya, Lanjutkan
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         SUCCESS MODAL
+    ====================================== -->
+    <div
+        class="modal-overlay"
+        id="adminActionSuccessModal"
+    >
+
+        <div class="modal-card">
+
+            <div class="success-icon">
+                ✓
+            </div>
+
+            <h2 id="adminActionSuccessTitle">
+                Berhasil
+            </h2>
+
+            <p id="adminActionSuccessMessage">
+                Status admin berhasil diperbarui.
+            </p>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="closeAdminActionSuccess"
+            >
+                Tutup
+            </button>
+
+        </div>
+
+    </div>
+
+
+   
+    <script src="../js/admin.js"></script>
+    <script src="../js/admin_kelola_admin.js"></script>
+
+</body>
+
+</html>

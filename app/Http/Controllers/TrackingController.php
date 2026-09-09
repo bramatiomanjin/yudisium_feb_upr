@@ -15,35 +15,42 @@ class TrackingController extends Controller
     // 1. Halaman Pencarian Status
     public function index()
     {
-        return '
-        <div style="font-family: sans-serif; padding: 50px; text-align: center;">
-            <h2>Cek Status & Revisi Yudisium</h2>
-            <form action="/tracking" method="POST">
-                '.csrf_field().'
-                <label>NIM Mahasiswa:</label><br>
-                <input type="text" name="nim" required placeholder="Contoh: 2300000001"><br><br>
-                
-                <label>Kode Pengajuan:</label><br>
-                <input type="text" name="kode_pengajuan" required placeholder="Contoh: YDS-2026-0001"><br><br>
-                
-                <button type="submit" style="padding: 10px 20px; background: #0056b3; color: white; border: none;">Cari Pengajuan</button>
-            </form>
-        </div>
-        ';
+        return view('mahasiswa.tracking');
     }
 
     // 2. Memproses Pencarian
     public function search(Request $request)
     {
-        $pengajuan = PengajuanYudisium::where('nim', $request->nim)
-                        ->where('kode_pengajuan', $request->kode_pengajuan)
+        // Tangkap 'kode_sk' dari JSON yang dikirimkan oleh Fetch API Javascript
+        $kode = $request->kode_sk ?? $request->kode_pengajuan;
+
+        $pengajuan = PengajuanYudisium::with('mahasiswa')
+                        ->where('nim', $request->nim)
+                        ->where('kode_pengajuan', $kode)
                         ->first();
 
+        // Jika tidak ada, kembalikan pesan error dalam format JSON (bukan teks biasa)
         if (!$pengajuan) {
-            return "Pengajuan tidak ditemukan. Pastikan NIM dan Kode Pengajuan benar.";
+            return response()->json([
+                'success' => false,
+                'message' => 'NIM dan Kode SK Yudisium tidak ditemukan.'
+            ], 404);
         }
 
-        return redirect()->route('tracking.revisi', $pengajuan->kode_pengajuan);
+        // Jika berhasil, kembalikan objek data agar Javascript bisa menyimpannya ke Session
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'id' => $pengajuan->id,
+                'kode_sk' => $pengajuan->kode_pengajuan,
+                'nim' => $pengajuan->nim,
+                'nama' => $pengajuan->mahasiswa->nama_lengkap ?? '-',
+                'jurusan' => $pengajuan->mahasiswa->jurusan ?? '-',
+                'status' => $pengajuan->status,
+                'tanggal_pengajuan' => $pengajuan->created_at->timezone('Asia/Jakarta')->format('d F Y'),
+                'updated_at' => $pengajuan->updated_at->timezone('Asia/Jakarta')->format('d F Y, H:i') . ' WIB'
+            ]
+        ]);
     }
 
     // 3. Menampilkan Halaman Status & Form Revisi (Jika Ada)

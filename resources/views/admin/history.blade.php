@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        History Aktivitas - Yudisium FEB UPR
+    </title>
+
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/style.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/admin.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/admin_theme.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/admin_history.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="admin-layout">
+
+
+        <!-- =========================================
+             SIDEBAR
+        ========================================== -->
+
+        <aside class="admin-sidebar">
+
+            <div class="admin-sidebar-brand">
+
+                <div class="admin-sidebar-logo">
+                    FEB
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        Yudisium FEB
+                    </strong>
+
+                    <span>
+                        Admin Panel
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <nav class="admin-sidebar-nav">
+
+                <a
+                    href="/admin/dashboard"
+                    class="admin-nav-item"
+                >
+
+                    <span class="admin-nav-icon">
+                        ▦
+                    </span>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="/admin/dashboard"
+                    class="admin-nav-item"
+                >
+
+                    <span class="admin-nav-icon">
+                        ☷
+                    </span>
+
+                    <span>
+                        Pengajuan
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="/admin/dashboard?filter=revisi"
+                    class="admin-nav-item"
+                >
+
+                    <span class="admin-nav-icon">
+                        !
+                    </span>
+
+                    <span>
+                        Perlu Revisi
+                    </span>
+
+                    <span
+                        class="admin-nav-count"
+                        id="historySidebarRevisionCount"
+                    >
+                        0
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="/admin/dashboard?filter=proses-sk"
+                    class="admin-nav-item"
+                >
+
+                    <span class="admin-nav-icon">
+                        ◷
+                    </span>
+
+                    <span>
+                        Proses SK
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="/superadmin/log-aktivitas"
+                    class="admin-nav-item active"
+                >
+
+                    <span class="admin-nav-icon">
+                        ↺
+                    </span>
+
+                    <span>
+                        History
+                    </span>
+
+                </a>
+
+
+                <div class="admin-nav-divider">
+                </div>
+
+
+                @if(Auth::user()->role === 'SUPER_ADMIN')
+                <a
+                    href="/superadmin/kelola-admin"
+                    class="admin-nav-item"
+                    id="manageAdminMenu"
+                >
+
+                    <span class="admin-nav-icon">
+                        ♙
+                    </span>
+
+                    <span>
+                        Kelola Admin
+                    </span>
+
+                </a>
+                @endif
+
+            </nav>
+
+
+            <div class="admin-sidebar-footer">
+
+                <div class="admin-user-mini">
+
+                    <div class="admin-user-avatar">
+                        A
+                    </div>
+
+
+                    <div>
+
+                        <strong id="sidebarAdminName">
+                            {{ Auth::user()->name }}
+                        </strong>
+
+                        <span id="sidebarAdminRole">
+                            {{ Auth::user()->role }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <form action="/admin/logout" method="POST" style="width: 100%;">
+                    @csrf
+                    <button type="submit" class="admin-logout-button">
+                        Keluar
+                    </button>
+                </form>
+
+            </div>
+
+        </aside>
+
+
+
+        <!-- =========================================
+             MAIN
+        ========================================== -->
+
+        <main class="admin-main history-main">
+
+
+            <!-- =====================================
+                 TOPBAR
+            ====================================== -->
+
+            <header class="admin-topbar">
+
+                <div class="history-page-heading">
+
+                    <p class="admin-page-eyebrow">
+                        AUDIT & AKTIVITAS SISTEM
+                    </p>
+
+
+                    <h1 id="historyPageTitle">
+                        History Aktivitas Saya
+                    </h1>
+
+
+                    <p
+                        class="admin-page-description"
+                        id="historyPageDescription"
+                    >
+                        Riwayat aktivitas administrasi pada sistem
+                        Yudisium FEB UPR.
+                    </p>
+
+                </div>
+
+
+                <div class="admin-profile-chip">
+
+                    <div class="admin-profile-avatar">
+                        A
+                    </div>
+
+
+                    <div>
+
+                        <strong id="topbarAdminName">
+                            {{ Auth::user()->name }}
+                        </strong>
+
+                        <span id="topbarAdminRole">
+                            {{ Auth::user()->role }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+
+            <!-- =====================================
+                 ACCESS INFORMATION
+            ====================================== -->
+
+            <section class="history-access-banner">
+
+                <div class="history-access-accent">
+                </div>
+
+
+                <div class="history-access-content">
+
+                    <span class="history-access-label">
+                        AKSES HISTORY
+                    </span>
+
+
+                    <strong id="historyRoleTitle">
+                        History akun Anda
+                    </strong>
+
+
+                    <p id="historyRoleDescription">
+                        Admin hanya dapat melihat aktivitas yang
+                        dilakukan menggunakan akun sendiri.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =====================================
+                 SUMMARY
+            ====================================== -->
+
+            <section class="history-summary-grid">
+
+
+                <article class="history-summary-card">
+
+                    <div class="history-summary-icon">
+                        ↺
+                    </div>
+
+
+                    <div class="history-summary-content">
+
+                        <span>
+                            Total Aktivitas
+                        </span>
+
+                        <strong id="historyTotalCount">
+                            {{ $logs->count() }}
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+
+                <article class="history-summary-card verification">
+
+                    <div class="history-summary-icon">
+                        ✓
+                    </div>
+
+
+                    <div class="history-summary-content">
+
+                        <span>
+                            Verifikasi
+                        </span>
+
+                        <strong id="historyVerificationCount">
+                            0
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+
+                <article class="history-summary-card revision">
+
+                    <div class="history-summary-icon">
+                        !
+                    </div>
+
+
+                    <div class="history-summary-content">
+
+                        <span>
+                            Revisi
+                        </span>
+
+                        <strong id="historyRevisionCount">
+                            0
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+
+                <article class="history-summary-card process">
+
+                    <div class="history-summary-icon">
+                        ◷
+                    </div>
+
+
+                    <div class="history-summary-content">
+
+                        <span>
+                            Proses SK
+                        </span>
+
+                        <strong id="historySkCount">
+                            0
+                        </strong>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+
+
+            <!-- =====================================
+                 FILTER
+            ====================================== -->
+
+            <section class="history-card">
+
+                <div class="history-card-header">
+
+                    <div>
+
+                        <p class="history-card-eyebrow">
+                            PENCARIAN & FILTER
+                        </p>
+
+
+                        <h2>
+                            Cari Aktivitas
+                        </h2>
+
+
+                        <p>
+                            Temukan riwayat berdasarkan mahasiswa,
+                            admin, atau jenis aktivitas.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="history-filter-grid">
+
+
+                    <div class="history-filter-group history-search">
+
+                        <label for="historySearch">
+                            Cari Mahasiswa
+                        </label>
+
+
+                        <input
+                            type="search"
+                            id="historySearch"
+                            placeholder="Nama mahasiswa, NIM, atau Kode SK Yudisium"
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+
+
+                    <div
+                        class="history-filter-group"
+                        id="historyAdminFilterGroup"
+                    >
+
+                        <label for="historyAdminFilter">
+                            Admin
+                        </label>
+
+
+                        <select id="historyAdminFilter">
+
+                            <option value="">
+                                Semua Admin
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <div class="history-filter-group">
+
+                        <label for="historyActionFilter">
+                            Jenis Aktivitas
+                        </label>
+
+
+                        <select id="historyActionFilter">
+
+                            <option value="">
+                                Semua Aktivitas
+                            </option>
+
+                            <option value="VERIFICATION">
+                                Verifikasi
+                            </option>
+
+                            <option value="REVISION">
+                                Revisi
+                            </option>
+
+                            <option value="UPDATE_SK_STATUS">
+                                Proses SK
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="history-filter-footer">
+
+                    <div
+                        class="history-active-filter"
+                        id="historyActiveFilter"
+                    >
+
+                        <span>
+                            Filter aktif
+                        </span>
+
+
+                        <strong id="historyActiveFilterText">
+                            Semua aktivitas
+                        </strong>
+
+                    </div>
+
+
+                    <div class="history-filter-actions">
+
+                        <button
+                            type="button"
+                            class="history-secondary-button"
+                            id="resetHistoryFilter"
+                        >
+                            Reset
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="history-primary-button"
+                            id="applyHistoryFilter"
+                        >
+                            Terapkan Filter
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =====================================
+                 TABLE
+            ====================================== -->
+
+            <section class="history-card history-table-card">
+
+                <div class="history-card-header">
+
+                    <div>
+
+                        <p class="history-card-eyebrow">
+                            RIWAYAT SISTEM
+                        </p>
+
+
+                        <h2>
+                            Aktivitas Administrasi
+                        </h2>
+
+
+                        <p id="historyResultText">
+                            Menampilkan 0 aktivitas
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="history-table-wrapper">
+
+                    <table class="history-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Waktu
+                                </th>
+
+
+                                <th
+                                    id="historyAdminColumn"
+                                    class="history-admin-column"
+                                >
+                                    Admin
+                                </th>
+
+
+                                <th>
+                                    Mahasiswa
+                                </th>
+
+
+                                <th>
+                                    Aktivitas
+                                </th>
+
+
+                                <th>
+                                    Perubahan Status
+                                </th>
+
+
+                                <th class="history-action-column">
+                                    Aksi
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="historyTableBody">
+
+                            <!-- Diisi JavaScript -->
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+
+                <div
+                    class="history-empty"
+                    id="historyEmpty"
+                >
+
+                    <div class="history-empty-symbol">
+                        ↺
+                    </div>
+
+
+                    <strong>
+                        Belum Ada Riwayat Aktivitas
+                    </strong>
+
+
+                    <p>
+                        Aktivitas verifikasi, revisi, dan proses SK
+                        akan muncul di halaman ini setelah backend
+                        mencatat aktivitas Admin.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+
+    <script src="{{ asset('js/yudisium_api.js') }}"></script>
+    <script src="{{ asset('js/admin.js') }}"></script>
+    <script src="{{ asset('js/admin_history.js') }}"></script>
+
+</body>
+
+</html>

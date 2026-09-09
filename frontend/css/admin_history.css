@@ -1,0 +1,1596 @@
+/* =========================================================
+   HISTORY ADMIN
+   YUDISIUM FEB UPR
+
+   Formal institutional dashboard
+========================================================= */
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.history-main {
+
+    width: 100%;
+
+    max-width: 1480px;
+
+    min-width: 0;
+
+}
+
+
+.history-page-heading {
+
+    min-width: 0;
+
+}
+
+
+/* =========================================================
+   ACCESS BANNER
+========================================================= */
+
+.history-access-banner {
+
+    position: relative;
+
+    width: 100%;
+
+    min-width: 0;
+
+    display: block;
+
+    margin-bottom: 24px;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        var(--feb-green-200);
+
+    border-radius:
+        var(--feb-radius-md);
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--feb-green-50) 0%,
+            #ffffff 72%
+        );
+
+    box-shadow:
+        var(--feb-shadow-xs);
+
+}
+
+
+.history-access-accent {
+
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+    left: 0;
+
+    width: 5px;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--feb-green-700),
+            var(--feb-gold-500)
+        );
+
+}
+
+
+.history-access-content {
+
+    min-width: 0;
+
+    padding:
+        18px 22px 18px 25px;
+
+}
+
+
+.history-access-label {
+
+    display: block;
+
+    margin-bottom: 4px;
+
+    color:
+        var(--feb-green-700);
+
+    font-size:
+        0.7rem;
+
+    font-weight:
+        850;
+
+    letter-spacing:
+        0.11em;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.history-access-content strong {
+
+    display: block;
+
+    margin: 0;
+
+    color:
+        var(--feb-heading);
+
+    font-size:
+        0.96rem;
+
+    font-weight:
+        850;
+
+    line-height:
+        1.4;
+
+}
+
+
+.history-access-content p {
+
+    max-width: 850px;
+
+    margin:
+        4px 0 0;
+
+    color:
+        var(--feb-muted);
+
+    font-size:
+        0.84rem;
+
+    line-height:
+        1.65;
+
+}
+
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+.history-summary-grid {
+
+    width: 100%;
+
+    min-width: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap: 15px;
+
+    margin-bottom: 24px;
+
+}
+
+
+.history-summary-card {
+
+    position: relative;
+
+    min-width: 0;
+
+    min-height: 118px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 20px;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        var(--feb-line);
+
+    border-radius:
+        var(--feb-radius-md);
+
+    background:
+        #ffffff;
+
+    box-shadow:
+        var(--feb-shadow-xs);
+
+}
+
+
+.history-summary-card::before {
+
+    position: absolute;
+
+    top: 0;
+    right: 0;
+    left: 0;
+
+    height: 4px;
+
+    content: "";
+
+    background:
+        var(--feb-green-700);
+
+}
+
+
+.history-summary-card.verification::before {
+
+    background:
+        var(--feb-success);
+
+}
+
+
+.history-summary-card.revision::before {
+
+    background:
+        var(--feb-danger);
+
+}
+
+
+.history-summary-card.process::before {
+
+    background:
+        var(--feb-info);
+
+}
+
+
+.history-summary-icon {
+
+    width: 44px;
+    height: 44px;
+
+    flex:
+        0 0 44px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border:
+        1px solid
+        var(--feb-green-200);
+
+    border-radius: 13px;
+
+    background:
+        var(--feb-green-50);
+
+    color:
+        var(--feb-green-800);
+
+    font-size:
+        1rem;
+
+    font-weight:
+        900;
+
+}
+
+
+.history-summary-card.verification
+.history-summary-icon {
+
+    border-color:
+        var(--feb-success-line);
+
+    background:
+        var(--feb-success-bg);
+
+    color:
+        var(--feb-success);
+
+}
+
+
+.history-summary-card.revision
+.history-summary-icon {
+
+    border-color:
+        var(--feb-danger-line);
+
+    background:
+        var(--feb-danger-bg);
+
+    color:
+        var(--feb-danger);
+
+}
+
+
+.history-summary-card.process
+.history-summary-icon {
+
+    border-color:
+        var(--feb-info-line);
+
+    background:
+        var(--feb-info-bg);
+
+    color:
+        var(--feb-info);
+
+}
+
+
+.history-summary-content {
+
+    min-width: 0;
+
+}
+
+
+.history-summary-content span {
+
+    display: block;
+
+    margin-bottom: 5px;
+
+    color:
+        var(--feb-muted);
+
+    font-size:
+        0.78rem;
+
+    font-weight:
+        700;
+
+}
+
+
+.history-summary-content strong {
+
+    display: block;
+
+    color:
+        var(--feb-heading);
+
+    font-size:
+        1.8rem;
+
+    font-weight:
+        900;
+
+    line-height:
+        1;
+
+}
+
+
+/* =========================================================
+   MAIN CARDS
+========================================================= */
+
+.history-card {
+
+    width: 100%;
+
+    min-width: 0;
+
+    margin-bottom: 24px;
+
+    padding: 25px;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        var(--feb-line);
+
+    border-radius:
+        var(--feb-radius-lg);
+
+    background:
+        #ffffff;
+
+    box-shadow:
+        var(--feb-shadow-xs);
+
+}
+
+
+.history-card-header {
+
+    width: 100%;
+
+    min-width: 0;
+
+    margin-bottom: 21px;
+
+}
+
+
+.history-card-header > div {
+
+    min-width: 0;
+
+}
+
+
+.history-card-eyebrow {
+
+    margin:
+        0 0 3px;
+
+    color:
+        var(--feb-green-700);
+
+    font-size:
+        0.69rem;
+
+    font-weight:
+        850;
+
+    letter-spacing:
+        0.11em;
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.history-card-header h2 {
+
+    margin: 0;
+
+    color:
+        var(--feb-heading);
+
+    font-size:
+        1.12rem;
+
+    font-weight:
+        850;
+
+    line-height:
+        1.4;
+
+}
+
+
+.history-card-header p:last-child {
+
+    max-width: 720px;
+
+    margin:
+        5px 0 0;
+
+    color:
+        var(--feb-muted);
+
+    font-size:
+        0.84rem;
+
+    line-height:
+        1.6;
+
+}
+
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+.history-filter-grid {
+
+    width: 100%;
+
+    min-width: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(300px, 2fr)
+        minmax(170px, 1fr)
+        minmax(190px, 1fr);
+
+    gap: 15px;
+
+}
+
+
+.history-filter-group {
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+}
+
+
+.history-filter-group label {
+
+    color:
+        var(--feb-heading);
+
+    font-size:
+        0.8rem;
+
+    font-weight:
+        750;
+
+}
+
+
+.history-filter-group input,
+.history-filter-group select {
+
+    width: 100%;
+
+    min-width: 0;
+
+    min-height: 47px;
+
+    padding:
+        0 14px;
+
+    border:
+        1px solid
+        var(--feb-line-dark);
+
+    border-radius:
+        var(--feb-radius-sm);
+
+    background:
+        #ffffff;
+
+    color:
+        var(--feb-ink);
+
+    font-family:
+        inherit;
+
+    font-size:
+        0.87rem;
+
+}
+
+
+.history-filter-group input::placeholder {
+
+    color:
+        #8f9d96;
+
+}
+
+
+.history-filter-group input:focus,
+.history-filter-group select:focus {
+
+    border-color:
+        var(--feb-green-700);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(8, 116, 71, 0.09);
+
+    outline:
+        none;
+
+}
+
+
+/* =========================================================
+   FILTER FOOTER
+========================================================= */
+
+.history-filter-footer {
+
+    width: 100%;
+
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-top: 19px;
+
+    padding-top: 18px;
+
+    border-top:
+        1px solid
+        var(--feb-line-soft);
+
+}
+
+
+.history-active-filter {
+
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color:
+        var(--feb-muted);
+
+    font-size:
+        0.78rem;
+
+}
+
+
+.history-active-filter span {
+
+    flex-shrink: 0;
+
+}
+
+
+.history-active-filter strong {
+
+    min-width: 0;
+
+    overflow: hidden;
+
+    color:
+        var(--feb-green-800);
+
+    font-size:
+        0.8rem;
+
+    font-weight:
+        800;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.history-filter-actions {
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+}
+
+
+.history-primary-button,
+.history-secondary-button {
+
+    min-height: 44px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding:
+        9px 17px;
+
+    border-radius:
+        var(--feb-radius-sm);
+
+    font-family:
+        inherit;
+
+    font-size:
+        0.83rem;
+
+    font-weight:
+        800;
+
+    cursor:
+        pointer;
+
+}
+
+
+.history-primary-button {
+
+    border:
+        1px solid
+        var(--feb-green-800);
+
+    background:
+        var(--feb-green-800);
+
+    color:
+        #ffffff;
+
+    box-shadow:
+        0 3px 10px
+        rgba(7, 92, 59, 0.12);
+
+}
+
+
+.history-primary-button:hover {
+
+    border-color:
+        var(--feb-green-900);
+
+    background:
+        var(--feb-green-900);
+
+    transform:
+        translateY(-1px);
+
+}
+
+
+.history-secondary-button {
+
+    border:
+        1px solid
+        var(--feb-line-dark);
+
+    background:
+        #ffffff;
+
+    color:
+        var(--feb-green-900);
+
+}
+
+
+.history-secondary-button:hover {
+
+    border-color:
+        var(--feb-green-300);
+
+    background:
+        var(--feb-green-50);
+
+}
+
+
+/* =========================================================
+   TABLE CARD
+========================================================= */
+
+.history-table-card {
+
+    padding-bottom: 0;
+
+}
+
+
+.history-table-wrapper {
+
+    width:
+        calc(
+            100% + 50px
+        );
+
+    max-width:
+        calc(
+            100% + 50px
+        );
+
+    margin:
+        0 -25px;
+
+    overflow-x:
+        auto;
+
+    overflow-y:
+        hidden;
+
+    -webkit-overflow-scrolling:
+        touch;
+
+    border-top:
+        1px solid
+        var(--feb-line-soft);
+
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.history-table {
+
+    width: 100%;
+
+    min-width: 960px;
+
+    border-collapse:
+        collapse;
+
+}
+
+
+.history-table thead {
+
+    background:
+        var(--feb-green-50);
+
+}
+
+
+.history-table th {
+
+    padding:
+        14px 16px;
+
+    border-bottom:
+        1px solid
+        var(--feb-green-200);
+
+    color:
+        var(--feb-green-900);
+
+    font-size:
+        0.7rem;
+
+    font-weight:
+        850;
+
+    letter-spacing:
+        0.055em;
+
+    text-align:
+        left;
+
+    text-transform:
+        uppercase;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.history-table td {
+
+    padding:
+        16px;
+
+    border-bottom:
+        1px solid
+        var(--feb-line-soft);
+
+    color:
+        var(--feb-ink);
+
+    font-size:
+        0.82rem;
+
+    vertical-align:
+        middle;
+
+}
+
+
+.history-table tbody tr {
+
+    background:
+        #ffffff;
+
+}
+
+
+.history-table tbody tr:hover {
+
+    background:
+        #fbfdfc;
+
+}
+
+
+/* =========================================================
+   TIME
+========================================================= */
+
+.history-time {
+
+    min-width:
+        130px;
+
+}
+
+
+.history-time strong {
+
+    color:
+        var(--feb-heading);
+
+    font-size:
+        0.79rem;
+
+    font-weight:
+        750;
+
+    line-height:
+        1.5;
+
+}
+
+
+/* =========================================================
+   STUDENT / ADMIN
+========================================================= */
+
+.history-admin-cell,
+.history-student {
+
+    min-width: 0;
+
+}
+
+
+.history-admin-cell strong,
+.history-student strong {
+
+    display: block;
+
+    color:
+        var(--feb-heading);
+
+    font-size:
+        0.84rem;
+
+    font-weight:
+        800;
+
+}
+
+
+.history-admin-cell span,
+.history-student span {
+
+    display: block;
+
+    margin-top:
+        2px;
+
+    color:
+        var(--feb-muted);
+
+    font-size:
+        0.74rem;
+
+}
+
+
+.history-student small {
+
+    display: block;
+
+    margin-top:
+        4px;
+
+    color:
+        var(--feb-green-700);
+
+    font-size:
+        0.69rem;
+
+    font-weight:
+        750;
+
+}
+
+
+/* =========================================================
+   ACTION BADGES
+========================================================= */
+
+.history-action-badge {
+
+    min-height: 29px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding:
+        4px 10px;
+
+    border:
+        1px solid
+        var(--feb-line);
+
+    border-radius:
+        999px;
+
+    font-size:
+        0.7rem;
+
+    font-weight:
+        800;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.history-action-badge.verification {
+
+    border-color:
+        var(--feb-success-line);
+
+    background:
+        var(--feb-success-bg);
+
+    color:
+        var(--feb-success);
+
+}
+
+
+.history-action-badge.revision {
+
+    border-color:
+        var(--feb-danger-line);
+
+    background:
+        var(--feb-danger-bg);
+
+    color:
+        var(--feb-danger);
+
+}
+
+
+.history-action-badge.process {
+
+    border-color:
+        var(--feb-info-line);
+
+    background:
+        var(--feb-info-bg);
+
+    color:
+        var(--feb-info);
+
+}
+
+
+/* =========================================================
+   STATUS CHANGE
+========================================================= */
+
+.history-change {
+
+    min-width:
+        170px;
+
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+
+}
+
+
+.history-change span {
+
+    color:
+        var(--feb-muted);
+
+    font-size:
+        0.72rem;
+
+}
+
+
+.history-change b {
+
+    color:
+        var(--feb-gold-600);
+
+    font-size:
+        0.8rem;
+
+}
+
+
+.history-change strong {
+
+    color:
+        var(--feb-green-800);
+
+    font-size:
+        0.73rem;
+
+    font-weight:
+        800;
+
+}
+
+
+/* =========================================================
+   DETAIL BUTTON
+========================================================= */
+
+.history-detail-button {
+
+    min-height:
+        36px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        6px 12px;
+
+    border:
+        1px solid
+        var(--feb-green-200);
+
+    border-radius:
+        var(--feb-radius-xs);
+
+    background:
+        var(--feb-green-50);
+
+    color:
+        var(--feb-green-800);
+
+    font-size:
+        0.73rem;
+
+    font-weight:
+        800;
+
+    text-decoration:
+        none;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.history-detail-button:hover {
+
+    border-color:
+        var(--feb-green-700);
+
+    background:
+        var(--feb-green-700);
+
+    color:
+        #ffffff;
+
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.history-empty {
+
+    min-height:
+        280px;
+
+    display:
+        none;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        48px 22px;
+
+    text-align:
+        center;
+
+}
+
+
+.history-empty-symbol {
+
+    width: 54px;
+    height: 54px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-bottom:
+        15px;
+
+    border:
+        1px solid
+        var(--feb-green-200);
+
+    border-radius:
+        14px;
+
+    background:
+        var(--feb-green-50);
+
+    color:
+        var(--feb-green-700);
+
+    font-size:
+        1.2rem;
+
+    font-weight:
+        900;
+
+}
+
+
+.history-empty strong {
+
+    color:
+        var(--feb-heading);
+
+    font-size:
+        0.98rem;
+
+    font-weight:
+        850;
+
+}
+
+
+.history-empty p {
+
+    max-width:
+        510px;
+
+    margin:
+        6px 0 0;
+
+    color:
+        var(--feb-muted);
+
+    font-size:
+        0.82rem;
+
+    line-height:
+        1.65;
+
+}
+
+
+/* =========================================================
+   RESPONSIVE 1180
+========================================================= */
+
+@media (max-width: 1180px) {
+
+    .history-summary-grid {
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+    }
+
+
+    .history-filter-grid {
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+    }
+
+
+    .history-search {
+
+        grid-column:
+            1 / -1;
+
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .history-main {
+
+        width:
+            100% !important;
+
+        max-width:
+            none !important;
+
+        min-width:
+            0 !important;
+
+    }
+
+
+    .history-access-banner,
+    .history-summary-grid,
+    .history-summary-card,
+    .history-card,
+    .history-card-header,
+    .history-filter-grid,
+    .history-filter-footer {
+
+        min-width:
+            0 !important;
+
+        max-width:
+            100%;
+
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .history-summary-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .history-summary-card {
+
+        min-height:
+            96px;
+
+    }
+
+
+    .history-filter-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .history-search {
+
+        grid-column:
+            auto;
+
+    }
+
+
+    .history-filter-footer {
+
+        align-items:
+            stretch;
+
+        flex-direction:
+            column;
+
+    }
+
+
+    .history-active-filter {
+
+        width:
+            100%;
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+        gap:
+            3px;
+
+    }
+
+
+    .history-active-filter strong {
+
+        white-space:
+            normal;
+
+        overflow-wrap:
+            anywhere;
+
+    }
+
+
+    .history-filter-actions {
+
+        width:
+            100%;
+
+    }
+
+
+    .history-primary-button,
+    .history-secondary-button {
+
+        flex:
+            1;
+
+    }
+
+
+    .history-card {
+
+        padding:
+            20px;
+
+    }
+
+
+    .history-table-wrapper {
+
+        width:
+            calc(
+                100% + 40px
+            );
+
+        max-width:
+            calc(
+                100% + 40px
+            );
+
+        margin:
+            0 -20px;
+
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 520px) {
+
+    .history-access-content {
+
+        padding:
+            16px 17px 16px 20px;
+
+    }
+
+
+    .history-access-content strong {
+
+        font-size:
+            0.91rem;
+
+    }
+
+
+    .history-access-content p {
+
+        font-size:
+            0.8rem;
+
+    }
+
+
+    .history-summary-card {
+
+        padding:
+            17px;
+
+    }
+
+
+    .history-card {
+
+        padding:
+            18px;
+
+    }
+
+
+    .history-table-wrapper {
+
+        width:
+            calc(
+                100% + 36px
+            );
+
+        max-width:
+            calc(
+                100% + 36px
+            );
+
+        margin:
+            0 -18px;
+
+    }
+
+
+    .history-filter-actions {
+
+        flex-direction:
+            column;
+
+    }
+
+
+    .history-primary-button,
+    .history-secondary-button {
+
+        width:
+            100%;
+
+        flex:
+            none;
+
+    }
+
+}

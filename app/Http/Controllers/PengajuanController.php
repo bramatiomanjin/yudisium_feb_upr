@@ -15,66 +15,19 @@ class PengajuanController extends Controller
     // 1. Menampilkan halaman form
     public function create()
     {
-        // Form HTML Polos untuk TESTING BACKEND sementara
-        return '
-        <div style="font-family: sans-serif; padding: 20px;">
-            <h2>Form Testing Backend Yudisium (UI Sementara)</h2>
-            <form action="/pengajuan" method="POST" enctype="multipart/form-data">
-                '.csrf_field().'
-                
-                <label>NIM:</label><br>
-                <input type="text" name="nim" value="2300000002" required><br><br>
-                
-                <label>Nama Lengkap:</label><br>
-                <input type="text" name="nama_lengkap" value="Rafael Rey Bungai" required><br><br>
-                
-                <label>Email:</label><br>
-                <input type="email" name="email" value="rafael@mhs.upr.ac.id" required><br><br>
-                
-                <label>No WhatsApp:</label><br>
-                <input type="text" name="no_whatsapp" value="081299998888" required><br><br>
-                
-                <label>Tahun Angkatan:</label><br>
-                <input type="number" name="tahun_angkatan" value="2023" required><br><br>
-                
-                <label>Jalur Masuk:</label><br>
-                <select name="jalur_masuk"><option value="REGULER">REGULER</option></select><br><br>
-                
-                <label>Jurusan:</label><br>
-                <select name="jurusan"><option value="MANAJEMEN">MANAJEMEN</option></select><br><br>
-                
-                <label>Karya Tulis:</label><br>
-                <select name="karya_tulis"><option value="SKRIPSI">SKRIPSI</option></select><br><br>
-                
-                <label>Judul Skripsi:</label><br>
-                <textarea name="judul_karya_tulis" required>Sistem Informasi Akademik</textarea><br><br>
-                
-                <label>Tanggal Ujian:</label><br>
-                <input type="date" name="tanggal_ujian" value="2026-09-02" required><br><br>
-                
-                <label>Nilai Angka / Huruf:</label><br>
-                <input type="number" step="0.01" name="nilai_angka" value="90.00" required>
-                <select name="nilai_huruf"><option value="A">A</option></select><br><br>
-
-                <hr>
-                <h3>Upload Dokumen</h3>
-                
-                <label>Formulir Pendaftaran Yudisium (PDF):</label><br>
-                <input type="file" name="file_FORM_YUDISIUM" accept=".pdf"><br><br>
-
-                <label>Ijazah SLTA (PDF):</label><br>
-                <input type="file" name="file_IJAZAH_SLTA" accept=".pdf"><br><br>
-
-                <button type="submit" style="padding: 10px 20px; background: blue; color: white; border: none;">Test Submit + Upload</button>
-            </form>
-        </div>
-        ';
+        return view('index');
     }
 
     // 2. Memproses pengiriman form
     public function store(Request $request)
     {
         // --- A. VALIDASI INPUT AWAL ---
+        if ($request->has('nilai_angka')) {
+            $request->merge([
+                'nilai_angka' => str_replace(',', '.', $request->nilai_angka)
+            ]);
+        }
+        
         $request->validate([
             'nim' => 'required|string|max:20',
             'nama_lengkap' => 'required|string|max:150',
@@ -187,11 +140,19 @@ class PengajuanController extends Controller
             DB::commit(); // Simpan permanen ke database
 
             // Redirect ke halaman sukses
-            return redirect()->route('pengajuan.success')->with('kode', $kodePengajuan);
+            return response()->json([
+                'success' => true,
+                'code' => $kodePengajuan,
+                'nim' => $mahasiswa->nim,
+                'message' => 'Pengajuan berhasil dikirim.'
+            ]);
 
         } catch (\Exception $e) {
             DB::rollBack(); // Batalkan semua simpanan jika terjadi error
-            return response('Terjadi Kesalahan Sistem: ' . $e->getMessage(), 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi Kesalahan Sistem: ' . $e->getMessage()
+            ], 500);
         }
     }
 

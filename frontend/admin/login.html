@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Login Admin - Yudisium FEB UPR
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/admin.css"
+    >
+    <link rel="stylesheet" href="../css/admin_theme.css">
+</head>
+
+<body>
+
+    <main class="admin-auth-page">
+
+        <div class="admin-auth-container">
+
+            <!-- BRAND -->
+            <div class="admin-auth-brand">
+
+                <div class="admin-brand-badge">
+                    FEB UPR
+                </div>
+
+                <h1>
+                    Sistem Yudisium
+                </h1>
+
+                <p>
+                    Fakultas Ekonomi dan Bisnis
+                    Universitas Palangka Raya
+                </p>
+
+            </div>
+
+
+            <!-- LOGIN CARD -->
+            <section class="admin-auth-card">
+
+                <div class="admin-auth-header">
+
+                    <h2>
+                        Login Admin
+                    </h2>
+
+                    <p>
+                        Masuk menggunakan akun admin untuk
+                        mengelola pengajuan yudisium.
+                    </p>
+
+                </div>
+
+
+                <form
+                    id="adminLoginForm"
+                    novalidate
+                >
+
+                    <!-- USERNAME -->
+                    <div class="form-group">
+
+                        <label for="admin_username">
+                            Username
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="admin_username"
+                            name="username"
+                            placeholder="Masukkan username"
+                            autocomplete="username"
+                            required
+                        >
+
+                        <div class="error-message">
+                            Username wajib diisi.
+                        </div>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+                    <div class="form-group">
+
+                        <label for="admin_password">
+                            Password
+                            <span class="required">*</span>
+                        </label>
+
+                        <div class="password-wrapper">
+
+                            <input
+                                type="password"
+                                id="admin_password"
+                                name="password"
+                                placeholder="Masukkan password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                id="togglePassword"
+                                aria-label="Tampilkan password"
+                                title="Tampilkan password"
+                            >
+
+                                <!-- ICON MATA TERBUKA -->
+                                <svg
+                                    id="eyeOpenIcon"
+                                    viewBox="0 0 24 24"
+                                    aria-hidden="true"
+                                >
+                                    <path
+                                        d="M2.25 12s3.5-6 9.75-6 9.75 6 9.75 6-3.5 6-9.75 6S2.25 12 2.25 12Z"
+                                    ></path>
+
+                                    <circle
+                                        cx="12"
+                                        cy="12"
+                                        r="3"
+                                    ></circle>
+                                </svg>
+
+
+                                <!-- ICON MATA TERTUTUP -->
+                                <svg
+                                    id="eyeClosedIcon"
+                                    class="hidden"
+                                    viewBox="0 0 24 24"
+                                    aria-hidden="true"
+                                >
+                                    <path
+                                        d="M3 3l18 18"
+                                    ></path>
+
+                                    <path
+                                        d="M10.6 10.7a2 2 0 0 0 2.7 2.7"
+                                    ></path>
+
+                                    <path
+                                        d="M9.9 4.2A10.7 10.7 0 0 1 12 4c6.2 0 9.8 6 9.8 6a16.4 16.4 0 0 1-3 3.7"
+                                    ></path>
+
+                                    <path
+                                        d="M6.6 6.6C3.8 8.4 2.2 12 2.2 12s3.5 6 9.8 6a10.7 10.7 0 0 0 4.1-.8"
+                                    ></path>
+                                </svg>
+
+                            </button>
+
+                        </div>
+
+                        <div class="error-message">
+                            Password wajib diisi.
+                        </div>
+
+                    </div>
+
+
+                    <!-- REMEMBER -->
+                    <div class="admin-login-options">
+
+                        <label class="remember-wrapper">
+
+                            <input
+                                type="checkbox"
+                                id="remember_admin"
+                                name="remember"
+                            >
+
+                            <span>
+                                Ingat saya
+                            </span>
+
+                        </label>
+
+
+                        <a
+                            href="account_recovery.html"
+                            class="admin-auth-link"
+                        >
+                            Lupa username / password?
+                        </a>
+
+                    </div>
+
+
+                    <!-- BUTTON -->
+                    <button
+                        type="submit"
+                        class="btn btn-primary admin-auth-submit"
+                    >
+                        Masuk
+                    </button>
+
+                </form>
+
+
+                <!-- REGISTER -->
+                <div class="admin-auth-footer">
+
+                    <p>
+                        Belum memiliki akun admin?
+                    </p>
+
+                    <a
+                        href="register.html"
+                        class="admin-auth-link strong"
+                    >
+                        Daftar Admin
+                    </a>
+
+                </div>
+
+            </section>
+
+
+            <!-- BACK -->
+            <div class="admin-auth-back">
+
+                <a href="../index.html">
+                    ← Kembali ke halaman mahasiswa
+                </a>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- LOADING -->
+    <div
+        class="modal-overlay"
+        id="adminLoginLoading"
+    >
+
+        <div class="modal-card">
+
+            <div class="loading-spinner"></div>
+
+            <h2>
+                Memproses Login
+            </h2>
+
+            <p>
+                Mohon tunggu sebentar...
+            </p>
+
+        </div>
+
+    </div>
+
+
+    
+    <script src="../js/admin.js"></script>
+
+</body>
+
+</html>

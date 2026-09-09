@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Detail Pengajuan - Yudisium FEB UPR</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/style.css') }}">
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/admin.css') }}">
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/admin_theme.css') }}">
+    >
+
+    <!-- CSS KHUSUS HALAMAN DETAIL PENGAJUAN -->
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/admin_detail_pengajuan.css') }}">
+    >
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-sidebar-brand">
+
+                <div class="admin-sidebar-logo">
+                    FEB
+                </div>
+
+                <div>
+                    <strong>
+                        Yudisium FEB
+                    </strong>
+
+                    <span>
+                        Admin Panel
+                    </span>
+                </div>
+
+            </div>
+
+
+            <nav class="admin-sidebar-nav">
+
+                <a
+                    href="/admin/dashboard"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ▦
+                    </span>
+
+                    <span>
+                        Dashboard
+                    </span>
+                </a>
+
+
+                <a
+                    href="/admin/dashboard"
+                    class="admin-nav-item active"
+                >
+                    <span class="admin-nav-icon">
+                        ☷
+                    </span>
+
+                    <span>
+                        Pengajuan
+                    </span>
+                </a>
+
+
+                <a
+                    href="/admin/dashboard?filter=revisi"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        !
+                    </span>
+
+                    <span>
+                        Perlu Revisi
+                    </span>
+
+                    <span class="admin-nav-count">
+                        3
+                    </span>
+                </a>
+
+
+                <a
+                    href="/admin/dashboard?filter=proses-sk"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ◷
+                    </span>
+
+                    <span>
+                        Proses SK
+                    </span>
+                </a>
+
+
+                <a
+                    href="history.html"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ↺
+                    </span>
+
+                    <span>
+                        History
+                    </span>
+                </a>
+
+
+                <div class="admin-nav-divider"></div>
+
+
+                @if(Auth::user()->role === 'SUPER_ADMIN')
+                <a
+                    href="/superadmin/kelola-admin"
+                    class="admin-nav-item"
+                    id="manageAdminMenu"
+                >
+
+                    <span class="admin-nav-icon">
+                        ♙
+                    </span>
+
+                    <span>
+                        Kelola Admin
+                    </span>
+
+                </a>
+                @endif
+
+            </nav>
+
+
+            <div class="admin-sidebar-footer">
+
+                <div class="admin-user-mini">
+
+                    <div class="admin-user-avatar">
+                        A
+                    </div>
+
+                    <div>
+                        <strong id="sidebarAdminName">
+                            {{ Auth::user()->name }}
+                        </strong>
+
+                        <span id="sidebarAdminRole">
+                            {{ Auth::user()->role }}
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <form action="/admin/logout" method="POST" style="width: 100%;">
+                    @csrf
+                    <button type="submit" class="admin-logout-button">
+                        Keluar
+                    </button>
+                </form>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================================
+             MAIN CONTENT
+        ====================================================== -->
+        <main class="admin-main detail-page-main">
+
+            <!-- BACK -->
+            <div class="detail-back-wrapper">
+
+                <a
+                    href="/admin/dashboard"
+                    class="detail-back-link"
+                >
+                    ← Kembali ke Daftar Pengajuan
+                </a>
+
+            </div>
+
+
+            <!-- =================================================
+                 HEADER
+            ================================================== -->
+            <header class="admin-topbar detail-topbar">
+
+                <div class="detail-title-area">
+
+                    <p class="admin-page-eyebrow">
+                        DETAIL PENGAJUAN
+                    </p>
+
+                    <h1 id="detailSubmissionCode">
+                        -
+                    </h1>
+
+                    <p class="admin-page-description">
+                        Periksa informasi mahasiswa dan dokumen
+                        pengajuan yudisium.
+                    </p>
+
+                </div>
+
+
+                <div class="detail-header-actions">
+
+                    <span
+                        class="admin-status-badge pending"
+                        id="detailSubmissionStatusBadge"
+                    >
+                        Menunggu Verifikasi
+                    </span>
+
+
+                    <div class="admin-profile-chip">
+
+                        <div class="admin-profile-avatar">
+                            A
+                        </div>
+
+                        <div>
+                            <strong id="topbarAdminName">
+                                {{ Auth::user()->name }}
+                            </strong>
+
+                            <span id="topbarAdminRole">
+                                {{ Auth::user()->role }}
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- =================================================
+                 SUMMARY MAHASISWA
+            ================================================== -->
+            <section class="detail-summary-card">
+
+                <div class="detail-summary-main">
+
+                    <div
+                        class="detail-student-avatar"
+                        id="detailStudentAvatar"
+                    >
+                        AS
+                    </div>
+
+
+                    <div class="detail-summary-identity">
+
+                        <span class="detail-summary-label">
+                            Mahasiswa
+                        </span>
+
+                        <h2 id="detailStudentName">
+                            -
+                        </h2>
+
+                        <p id="detailStudentNimSummary">
+                            NIM 2301110001
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-summary-meta">
+
+                    <div class="detail-summary-meta-item">
+
+                        <span>
+                            Jurusan
+                        </span>
+
+                        <strong id="detailStudentDepartmentSummary">
+                            Manajemen
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-summary-meta-item">
+
+                        <span>
+                            Tanggal Pengajuan
+                        </span>
+
+                        <strong id="detailSubmittedAt">
+                            02 September 2026
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-summary-meta-item">
+
+                        <span>
+                            Status Pengajuan
+                        </span>
+
+                        <strong id="detailSubmissionStatusText">
+                            Menunggu Verifikasi
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 DATA MAHASISWA
+            ================================================== -->
+            <section class="admin-dashboard-card detail-section">
+
+                <div class="admin-card-header detail-section-header">
+
+                    <div>
+
+                        <p class="detail-section-eyebrow">
+                            IDENTITAS
+                        </p>
+
+                        <h2>
+                            Data Mahasiswa
+                        </h2>
+
+                        <p>
+                            Informasi identitas mahasiswa yang
+                            mengajukan yudisium.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-data-grid">
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Nama Lengkap
+                        </span>
+
+                        <strong id="detailStudentFullName">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            NIM
+                        </span>
+
+                        <strong id="detailStudentNim">
+                            2301110001
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Email
+                        </span>
+
+                        <strong id="detailStudentEmail">
+                            andi.saputra@example.com
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Nomor WhatsApp
+                        </span>
+
+                        <strong id="detailStudentWhatsapp">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Tahun Angkatan
+                        </span>
+
+                        <strong id="detailStudentYear">
+                            2023
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Jalur Masuk
+                        </span>
+
+                        <strong id="detailStudentEntryRoute">
+                            Reguler
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Jurusan
+                        </span>
+
+                        <strong id="detailStudentDepartment">
+                            Manajemen
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 DATA AKADEMIK
+            ================================================== -->
+            <section class="admin-dashboard-card detail-section">
+
+                <div class="admin-card-header detail-section-header">
+
+                    <div>
+
+                        <p class="detail-section-eyebrow">
+                            AKADEMIK
+                        </p>
+
+                        <h2>
+                            Data Akademik
+                        </h2>
+
+                        <p>
+                            Informasi karya tulis dan hasil ujian
+                            mahasiswa.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-data-grid">
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Jenis Karya Tulis
+                        </span>
+
+                        <strong id="detailWorkType">
+                            Skripsi
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Tanggal Ujian
+                        </span>
+
+                        <strong id="detailExamDate">
+                            28 Agustus 2026
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item detail-data-wide">
+
+                        <span>
+                            Judul Skripsi / Artikel
+                        </span>
+
+                        <strong id="detailWorkTitle">
+                            Analisis Sistem Informasi Akademik
+                            Fakultas Ekonomi dan Bisnis
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Nilai Ujian
+                        </span>
+
+                        <strong id="detailExamScore">
+                            80,00
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Nilai Huruf
+                        </span>
+
+                        <strong id="detailLetterGrade">
+                            A
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 DOKUMEN
+            ================================================== -->
+            <section class="admin-dashboard-card detail-section">
+
+                <div class="admin-card-header detail-section-header">
+
+                    <div>
+
+                        <p class="detail-section-eyebrow">
+                            BERKAS
+                        </p>
+
+                        <h2>
+                            Dokumen Mahasiswa
+                        </h2>
+
+                        <p>
+                            Klik tombol Preview untuk melihat
+                            dokumen tanpa meninggalkan halaman.
+                        </p>
+
+                    </div>
+
+
+                    <span class="detail-document-count">
+                        15 Dokumen
+                    </span>
+
+                </div>
+
+
+                <div class="detail-document-list">
+
+
+                    <!-- 1 -->
+                    <div class="detail-document-item">
+
+                        <div class="detail-document-info">
+
+                            <div class="detail-document-icon">
+                                PDF
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Formulir Pendaftaran Yudisium
+                                </strong>
+
+                                <span>
+                                    -
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-document-actions">
+
+                            <span class="admin-status-badge pending">
+                                Belum Diperiksa
+                            </span>
+
+                            <button
+                                type="button"
+                                class="admin-detail-button preview-document-button"
+                                data-title="Formulir Pendaftaran Yudisium"
+                                data-file=""
+                            >
+                                Preview
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- 2 -->
+                    <div class="detail-document-item">
+
+                        <div class="detail-document-info">
+
+                            <div class="detail-document-icon">
+                                PDF
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Foto 3x4 Berwarna
+                                </strong>
+
+                                <span>
+                                    foto_3x4.pdf • 420 KB
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-document-actions">
+
+                            <span class="admin-status-badge pending">
+                                Belum Diperiksa
+                            </span>
+
+                            <button
+                                type="button"
+                                class="admin-detail-button preview-document-button"
+                                data-title="Foto 3x4 Berwarna"
+                                data-file=""
+                            >
+                                Preview
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- 3 -->
+                    <div class="detail-document-item">
+
+                        <div class="detail-document-info">
+
+                            <div class="detail-document-icon">
+                                PDF
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Ijazah SLTA
+                                </strong>
+
+                                <span>
+                                    ijazah_slta.pdf • 830 KB
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-document-actions">
+
+                            <span class="admin-status-badge pending">
+                                Belum Diperiksa
+                            </span>
+
+                            <button
+                                type="button"
+                                class="admin-detail-button preview-document-button"
+                                data-title="Ijazah SLTA"
+                                data-file=""
+                            >
+                                Preview
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- 4 -->
+                    <div class="detail-document-item">
+
+                        <div class="detail-document-info">
+
+                            <div class="detail-document-icon">
+                                PDF
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Berita Acara Ujian Skripsi / Artikel
+                                </strong>
+
+                                <span>
+                                    berita_acara.pdf • 790 KB
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-document-actions">
+
+                            <span class="admin-status-badge pending">
+                                Belum Diperiksa
+                            </span>
+
+                            <button
+                                type="button"
+                                class="admin-detail-button preview-document-button"
+                                data-title="Berita Acara Ujian Skripsi / Artikel"
+                                data-file=""
+                            >
+                                Preview
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- 5 -->
+                    <div class="detail-document-item">
+
+                        <div class="detail-document-info">
+
+                            <div class="detail-document-icon">
+                                PDF
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Rekapitulasi Nilai Ujian
+                                </strong>
+
+                                <span>
+                                    rekap_nilai.pdf • 740 KB
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-document-actions">
+
+                            <span class="admin-status-badge pending">
+                                Belum Diperiksa
+                            </span>
+
+                            <button
+                                type="button"
+                                class="admin-detail-button preview-document-button"
+                                data-title="Rekapitulasi Nilai Ujian"
+                                data-file=""
+                            >
+                                Preview
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- 6 -->
+                    <div class="detail-document-item">
+
+                        <div class="detail-document-info">
+
+                            <div class="detail-document-icon">
+                                PDF
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Blanko Revisi
+                                </strong>
+
+                                <span>
+                                    blanko_revisi.pdf • 510 KB
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-document-actions">
+
+                            <span class="admin-status-badge pending">
+                                Belum Diperiksa
+                            </span>
+
+                            <button
+                                type="button"
+                                class="admin-detail-button preview-document-button"
+                                data-title="Blanko Revisi"
+                                data-file=""
+                            >
+                                Preview
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- 7 -->
+                    <div class="detail-document-item">
+
+                        <div class="detail-document-info">
+
+                            <div class="detail-document-icon">
+                                PDF
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Tanda Terima Skripsi / Artikel
+                                </strong>
+
+                                <span>
+                                    tanda_terima.pdf • 1.2 MB
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-document-actions">
+
+                            <span class="admin-status-badge pending">
+                                Belum Diperiksa
+                            </span>
+
+                            <button
+                                type="button"
+                                class="admin-detail-button preview-document-button"
+                                data-title="Tanda Terima Skripsi / Artikel"
+                                data-file=""
+                            >
+                                Preview
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- 8 -->
+                    <div class="detail-document-item">
+
+                        <div class="detail-document-info">
+
+                            <div class="detail-document-icon">
+                                PDF
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Surat Pernyataan Penulisan Ijazah
+                                </strong>
+
+                                <span>
+                                    pernyataan_ijazah.pdf • 560 KB
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-document-actions">
+
+                            <span class="admin-status-badge pending">
+                                Belum Diperiksa
+                            </span>
+
+                            <button
+                                type="button"
+                                class="admin-detail-button preview-document-button"
+                                data-title="Surat Pernyataan Penulisan Ijazah"
+                                data-file=""
+                            >
+                                Preview
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- 9 -->
+                    <div class="detail-document-item">
+
+                        <div class="detail-document-info">
+
+                            <div class="detail-document-icon">
+                                PDF
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Surat Bebas Pinjam Perpustakaan Universitas
+                                </strong>
+
+                                <span>
+                                    bebas_pinjam_univ.pdf • 690 KB
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-document-actions">
+
+                            <span class="admin-status-badge pending">
+                                Belum Diperiksa
+                            </span>
+
+                            <button
+                                type="button"
+                                class="admin-detail-button preview-document-button"
+                                data-title="Surat Bebas Pinjam Perpustakaan Universitas"
+                                data-file=""
+                            >
+                                Preview
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- 10 -->
+                    <div class="detail-document-item">
+
+                        <div class="detail-document-info">
+
+                            <div class="detail-document-icon">
+                                PDF
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Surat Bebas Pinjam Perpustakaan Fakultas
+                                </strong>
+
+                                <span>
+                                    bebas_pinjam_fakultas.pdf • 620 KB
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-document-actions">
+
+                            <span class="admin-status-badge pending">
+                                Belum Diperiksa
+                            </span>
+
+                            <button
+                                type="button"
+                                class="admin-detail-button preview-document-button"
+                                data-title="Surat Bebas Pinjam Perpustakaan Fakultas"
+                                data-file=""
+                            >
+                                Preview
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- 11 -->
+                    <div class="detail-document-item">
+
+                        <div class="detail-document-info">
+
+                            <div class="detail-document-icon">
+                                PDF
+                            </div>
+
+                            <div>
+                                <strong>
+                                    KHS Semester 1 s/d Terbaru
+                                </strong>
+
+                                <span>
+                                    khs.pdf • 880 KB
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-document-actions">
+
+                            <span class="admin-status-badge pending">
+                                Belum Diperiksa
+                            </span>
+
+                            <button
+                                type="button"
+                                class="admin-detail-button preview-document-button"
+                                data-title="KHS Semester 1 s/d Terbaru"
+                                data-file=""
+                            >
+                                Preview
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- 12 -->
+                    <div class="detail-document-item">
+
+                        <div class="detail-document-info">
+
+                            <div class="detail-document-icon">
+                                PDF
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Transkrip Nilai Ujian Skripsi
+                                </strong>
+
+                                <span>
+                                    transkrip.pdf • 710 KB
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-document-actions">
+
+                            <span class="admin-status-badge pending">
+                                Belum Diperiksa
+                            </span>
+
+                            <button
+                                type="button"
+                                class="admin-detail-button preview-document-button"
+                                data-title="Transkrip Nilai Ujian Skripsi"
+                                data-file=""
+                            >
+                                Preview
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- 13 -->
+                    <div class="detail-document-item">
+
+                        <div class="detail-document-info">
+
+                            <div class="detail-document-icon">
+                                PDF
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Surat Tugas Dosen Pembimbing
+                                </strong>
+
+                                <span>
+                                    surat_tugas_pembimbing.pdf • 1.4 MB
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-document-actions">
+
+                            <span class="admin-status-badge pending">
+                                Belum Diperiksa
+                            </span>
+
+                            <button
+                                type="button"
+                                class="admin-detail-button preview-document-button"
+                                data-title="Surat Tugas Dosen Pembimbing"
+                                data-file=""
+                            >
+                                Preview
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- 14 -->
+                    <div class="detail-document-item">
+
+                        <div class="detail-document-info">
+
+                            <div class="detail-document-icon">
+                                PDF
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Surat Verifikasi Bebas Tunggakan
+                                </strong>
+
+                                <span>
+                                    bebas_tunggakan.pdf • 530 KB
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-document-actions">
+
+                            <span class="admin-status-badge pending">
+                                Belum Diperiksa
+                            </span>
+
+                            <button
+                                type="button"
+                                class="admin-detail-button preview-document-button"
+                                data-title="Surat Verifikasi Bebas Tunggakan"
+                                data-file=""
+                            >
+                                Preview
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- 15 -->
+                    <div class="detail-document-item">
+
+                        <div class="detail-document-info">
+
+                            <div class="detail-document-icon">
+                                PDF
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Bukti Pengisian Jurnal Manajemen
+                                </strong>
+
+                                <span>
+                                    jurnal_manajemen.pdf • 680 KB
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-document-actions">
+
+                            <span class="admin-status-badge pending">
+                                Belum Diperiksa
+                            </span>
+
+                            <button
+                                type="button"
+                                class="admin-detail-button preview-document-button"
+                                data-title="Bukti Pengisian Jurnal Manajemen"
+                                data-file=""
+                            >
+                                Preview
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 ACTION
+            ================================================== -->
+            <section class="detail-action-card">
+
+                <div class="detail-action-content">
+
+                    <span class="detail-action-label">
+                        TINDAKAN SELANJUTNYA
+                    </span>
+
+                    <h2 id="detailActionTitle">
+                        Verifikasi Pengajuan
+                    </h2>
+
+                    <p id="detailActionDescription">
+                        Periksa seluruh data dan dokumen sebelum
+                        menentukan hasil verifikasi.
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="/admin/verifikasi"
+                    id="detailPrimaryAction"
+                    class="admin-primary-button detail-verify-button"
+                >
+                    Mulai Verifikasi
+                </a>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- =========================================================
+         MODAL PREVIEW DOKUMEN
+         Secara default BENAR-BENAR tersembunyi.
+    ========================================================== -->
+    <div
+        class="document-preview-overlay"
+        id="documentPreviewModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="documentPreviewTitle"
+    >
+
+        <div class="document-preview-modal">
+
+            <!-- MODAL HEADER -->
+            <div class="document-preview-header">
+
+                <div class="document-preview-heading">
+
+                    <p>
+                        PREVIEW DOKUMEN
+                    </p>
+
+                    <h2 id="documentPreviewTitle">
+                        Dokumen
+                    </h2>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="document-preview-close"
+                    id="closeDocumentPreview"
+                    aria-label="Tutup preview dokumen"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <!-- MODAL BODY -->
+            <div class="document-preview-body">
+
+                <!-- Nanti digunakan jika backend sudah menyediakan URL -->
+                <iframe
+                    id="documentPreviewFrame"
+                    title="Preview Dokumen"
+                ></iframe>
+
+
+                <!-- Placeholder sementara frontend -->
+                <div
+                    class="document-preview-placeholder"
+                    id="documentPreviewPlaceholder"
+                >
+
+                    <div class="document-preview-file-icon">
+                        PDF
+                    </div>
+
+                    <strong>
+                        Preview Dokumen
+                    </strong>
+
+                    <p>
+                        File asli akan tampil di area ini setelah
+                        frontend terhubung dengan backend Laravel.
+                    </p>
+
+                    <span>
+                        Preview dokumen tersedia ketika file dapat diakses
+                        dari server.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- MODAL FOOTER -->
+            <div class="document-preview-footer">
+
+                <div class="document-preview-file-info">
+
+                    <span>
+                        Nama File
+                    </span>
+
+                    <strong id="documentPreviewFilename">
+                        sample.pdf
+                    </strong>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="admin-secondary-button"
+                    id="openDocumentNewTab"
+                >
+                    Buka di Tab Baru ↗
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         SCRIPT
+    ========================================================== -->
+    <script src="{{ asset('js/yudisium_api.js') }}"></script>
+    <script src="{{ asset('js/admin.js') }}"></script>
+    <script src="{{ asset('js/admin_detail.js') }}"></script>
+
+</body>
+
+</html>

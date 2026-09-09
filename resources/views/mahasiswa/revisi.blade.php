@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Revisi Pengajuan Yudisium - FEB UPR
+    </title>
+
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/style.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/student_theme.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/student_revisi.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+    <main class="revision-page">
+
+        <div class="revision-container">
+
+
+            <!-- =================================================
+                 TOPBAR
+            ================================================== -->
+
+            <div class="revision-topbar">
+
+                <a
+                    href="/tracking"
+                    class="revision-back-link"
+                >
+                    ← Kembali ke Status Pengajuan
+                </a>
+
+
+                <span class="revision-faculty-badge">
+                    FEB UPR
+                </span>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 HERO
+            ================================================== -->
+
+            <header class="revision-hero">
+
+                <div>
+
+                    <span class="revision-eyebrow">
+                        REVISI PENGAJUAN YUDISIUM
+                    </span>
+
+
+                    <h1>
+                        Perbaiki Hanya Bagian yang Ditandai Admin
+                    </h1>
+
+
+                    <p>
+                        Data yang sudah disetujui tetap terkunci.
+                        Baca feedback Admin pada setiap bagian dan
+                        kirim hanya perbaikan yang diminta.
+                    </p>
+
+                </div>
+
+
+                <div class="revision-hero-status">
+
+                    <span class="revision-hero-status-label">
+                        Status saat ini
+                    </span>
+
+                    <strong>
+                        Perlu Revisi
+                    </strong>
+
+                </div>
+
+            </header>
+
+
+
+            <!-- =================================================
+                 SUMMARY
+            ================================================== -->
+
+            <section class="revision-info-card">
+
+                <div>
+
+                    <span>
+                        Kode SK Yudisium
+                    </span>
+
+                    <strong id="revisionKode">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        NIM
+                    </span>
+
+                    <strong id="revisionNim">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Jumlah Perbaikan
+                    </span>
+
+                    <strong>
+                        <span id="revisionFieldCount">
+                            -
+                        </span>
+                        item
+                    </strong>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 NOTICE
+            ================================================== -->
+
+            <section class="revision-notice">
+
+                <div class="revision-notice-icon">
+                    !
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        Fokus pada bagian yang diminta
+                    </h2>
+
+
+                    <p>
+                        Periksa feedback Admin dan data sebelumnya.
+                        Bagian yang tidak diminta untuk direvisi
+                        tidak dapat diubah melalui halaman ini.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 FORM
+            ================================================== -->
+
+            <form
+                id="revisionForm"
+                novalidate
+                enctype="multipart/form-data"
+            >
+                @csrf
+
+
+                <!-- =============================================
+                     APPROVED / LOCKED DATA
+                ============================================== -->
+
+                <section class="revision-section revision-approved-section">
+
+                    <div class="revision-section-header">
+
+                        <div>
+
+                            <span class="section-kicker">
+                                SUDAH DISETUJUI
+                            </span>
+
+
+                            <h2>
+                                Data yang Terkunci
+                            </h2>
+
+
+                            <p>
+                                Data berikut tidak diminta untuk
+                                diperbaiki dan tetap terkunci.
+                            </p>
+
+                        </div>
+
+
+                        <span class="approved-badge">
+                            ✓ Terkunci
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="locked-data-grid"
+                        id="approvedDataGrid"
+                    >
+                    </div>
+
+                </section>
+
+
+
+                <!-- =============================================
+                     REVISION ITEMS
+                ============================================== -->
+
+                <section class="revision-section">
+
+                    <div class="revision-section-header">
+
+                        <div>
+
+                            <span class="section-kicker revision-kicker">
+                                PERLU DIPERBAIKI
+                            </span>
+
+
+                            <h2>
+                                Feedback & Perbaikan
+                            </h2>
+
+
+                            <p>
+                                Selesaikan seluruh item di bawah
+                                sebelum menekan Kirim Revisi.
+                            </p>
+
+                        </div>
+
+
+                        <span
+                            class="revision-badge"
+                            id="revisionBadge"
+                        >
+                            -
+                        </span>
+
+                    </div>
+
+
+                    <div id="revisionItemsContainer">
+                    </div>
+
+                </section>
+
+
+
+                <!-- =============================================
+                     CONFIRMATION
+                ============================================== -->
+
+                <section class="revision-confirmation">
+
+                    <label for="revisionConfirmation">
+
+                        <input
+                            type="checkbox"
+                            id="revisionConfirmation"
+                        >
+
+
+                        <span>
+
+                            <strong>
+                                Saya sudah memeriksa kembali seluruh revisi.
+                            </strong>
+
+                            Data dan dokumen yang saya masukkan merupakan
+                            versi perbaikan sesuai feedback Admin.
+
+                        </span>
+
+                    </label>
+
+
+                    <div
+                        class="confirmation-error"
+                        id="revisionConfirmationError"
+                    >
+                        Centang pernyataan sebelum mengirim revisi.
+                    </div>
+
+                </section>
+
+
+
+                <!-- =============================================
+                     ACTION
+                ============================================== -->
+
+                <div class="revision-actions">
+
+                    <a
+                        href="/tracking"
+                        class="btn btn-secondary"
+                    >
+                        Batal
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-success"
+                        id="submitRevision"
+                    >
+                        Kirim Revisi
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+
+
+    <!-- =====================================================
+         SUCCESS MODAL
+    ====================================================== -->
+
+    <div
+        class="modal-overlay"
+        id="revisionSuccessModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="revisionSuccessTitle"
+    >
+
+        <div class="modal-card revision-success-modal">
+
+            <div class="success-icon">
+                ✓
+            </div>
+
+
+            <span class="revision-modal-kicker">
+                REVISI BERHASIL DIKIRIM
+            </span>
+
+
+            <h2 id="revisionSuccessTitle">
+                Perbaikan Telah Dikirim
+            </h2>
+
+
+            <p>
+                Revisi telah tersimpan pada pengajuan yang sama
+                dan akan diperiksa kembali oleh Bagian Akademik FEB UPR.
+            </p>
+
+
+            <div class="revision-modal-info">
+
+                <span>
+                    Status berikutnya
+                </span>
+
+                <strong>
+                    Revisi Dikirim — Menunggu Pemeriksaan Admin
+                </strong>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="closeRevisionModal"
+            >
+                Kembali ke Status Pengajuan
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CENTRAL DATA
+    ====================================================== -->
+
+    <script src="{{ asset('js/yudisium_api.js') }}"></script>
+    <script src="{{ asset('js/student_revisi.js') }}"></script>
+
+
+</body>
+
+</html>

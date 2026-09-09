@@ -1,0 +1,1170 @@
+.revision-review-main {
+    max-width: 1500px;
+}
+
+
+.revision-review-back {
+    margin-bottom: 18px;
+}
+
+
+.revision-review-back a {
+    color: #666;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+
+.revision-review-back a:hover {
+    color: #111;
+
+    text-decoration: underline;
+}
+
+
+/* HEADER */
+
+.revision-review-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    margin-bottom: 20px;
+}
+
+
+.revision-review-header h1 {
+    font-size: 28px;
+}
+
+
+.revision-review-header > div:first-child > p:last-child {
+    margin-top: 4px;
+
+    color: #777;
+
+    font-size: 11px;
+}
+
+
+.revision-review-header-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+/* STUDENT */
+
+.revision-student-card {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 15px;
+
+    padding: 18px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    background-color: #fff;
+}
+
+
+.revision-student-avatar {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background-color: #222;
+
+    color: #fff;
+
+    font-size: 14px;
+
+    font-weight: 700;
+}
+
+
+.revision-student-card h2 {
+    margin-bottom: 3px;
+
+    font-size: 16px;
+}
+
+
+.revision-student-card p {
+    color: #777;
+
+    font-size: 10px;
+}
+
+
+.revision-round {
+    margin-left: auto;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    min-width: 70px;
+
+    padding: 8px;
+
+    border-radius: 8px;
+
+    background-color: #f3f4f6;
+}
+
+
+.revision-round span {
+    color: #777;
+
+    font-size: 9px;
+}
+
+
+.revision-round strong {
+    font-size: 18px;
+}
+
+
+/* INFO */
+
+.revision-info-box {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+
+    padding: 13px;
+
+    border: 1px solid #bfdbfe;
+
+    border-radius: 9px;
+
+    background-color: #eff6ff;
+}
+
+
+.revision-info-box > div {
+    width: 26px;
+    height: 26px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background-color: #dbeafe;
+
+    color: #1d4ed8;
+
+    font-size: 11px;
+
+    font-weight: bold;
+}
+
+
+.revision-info-box p {
+    color: #555;
+
+    font-size: 10px;
+
+    line-height: 1.6;
+}
+
+
+/* SECTION */
+
+.revision-review-section {
+    margin-bottom: 18px;
+
+    padding: 20px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    background-color: #fff;
+}
+
+
+.revision-section-header {
+    margin-bottom: 15px;
+
+    padding-bottom: 14px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.revision-section-header > div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.revision-section-number {
+    width: 29px;
+    height: 29px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 7px;
+
+    background-color: #222;
+
+    color: #fff;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+.revision-section-header h2 {
+    margin-bottom: 2px;
+
+    font-size: 15px;
+}
+
+
+.revision-section-header p {
+    color: #777;
+
+    font-size: 10px;
+}
+
+
+/* REVIEW ITEM */
+
+.revision-review-item {
+    padding: 15px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 9px;
+
+    background-color: #fff;
+}
+
+
+.revision-review-item.approved {
+    border-color: #bbf7d0;
+
+    background-color: #f9fefb;
+}
+
+
+.revision-review-item.revision {
+    border-color: #fed7aa;
+
+    background-color: #fffaf5;
+}
+
+
+.revision-review-item.review-error {
+    border-color: #fecaca;
+}
+
+
+.revision-item-title {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 14px;
+}
+
+
+.revision-item-title > div {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+
+.revision-item-title span {
+    color: #777;
+
+    font-size: 9px;
+
+    text-transform: uppercase;
+}
+
+
+.revision-item-title strong {
+    font-size: 12px;
+}
+
+
+.revision-item-type {
+    padding: 4px 8px;
+
+    border-radius: 999px;
+
+    background-color: #e0e7ff;
+
+    color: #3730a3;
+
+    font-size: 8px;
+
+    font-weight: 800;
+}
+
+
+.revision-item-type.document {
+    background-color: #fee2e2;
+
+    color: #b91c1c;
+}
+
+
+/* COMPARISON */
+
+.revision-comparison {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        auto
+        minmax(0, 1fr);
+
+    align-items: stretch;
+
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+
+.revision-old-value,
+.revision-new-value {
+    padding: 12px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 8px;
+}
+
+
+.revision-old-value {
+    background-color: #fafafa;
+}
+
+
+.revision-new-value {
+    border-color: #bbf7d0;
+
+    background-color: #f0fdf4;
+}
+
+
+.revision-old-value span,
+.revision-new-value span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #777;
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+}
+
+
+.revision-old-value p,
+.revision-new-value p {
+    color: #333;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+
+.revision-arrow {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #777;
+
+    font-size: 16px;
+}
+
+
+/* FILE COMPARISON */
+
+.revision-file-comparison {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+
+.revision-file-card {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 8px;
+
+    background-color: #fafafa;
+}
+
+
+.revision-file-card.new {
+    border-color: #bbf7d0;
+
+    background-color: #f0fdf4;
+}
+
+
+.revision-file-card > div {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.revision-file-card span {
+    color: #777;
+
+    font-size: 8px;
+
+    text-transform: uppercase;
+}
+
+
+.revision-file-card strong {
+    overflow: hidden;
+
+    font-size: 10px;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+.revision-file-card small {
+    color: #888;
+
+    font-size: 8px;
+}
+
+
+.revision-preview-button {
+    flex-shrink: 0;
+
+    padding: 6px 9px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 6px;
+
+    background-color: #fff;
+
+    color: #333;
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+/* OLD ADMIN FEEDBACK */
+
+.revision-admin-feedback {
+    margin-bottom: 14px;
+
+    padding: 11px;
+
+    border-left: 3px solid #f59e0b;
+
+    border-radius: 0 6px 6px 0;
+
+    background-color: #fffbeb;
+}
+
+
+.revision-admin-feedback span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #92400e;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+}
+
+
+.revision-admin-feedback p {
+    color: #555;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+
+/* ACTION */
+
+.revision-review-actions {
+    display: flex;
+
+    gap: 7px;
+}
+
+
+.revision-review-choice {
+    min-height: 34px;
+
+    padding: 7px 11px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 7px;
+
+    background-color: #fff;
+
+    color: #666;
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.revision-review-choice.approve.selected {
+    border-color: #86efac;
+
+    background-color: #dcfce7;
+
+    color: #166534;
+}
+
+
+.revision-review-choice.revision.selected {
+    border-color: #fdba74;
+
+    background-color: #ffedd5;
+
+    color: #c2410c;
+}
+
+
+/* FEEDBACK */
+
+.revision-review-feedback {
+    display: none;
+
+    margin-top: 12px;
+
+    padding-top: 12px;
+
+    border-top: 1px dashed #e5e7eb;
+}
+
+
+.revision-review-feedback.active {
+    display: block;
+}
+
+
+.revision-review-feedback label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #555;
+
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+
+.revision-review-feedback textarea {
+    width: 100%;
+
+    min-height: 82px;
+
+    resize: vertical;
+
+    padding: 9px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 7px;
+
+    font-family: inherit;
+
+    font-size: 10px;
+}
+
+
+.revision-feedback-error {
+    display: none;
+
+    margin-top: 4px;
+
+    color: #b91c1c;
+
+    font-size: 9px;
+}
+
+
+.revision-feedback-error.active {
+    display: block;
+}
+
+
+/* RESULT */
+
+.revision-result-card {
+    margin-bottom: 30px;
+
+    padding: 20px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 12px;
+
+    background-color: #fff;
+}
+
+
+.revision-result-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 15px;
+}
+
+
+.revision-result-header h2 {
+    margin-bottom: 2px;
+
+    font-size: 16px;
+}
+
+
+.revision-result-header p {
+    color: #777;
+
+    font-size: 10px;
+}
+
+
+.revision-result-status {
+    padding: 5px 9px;
+
+    border-radius: 999px;
+
+    font-size: 9px;
+
+    font-weight: 800;
+}
+
+
+.revision-result-status.pending {
+    background-color: #f3f4f6;
+
+    color: #666;
+}
+
+
+.revision-result-status.revision {
+    background-color: #ffedd5;
+
+    color: #c2410c;
+}
+
+
+.revision-result-status.approved {
+    background-color: #dcfce7;
+
+    color: #166534;
+}
+
+
+.revision-result-summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 10px;
+
+    margin-bottom: 16px;
+}
+
+
+.revision-result-summary > div {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 11px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 8px;
+
+    background-color: #fafafa;
+}
+
+
+.revision-result-summary span {
+    color: #777;
+
+    font-size: 9px;
+}
+
+
+.revision-result-summary strong {
+    font-size: 16px;
+}
+
+
+.revision-confirmation {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 9px;
+
+    cursor: pointer;
+}
+
+
+.revision-confirmation input {
+    width: 16px;
+    height: 16px;
+
+    flex-shrink: 0;
+}
+
+
+.revision-confirmation span {
+    color: #555;
+
+    font-size: 10px;
+}
+
+
+.revision-confirmation-error {
+    display: none;
+
+    margin-top: 5px;
+
+    color: #b91c1c;
+
+    font-size: 9px;
+}
+
+
+.revision-confirmation-error.active {
+    display: block;
+}
+
+
+.revision-submit-button {
+    width: 100%;
+
+    min-height: 42px;
+
+    margin-top: 13px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background-color: #222;
+
+    color: #fff;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+/* PREVIEW */
+
+.revision-preview-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    background-color:
+        rgba(
+            0,
+            0,
+            0,
+            0.6
+        );
+}
+
+
+.revision-preview-overlay.active {
+    display: flex;
+}
+
+
+.revision-preview-modal {
+    width: 100%;
+
+    max-width: 950px;
+
+    height: min(86vh, 760px);
+
+    display: flex;
+
+    flex-direction: column;
+
+    overflow: hidden;
+
+    border-radius: 12px;
+
+    background-color: #fff;
+}
+
+
+.revision-preview-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 15px 18px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.revision-preview-header span {
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: #888;
+
+    font-size: 8px;
+
+    font-weight: 800;
+}
+
+
+.revision-preview-header h2 {
+    font-size: 14px;
+}
+
+
+.revision-preview-header button {
+    width: 34px;
+    height: 34px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background-color: #f3f4f6;
+
+    font-size: 22px;
+
+    cursor: pointer;
+}
+
+
+.revision-preview-body {
+    position: relative;
+
+    flex: 1;
+
+    background-color: #eef0f2;
+}
+
+
+.revision-preview-placeholder {
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-direction: column;
+
+    gap: 6px;
+
+    text-align: center;
+}
+
+
+.revision-preview-placeholder > div {
+    width: 65px;
+    height: 65px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background-color: #fee2e2;
+
+    color: #b91c1c;
+
+    font-size: 13px;
+
+    font-weight: 800;
+}
+
+
+.revision-preview-placeholder strong {
+    font-size: 13px;
+}
+
+
+.revision-preview-placeholder p {
+    color: #777;
+
+    font-size: 10px;
+}
+
+
+.revision-preview-footer {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 12px 18px;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+
+.revision-preview-footer span {
+    color: #777;
+
+    font-size: 9px;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 760px) {
+
+    .revision-review-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .revision-review-header-actions {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .revision-student-card {
+        align-items: flex-start;
+
+        flex-wrap: wrap;
+    }
+
+
+    .revision-round {
+        margin-left: 0;
+    }
+
+
+    .revision-comparison {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .revision-arrow {
+        transform: rotate(90deg);
+    }
+
+
+    .revision-file-comparison {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .revision-result-summary {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .revision-review-section,
+    .revision-result-card {
+        padding: 14px;
+    }
+
+
+    .revision-file-card {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .revision-review-actions {
+        flex-direction: column;
+    }
+
+
+    .revision-review-choice {
+        width: 100%;
+    }
+
+
+    .revision-preview-overlay {
+        padding: 7px;
+    }
+
+
+    .revision-preview-modal {
+        height: 94vh;
+    }
+
+
+    .revision-preview-footer {
+        align-items: stretch;
+
+        flex-direction: column;
+    }
+
+}

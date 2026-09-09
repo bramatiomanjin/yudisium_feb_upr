@@ -4,23 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class AuthController extends Controller
 {
     public function loginPage()
     {
-        // UI Login Sementara
-        return '
-        <div style="font-family: sans-serif; padding: 50px; text-align: center;">
-            <h2>Login Admin Yudisium FEB</h2>
-            <form action="/admin/login" method="POST">
-                '.csrf_field().'
-                Email: <input type="email" name="email" value="superadmin@feb.upr.ac.id"><br><br>
-                Password: <input type="password" name="password" value="password123"><br><br>
-                <button type="submit" style="padding: 10px 20px; background: darkred; color: white; border: none;">Login Admin</button>
-            </form>
-        </div>
-        ';
+        return view('admin.login');
     }
 
     public function loginProses(Request $request)
@@ -32,6 +23,13 @@ class AuthController extends Controller
 
         // Cek kecocokan di database
         if (Auth::attempt($credentials)) {
+            if (Auth::user()->status !== 'ACTIVE') {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Akun Anda masih berstatus PENDING atau INACTIVE. Silakan tunggu persetujuan Super Admin.',
+                ]);
+            }
+            
             $request->session()->regenerate();
             return redirect()->intended('/admin/dashboard'); // Jika benar, arahkan ke dashboard
         }
@@ -47,5 +45,24 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/admin/login');
+    }
+
+    public function registerProses(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'ADMIN',
+            'status' => 'PENDING',
+        ]);
+
+        return redirect('/admin/login')->with('success', 'Registrasi berhasil! Akun Anda menunggu persetujuan Super Admin.');
     }
 }

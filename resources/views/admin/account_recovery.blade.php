@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Pemulihan Akun Admin - Yudisium FEB UPR
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/style.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/admin.css') }}"
+    >
+    <link rel="stylesheet" href="{{ asset('css/admin_theme.css') }}">
+</head>
+
+<body>
+
+    <main class="admin-auth-page">
+
+        <div class="admin-auth-container recovery-container">
+
+            <!-- BRAND -->
+            <div class="admin-auth-brand">
+
+                <div class="admin-brand-badge">
+                    FEB UPR
+                </div>
+
+                <h1>
+                    Pemulihan Akun
+                </h1>
+
+                <p>
+                    Sistem Pengelolaan Yudisium
+                    Fakultas Ekonomi dan Bisnis
+                    Universitas Palangka Raya
+                </p>
+
+            </div>
+
+
+            <!-- CARD -->
+            <section class="admin-auth-card">
+
+                <div class="admin-auth-header">
+
+                    <h2>
+                        Lupa Username / Password
+                    </h2>
+
+                    <p>
+                        Pilih jenis bantuan yang Anda perlukan.
+                    </p>
+
+                </div>
+
+
+                <!-- TAB -->
+                <div class="recovery-tabs">
+
+                    <button
+                        type="button"
+                        class="recovery-tab active"
+                        id="usernameTab"
+                    >
+                        Lupa Username
+                    </button>
+
+                    <button
+                        type="button"
+                        class="recovery-tab"
+                        id="passwordTab"
+                    >
+                        Lupa Password
+                    </button>
+
+                </div>
+
+
+                <!-- =====================================
+                     LUPA USERNAME
+                ====================================== -->
+                <section
+                    class="recovery-panel active"
+                    id="usernameRecoveryPanel"
+                >
+
+                    <div class="recovery-panel-header">
+
+                        <h3>
+                            Pulihkan Username
+                        </h3>
+
+                        <p>
+                            Masukkan email yang terdaftar pada akun admin.
+                        </p>
+
+                    </div>
+
+
+                    <form
+                        id="usernameRecoveryForm"
+                        novalidate
+                    >
+
+                        <div class="form-group">
+
+                            <label for="recovery_username_email">
+                                Email Terdaftar
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                type="email"
+                                id="recovery_username_email"
+                                name="email"
+                                placeholder="contoh@email.com"
+                                autocomplete="email"
+                                required
+                            >
+
+                            <small>
+                                Username akan dikirim melalui email terdaftar.
+                            </small>
+
+                            <div class="error-message">
+                                Masukkan alamat email yang valid.
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary admin-auth-submit"
+                        >
+                            Kirim Username
+                        </button>
+
+                    </form>
+
+                </section>
+
+
+                <!-- =====================================
+                     LUPA PASSWORD
+                ====================================== -->
+                <section
+                    class="recovery-panel"
+                    id="passwordRecoveryPanel"
+                >
+
+                    <div class="recovery-panel-header">
+
+                        <h3>
+                            Reset Password
+                        </h3>
+
+                        <p>
+                            Masukkan email akun untuk menerima tautan
+                            reset password.
+                        </p>
+
+                    </div>
+
+
+                    <form
+                        id="passwordRecoveryForm"
+                        novalidate
+                    >
+
+                        <div class="form-group">
+
+                            <label for="recovery_password_email">
+                                Email Terdaftar
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                type="email"
+                                id="recovery_password_email"
+                                name="email"
+                                placeholder="contoh@email.com"
+                                autocomplete="email"
+                                required
+                            >
+
+                            <small>
+                                Tautan reset password akan dikirim ke email tersebut.
+                            </small>
+
+                            <div class="error-message">
+                                Masukkan alamat email yang valid.
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary admin-auth-submit"
+                        >
+                            Kirim Link Reset
+                        </button>
+
+                    </form>
+
+                </section>
+
+
+                <!-- FOOTER -->
+                <div class="admin-auth-footer">
+
+                    <p>
+                        Sudah ingat akun Anda?
+                    </p>
+
+                    <a
+                        href="/admin/login"
+                        class="admin-auth-link strong"
+                    >
+                        Kembali ke Login
+                    </a>
+
+                </div>
+
+            </section>
+
+
+            <div class="admin-auth-back">
+
+                <a href="/">
+                    ← Kembali ke halaman mahasiswa
+                </a>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- SUCCESS MODAL -->
+    <div
+        class="modal-overlay"
+        id="recoverySuccessModal"
+    >
+
+        <div class="modal-card">
+
+            <div class="success-icon">
+                ✓
+            </div>
+
+            <h2 id="recoverySuccessTitle">
+                Permintaan Berhasil
+            </h2>
+
+            <p id="recoverySuccessMessage">
+                Instruksi pemulihan akun telah dikirim.
+            </p>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="recoveryBackToLogin"
+            >
+                Kembali ke Login
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script src="{{ asset('js/admin.js') }}"></script>
+
+</body>
+
+</html>

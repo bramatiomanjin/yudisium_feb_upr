@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Detail History - Yudisium FEB UPR
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/style.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/admin.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/admin_detail_history.css') }}"
+    >
+    <link rel="stylesheet" href="{{ asset('css/admin_theme.css') }}">
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- =====================================
+             SIDEBAR
+        ====================================== -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-sidebar-brand">
+
+                <div class="admin-sidebar-logo">
+                    FEB
+                </div>
+
+                <div>
+
+                    <strong>
+                        Yudisium FEB
+                    </strong>
+
+                    <span>
+                        Admin Panel
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <nav class="admin-sidebar-nav">
+
+                <a
+                    href="/admin/dashboard"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ▦
+                    </span>
+
+                    <span>
+                        Dashboard
+                    </span>
+                </a>
+
+
+                <a
+                    href="/admin/dashboard"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ☷
+                    </span>
+
+                    <span>
+                        Pengajuan
+                    </span>
+                </a>
+
+
+                <a
+                    href="/admin/dashboard?filter=revisi"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        !
+                    </span>
+
+                    <span>
+                        Perlu Revisi
+                    </span>
+
+                    <span class="admin-nav-count">
+                        3
+                    </span>
+                </a>
+
+
+                <a
+                    href="/admin/dashboard?filter=proses-sk"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ◷
+                    </span>
+
+                    <span>
+                        Proses SK
+                    </span>
+                </a>
+
+
+                <a
+                    href="/superadmin/log-aktivitas"
+                    class="admin-nav-item active"
+                >
+                    <span class="admin-nav-icon">
+                        ↺
+                    </span>
+
+                    <span>
+                        History
+                    </span>
+                </a>
+
+
+                <div class="admin-nav-divider"></div>
+
+
+                @if(Auth::user()->role === 'SUPER_ADMIN')
+                <a
+                    href="/superadmin/kelola-admin"
+                    class="admin-nav-item"
+                    id="manageAdminMenu"
+                >
+                    <span class="admin-nav-icon">
+                        ♙
+                    </span>
+
+                    <span>
+                        Kelola Admin
+                    </span>
+                </a>
+                @endif
+
+            </nav>
+
+
+            <div class="admin-sidebar-footer">
+
+                <div class="admin-user-mini">
+
+                    <div class="admin-user-avatar">
+                        A
+                    </div>
+
+                    <div>
+
+                        <strong id="sidebarAdminName">
+                            {{ Auth::user()->name }}
+                        </strong>
+
+                        <span id="sidebarAdminRole">
+                            {{ Auth::user()->role }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <form action="/admin/logout" method="POST" style="width: 100%;">
+                    @csrf
+                    <button type="submit" class="admin-logout-button">
+                        Keluar
+                    </button>
+                </form>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================
+             MAIN
+        ====================================== -->
+        <main class="admin-main detail-history-main">
+
+            <!-- BACK -->
+            <div class="detail-history-back">
+
+                <a href="/superadmin/log-aktivitas">
+                    ← Kembali ke History
+                </a>
+
+            </div>
+
+
+            <!-- HEADER -->
+            <header class="detail-history-header">
+
+                <div>
+
+                    <p class="admin-page-eyebrow">
+                        DETAIL HISTORY
+                    </p>
+
+                    <h1 id="detailHistoryCode">
+                        -
+                    </h1>
+
+                    <p>
+                        Detail aktivitas administrasi dan data pengajuan mahasiswa.
+                    </p>
+
+                </div>
+
+
+                <div class="admin-profile-chip">
+
+                    <div class="admin-profile-avatar">
+                        A
+                    </div>
+
+                    <div>
+
+                        <strong id="topbarAdminName">
+                            {{ Auth::user()->name }}
+                        </strong>
+
+                        <span id="topbarAdminRole">
+                            {{ Auth::user()->role }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- =====================================
+                 ACCESS ERROR
+            ====================================== -->
+            <section
+                class="detail-history-access-error"
+                id="detailHistoryAccessError"
+            >
+
+                <div>
+                    !
+                </div>
+
+                <h2>
+                    History Tidak Dapat Diakses
+                </h2>
+
+                <p>
+                    Admin biasa hanya dapat melihat history aktivitas
+                    yang dilakukan oleh akun sendiri.
+                </p>
+
+                <a href="/superadmin/log-aktivitas">
+                    Kembali ke History
+                </a>
+
+            </section>
+
+
+            <!-- =====================================
+                 CONTENT
+            ====================================== -->
+            <div id="detailHistoryContent">
+
+                <!-- =================================
+                     ACTIVITY SUMMARY
+                ================================== -->
+                <section class="detail-history-activity-card">
+
+                    <div class="detail-history-activity-icon">
+                        ↺
+                    </div>
+
+
+                    <div class="detail-history-activity-main">
+
+                        <span>
+                            AKTIVITAS
+                        </span>
+
+                        <h2 id="detailActivityTitle">
+                            Verifikasi Pengajuan
+                        </h2>
+
+                        <p id="detailActivityDescription">
+                            Aktivitas administrasi pengajuan mahasiswa.
+                        </p>
+
+                    </div>
+
+
+                    <span
+                        class="detail-history-status-badge"
+                        id="detailActivityBadge"
+                    >
+                        VERIFIKASI
+                    </span>
+
+                </section>
+
+
+                <!-- =================================
+                     ACTIVITY DETAIL
+                ================================== -->
+                <section class="detail-history-card">
+
+                    <div class="detail-history-card-header">
+
+                        <div>
+
+                            <h2>
+                                Informasi Aktivitas
+                            </h2>
+
+                            <p>
+                                Informasi admin dan perubahan yang dilakukan.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-history-info-grid">
+
+                        <div class="detail-history-info-item">
+
+                            <span>
+                                Admin
+                            </span>
+
+                            <strong id="detailAdminUsername">
+                                adminfeb
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-history-info-item">
+
+                            <span>
+                                Role
+                            </span>
+
+                            <strong id="detailAdminRole">
+                                ADMIN
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-history-info-item">
+
+                            <span>
+                                Tanggal & Waktu
+                            </span>
+
+                            <strong id="detailActivityTime">
+                                2 Sep 2026, 08.15
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-history-info-item">
+
+                            <span>
+                                Jenis Aktivitas
+                            </span>
+
+                            <strong id="detailActivityType">
+                                Verifikasi Pengajuan
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-history-status-change">
+
+                        <div>
+
+                            <span>
+                                Status Sebelumnya
+                            </span>
+
+                            <strong id="detailOldStatus">
+                                Verifikasi Admin
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-history-arrow">
+                            →
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Status Setelah Aktivitas
+                            </span>
+
+                            <strong id="detailNewStatus">
+                                Terverifikasi
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="detail-history-note"
+                        id="detailHistoryNoteBox"
+                    >
+
+                        <span>
+                            Catatan / Feedback
+                        </span>
+
+                        <p id="detailHistoryNote">
+                            Seluruh data dan dokumen mahasiswa telah disetujui.
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================
+                     STUDENT DATA
+                ================================== -->
+                <section class="detail-history-card">
+
+                    <div class="detail-history-card-header">
+
+                        <div>
+
+                            <h2>
+                                Data Mahasiswa
+                            </h2>
+
+                            <p>
+                                Data mahasiswa pada pengajuan yang terkait.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-history-student-summary">
+
+                        <div class="detail-history-avatar">
+                            AS
+                        </div>
+
+
+                        <div>
+
+                            <h3 id="detailStudentName">
+                                -
+                            </h3>
+
+                            <p id="detailStudentNim">
+                                NIM 2301110001
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-history-info-grid">
+
+                        <div class="detail-history-info-item">
+
+                            <span>
+                                Nama Lengkap
+                            </span>
+
+                            <strong id="studentFullName">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-history-info-item">
+
+                            <span>
+                                NIM
+                            </span>
+
+                            <strong id="studentNim">
+                                2301110001
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-history-info-item">
+
+                            <span>
+                                Email
+                            </span>
+
+                            <strong id="studentEmail">
+                                andi.saputra@example.com
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-history-info-item">
+
+                            <span>
+                                Nomor WhatsApp
+                            </span>
+
+                            <strong id="studentWhatsapp">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-history-info-item">
+
+                            <span>
+                                Tahun Angkatan
+                            </span>
+
+                            <strong id="studentYear">
+                                2023
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-history-info-item">
+
+                            <span>
+                                Jalur Masuk
+                            </span>
+
+                            <strong id="studentEntryRoute">
+                                Reguler
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-history-info-item">
+
+                            <span>
+                                Jurusan
+                            </span>
+
+                            <strong id="studentDepartment">
+                                Manajemen
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================
+                     ACADEMIC DATA
+                ================================== -->
+                <section class="detail-history-card">
+
+                    <div class="detail-history-card-header">
+
+                        <div>
+
+                            <h2>
+                                Data Akademik
+                            </h2>
+
+                            <p>
+                                Data akademik pada saat pengajuan.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-history-info-grid">
+
+                        <div class="detail-history-info-item">
+
+                            <span>
+                                Karya Tulis Ilmiah
+                            </span>
+
+                            <strong>
+                                Skripsi
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-history-info-item detail-history-wide">
+
+                            <span>
+                                Judul Skripsi / Artikel
+                            </span>
+
+                            <strong>
+                                Analisis dan Perancangan Sistem Informasi
+                                Akademik Fakultas Ekonomi dan Bisnis
+                                Universitas Palangka Raya
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-history-info-item">
+
+                            <span>
+                                Tanggal Ujian
+                            </span>
+
+                            <strong>
+                                28 Agustus 2026
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-history-info-item">
+
+                            <span>
+                                Nilai Ujian
+                            </span>
+
+                            <strong>
+                                80,00
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-history-info-item">
+
+                            <span>
+                                Nilai Huruf
+                            </span>
+
+                            <strong>
+                                A
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================
+                     DOCUMENTS
+                ================================== -->
+                <section class="detail-history-card">
+
+                    <div class="detail-history-card-header">
+
+                        <div>
+
+                            <h2>
+                                Dokumen Mahasiswa
+                            </h2>
+
+                            <p>
+                                Admin dan Super Admin dapat melihat preview dokumen.
+                            </p>
+
+                        </div>
+
+
+                        <span class="detail-history-document-count">
+                            15 Dokumen
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="detail-history-document-list"
+                        id="detailHistoryDocumentList"
+                    >
+
+                        <!-- JS RENDER -->
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- =====================================
+         PREVIEW MODAL
+    ====================================== -->
+    <div
+        class="history-document-overlay"
+        id="historyDocumentPreview"
+    >
+
+        <div class="history-document-modal">
+
+            <div class="history-document-header">
+
+                <div>
+
+                    <span>
+                        PREVIEW DOKUMEN
+                    </span>
+
+                    <h2 id="historyPreviewTitle">
+                        Dokumen
+                    </h2>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="closeHistoryPreview"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="history-document-body">
+
+                <iframe
+                    id="historyPreviewFrame"
+                    title="Preview Dokumen"
+                ></iframe>
+
+
+                <div
+                    class="history-document-placeholder"
+                    id="historyPreviewPlaceholder"
+                >
+
+                    <div>
+                        PDF
+                    </div>
+
+                    <strong id="historyPreviewFilename">
+                        file.pdf
+                    </strong>
+
+                    <p>
+                        Preview PDF asli akan tampil di area ini
+                        setelah URL file diberikan oleh backend Laravel.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="history-document-footer">
+
+                <span id="historyPreviewFooterName">
+                    file.pdf
+                </span>
+
+
+                <button
+                    type="button"
+                    class="admin-secondary-button"
+                    id="openHistoryDocumentNewTab"
+                >
+                    Buka di Tab Baru
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="{{ asset('js/yudisium_api.js') }}"></script>
+    <script src="{{ asset('js/admin.js') }}"></script>
+    <script src="{{ asset('js/admin_detail_history.js') }}"></script>
+
+</body>
+
+</html>

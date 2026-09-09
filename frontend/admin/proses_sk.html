@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Proses SK Yudisium - FEB UPR
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/admin.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/admin_theme.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/admin_proses_sk.css"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="admin-layout">
+
+
+        <!-- =========================================
+             SIDEBAR
+        ========================================== -->
+
+        <aside class="admin-sidebar">
+
+            <div class="admin-sidebar-brand">
+
+                <div class="admin-sidebar-logo">
+                    FEB
+                </div>
+
+                <div>
+
+                    <strong>
+                        Yudisium FEB
+                    </strong>
+
+                    <span>
+                        Admin Panel
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <nav class="admin-sidebar-nav">
+
+                <a
+                    href="dashboard.html"
+                    class="admin-nav-item"
+                >
+
+                    <span class="admin-nav-icon">
+                        ▦
+                    </span>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="pengajuan.html"
+                    class="admin-nav-item"
+                >
+
+                    <span class="admin-nav-icon">
+                        ☷
+                    </span>
+
+                    <span>
+                        Pengajuan
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="pengajuan.html?filter=revisi"
+                    class="admin-nav-item"
+                >
+
+                    <span class="admin-nav-icon">
+                        !
+                    </span>
+
+                    <span>
+                        Perlu Revisi
+                    </span>
+
+                    <span
+                        class="admin-nav-count"
+                        id="processSidebarRevisionCount"
+                    >
+                        0
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="pengajuan.html?filter=proses-sk"
+                    class="admin-nav-item active"
+                >
+
+                    <span class="admin-nav-icon">
+                        ◷
+                    </span>
+
+                    <span>
+                        Proses SK
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="history.html"
+                    class="admin-nav-item"
+                >
+
+                    <span class="admin-nav-icon">
+                        ↺
+                    </span>
+
+                    <span>
+                        History
+                    </span>
+
+                </a>
+
+
+                <div class="admin-nav-divider">
+                </div>
+
+
+                <a
+                    href="kelola_admin.html"
+                    class="admin-nav-item super-admin-only"
+                    id="manageAdminMenu"
+                >
+
+                    <span class="admin-nav-icon">
+                        ♙
+                    </span>
+
+                    <span>
+                        Kelola Admin
+                    </span>
+
+                </a>
+
+            </nav>
+
+
+            <div class="admin-sidebar-footer">
+
+                <div class="admin-user-mini">
+
+                    <div class="admin-user-avatar">
+                        A
+                    </div>
+
+                    <div>
+
+                        <strong id="sidebarAdminName">
+                            Admin
+                        </strong>
+
+                        <span id="sidebarAdminRole">
+                            ADMIN
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="admin-logout-button"
+                    id="adminLogout"
+                >
+                    Keluar
+                </button>
+
+            </div>
+
+        </aside>
+
+
+
+        <!-- =========================================
+             MAIN
+        ========================================== -->
+
+        <main class="admin-main sk-page">
+
+
+            <!-- =====================================
+                 TOPBAR
+            ====================================== -->
+
+            <header class="admin-topbar">
+
+                <div>
+
+                    <p class="admin-page-eyebrow">
+                        ADMINISTRASI YUDISIUM
+                    </p>
+
+                    <h1>
+                        Proses SK Yudisium
+                    </h1>
+
+                    <p class="admin-page-description">
+                        Pantau dan kelola tahapan administrasi SK
+                        Yudisium hingga siap diambil mahasiswa.
+                    </p>
+
+                </div>
+
+
+                <div class="admin-profile-chip">
+
+                    <div class="admin-profile-avatar">
+                        A
+                    </div>
+
+                    <div>
+
+                        <strong id="topbarAdminName">
+                            Admin
+                        </strong>
+
+                        <span id="topbarAdminRole">
+                            ADMIN
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+
+            <!-- =====================================
+                 BACK
+            ====================================== -->
+
+            <div class="sk-back-row">
+
+                <a
+                    href="pengajuan.html?filter=proses-sk"
+                    class="admin-text-link"
+                >
+                    ← Kembali ke Daftar Proses SK
+                </a>
+
+            </div>
+
+
+
+            <!-- =====================================
+                 STUDENT HERO
+            ====================================== -->
+
+            <section class="sk-student-card">
+
+                <div class="sk-student-accent">
+                </div>
+
+
+                <div class="sk-student-head">
+
+                    <div class="sk-student-identity">
+
+                        <div
+                            class="sk-student-avatar"
+                            id="skStudentAvatar"
+                        >
+                            -
+                        </div>
+
+
+                        <div>
+
+                            <span class="sk-student-caption">
+                                Mahasiswa
+                            </span>
+
+                            <h2 id="skStudentName">
+                                -
+                            </h2>
+
+                            <p id="skStudentSummary">
+                                -
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <span
+                        class="admin-status-badge"
+                        id="skStatusBadge"
+                    >
+                        -
+                    </span>
+
+                </div>
+
+
+                <div class="sk-student-meta">
+
+                    <div class="sk-meta-item">
+
+                        <span>
+                            Kode SK Yudisium
+                        </span>
+
+                        <strong id="skCode">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="sk-meta-item">
+
+                        <span>
+                            NIM
+                        </span>
+
+                        <strong id="skNim">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="sk-meta-item">
+
+                        <span>
+                            Jurusan
+                        </span>
+
+                        <strong id="skDepartment">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="sk-meta-item">
+
+                        <span>
+                            Tanggal Pengajuan
+                        </span>
+
+                        <strong id="skSubmittedAt">
+                            -
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =====================================
+                 PROCESS OVERVIEW
+            ====================================== -->
+
+            <section class="sk-process-card">
+
+                <div class="sk-card-heading">
+
+                    <div>
+
+                        <p class="sk-section-eyebrow">
+                            PROGRESS ADMINISTRASI
+                        </p>
+
+                        <h2>
+                            Tahapan Proses SK
+                        </h2>
+
+                        <p>
+                            Setiap tahap diperbarui setelah proses
+                            administrasi pada tahap tersebut selesai.
+                        </p>
+
+                    </div>
+
+
+                    <div class="sk-progress-summary">
+
+                        <span>
+                            Progress
+                        </span>
+
+                        <strong id="skProgressPercentage">
+                            0%
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sk-progress-track">
+
+                    <div
+                        class="sk-progress-fill"
+                        id="skProgressFill"
+                    >
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="sk-process-timeline"
+                    id="skProcessTimeline"
+                >
+                </div>
+
+            </section>
+
+
+
+            <!-- =====================================
+                 CURRENT ACTION
+            ====================================== -->
+
+            <section
+                class="sk-action-card"
+                id="skActionBox"
+            >
+
+                <div class="sk-action-label">
+                    TINDAKAN BERIKUTNYA
+                </div>
+
+
+                <div class="sk-action-content">
+
+                    <div class="sk-action-icon">
+                        →
+                    </div>
+
+
+                    <div class="sk-action-copy">
+
+                        <span class="sk-current-status-label">
+                            Status saat ini
+                        </span>
+
+                        <strong
+                            class="sk-current-status"
+                            id="skCurrentStatusText"
+                        >
+                            -
+                        </strong>
+
+
+                        <h2 id="skActionTitle">
+                            Memuat tindakan...
+                        </h2>
+
+                        <p id="skActionDescription">
+                            Mohon tunggu.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="admin-primary-button sk-primary-action"
+                        id="skPrimaryAction"
+                    >
+                        Lanjutkan Proses
+                    </button>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =====================================
+                 FINAL READY
+            ====================================== -->
+
+            <section
+                class="sk-ready-card"
+                id="skReadySection"
+                hidden
+            >
+
+                <div class="sk-ready-icon">
+                    ✓
+                </div>
+
+
+                <div>
+
+                    <p class="sk-section-eyebrow">
+                        PROSES SELESAI
+                    </p>
+
+                    <h2>
+                        SK Yudisium Siap Diambil
+                    </h2>
+
+                    <p>
+                        Seluruh tahapan administrasi dan tanda tangan
+                        telah selesai. Mahasiswa dapat mengambil SK
+                        Yudisium di Bagian Akademik FEB UPR.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =====================================
+                 ADMIN NOTE
+            ====================================== -->
+
+            <section class="sk-note-card">
+
+                <div class="sk-note-icon">
+                    i
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        Informasi Proses SK
+                    </strong>
+
+                    <p>
+                        Data mahasiswa yang telah terverifikasi dapat
+                        digunakan sebagai data sumber untuk penyusunan
+                        SK melalui export Excel. Sistem saat ini tidak
+                        mengasumsikan adanya distribusi SK dalam bentuk
+                        PDF kepada mahasiswa.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+
+    <!-- =========================================
+         CONFIRM MODAL
+    ========================================== -->
+
+    <div
+        class="modal-overlay"
+        id="skConfirmModal"
+        aria-hidden="true"
+    >
+
+        <div
+            class="modal-card sk-confirm-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="skConfirmTitle"
+        >
+
+            <div class="sk-confirm-icon">
+                !
+            </div>
+
+
+            <h2 id="skConfirmTitle">
+                Konfirmasi Perubahan Status
+            </h2>
+
+
+            <p id="skConfirmMessage">
+                Pastikan proses administrasi pada tahap ini
+                telah selesai sebelum melanjutkan.
+            </p>
+
+
+            <div class="sk-confirm-actions">
+
+                <button
+                    type="button"
+                    class="admin-secondary-button"
+                    id="cancelSkAction"
+                >
+                    Batal
+                </button>
+
+
+                <button
+                    type="button"
+                    class="admin-primary-button"
+                    id="confirmSkAction"
+                >
+                    Ya, Lanjutkan
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <script src="../js/yudisium_api.js"></script>
+    <script src="../js/admin.js"></script>
+    <script src="../js/admin_proses_sk.js"></script>
+
+</body>
+
+</html>

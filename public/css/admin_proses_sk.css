@@ -1,0 +1,95 @@
+﻿/* =====================================================
+   ADMIN PROSES SK
+   Styling untuk halaman manajemen proses SK Yudisium
+===================================================== */
+
+.sk-page { max-width: 900px; }
+
+.sk-back-row { margin-bottom: 20px; }
+
+/* STUDENT CARD */
+.sk-student-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 0; margin-bottom: 20px; overflow: hidden; }
+.sk-student-accent { height: 4px; background: linear-gradient(90deg, #1a3c5e 0%, #2563eb 100%); }
+.sk-student-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; padding: 24px; padding-bottom: 16px; }
+.sk-student-identity { display: flex; align-items: center; gap: 16px; }
+.sk-student-avatar { width: 52px; height: 52px; border-radius: 50%; background: #1a3c5e; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; flex-shrink: 0; }
+.sk-student-caption { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #6b7280; }
+.sk-student-head h2 { font-size: 22px; font-weight: 700; margin: 4px 0 2px; color: #111; }
+.sk-student-head p { font-size: 13px; color: #6b7280; margin: 0; }
+.sk-student-meta { display: flex; flex-wrap: wrap; border-top: 1px solid #f3f4f6; padding: 0 24px; }
+.sk-meta-item { flex: 1; min-width: 140px; padding: 14px 20px 14px 0; margin-right: 20px; border-right: 1px solid #f3f4f6; }
+.sk-meta-item:last-child { border-right: none; padding-right: 0; margin-right: 0; }
+.sk-meta-item > span { display: block; font-size: 11px; color: #9ca3af; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.sk-meta-item > strong { font-size: 14px; font-weight: 600; color: #111; }
+
+/* PROCESS CARD */
+.sk-process-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+.sk-card-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; margin-bottom: 20px; }
+.sk-section-eyebrow { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #2563eb; margin-bottom: 4px; }
+.sk-card-heading h2 { font-size: 18px; font-weight: 700; margin: 0 0 4px; color: #111; }
+.sk-card-heading > div:first-child > p { font-size: 13px; color: #6b7280; margin: 0; }
+.sk-progress-summary { text-align: right; flex-shrink: 0; }
+.sk-progress-summary span { display: block; font-size: 11px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; }
+.sk-progress-summary strong { font-size: 28px; font-weight: 800; color: #1a3c5e; }
+
+/* PROGRESS BAR */
+.sk-progress-track { height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden; margin-bottom: 28px; }
+.sk-progress-fill { height: 100%; background: linear-gradient(90deg, #1a3c5e 0%, #2563eb 100%); border-radius: 3px; width: 0%; transition: width 0.6s ease; }
+
+/* TIMELINE */
+.sk-process-timeline { display: flex; flex-direction: column; }
+.sk-timeline-step { display: flex; align-items: flex-start; gap: 16px; padding: 16px 0; border-bottom: 1px solid #f3f4f6; }
+.sk-timeline-step:last-child { border-bottom: none; padding-bottom: 0; }
+.sk-timeline-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; border: 2px solid #e5e7eb; background: #fff; color: #9ca3af; margin-top: 2px; }
+.sk-timeline-step.done .sk-timeline-dot { background: #059669; border-color: #059669; color: #fff; }
+.sk-timeline-step.active .sk-timeline-dot { background: #2563eb; border-color: #2563eb; color: #fff; }
+.sk-timeline-step.pending .sk-timeline-dot { background: #f3f4f6; border-color: #e5e7eb; color: #d1d5db; }
+.sk-timeline-body { flex: 1; }
+.sk-timeline-body strong { display: block; font-size: 14px; font-weight: 600; color: #111; margin-bottom: 2px; }
+.sk-timeline-body p { font-size: 12px; color: #6b7280; margin: 0; }
+.sk-timeline-step.done .sk-timeline-body strong { color: #059669; }
+.sk-timeline-step.active .sk-timeline-body strong { color: #2563eb; }
+.sk-timeline-step.pending .sk-timeline-body strong { color: #9ca3af; }
+.sk-timeline-timestamp { font-size: 11px; color: #9ca3af; flex-shrink: 0; padding-top: 4px; }
+
+/* ACTION CARD */
+.sk-action-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+.sk-action-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #9ca3af; margin-bottom: 16px; }
+.sk-action-content { display: flex; align-items: center; gap: 20px; }
+.sk-action-icon { width: 48px; height: 48px; border-radius: 10px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.sk-action-copy { flex: 1; }
+.sk-current-status-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #9ca3af; font-weight: 500; }
+.sk-current-status { display: block; font-size: 13px; font-weight: 600; color: #2563eb; margin: 2px 0 6px; }
+.sk-action-copy h2 { font-size: 18px; font-weight: 700; margin: 0 0 4px; color: #111; }
+.sk-action-copy p { font-size: 13px; color: #6b7280; margin: 0; }
+.sk-primary-action { flex-shrink: 0; white-space: nowrap; }
+
+/* READY CARD */
+.sk-ready-card { background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%); border: 1px solid #a7f3d0; border-radius: 12px; padding: 32px; display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
+.sk-ready-icon { width: 56px; height: 56px; border-radius: 50%; background: #059669; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 700; flex-shrink: 0; }
+.sk-ready-card h2 { font-size: 20px; font-weight: 700; color: #065f46; margin: 0 0 6px; }
+.sk-ready-card p { font-size: 13px; color: #065f46; opacity: 0.8; margin: 0; }
+
+/* NOTE CARD */
+.sk-note-card { background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px 24px; display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+.sk-note-icon { width: 28px; height: 28px; border-radius: 50%; background: #dbeafe; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+.sk-note-card > div strong { display: block; font-size: 14px; font-weight: 600; color: #111; margin-bottom: 4px; }
+.sk-note-card > div p { font-size: 13px; color: #6b7280; margin: 0; line-height: 1.6; }
+
+/* CONFIRM MODAL */
+.sk-confirm-modal { max-width: 420px; }
+.sk-confirm-icon { width: 52px; height: 52px; border-radius: 50%; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; margin: 0 auto 16px; }
+.sk-confirm-actions { display: flex; gap: 12px; justify-content: center; margin-top: 24px; }
+
+/* BUTTONS */
+.admin-primary-button { background: #1a3c5e; color: #fff; border: none; border-radius: 8px; padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+.admin-primary-button:hover { background: #2563eb; }
+.admin-secondary-button { background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+.admin-secondary-button:hover { background: #e5e7eb; }
+
+@media (max-width: 640px) {
+    .sk-card-heading, .sk-action-content, .sk-student-head { flex-direction: column; }
+    .sk-student-meta { flex-direction: column; }
+    .sk-meta-item { border-right: none; padding-right: 0; margin-right: 0; border-bottom: 1px solid #f3f4f6; }
+    .sk-meta-item:last-child { border-bottom: none; }
+}

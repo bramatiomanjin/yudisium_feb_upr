@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Verifikasi Pengajuan - Yudisium FEB UPR
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/style.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/admin.css') }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/admin_verifikasi.css') }}"
+    >
+    <link rel="stylesheet" href="{{ asset('css/admin_theme.css') }}">
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- =====================================
+             SIDEBAR
+        ====================================== -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-sidebar-brand">
+
+                <div class="admin-sidebar-logo">
+                    FEB
+                </div>
+
+                <div>
+
+                    <strong>
+                        Yudisium FEB
+                    </strong>
+
+                    <span>
+                        Admin Panel
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <nav class="admin-sidebar-nav">
+
+                <a
+                    href="/admin/dashboard"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ▦
+                    </span>
+
+                    <span>
+                        Dashboard
+                    </span>
+                </a>
+
+
+                <a
+                    href="/admin/dashboard"
+                    class="admin-nav-item active"
+                >
+                    <span class="admin-nav-icon">
+                        ☷
+                    </span>
+
+                    <span>
+                        Pengajuan
+                    </span>
+                </a>
+
+
+                <a
+                    href="/admin/dashboard?filter=revisi"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        !
+                    </span>
+
+                    <span>
+                        Perlu Revisi
+                    </span>
+
+                    <span class="admin-nav-count">
+                        3
+                    </span>
+                </a>
+
+
+                <a
+                    href="pengajuan.html?filter=proses-sk"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ◷
+                    </span>
+
+                    <span>
+                        Proses SK
+                    </span>
+                </a>
+
+
+                <a
+                    href="/superadmin/log-aktivitas"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">
+                        ↺
+                    </span>
+
+                    <span>
+                        History
+                    </span>
+                </a>
+
+
+                <div class="admin-nav-divider"></div>
+
+
+                @if(Auth::user()->role === 'SUPER_ADMIN')
+                <a
+                    href="/superadmin/kelola-admin"
+                    class="admin-nav-item"
+                    id="manageAdminMenu"
+                >
+
+                    <span class="admin-nav-icon">
+                        ♙
+                    </span>
+
+                    <span>
+                        Kelola Admin
+                    </span>
+
+                </a>
+                @endif
+
+            </nav>
+
+
+            <div class="admin-sidebar-footer">
+
+                <div class="admin-user-mini">
+
+                    <div class="admin-user-avatar">
+                        A
+                    </div>
+
+                    <div>
+
+                        <strong id="sidebarAdminName">
+                            {{ Auth::user()->name }}
+                        </strong>
+
+                        <span id="sidebarAdminRole">
+                            {{ Auth::user()->role }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <form action="/admin/logout" method="POST" style="width: 100%;">
+                    @csrf
+                    <button type="submit" class="admin-logout-button">
+                        Keluar
+                    </button>
+                </form>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================
+             MAIN
+        ====================================== -->
+        <main class="admin-main verification-main">
+
+            <!-- BACK -->
+            <div class="verification-back">
+
+                <a href="/admin/dashboard">
+                    ← Kembali ke Detail Pengajuan
+                </a>
+
+            </div>
+
+
+            <!-- HEADER -->
+            <header class="verification-header">
+
+                <div>
+
+                    <p class="admin-page-eyebrow">
+                        VERIFIKASI PENGAJUAN
+                    </p>
+
+                    <h1>
+                        -
+                    </h1>
+
+                    <p>
+                        Periksa setiap data dan dokumen mahasiswa.
+                    </p>
+
+                </div>
+
+
+                <div class="verification-header-right">
+
+                    <span class="admin-status-badge pending">
+                        Menunggu Verifikasi
+                    </span>
+
+
+                    <div class="admin-profile-chip">
+
+                        <div class="admin-profile-avatar">
+                            A
+                        </div>
+
+                        <div>
+
+                            <strong id="topbarAdminName">
+                                {{ Auth::user()->name }}
+                            </strong>
+
+                            <span id="topbarAdminRole">
+                                {{ Auth::user()->role }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- =====================================
+                 MAHASISWA SUMMARY
+            ====================================== -->
+            <section class="verification-student-card">
+
+                <div class="verification-student-avatar">
+                    AS
+                </div>
+
+
+                <div class="verification-student-info">
+
+                    <h2>
+                        -
+                    </h2>
+
+                    <p>
+                        NIM 2301110001 • Manajemen • Angkatan 2023
+                    </p>
+
+                </div>
+
+
+                <div class="verification-progress-wrapper">
+
+                    <span>
+                        Progress Verifikasi
+                    </span>
+
+                    <strong id="verificationProgressText">
+                        0 / 22 item
+                    </strong>
+
+                    <div class="verification-progress-bar">
+
+                        <div
+                            class="verification-progress-fill"
+                            id="verificationProgressFill"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 INFO
+            ====================================== -->
+            <section class="verification-info-box">
+
+                <div class="verification-info-icon">
+                    i
+                </div>
+
+                <div>
+
+                    <strong>
+                        Cara melakukan verifikasi
+                    </strong>
+
+                    <p>
+                        Pilih Disetujui jika data sudah benar.
+                        Pilih Revisi jika mahasiswa harus melakukan
+                        perbaikan. Feedback wajib diberikan untuk
+                        setiap item yang ditandai Revisi.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 DATA MAHASISWA
+            ====================================== -->
+            <section class="verification-section">
+
+                <div class="verification-section-header">
+
+                    <div>
+
+                        <span class="verification-section-number">
+                            1
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Data Mahasiswa
+                            </h2>
+
+                            <p>
+                                Verifikasi identitas mahasiswa.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <span
+                        class="verification-section-status"
+                        id="studentDataStatus"
+                    >
+                        Belum selesai
+                    </span>
+
+                </div>
+
+
+                <div class="verification-items">
+
+                    <!-- NAMA -->
+                    <article
+                        class="verification-item"
+                        data-verification-item
+                        data-item-type="field"
+                        data-item-key="nama_lengkap"
+                    >
+
+                        <div class="verification-item-content">
+
+                            <span class="verification-item-label">
+                                Nama Lengkap
+                            </span>
+
+                            <strong>
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="verification-decision">
+
+                            <button
+                                type="button"
+                                class="verification-choice approve"
+                                data-choice="approved"
+                            >
+                                ✓ Disetujui
+                            </button>
+
+                            <button
+                                type="button"
+                                class="verification-choice revision"
+                                data-choice="revision"
+                            >
+                                ! Revisi
+                            </button>
+
+                        </div>
+
+
+                        <div class="verification-feedback">
+
+                            <label>
+                                Feedback Revisi
+                            </label>
+
+                            <textarea
+                                placeholder="Jelaskan kesalahan yang harus diperbaiki mahasiswa..."
+                            ></textarea>
+
+                            <span class="verification-feedback-error">
+                                Feedback wajib diisi untuk item revisi.
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- EMAIL -->
+                    <article
+                        class="verification-item"
+                        data-verification-item
+                        data-item-type="field"
+                        data-item-key="email"
+                    >
+
+                        <div class="verification-item-content">
+
+                            <span class="verification-item-label">
+                                Email
+                            </span>
+
+                            <strong>
+                                andi.saputra@example.com
+                            </strong>
+
+                        </div>
+
+
+                        <div class="verification-decision">
+
+                            <button
+                                type="button"
+                                class="verification-choice approve"
+                                data-choice="approved"
+                            >
+                                ✓ Disetujui
+                            </button>
+
+                            <button
+                                type="button"
+                                class="verification-choice revision"
+                                data-choice="revision"
+                            >
+                                ! Revisi
+                            </button>
+
+                        </div>
+
+
+                        <div class="verification-feedback">
+
+                            <label>
+                                Feedback Revisi
+                            </label>
+
+                            <textarea
+                                placeholder="Jelaskan kesalahan yang harus diperbaiki mahasiswa..."
+                            ></textarea>
+
+                            <span class="verification-feedback-error">
+                                Feedback wajib diisi untuk item revisi.
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- WHATSAPP -->
+                    <article
+                        class="verification-item"
+                        data-verification-item
+                        data-item-type="field"
+                        data-item-key="no_whatsapp"
+                    >
+
+                        <div class="verification-item-content">
+
+                            <span class="verification-item-label">
+                                Nomor WhatsApp
+                            </span>
+
+                            <strong>
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="verification-decision">
+
+                            <button
+                                type="button"
+                                class="verification-choice approve"
+                                data-choice="approved"
+                            >
+                                ✓ Disetujui
+                            </button>
+
+                            <button
+                                type="button"
+                                class="verification-choice revision"
+                                data-choice="revision"
+                            >
+                                ! Revisi
+                            </button>
+
+                        </div>
+
+
+                        <div class="verification-feedback">
+
+                            <label>
+                                Feedback Revisi
+                            </label>
+
+                            <textarea
+                                placeholder="Jelaskan kesalahan yang harus diperbaiki mahasiswa..."
+                            ></textarea>
+
+                            <span class="verification-feedback-error">
+                                Feedback wajib diisi untuk item revisi.
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- ANGKATAN -->
+                    <article
+                        class="verification-item"
+                        data-verification-item
+                        data-item-type="field"
+                        data-item-key="tahun_angkatan"
+                    >
+
+                        <div class="verification-item-content">
+
+                            <span class="verification-item-label">
+                                Tahun Angkatan
+                            </span>
+
+                            <strong>
+                                2023
+                            </strong>
+
+                        </div>
+
+
+                        <div class="verification-decision">
+
+                            <button
+                                type="button"
+                                class="verification-choice approve"
+                                data-choice="approved"
+                            >
+                                ✓ Disetujui
+                            </button>
+
+                            <button
+                                type="button"
+                                class="verification-choice revision"
+                                data-choice="revision"
+                            >
+                                ! Revisi
+                            </button>
+
+                        </div>
+
+
+                        <div class="verification-feedback">
+
+                            <label>
+                                Feedback Revisi
+                            </label>
+
+                            <textarea
+                                placeholder="Jelaskan kesalahan yang harus diperbaiki mahasiswa..."
+                            ></textarea>
+
+                            <span class="verification-feedback-error">
+                                Feedback wajib diisi untuk item revisi.
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- JALUR MASUK -->
+                    <article
+                        class="verification-item"
+                        data-verification-item
+                        data-item-type="field"
+                        data-item-key="jalur_masuk"
+                    >
+
+                        <div class="verification-item-content">
+
+                            <span class="verification-item-label">
+                                Jalur Masuk
+                            </span>
+
+                            <strong>
+                                Reguler
+                            </strong>
+
+                        </div>
+
+
+                        <div class="verification-decision">
+
+                            <button
+                                type="button"
+                                class="verification-choice approve"
+                                data-choice="approved"
+                            >
+                                ✓ Disetujui
+                            </button>
+
+                            <button
+                                type="button"
+                                class="verification-choice revision"
+                                data-choice="revision"
+                            >
+                                ! Revisi
+                            </button>
+
+                        </div>
+
+
+                        <div class="verification-feedback">
+
+                            <label>
+                                Feedback Revisi
+                            </label>
+
+                            <textarea
+                                placeholder="Jelaskan kesalahan yang harus diperbaiki mahasiswa..."
+                            ></textarea>
+
+                            <span class="verification-feedback-error">
+                                Feedback wajib diisi untuk item revisi.
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- JURUSAN -->
+                    <article
+                        class="verification-item"
+                        data-verification-item
+                        data-item-type="field"
+                        data-item-key="jurusan"
+                    >
+
+                        <div class="verification-item-content">
+
+                            <span class="verification-item-label">
+                                Jurusan
+                            </span>
+
+                            <strong>
+                                Manajemen
+                            </strong>
+
+                        </div>
+
+
+                        <div class="verification-decision">
+
+                            <button
+                                type="button"
+                                class="verification-choice approve"
+                                data-choice="approved"
+                            >
+                                ✓ Disetujui
+                            </button>
+
+                            <button
+                                type="button"
+                                class="verification-choice revision"
+                                data-choice="revision"
+                            >
+                                ! Revisi
+                            </button>
+
+                        </div>
+
+
+                        <div class="verification-feedback">
+
+                            <label>
+                                Feedback Revisi
+                            </label>
+
+                            <textarea
+                                placeholder="Jelaskan kesalahan yang harus diperbaiki mahasiswa..."
+                            ></textarea>
+
+                            <span class="verification-feedback-error">
+                                Feedback wajib diisi untuk item revisi.
+                            </span>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 DATA AKADEMIK
+            ====================================== -->
+            <section class="verification-section">
+
+                <div class="verification-section-header">
+
+                    <div>
+
+                        <span class="verification-section-number">
+                            2
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Data Akademik
+                            </h2>
+
+                            <p>
+                                Verifikasi karya tulis dan hasil ujian.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="verification-items">
+
+                    <!-- KARYA TULIS -->
+                    <article
+                        class="verification-item"
+                        data-verification-item
+                        data-item-type="field"
+                        data-item-key="karya_tulis"
+                    >
+
+                        <div class="verification-item-content">
+
+                            <span class="verification-item-label">
+                                Karya Tulis Ilmiah
+                            </span>
+
+                            <strong>
+                                Skripsi
+                            </strong>
+
+                        </div>
+
+
+                        <div class="verification-decision">
+
+                            <button
+                                type="button"
+                                class="verification-choice approve"
+                                data-choice="approved"
+                            >
+                                ✓ Disetujui
+                            </button>
+
+                            <button
+                                type="button"
+                                class="verification-choice revision"
+                                data-choice="revision"
+                            >
+                                ! Revisi
+                            </button>
+
+                        </div>
+
+
+                        <div class="verification-feedback">
+
+                            <label>
+                                Feedback Revisi
+                            </label>
+
+                            <textarea
+                                placeholder="Jelaskan kesalahan yang harus diperbaiki mahasiswa..."
+                            ></textarea>
+
+                            <span class="verification-feedback-error">
+                                Feedback wajib diisi untuk item revisi.
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- JUDUL -->
+                    <article
+                        class="verification-item"
+                        data-verification-item
+                        data-item-type="field"
+                        data-item-key="judul_karya_tulis"
+                    >
+
+                        <div class="verification-item-content">
+
+                            <span class="verification-item-label">
+                                Judul Skripsi / Artikel
+                            </span>
+
+                            <strong>
+                                Analisis Sistem Informasi Akademik
+                                Fakultas Ekonomi dan Bisnis
+                            </strong>
+
+                        </div>
+
+
+                        <div class="verification-decision">
+
+                            <button
+                                type="button"
+                                class="verification-choice approve"
+                                data-choice="approved"
+                            >
+                                ✓ Disetujui
+                            </button>
+
+                            <button
+                                type="button"
+                                class="verification-choice revision"
+                                data-choice="revision"
+                            >
+                                ! Revisi
+                            </button>
+
+                        </div>
+
+
+                        <div class="verification-feedback">
+
+                            <label>
+                                Feedback Revisi
+                            </label>
+
+                            <textarea
+                                placeholder="Contoh: Judul tidak sama dengan berita acara ujian."
+                            ></textarea>
+
+                            <span class="verification-feedback-error">
+                                Feedback wajib diisi untuk item revisi.
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- TANGGAL UJIAN -->
+                    <article
+                        class="verification-item"
+                        data-verification-item
+                        data-item-type="field"
+                        data-item-key="tanggal_ujian"
+                    >
+
+                        <div class="verification-item-content">
+
+                            <span class="verification-item-label">
+                                Tanggal Ujian
+                            </span>
+
+                            <strong>
+                                28 Agustus 2026
+                            </strong>
+
+                        </div>
+
+
+                        <div class="verification-decision">
+
+                            <button
+                                type="button"
+                                class="verification-choice approve"
+                                data-choice="approved"
+                            >
+                                ✓ Disetujui
+                            </button>
+
+                            <button
+                                type="button"
+                                class="verification-choice revision"
+                                data-choice="revision"
+                            >
+                                ! Revisi
+                            </button>
+
+                        </div>
+
+
+                        <div class="verification-feedback">
+
+                            <label>
+                                Feedback Revisi
+                            </label>
+
+                            <textarea
+                                placeholder="Jelaskan kesalahan yang harus diperbaiki mahasiswa..."
+                            ></textarea>
+
+                            <span class="verification-feedback-error">
+                                Feedback wajib diisi untuk item revisi.
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- NILAI ANGKA -->
+                    <article
+                        class="verification-item"
+                        data-verification-item
+                        data-item-type="field"
+                        data-item-key="nilai_angka"
+                    >
+
+                        <div class="verification-item-content">
+
+                            <span class="verification-item-label">
+                                Nilai Ujian
+                            </span>
+
+                            <strong>
+                                80,00
+                            </strong>
+
+                        </div>
+
+
+                        <div class="verification-decision">
+
+                            <button
+                                type="button"
+                                class="verification-choice approve"
+                                data-choice="approved"
+                            >
+                                ✓ Disetujui
+                            </button>
+
+                            <button
+                                type="button"
+                                class="verification-choice revision"
+                                data-choice="revision"
+                            >
+                                ! Revisi
+                            </button>
+
+                        </div>
+
+
+                        <div class="verification-feedback">
+
+                            <label>
+                                Feedback Revisi
+                            </label>
+
+                            <textarea
+                                placeholder="Jelaskan kesalahan yang harus diperbaiki mahasiswa..."
+                            ></textarea>
+
+                            <span class="verification-feedback-error">
+                                Feedback wajib diisi untuk item revisi.
+                            </span>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- NILAI HURUF -->
+                    <article
+                        class="verification-item"
+                        data-verification-item
+                        data-item-type="field"
+                        data-item-key="nilai_huruf"
+                    >
+
+                        <div class="verification-item-content">
+
+                            <span class="verification-item-label">
+                                Nilai Huruf
+                            </span>
+
+                            <strong>
+                                A
+                            </strong>
+
+                        </div>
+
+
+                        <div class="verification-decision">
+
+                            <button
+                                type="button"
+                                class="verification-choice approve"
+                                data-choice="approved"
+                            >
+                                ✓ Disetujui
+                            </button>
+
+                            <button
+                                type="button"
+                                class="verification-choice revision"
+                                data-choice="revision"
+                            >
+                                ! Revisi
+                            </button>
+
+                        </div>
+
+
+                        <div class="verification-feedback">
+
+                            <label>
+                                Feedback Revisi
+                            </label>
+
+                            <textarea
+                                placeholder="Jelaskan kesalahan yang harus diperbaiki mahasiswa..."
+                            ></textarea>
+
+                            <span class="verification-feedback-error">
+                                Feedback wajib diisi untuk item revisi.
+                            </span>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 DOKUMEN
+            ====================================== -->
+            <section class="verification-section">
+
+                <div class="verification-section-header">
+
+                    <div>
+
+                        <span class="verification-section-number">
+                            3
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Dokumen Mahasiswa
+                            </h2>
+
+                            <p>
+                                Preview dokumen sebelum memberikan keputusan.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="verification-items"
+                    id="verificationDocuments"
+                >
+
+                    <!-- DOKUMEN DI-RENDER JAVASCRIPT -->
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 FINAL RESULT
+            ====================================== -->
+            <section class="verification-result-card">
+
+                <div class="verification-result-header">
+
+                    <div>
+
+                        <h2>
+                            Hasil Verifikasi
+                        </h2>
+
+                        <p>
+                            Ringkasan keputusan berdasarkan seluruh item.
+                        </p>
+
+                    </div>
+
+
+                    <span
+                        class="verification-result-badge pending"
+                        id="verificationResultBadge"
+                    >
+                        Belum Lengkap
+                    </span>
+
+                </div>
+
+
+                <div class="verification-result-summary">
+
+                    <div>
+
+                        <span>
+                            Disetujui
+                        </span>
+
+                        <strong id="approvedCount">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Revisi
+                        </span>
+
+                        <strong id="revisionCount">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Belum Diperiksa
+                        </span>
+
+                        <strong id="pendingCount">
+                            22
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="verification-submit-area">
+
+                    <label class="verification-confirmation">
+
+                        <input
+                            type="checkbox"
+                            id="verificationConfirmation"
+                        >
+
+                        <span>
+                            Saya telah memeriksa seluruh data dan dokumen
+                            pengajuan mahasiswa ini.
+                        </span>
+
+                    </label>
+
+
+                    <span
+                        class="verification-confirmation-error"
+                        id="verificationConfirmationError"
+                    >
+                        Centang konfirmasi sebelum menyimpan hasil verifikasi.
+                    </span>
+
+
+                    <button
+                        type="button"
+                        class="verification-submit-button"
+                        id="submitVerification"
+                    >
+                        Simpan Hasil Verifikasi
+                    </button>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- =====================================
+         DOCUMENT PREVIEW
+    ====================================== -->
+    <div
+        class="verification-preview-overlay"
+        id="verificationPreviewModal"
+    >
+
+        <div class="verification-preview-modal">
+
+            <div class="verification-preview-header">
+
+                <div>
+
+                    <span>
+                        PREVIEW DOKUMEN
+                    </span>
+
+                    <h2 id="verificationPreviewTitle">
+                        Dokumen
+                    </h2>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="closeVerificationPreview"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="verification-preview-body">
+
+                <div class="verification-preview-placeholder">
+
+                    <div>
+                        PDF
+                    </div>
+
+                    <strong id="verificationPreviewFilename">
+                        file.pdf
+                    </strong>
+
+                    <p>
+                        File asli akan ditampilkan di area ini
+                        ketika frontend sudah terhubung ke Laravel.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="verification-preview-footer">
+
+                <span>
+                    Preview tersedia untuk Admin dan Super Admin.
+                </span>
+
+                <button
+                    type="button"
+                    class="admin-secondary-button"
+                    id="verificationOpenNewTab"
+                >
+                    Buka di Tab Baru
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         SUCCESS MODAL
+    ====================================== -->
+    <div
+        class="modal-overlay"
+        id="verificationSuccessModal"
+    >
+
+        <div class="modal-card">
+
+            <div
+                class="success-icon"
+                id="verificationSuccessIcon"
+            >
+                ✓
+            </div>
+
+
+            <h2 id="verificationSuccessTitle">
+                Verifikasi Disimpan
+            </h2>
+
+
+            <p id="verificationSuccessMessage">
+                Hasil verifikasi berhasil disimpan.
+            </p>
+
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                id="verificationSuccessButton"
+            >
+                Kembali ke Pengajuan
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script src="{{ asset('js/yudisium_api.js') }}"></script>
+    <script src="{{ asset('js/admin.js') }}"></script>
+    <script src="{{ asset('js/admin_verifikasi.js') }}"></script>
+
+</body>
+
+</html>
