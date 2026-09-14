@@ -42,13 +42,13 @@ document.addEventListener(
 
         const departmentFilter =
             document.getElementById(
-                "departmentFilter"
+                "submissionDepartment"
             );
 
 
         const statusFilter =
             document.getElementById(
-                "statusFilter"
+                "submissionStatus"
             );
 
 
@@ -450,6 +450,8 @@ document.addEventListener(
             fallbackStatus.dataset
                 .externalFilter =
                 requested;
+
+            fallbackStatus.value = "";
 
         }
 
