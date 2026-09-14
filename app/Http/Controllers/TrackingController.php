@@ -635,6 +635,13 @@ class TrackingController extends Controller
                     'status' =>
                         'REVISI_DIKIRIM'
                 ]);
+                
+                \App\Models\RiwayatStatus::create([
+                    'pengajuan_id' => $pengajuan->id,
+                    'status' => 'REVISI_DIKIRIM',
+                    'catatan' => 'Mahasiswa telah mengirimkan seluruh perbaikan revisi',
+                    'changed_by' => null
+                ]);
 
 
                 $pesan =

@@ -593,6 +593,22 @@ document.addEventListener(
 
                             if (
                                 statusTarget ===
+                                "pengajuan_only"
+                            ) {
+
+                                return [
+
+                                    STATUS.MENUNGGU_VERIFIKASI
+
+                                ].includes(
+                                    item.status
+                                );
+
+                            }
+
+
+                            if (
+                                statusTarget ===
                                 "revision-group"
                             ) {
 

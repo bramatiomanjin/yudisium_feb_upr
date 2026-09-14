@@ -113,15 +113,27 @@ class AdminController extends Controller
         $masihPendingField = \App\Models\ValidasiField::where('pengajuan_id', $id)->where('status_validasi', 'PENDING')->exists();
         $masihPendingDokumen = \App\Models\PengajuanDokumen::where('pengajuan_id', $id)->where('status_validasi', 'PENDING')->exists();
 
+        $oldStatus = $pengajuan->status;
         if ($adaRevisi) {
-            // Jika ada minimal 1 saja yang salah, statusnya jadi PERLU REVISI
-            $pengajuan->update(['status' => 'PERLU_REVISI']);
+            $newStatus = 'PERLU_REVISI';
         } elseif (!$masihPendingField && !$masihPendingDokumen) {
-            // Jika semua sudah diperiksa dan tidak ada revisi, berarti TERVERIFIKASI
-            $pengajuan->update(['status' => 'TERVERIFIKASI', 'verified_at' => now()]);
+            $newStatus = 'TERVERIFIKASI';
+            $pengajuan->verified_at = now();
         } else {
-            // Jika admin baru memeriksa sebagian (masih ada yang PENDING)
-            $pengajuan->update(['status' => 'VERIFIKASI_ADMIN']);
+            $newStatus = 'MENUNGGU_VERIFIKASI';
+        }
+
+        $pengajuan->status = $newStatus;
+        if ($pengajuan->isDirty('status')) {
+            $pengajuan->save();
+            \App\Models\RiwayatStatus::create([
+                'pengajuan_id' => $pengajuan->id,
+                'status' => $newStatus,
+                'catatan' => 'Verifikasi dokumen dan field (Klasik)',
+                'changed_by' => Auth::id()
+            ]);
+        } else {
+            $pengajuan->save();
         }
 
         // Redirect kembali ke halaman detail
