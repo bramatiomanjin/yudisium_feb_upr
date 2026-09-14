@@ -86,7 +86,7 @@
 
                 <a
                     href="/admin/pengajuan"
-                    class="admin-nav-item active"
+                    class="admin-nav-item {{ request('filter') ? '' : 'active' }}"
                 >
 
                     <span class="admin-nav-icon">
@@ -102,13 +102,11 @@
 
                 <a
                     href="/admin/pengajuan?filter=revisi"
-                    class="admin-nav-item"
+                    class="admin-nav-item {{ request('filter') == 'revisi' ? 'active' : '' }}"
                 >
-
                     <span class="admin-nav-icon">
                         !
                     </span>
-
                     <span>
                         Perlu Revisi
                     </span>
@@ -125,7 +123,7 @@
 
                 <a
                     href="/admin/pengajuan?filter=proses-sk"
-                    class="admin-nav-item"
+                    class="admin-nav-item {{ request('filter') == 'proses-sk' ? 'active' : '' }}"
                 >
 
                     <span class="admin-nav-icon">
@@ -255,13 +253,9 @@
 
                     <div>
 
-                        <strong id="topbarAdminName">
-                            {{ Auth::user()->name }}
-                        </strong>
+                        <strong id="topbarAdminName">{{ Auth::user()->name }}</strong>
 
-                        <span id="topbarAdminRole">
-                            {{ Auth::user()->role }}
-                        </span>
+                        <span id="topbarAdminRole">{{ Auth::user()->role === 'SUPER_ADMIN' ? 'SUPER ADMIN' : 'ADMIN' }}</span>
 
                     </div>
 

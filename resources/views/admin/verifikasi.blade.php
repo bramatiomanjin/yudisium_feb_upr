@@ -98,7 +98,6 @@
                     <span class="admin-nav-icon">
                         !
                     </span>
-
                     <span>
                         Perlu Revisi
                     </span>
@@ -246,13 +245,9 @@
 
                         <div>
 
-                            <strong id="topbarAdminName">
-                                {{ Auth::user()->name }}
-                            </strong>
+                            <strong id="topbarAdminName">{{ Auth::user()->name }}</strong>
 
-                            <span id="topbarAdminRole">
-                                {{ Auth::user()->role }}
-                            </span>
+                            <span id="topbarAdminRole">{{ Auth::user()->role === 'SUPER_ADMIN' ? 'SUPER ADMIN' : 'ADMIN' }}</span>
 
                         </div>
 
@@ -1281,28 +1276,14 @@
             </div>
 
 
-            <div class="verification-preview-body">
-
-                <div class="verification-preview-placeholder">
-
-                    <div>
-                        PDF
-                    </div>
-
-                    <strong id="verificationPreviewFilename">
-                        file.pdf
-                    </strong>
-
-                    <p>
-                        File asli akan ditampilkan di area ini
-                        ketika frontend sudah terhubung ke Laravel.
-                    </p>
-
+                        <div class="verification-preview-body">
+                <iframe id="verificationPreviewFrame" title="Preview Dokumen" style="width: 100%; height: 600px; display: none; border: none;"></iframe>
+                <div class="verification-preview-placeholder" id="verificationPreviewPlaceholder">
+                    <div>PDF</div>
+                    <strong id="verificationPreviewFilename">file.pdf</strong>
+                    <p>Memuat dokumen...</p>
                 </div>
-
             </div>
-
-
             <div class="verification-preview-footer">
 
                 <span>

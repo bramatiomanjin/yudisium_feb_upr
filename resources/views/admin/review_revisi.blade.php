@@ -109,7 +109,6 @@
                     <span class="admin-nav-icon">
                         !
                     </span>
-
                     <span>
                         Perlu Revisi
                     </span>
@@ -273,13 +272,9 @@
 
                         <div>
 
-                            <strong id="topbarAdminName">
-                                {{ Auth::user()->name }}
-                            </strong>
+                            <strong id="topbarAdminName">{{ Auth::user()->name }}</strong>
 
-                            <span id="topbarAdminRole">
-                                {{ Auth::user()->role }}
-                            </span>
+                            <span id="topbarAdminRole">{{ Auth::user()->role === 'SUPER_ADMIN' ? 'SUPER ADMIN' : 'ADMIN' }}</span>
 
                         </div>
 

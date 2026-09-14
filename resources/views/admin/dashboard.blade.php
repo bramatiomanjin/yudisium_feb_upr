@@ -265,13 +265,9 @@
 
                         <div>
 
-                            <strong id="topbarAdminName">
-                                Admin
-                            </strong>
+                            <strong id="topbarAdminName">{{ Auth::user()->name }}</strong>
 
-                            <span id="topbarAdminRole">
-                                ADMIN
-                            </span>
+                            <span id="topbarAdminRole">{{ Auth::user()->role === 'SUPER_ADMIN' ? 'SUPER ADMIN' : 'ADMIN' }}</span>
 
                         </div>
 
