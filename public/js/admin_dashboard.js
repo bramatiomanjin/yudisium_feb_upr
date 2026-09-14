@@ -197,7 +197,10 @@ document.addEventListener(
                                 "long",
 
                             year:
-                                "numeric"
+                                "numeric",
+                                
+                            timeZone:
+                                "Asia/Jakarta"
 
                         }
                     );

@@ -162,6 +162,27 @@ document.addEventListener(
         }
 
 
+        function formatDateTime(value) {
+            if (!value) {
+                return "-";
+            }
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) {
+                return value;
+            }
+            const formatted = new Intl.DateTimeFormat("id-ID", {
+                timeZone: "Asia/Jakarta",
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false
+            }).format(date);
+            return formatted.replace(".", ":") + " WIB";
+        }
+
+
         function normalizeText(value) {
 
             return String(
@@ -820,8 +841,7 @@ document.addEventListener(
 
                         <td>
                             ${escapeHtml(
-                                submission.submittedAt ||
-                                "-"
+                                formatDateTime(submission.submittedAt)
                             )}
                         </td>
 

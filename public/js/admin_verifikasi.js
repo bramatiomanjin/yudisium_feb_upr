@@ -82,6 +82,7 @@ document.addEventListener(
             return new Intl.DateTimeFormat(
                 "id-ID",
                 {
+                    timeZone: "Asia/Jakarta",
                     day: "2-digit",
                     month: "long",
                     year: "numeric"
@@ -397,11 +398,30 @@ document.addEventListener(
 
 
                         item.innerHTML = `
-                            <div class="verification-document-main">
+                                                        <div class="verification-document-main">
 
                                 <div class="verification-document-icon">
                                     FILE
                                 </div>
+
+                                <div class="verification-document-info">
+                                    <strong>${title}</strong>
+                                    <span>${filename}</span>
+                                </div>
+
+                                ${previewUrl ? `
+                                    <button
+                                        type="button"
+                                        class="verification-preview-button"
+                                        data-preview-url="${previewUrl}"
+                                        data-preview-title="${title}"
+                                        data-preview-filename="${filename}"
+                                    >
+                                        Preview
+                                    </button>
+                                ` : ""}
+
+                            </div>
 
                                 <div class="verification-document-info">
 
@@ -775,7 +795,7 @@ document.addEventListener(
                                         other
                                             .classList
                                             .remove(
-                                                "selected"
+                                                "active"
                                             );
 
                                     }
@@ -783,7 +803,7 @@ document.addEventListener(
 
 
                                 button.classList.add(
-                                    "selected"
+                                    "active"
                                 );
 
 
@@ -1063,6 +1083,48 @@ document.addEventListener(
             "Halaman verifikasi siap:",
             submission
         );
+
+    
+        const modal = document.getElementById("verificationPreviewModal");
+        const closeBtn = document.getElementById("closeVerificationPreview");
+        const iframe = document.getElementById("verificationPreviewFrame");
+        const placeholder = document.getElementById("verificationPreviewPlaceholder");
+        const titleEl = document.getElementById("verificationPreviewTitle");
+        const filenameEl = document.getElementById("verificationPreviewFilename");
+        const openNewTab = document.getElementById("verificationOpenNewTab");
+        let currentUrl = "";
+
+        document.addEventListener("click", function(e) {
+            if (e.target.classList.contains("verification-preview-button")) {
+                currentUrl = e.target.dataset.previewUrl;
+                const title = e.target.dataset.previewTitle;
+                const filename = e.target.dataset.previewFilename;
+
+                if (titleEl) titleEl.textContent = title;
+                if (filenameEl) filenameEl.textContent = filename;
+
+                if (iframe && placeholder) {
+                    placeholder.style.display = "none";
+                    iframe.style.display = "block";
+                    iframe.src = currentUrl;
+                }
+
+                if (modal) modal.classList.add("active");
+            }
+        });
+
+        if (closeBtn && modal) {
+            closeBtn.addEventListener("click", function() {
+                modal.classList.remove("active");
+                if (iframe) iframe.src = "";
+            });
+        }
+
+        if (openNewTab) {
+            openNewTab.addEventListener("click", function() {
+                if (currentUrl) window.open(currentUrl, "_blank");
+            });
+        }
 
     }
 );

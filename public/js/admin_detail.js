@@ -16,8 +16,15 @@ document.addEventListener(
             );
 
 
-        const id =
+                let id =
             params.get("id");
+
+        if (!id) {
+            const parts = window.location.pathname.split("/");
+            if (parts.length > 2 && parts[parts.length - 2] === "pengajuan") {
+                id = parts[parts.length - 1];
+            }
+        }
 
 
         if (!id) {
