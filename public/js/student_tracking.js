@@ -141,6 +141,30 @@ document.addEventListener(
 
         async function initDetail() {
 
+            const urlParams =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+            const queryNim =
+                urlParams.get("nim");
+
+            const queryKode =
+                urlParams.get("kode") ||
+                urlParams.get("kode_sk") ||
+                urlParams.get("kode_pengajuan");
+
+            if (queryNim && queryKode) {
+                sessionStorage.setItem(
+                    "tracking_nim",
+                    queryNim.trim()
+                );
+                sessionStorage.setItem(
+                    "tracking_kode",
+                    queryKode.trim()
+                );
+            }
+
             const nim =
                 sessionStorage.getItem(
                     "tracking_nim"
