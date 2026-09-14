@@ -597,8 +597,7 @@ document.addEventListener(
 
                                 return [
 
-                                    STATUS.MENUNGGU_VERIFIKASI,
-                                    STATUS.TERVERIFIKASI
+                                    STATUS.MENUNGGU_VERIFIKASI
 
                                 ].includes(
                                     item.status
@@ -646,8 +645,7 @@ document.addEventListener(
 
                                 return [
 
-                                    STATUS.MENUNGGU_VERIFIKASI,
-                                    STATUS.TERVERIFIKASI
+                                    STATUS.MENUNGGU_VERIFIKASI
 
                                 ].includes(
                                     item.status
