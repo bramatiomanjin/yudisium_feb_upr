@@ -12,222 +12,660 @@ use App\Models\RiwayatRevisi;
 
 class TrackingController extends Controller
 {
-    // 1. Halaman Pencarian Status
+    // =========================================================
+    // 1. TRACKING
+    // =========================================================
+
     public function index()
     {
-        return view('mahasiswa.tracking');
+        return view(
+            'mahasiswa.tracking'
+        );
     }
 
-    // 2. Memproses Pencarian
-    public function search(Request $request)
-    {
-        // Tangkap 'kode_sk' dari JSON yang dikirimkan oleh Fetch API Javascript
-        $kode = $request->kode_sk ?? $request->kode_pengajuan;
 
-        $pengajuan = PengajuanYudisium::with('mahasiswa')
-                        ->where('nim', $request->nim)
-                        ->where('kode_pengajuan', $kode)
-                        ->first();
+    // =========================================================
+    // 2. SEARCH TRACKING
+    // =========================================================
 
-        // Jika tidak ada, kembalikan pesan error dalam format JSON (bukan teks biasa)
+    public function search(
+        Request $request
+    ) {
+        $kode =
+            $request->kode_sk
+            ??
+            $request->kode_pengajuan;
+
+
+        $pengajuan =
+            PengajuanYudisium::with(
+                'mahasiswa'
+            )
+                ->where(
+                    'nim',
+                    $request->nim
+                )
+                ->where(
+                    'kode_pengajuan',
+                    $kode
+                )
+                ->first();
+
+
         if (!$pengajuan) {
+
             return response()->json([
-                'success' => false,
-                'message' => 'NIM dan Kode SK Yudisium tidak ditemukan.'
+                'success' =>
+                    false,
+
+                'message' =>
+                    'NIM dan Kode SK Yudisium tidak ditemukan.'
             ], 404);
         }
 
-        // Jika berhasil, kembalikan objek data agar Javascript bisa menyimpannya ke Session
+
+        $jumlahRevisiField =
+            ValidasiField::where(
+                'pengajuan_id',
+                $pengajuan->id
+            )
+                ->where(
+                    'status_validasi',
+                    'REVISI'
+                )
+                ->count();
+
+
+        $jumlahRevisiDokumen =
+            PengajuanDokumen::where(
+                'pengajuan_id',
+                $pengajuan->id
+            )
+                ->where(
+                    'status_validasi',
+                    'REVISI'
+                )
+                ->count();
+
+
         return response()->json([
-            'success' => true,
+
+            'success' =>
+                true,
+
             'data' => [
-                'id' => $pengajuan->id,
-                'kode_sk' => $pengajuan->kode_pengajuan,
-                'nim' => $pengajuan->nim,
-                'nama' => $pengajuan->mahasiswa->nama_lengkap ?? '-',
-                'jurusan' => $pengajuan->mahasiswa->jurusan ?? '-',
-                'status' => $pengajuan->status,
-                'tanggal_pengajuan' => $pengajuan->created_at->timezone('Asia/Jakarta')->format('d F Y'),
-                'updated_at' => $pengajuan->updated_at->timezone('Asia/Jakarta')->format('d F Y, H:i') . ' WIB'
+
+                'id' =>
+                    $pengajuan->id,
+
+                'kode_sk' =>
+                    $pengajuan
+                        ->kode_pengajuan,
+
+                'kode_pengajuan' =>
+                    $pengajuan
+                        ->kode_pengajuan,
+
+                'nim' =>
+                    $pengajuan
+                        ->nim,
+
+                'nama' =>
+                    $pengajuan
+                        ->mahasiswa
+                        ->nama_lengkap ?? '-',
+
+                'jurusan' =>
+                    $pengajuan
+                        ->mahasiswa
+                        ->jurusan ?? '-',
+
+                'status' =>
+                    $pengajuan
+                        ->status,
+
+                'tanggal_pengajuan' =>
+                    $pengajuan
+                        ->created_at
+                        ->timezone(
+                            'Asia/Jakarta'
+                        )
+                        ->format(
+                            'd F Y'
+                        ),
+
+                'updated_at' =>
+                    $pengajuan
+                        ->updated_at
+                        ->timezone(
+                            'Asia/Jakarta'
+                        )
+                        ->format(
+                            'd F Y, H:i'
+                        )
+                    .
+                    ' WIB',
+
+                'revision_count' =>
+                    $jumlahRevisiField
+                    +
+                    $jumlahRevisiDokumen
             ]
         ]);
     }
 
-    // 3. Menampilkan Halaman Status & Form Revisi (Jika Ada)
-    public function revisiPage(string $kode_pengajuan)
-    {
-        $pengajuan = PengajuanYudisium::with(['mahasiswa', 'validasi', 'dokumen.jenisDokumen'])
-                        ->where('kode_pengajuan', $kode_pengajuan)->firstOrFail();
 
-        $html = '<div style="font-family: sans-serif; padding: 20px;">';
-        $html .= '<h2>Tracking Pengajuan: ' . $pengajuan->kode_pengajuan . '</h2>';
-        $html .= '<p>Nama: <b>' . $pengajuan->mahasiswa->nama_lengkap . '</b></p>';
-        $html .= '<p>Status Saat Ini: <b style="color: '.($pengajuan->status == 'PERLU_REVISI' ? 'red' : 'green').';">' . str_replace('_', ' ', $pengajuan->status) . '</b></p>';
-        
-        $html .= '<hr>';
+    // =========================================================
+    // 3. HALAMAN REVISI
+    // =========================================================
 
-        // Jika statusnya PERLU REVISI, buka form. Jika tidak, hanya tampilkan info.
-        if ($pengajuan->status == 'PERLU_REVISI') {
-            $html .= '<div style="background: #ffe6e6; padding: 15px; border-left: 5px solid red;">';
-            $html .= '<b>Perhatian:</b> Ada data/dokumen yang ditolak oleh Admin. Silakan perbaiki pada form di bawah ini.</div><br>';
-            
-            $html .= '<form action="/revisi/'.$kode_pengajuan.'" method="POST" enctype="multipart/form-data">';
-            $html .= csrf_field();
+    public function revisiPage(
+        string $kode_pengajuan
+    ) {
+        $pengajuan =
+            PengajuanYudisium::with([
+                'mahasiswa',
+                'validasi',
+                'dokumen.jenisDokumen'
+            ])
+                ->where(
+                    'kode_pengajuan',
+                    $kode_pengajuan
+                )
+                ->firstOrFail();
+
+
+        if (
+            !in_array(
+                $pengajuan->status,
+                [
+                    'PERLU_REVISI',
+                    'REVISI_DIKIRIM'
+                ],
+                true
+            )
+        ) {
+
+            return redirect(
+                '/detail_tracking'
+            );
         }
 
-        $html .= '<h3>1. Data Identitas & Akademik</h3>';
-        $html .= '<table border="1" cellpadding="8" cellspacing="0" width="100%">';
-        $html .= '<tr style="background:#f4f4f4;"><th>Data (Field)</th><th>Status</th><th>Aksi / Input Revisi</th></tr>';
-        
-        foreach($pengajuan->validasi as $v) {
-            $field = $v->field_key;
-            $isiData = $pengajuan->$field ?? $pengajuan->mahasiswa->$field ?? '-';
 
-            $html .= '<tr>';
-            $html .= '<td>' . strtoupper(str_replace('_', ' ', $field)) . '</td>';
-            
-            if ($v->status_validasi == 'REVISI') {
-                $html .= '<td style="color:red;">❌ Revisi<br><small><i>Catatan: '.$v->feedback.'</i></small></td>';
-                // Munculkan input untuk mengedit data
-                $html .= '<td><input type="text" name="revisi_field['.$field.']" value="'.$isiData.'" style="width:100%; border:1px solid red; padding:5px;"></td>';
-            } else {
-                $icon = ($v->status_validasi == 'DISETUJUI') ? '✅ Disetujui' : '⏳ Menunggu';
-                $html .= '<td>'.$icon.'</td>';
-                // Data terkunci
-                $html .= '<td>🔒 <i>'.$isiData.'</i></td>';
-            }
-            $html .= '</tr>';
-        }
-        $html .= '</table>';
-
-        $html .= '<h3>2. Dokumen Persyaratan</h3>';
-        $html .= '<table border="1" cellpadding="8" cellspacing="0" width="100%">';
-        $html .= '<tr style="background:#f4f4f4;"><th>Nama Dokumen</th><th>Status</th><th>Aksi / Upload Ulang</th></tr>';
-        
-        foreach($pengajuan->dokumen as $d) {
-            $html .= '<tr>';
-            $html .= '<td>' . $d->jenisDokumen->nama_dokumen . '</td>';
-            
-            if ($d->status_validasi == 'REVISI') {
-                $html .= '<td style="color:red;">❌ Revisi<br><small><i>Catatan: '.$d->feedback.'</i></small></td>';
-                // Munculkan input file untuk upload ulang
-                $html .= '<td><input type="file" name="revisi_dokumen['.$d->id.']" accept=".pdf" style="border:1px solid red; padding:5px;"></td>';
-            } else {
-                $icon = ($d->status_validasi == 'DISETUJUI') ? '✅ Disetujui' : '⏳ Menunggu';
-                $html .= '<td>'.$icon.'</td>';
-                // Dokumen terkunci
-                $html .= '<td>🔒 <i>File sudah tersimpan</i></td>';
-            }
-            $html .= '</tr>';
-        }
-        $html .= '</table><br>';
-
-        if ($pengajuan->status == 'PERLU_REVISI') {
-            $html .= '<button type="submit" style="padding: 12px 24px; background: darkgreen; color: white; border:none; cursor:pointer;">Kirim Perbaikan Data</button>';
-            $html .= '</form>';
-        }
-
-        $html .= '</div>';
-        return $html;
+        return view(
+            'mahasiswa.revisi',
+            [
+                'pengajuan' =>
+                    $pengajuan
+            ]
+        );
     }
 
-    // 4. Memproses Update Revisi Mahasiswa (Sudah Disempurnakan)
-    public function prosesRevisi(Request $request, string $kode_pengajuan)
-    {
-        $pengajuan = PengajuanYudisium::where('kode_pengajuan', $kode_pengajuan)->firstOrFail();
-        $mahasiswa = Mahasiswa::where('nim', $pengajuan->nim)->firstOrFail();
 
-        // Daftar kolom yang berada di tabel Mahasiswa
-        $kolomMahasiswa = ['nama_lengkap', 'email', 'no_whatsapp', 'tahun_angkatan', 'jalur_masuk', 'jurusan'];
+    // =========================================================
+    // 4. PROSES REVISI
+    // =========================================================
+
+    public function prosesRevisi(
+        Request $request,
+        string $kode_pengajuan
+    ) {
+        $pengajuan =
+            PengajuanYudisium::where(
+                'kode_pengajuan',
+                $kode_pengajuan
+            )
+                ->firstOrFail();
+
+
+        $mahasiswa =
+            Mahasiswa::where(
+                'nim',
+                $pengajuan->nim
+            )
+                ->firstOrFail();
+
+
+        $kolomMahasiswa = [
+
+            'nama_lengkap',
+
+            'email',
+
+            'no_whatsapp',
+
+            'tahun_angkatan',
+
+            'jalur_masuk',
+
+            'jurusan'
+        ];
+
 
         DB::beginTransaction();
-        try {
-            // A. UPDATE FIELD TEKS (Hanya jika teksnya benar-benar berubah)
-            if ($request->has('revisi_field')) {
-                foreach ($request->revisi_field as $field => $newValue) {
-                    
-                    // Ambil nilai lama
-                    $oldValue = in_array($field, $kolomMahasiswa) ? $mahasiswa->$field : $pengajuan->$field;
 
-                    // CEK LOGIKA: Apakah nilai baru BERBEDA dengan nilai lama?
-                    if ($oldValue != $newValue) {
-                        
-                        // Catat ke Riwayat Revisi
-                        RiwayatRevisi::create([
-                            'pengajuan_id' => $pengajuan->id,
-                            'jenis_revisi' => 'FIELD',
-                            'field_key' => $field,
-                            'nilai_lama' => $oldValue,
-                            'nilai_baru' => $newValue,
+
+        try {
+
+            // =================================================
+            // A. FIELD
+            // =================================================
+
+            if (
+                $request->has(
+                    'revisi_field'
+                )
+            ) {
+
+                foreach (
+                    $request
+                        ->revisi_field
+                    as
+                    $field
+                    =>
+                    $newValue
+                ) {
+
+                    $validasi =
+                        ValidasiField::where(
+                            'pengajuan_id',
+                            $pengajuan->id
+                        )
+                            ->where(
+                                'field_key',
+                                $field
+                            )
+                            ->where(
+                                'status_validasi',
+                                'REVISI'
+                            )
+                            ->first();
+
+
+                    if (!$validasi) {
+                        continue;
+                    }
+
+
+                    if (
+                        in_array(
+                            $field,
+                            $kolomMahasiswa,
+                            true
+                        )
+                    ) {
+
+                        $oldValue =
+                            $mahasiswa
+                                ->$field;
+
+                    } else {
+
+                        $oldValue =
+                            $pengajuan
+                                ->$field;
+                    }
+
+
+                    /*
+                     * Nilai harus benar-benar berubah.
+                     */
+                    if (
+                        (string) $oldValue ===
+                        (string) $newValue
+                    ) {
+                        continue;
+                    }
+
+
+                    /*
+                     * Tentukan revisi ke berapa.
+                     */
+                    $revisiKe =
+                        RiwayatRevisi::where(
+                            'pengajuan_id',
+                            $pengajuan->id
+                        )
+                            ->where(
+                                'jenis_revisi',
+                                'FIELD'
+                            )
+                            ->where(
+                                'field_key',
+                                $field
+                            )
+                            ->max(
+                                'revisi_ke'
+                            );
+
+
+                    $revisiKe =
+                        ($revisiKe ?? 0)
+                        +
+                        1;
+
+
+                    /*
+                     * Simpan riwayat SEBELUM feedback
+                     * dikosongkan.
+                     */
+                    RiwayatRevisi::create([
+
+                        'pengajuan_id' =>
+                            $pengajuan->id,
+
+                        'jenis_revisi' =>
+                            'FIELD',
+
+                        'field_key' =>
+                            $field,
+
+                        'nilai_lama' =>
+                            $oldValue,
+
+                        'nilai_baru' =>
+                            $newValue,
+
+                        'feedback_admin' =>
+                            $validasi
+                                ->feedback,
+
+                        'revisi_ke' =>
+                            $revisiKe
+                    ]);
+
+
+                    if (
+                        in_array(
+                            $field,
+                            $kolomMahasiswa,
+                            true
+                        )
+                    ) {
+
+                        $mahasiswa->update([
+                            $field =>
+                                $newValue
                         ]);
 
-                        // Update nilai baru ke tabel
-                        if (in_array($field, $kolomMahasiswa)) {
-                            $mahasiswa->update([$field => $newValue]);
-                        } else {
-                            $pengajuan->update([$field => $newValue]);
-                        }
+                    } else {
 
-                        // Karena sudah diubah, kembalikan statusnya menjadi PENDING
-                        ValidasiField::where('pengajuan_id', $pengajuan->id)
-                                     ->where('field_key', $field)
-                                     ->update(['status_validasi' => 'PENDING', 'feedback' => null]);
+                        $pengajuan->update([
+                            $field =>
+                                $newValue
+                        ]);
                     }
+
+
+                    /*
+                     * Revisi dikirim,
+                     * menunggu review admin.
+                     */
+                    $validasi->update([
+
+                        'status_validasi' =>
+                            'PENDING',
+
+                        'feedback' =>
+                            null,
+
+                        'checked_by' =>
+                            null,
+
+                        'checked_at' =>
+                            null
+                    ]);
                 }
             }
 
-            // B. UPDATE DOKUMEN (Jika ada file yang diupload ulang)
-            if ($request->hasFile('revisi_dokumen')) {
-                foreach ($request->file('revisi_dokumen') as $dokumen_id => $file) {
-                    $dokumenLama = PengajuanDokumen::findOrFail($dokumen_id);
-                    $jenisDokumen = $dokumenLama->jenisDokumen;
 
-                    // Catat ke Riwayat Revisi
+            // =================================================
+            // B. DOKUMEN
+            // =================================================
+
+            if (
+                $request->hasFile(
+                    'revisi_dokumen'
+                )
+            ) {
+
+                foreach (
+                    $request->file(
+                        'revisi_dokumen'
+                    )
+                    as
+                    $dokumen_id
+                    =>
+                    $file
+                ) {
+
+                    $dokumenLama =
+                        PengajuanDokumen::where(
+                            'id',
+                            $dokumen_id
+                        )
+                            ->where(
+                                'pengajuan_id',
+                                $pengajuan->id
+                            )
+                            ->where(
+                                'status_validasi',
+                                'REVISI'
+                            )
+                            ->first();
+
+
+                    if (!$dokumenLama) {
+                        continue;
+                    }
+
+
+                    $jenisDokumen =
+                        $dokumenLama
+                            ->jenisDokumen;
+
+
+                    $revisiKe =
+                        RiwayatRevisi::where(
+                            'pengajuan_id',
+                            $pengajuan->id
+                        )
+                            ->where(
+                                'jenis_revisi',
+                                'DOKUMEN'
+                            )
+                            ->where(
+                                'jenis_dokumen_id',
+                                $jenisDokumen->id
+                            )
+                            ->max(
+                                'revisi_ke'
+                            );
+
+
+                    $revisiKe =
+                        ($revisiKe ?? 0)
+                        +
+                        1;
+
+
                     RiwayatRevisi::create([
-                        'pengajuan_id' => $pengajuan->id,
-                        'jenis_revisi' => 'DOKUMEN',
-                        'jenis_dokumen_id' => $jenisDokumen->id,
-                        'nilai_lama' => $dokumenLama->nama_file_asli,
-                        'nilai_baru' => $file->getClientOriginalName(),
+
+                        'pengajuan_id' =>
+                            $pengajuan->id,
+
+                        'jenis_revisi' =>
+                            'DOKUMEN',
+
+                        'jenis_dokumen_id' =>
+                            $jenisDokumen->id,
+
+                        'nilai_lama' =>
+                            $dokumenLama
+                                ->nama_file_asli,
+
+                        'nilai_baru' =>
+                            $file
+                                ->getClientOriginalName(),
+
+                        'feedback_admin' =>
+                            $dokumenLama
+                                ->feedback,
+
+                        'revisi_ke' =>
+                            $revisiKe
                     ]);
 
-                    $namaFileStorage = time() . '_revisi_' . $jenisDokumen->kode . '.' . $file->extension();
-                    $path = $file->storeAs('private/yudisium/' . $mahasiswa->nim, $namaFileStorage);
 
-                    // Update data di database
+                    $extension =
+                        strtolower(
+                            $file
+                                ->getClientOriginalExtension()
+                        );
+
+
+                    $namaFileStorage =
+                        $pengajuan->id
+                        .
+                        '_'
+                        .
+                        time()
+                        .
+                        '_revisi_'
+                        .
+                        $jenisDokumen->kode
+                        .
+                        '.'
+                        .
+                        $extension;
+
+
+                    $path =
+                        $file->storeAs(
+
+                            'private/yudisium/'
+                            .
+                            $mahasiswa->nim,
+
+                            $namaFileStorage
+                        );
+
+
                     $dokumenLama->update([
-                        'nama_file_asli' => $file->getClientOriginalName(),
-                        'nama_file_storage' => $namaFileStorage,
-                        'file_path' => $path,
-                        'mime_type' => $file->getMimeType(),
-                        'ukuran_file' => $file->getSize(),
-                        'status_validasi' => 'PENDING',
-                        'feedback' => null
+
+                        'nama_file_asli' =>
+                            $file
+                                ->getClientOriginalName(),
+
+                        'nama_file_storage' =>
+                            $namaFileStorage,
+
+                        'file_path' =>
+                            $path,
+
+                        'mime_type' =>
+                            $file
+                                ->getMimeType(),
+
+                        'ukuran_file' =>
+                            $file
+                                ->getSize(),
+
+                        'status_validasi' =>
+                            'PENDING',
+
+                        'feedback' =>
+                            null,
+
+                        'checked_by' =>
+                            null,
+
+                        'checked_at' =>
+                            null
                     ]);
                 }
             }
 
-            // C. LOGIKA STATUS AKHIR PENGAJUAN
-            // Cek apakah di database masih ada data yang berstatus REVISI
-            $sisaRevisiField = ValidasiField::where('pengajuan_id', $pengajuan->id)->where('status_validasi', 'REVISI')->exists();
-            $sisaRevisiDokumen = PengajuanDokumen::where('pengajuan_id', $pengajuan->id)->where('status_validasi', 'REVISI')->exists();
 
-            if ($sisaRevisiField || $sisaRevisiDokumen) {
-                // Jika masih ada yang salah/belum diubah, tahan statusnya di PERLU REVISI
-                $pengajuan->update(['status' => 'PERLU_REVISI']);
-                $pesan = 'Sebagian revisi tersimpan, namun masih ada data yang belum Anda perbaiki!';
+            // =================================================
+            // C. STATUS AKHIR
+            // =================================================
+
+            $sisaRevisiField =
+                ValidasiField::where(
+                    'pengajuan_id',
+                    $pengajuan->id
+                )
+                    ->where(
+                        'status_validasi',
+                        'REVISI'
+                    )
+                    ->exists();
+
+
+            $sisaRevisiDokumen =
+                PengajuanDokumen::where(
+                    'pengajuan_id',
+                    $pengajuan->id
+                )
+                    ->where(
+                        'status_validasi',
+                        'REVISI'
+                    )
+                    ->exists();
+
+
+            if (
+                $sisaRevisiField ||
+                $sisaRevisiDokumen
+            ) {
+
+                $pengajuan->update([
+                    'status' =>
+                        'PERLU_REVISI'
+                ]);
+
+
+                $pesan =
+                    'Sebagian revisi tersimpan, namun masih ada data yang belum Anda perbaiki!';
+
             } else {
-                // Jika semua yang ditolak sudah diperbaiki, ubah jadi REVISI DIKIRIM
-                $pengajuan->update(['status' => 'REVISI_DIKIRIM']);
-                $pesan = 'Seluruh revisi berhasil dikirim ke Admin Akademik!';
-            }
-            
-            DB::commit();
-            return redirect('/revisi/'.$kode_pengajuan)->with('pesan', $pesan);
 
-        } catch (\Exception $e) {
+                $pengajuan->update([
+                    'status' =>
+                        'REVISI_DIKIRIM'
+                ]);
+
+
+                $pesan =
+                    'Seluruh revisi berhasil dikirim ke Admin Akademik!';
+            }
+
+
+            DB::commit();
+
+
+            return redirect(
+                '/revisi/'
+                .
+                $kode_pengajuan
+            )
+                ->with(
+                    'pesan',
+                    $pesan
+                );
+
+        } catch (\Throwable $e) {
+
             DB::rollBack();
-            return response('Terjadi Kesalahan saat merevisi: ' . $e->getMessage(), 500);
+
+
+            return response(
+                'Terjadi Kesalahan saat merevisi: '
+                .
+                $e->getMessage(),
+                500
+            );
         }
     }
 }

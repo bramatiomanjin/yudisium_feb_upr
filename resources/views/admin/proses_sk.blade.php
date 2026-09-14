@@ -28,12 +28,12 @@
 
     <link
         rel="stylesheet"
-        href="{{ asset('css/admin_theme.css') }}"
+        href="{{ asset('css/admin_proses_sk.css') }}"
     >
 
     <link
         rel="stylesheet"
-        href="{{ asset('css/admin_proses_sk.css') }}"
+        href="{{ asset('css/admin_theme.css') }}"
     >
 
 </head>
@@ -90,7 +90,6 @@
 
 
                 <a
-                    href="/admin/dashboard"
                     href="/admin/pengajuan"
                     class="admin-nav-item"
                 >
@@ -107,7 +106,6 @@
 
 
                 <a
-                    href="/admin/dashboard?filter=revisi"
                     href="/admin/pengajuan?filter=revisi"
                     class="admin-nav-item"
                 >
@@ -131,7 +129,7 @@
 
 
                 <a
-                    href="/admin/dashboard?filter=proses-sk"
+                    href="/admin/pengajuan?filter=proses-sk"
                     class="admin-nav-item active"
                 >
 
@@ -147,8 +145,8 @@
 
 
                 <a
-                    href="history.html"
-                    href="/superadmin/log-aktivitas"
+                    href="/admin/history"
+                    
                     class="admin-nav-item"
                 >
 
@@ -286,7 +284,7 @@
             <div class="sk-back-row">
 
                 <a
-                    href="/admin/dashboard?filter=proses-sk"
+                    href="/admin/pengajuan?filter=proses-sk"
                     class="admin-text-link"
                 >
                     ← Kembali ke Daftar Proses SK

@@ -64,7 +64,7 @@ document.addEventListener(
         ) {
 
             window.location.href =
-                "/superadmin/log-aktivitas";
+                "/admin/history";
 
             return;
 
@@ -750,7 +750,7 @@ document.addEventListener(
             ) {
 
                 window.location.href =
-                    "/superadmin/log-aktivitas";
+                    "/admin/history";
 
                 return;
 
@@ -771,7 +771,7 @@ document.addEventListener(
                 ) {
 
                     window.location.href =
-                        "/superadmin/log-aktivitas";
+                        "/admin/history";
 
                     return;
 
@@ -851,7 +851,7 @@ document.addEventListener(
 
 
                 window.location.href =
-                    "/superadmin/log-aktivitas";
+                    "/admin/history";
 
             }
 

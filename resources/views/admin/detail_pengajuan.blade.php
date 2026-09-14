@@ -13,23 +13,24 @@
 
     <link
         rel="stylesheet"
-        href="{{ asset('css/style.css') }}">
+        href="{{ asset('css/style.css') }}"
     >
 
     <link
         rel="stylesheet"
-        href="{{ asset('css/admin.css') }}">
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('css/admin_theme.css') }}">
+        href="{{ asset('css/admin.css') }}"
     >
 
     <!-- CSS KHUSUS HALAMAN DETAIL PENGAJUAN -->
     <link
         rel="stylesheet"
-        href="{{ asset('css/admin_detail_pengajuan.css') }}">
+        href="{{ asset('css/admin_detail_pengajuan.css') }}"
+    >
+
+    <!-- Theme diletakkan terakhir agar design system konsisten -->
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/admin_theme.css') }}"
     >
 </head>
 
@@ -92,7 +93,7 @@
 
 
                 <a
-                    href="/admin/dashboard?filter=revisi"
+                    href="/admin/pengajuan?filter=revisi"
                     class="admin-nav-item"
                 >
                     <span class="admin-nav-icon">
@@ -110,7 +111,7 @@
 
 
                 <a
-                    href="/admin/dashboard?filter=proses-sk"
+                    href="/admin/pengajuan?filter=proses-sk"
                     class="admin-nav-item"
                 >
                     <span class="admin-nav-icon">
@@ -124,7 +125,7 @@
 
 
                 <a
-                    href="history.html"
+                    href="/admin/history"
                     class="admin-nav-item"
                 >
                     <span class="admin-nav-icon">

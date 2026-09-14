@@ -27,12 +27,12 @@
 
     <link
         rel="stylesheet"
-        href="{{ asset('css/admin_theme.css') }}"
+        href="{{ asset('css/admin_history.css') }}"
     >
 
     <link
         rel="stylesheet"
-        href="{{ asset('css/admin_history.css') }}"
+        href="{{ asset('css/admin_theme.css') }}"
     >
 
 </head>
@@ -106,7 +106,7 @@
 
 
                 <a
-                    href="/admin/dashboard?filter=revisi"
+                    href="/admin/pengajuan?filter=revisi"
                     class="admin-nav-item"
                 >
 
@@ -129,7 +129,7 @@
 
 
                 <a
-                    href="/admin/dashboard?filter=proses-sk"
+                    href="/admin/pengajuan?filter=proses-sk"
                     class="admin-nav-item"
                 >
 
@@ -145,8 +145,8 @@
 
 
                 <a
-                    href="/superadmin/log-aktivitas"
-                    class="admin-nav-item active"
+                     href="/admin/history"
+                     class="admin-nav-item active"
                 >
 
                     <span class="admin-nav-icon">

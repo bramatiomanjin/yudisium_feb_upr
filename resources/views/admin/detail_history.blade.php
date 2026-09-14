@@ -91,7 +91,7 @@
 
 
                 <a
-                    href="/admin/dashboard?filter=revisi"
+                    href="/admin/pengajuan?filter=revisi"
                     class="admin-nav-item"
                 >
                     <span class="admin-nav-icon">
@@ -109,7 +109,7 @@
 
 
                 <a
-                    href="/admin/dashboard?filter=proses-sk"
+                    href="/admin/pengajuan?filter=proses-sk"
                     class="admin-nav-item"
                 >
                     <span class="admin-nav-icon">
@@ -123,7 +123,7 @@
 
 
                 <a
-                    href="/superadmin/log-aktivitas"
+                    href="/admin/history"
                     class="admin-nav-item active"
                 >
                     <span class="admin-nav-icon">
@@ -201,7 +201,7 @@
             <!-- BACK -->
             <div class="detail-history-back">
 
-                <a href="/superadmin/log-aktivitas">
+                <a href="/admin/history">
                     ← Kembali ke History
                 </a>
 
@@ -272,7 +272,7 @@
                     yang dilakukan oleh akun sendiri.
                 </p>
 
-                <a href="/superadmin/log-aktivitas">
+                <a href="/admin/history">
                     Kembali ke History
                 </a>
 

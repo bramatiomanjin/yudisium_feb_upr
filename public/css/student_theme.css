@@ -1138,3 +1138,431 @@ textarea {
         padding: 24px 18px;
     }
 }
+
+/* =========================================================
+   FINAL UI/UX POLISH — MAHASISWA FEB UPR
+   2026-09-14
+
+   Fokus:
+   - sederhana dan meyakinkan untuk alur pengajuan
+   - ukuran kontrol ramah touch
+   - hirarki informasi jelas
+   - identitas FEB tetap hijau + emas
+========================================================= */
+
+:root {
+    --student-content-max: 1080px;
+    --student-control-height: 50px;
+    --student-touch-target: 46px;
+    --student-radius-sm: 10px;
+    --student-radius-md: 14px;
+    --student-radius-lg: 18px;
+}
+
+body {
+    color: var(--student-ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+    transition:
+        border-color .16s ease,
+        background-color .16s ease,
+        color .16s ease,
+        box-shadow .16s ease,
+        transform .16s ease;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid var(--student-gold-500);
+    outline-offset: 3px;
+}
+
+.container,
+.tracking-detail-container,
+.revision-container,
+.student-tracking-shell {
+    max-width: var(--student-content-max);
+}
+
+/* ---------- HERO / PAGE HEADER ---------- */
+
+.student-page-header,
+.tracking-hero,
+.tracking-detail-header,
+.revision-hero {
+    border-radius: 20px;
+    box-shadow: 0 18px 44px rgba(6,59,45,.16);
+}
+
+.student-page-header,
+.tracking-hero,
+.tracking-detail-header,
+.revision-hero {
+    padding: clamp(24px, 3vw, 32px);
+}
+
+.student-page-header h1,
+.tracking-hero h1,
+.tracking-detail-header h1,
+.revision-hero h1 {
+    letter-spacing: -.025em;
+}
+
+.student-page-header p,
+.tracking-hero p,
+.tracking-detail-header p,
+.revision-hero p {
+    font-size: .96rem;
+    line-height: 1.65;
+}
+
+.student-status-link,
+.tracking-back-link,
+.revision-back-link {
+    min-height: var(--student-touch-target);
+}
+
+/* ---------- CARDS ---------- */
+
+.form-section,
+.progress-card,
+.review-card,
+.confirmation-box,
+.detail-card,
+.status-card,
+.next-action-card,
+.revision-alert,
+.tracking-card,
+.tracking-side-card,
+.tracking-help-card,
+.revision-info-card,
+.revision-notice,
+.revision-section {
+    border-radius: var(--student-radius-lg);
+}
+
+.form-section,
+.review-card,
+.detail-card,
+.tracking-search-card,
+.tracking-side-card,
+.revision-section {
+    padding: clamp(20px, 3vw, 28px);
+}
+
+.section-header h2,
+.detail-card-header h2,
+.tracking-card-heading h2,
+.revision-section-header h2 {
+    color: var(--student-green-950);
+    letter-spacing: -.012em;
+}
+
+.section-header p,
+.detail-card-header p,
+.tracking-card-heading p,
+.revision-section-header p {
+    color: var(--student-muted);
+    line-height: 1.6;
+}
+
+/* ---------- FORMS ---------- */
+
+.form-group label,
+.tracking-form-group label,
+.revision-field-content label {
+    color: var(--student-green-950);
+    font-size: .9rem;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea,
+.tracking-form-group input,
+.tracking-form-group select,
+.tracking-form-group textarea,
+.revision-field-content input,
+.revision-field-content select,
+.revision-field-content textarea {
+    min-height: var(--student-control-height);
+    border: 1px solid #c9d8d1;
+    border-radius: var(--student-radius-sm);
+    background: #fff;
+    color: var(--student-ink);
+    font-size: .94rem;
+}
+
+.form-group textarea,
+.tracking-form-group textarea,
+.revision-field-content textarea {
+    min-height: 120px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus,
+.tracking-form-group input:focus,
+.tracking-form-group select:focus,
+.tracking-form-group textarea:focus,
+.revision-field-content input:focus,
+.revision-field-content select:focus,
+.revision-field-content textarea:focus {
+    border-color: var(--student-green-700);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(17,125,91,.10);
+}
+
+.error-message,
+.confirmation-error {
+    font-size: .82rem;
+    line-height: 1.45;
+}
+
+/* ---------- BUTTONS ---------- */
+
+.btn,
+.copy-code-button,
+.student-status-link,
+.tracking-back-link,
+.tracking-submit,
+.revision-button {
+    min-height: var(--student-touch-target);
+    border-radius: 10px;
+    font-size: .9rem;
+    font-weight: 800;
+}
+
+.btn-primary,
+.btn-success {
+    box-shadow: 0 6px 16px rgba(10,104,76,.14);
+}
+
+.btn-primary:hover,
+.btn-success:hover {
+    transform: translateY(-1px);
+}
+
+/* ---------- STEPPER ---------- */
+
+.step-indicator {
+    gap: 0;
+    padding: 20px;
+    border-radius: 16px;
+}
+
+.step-number {
+    width: 42px;
+    height: 42px;
+    margin-bottom: 8px;
+}
+
+.step span {
+    font-size: .84rem;
+    line-height: 1.3;
+}
+
+/* ---------- INFORMATION GRID ---------- */
+
+.detail-info-item,
+.review-item,
+.revision-info-card > div,
+.locked-data-item {
+    border-radius: 11px;
+}
+
+.detail-info-item span,
+.review-label,
+.revision-info-card span,
+.locked-label {
+    color: var(--student-muted);
+    font-size: .78rem;
+    font-weight: 750;
+}
+
+.detail-info-item strong,
+.review-item strong,
+.revision-info-card strong,
+.locked-data-item strong {
+    color: var(--student-ink);
+    font-size: .9rem;
+    line-height: 1.45;
+}
+
+/* ---------- TRACKING ---------- */
+
+.tracking-layout {
+    grid-template-columns: minmax(0, 1.35fr) minmax(300px, .65fr);
+    gap: 20px;
+}
+
+.tracking-search-card {
+    border-top: 4px solid var(--student-gold-500);
+}
+
+.tracking-security-note,
+.revision-confirmation,
+.student-helper-bar {
+    border-radius: 12px;
+}
+
+.status-card {
+    padding: 20px 22px;
+}
+
+.status-content h2 {
+    font-size: 1.22rem;
+}
+
+/* ---------- REVISION ---------- */
+
+.revision-info-card {
+    gap: 12px;
+    padding: 18px;
+}
+
+.revision-section {
+    border-top: 4px solid var(--student-gold-500);
+}
+
+.revision-field-card {
+    border-radius: 14px;
+}
+
+.revision-actions .btn,
+.detail-actions .btn,
+.form-navigation .btn {
+    min-width: 150px;
+}
+
+/* ---------- MODAL ---------- */
+
+.modal-overlay {
+    padding: 20px;
+    background: rgba(6,59,45,.68);
+    backdrop-filter: blur(5px);
+}
+
+.modal-card,
+.student-success-modal,
+.revision-success-modal {
+    border-radius: 18px;
+    box-shadow: 0 28px 80px rgba(0,0,0,.24);
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 860px) {
+    .tracking-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    .container,
+    .tracking-detail-container,
+    .revision-container,
+    .student-tracking-shell {
+        width: calc(100% - 24px);
+    }
+
+    .student-page-header,
+    .tracking-hero,
+    .revision-hero {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .student-header-content {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .student-status-link,
+    .tracking-back-link {
+        align-self: flex-start;
+    }
+
+    .status-card {
+        grid-template-columns: auto 1fr;
+    }
+
+    .status-updated {
+        grid-column: 1 / -1;
+        min-width: 0;
+        padding: 12px 0 0;
+        border-top: 1px solid var(--student-line);
+        border-left: 0;
+    }
+}
+
+@media (max-width: 560px) {
+    .container,
+    .tracking-detail-container,
+    .revision-container,
+    .student-tracking-shell {
+        width: calc(100% - 20px);
+    }
+
+    .student-page-header,
+    .tracking-hero,
+    .tracking-detail-header,
+    .revision-hero {
+        padding: 22px 18px;
+        border-radius: 16px;
+    }
+
+    .step-indicator {
+        padding: 16px 10px;
+    }
+
+    .step-number {
+        width: 38px;
+        height: 38px;
+    }
+
+    .step:not(:last-child)::after {
+        top: 19px;
+        left: calc(50% + 25px);
+        width: calc(100% - 50px);
+    }
+
+    .step span {
+        font-size: .74rem;
+    }
+
+    .form-section,
+    .review-card,
+    .detail-card,
+    .tracking-search-card,
+    .tracking-side-card,
+    .revision-section {
+        padding: 20px 16px;
+    }
+
+    .revision-actions,
+    .detail-actions,
+    .form-navigation {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .revision-actions .btn,
+    .detail-actions .btn,
+    .form-navigation .btn {
+        width: 100%;
+        min-width: 0;
+    }
+}

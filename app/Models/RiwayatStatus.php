@@ -7,10 +7,26 @@ use Illuminate\Database\Eloquent\Model;
 class RiwayatStatus extends Model
 {
     protected $table = 'riwayat_status';
-    protected $guarded = ['id'];
+
+    protected $guarded = [
+        'id'
+    ];
+
 
     public function pengajuan()
     {
-        return $this->belongsTo(PengajuanYudisium::class, 'pengajuan_id');
+        return $this->belongsTo(
+            PengajuanYudisium::class,
+            'pengajuan_id'
+        );
+    }
+
+
+    public function changedBy()
+    {
+        return $this->belongsTo(
+            User::class,
+            'changed_by'
+        );
     }
 }

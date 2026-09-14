@@ -13,22 +13,10 @@
     <title>
         Revisi Pengajuan Yudisium - FEB UPR
     </title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/student_revisi.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/student_theme.css') }}">
 
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('css/style.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('css/student_theme.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('css/student_revisi.css') }}"
-    >
 
 </head>
 

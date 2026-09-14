@@ -18,19 +18,16 @@
 
     <link
         rel="stylesheet"
-        href="{{ asset('css/style.css') }}
         href="{{ asset('css/style.css') }}"
     >
 
     <link
         rel="stylesheet"
-        href="{{ asset('css/admin.css') }}
         href="{{ asset('css/admin.css') }}"
     >
 
     <link
         rel="stylesheet"
-        href="{{ asset('css/admin_theme.css') }}
         href="{{ asset('css/admin_theme.css') }}"
     >
 
@@ -88,7 +85,6 @@
 
 
                 <a
-                    href="/admin/dashboard"
                     href="/admin/pengajuan"
                     class="admin-nav-item active"
                 >
@@ -105,7 +101,7 @@
 
 
                 <a
-                    href="/admin/dashboard?filter=revisi"
+                    href="/admin/pengajuan?filter=revisi"
                     class="admin-nav-item"
                 >
 
@@ -128,7 +124,6 @@
 
 
                 <a
-                    href="/admin/dashboard?filter=proses-sk"
                     href="/admin/pengajuan?filter=proses-sk"
                     class="admin-nav-item"
                 >
@@ -145,8 +140,7 @@
 
 
                 <a
-                    href="history.html"
-                    href="/superadmin/log-aktivitas"
+                    href="/admin/history"
                     class="admin-nav-item"
                 >
 
@@ -159,7 +153,6 @@
                     </span>
 
                 </a>
-
 
 
                 <div class="admin-nav-divider"></div>
@@ -211,7 +204,11 @@
 
                 <form action="/admin/logout" method="POST" style="width: 100%;">
                     @csrf
-                    <button type="submit" class="admin-logout-button">
+
+                    <button
+                        type="submit"
+                        class="admin-logout-button"
+                    >
                         Keluar
                     </button>
                 </form>
@@ -532,13 +529,12 @@
                     </div>
 
 
-                    <button
-                        type="button"
+                    <a
+                        href="{{ route('admin.export-yudisium') }}"
                         class="admin-secondary-button"
-                        id="submissionExportButton"
                     >
                         Export Excel
-                    </button>
+                    </a>
 
                 </div>
 
@@ -659,49 +655,7 @@
 
 
     <!-- =====================================================
-         EXPORT MODAL
-    ====================================================== -->
-
-    <div
-        class="modal-overlay"
-        id="submissionExportModal"
-    >
-
-        <div class="modal-card">
-
-            <div class="success-icon">
-                ↓
-            </div>
-
-            <h2>
-                Export Data
-            </h2>
-
-            <p>
-                Data pengajuan nantinya akan diekspor ke file Excel
-                melalui backend Laravel.
-            </p>
-
-            <button
-                type="button"
-                class="btn btn-primary"
-                id="closeSubmissionExportModal"
-            >
-                Tutup
-            </button>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- =====================================================
          SCRIPT
-
-         yudisium_api.js     = service API frontend
-         admin.js            = auth/sidebar umum
-         admin_pengajuan.js  = renderer halaman pengajuan
     ====================================================== -->
 
     <script src="{{ asset('js/yudisium_api.js') }}"></script>

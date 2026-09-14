@@ -87,7 +87,6 @@
 
 
                 <a
-                    href="/admin/dashboard?filter=pengajuan"
                     href="/admin/pengajuan"
                     class="admin-nav-item"
                 >
@@ -104,7 +103,6 @@
 
 
                 <a
-                    href="/admin/dashboard?filter=revisi"
                     href="/admin/pengajuan?filter=revisi"
                     class="admin-nav-item"
                     id="dashboardRevisionMenu"
@@ -130,7 +128,6 @@
 
 
                 <a
-                    href="/admin/dashboard?filter=proses-sk"
                     href="/admin/pengajuan?filter=proses-sk"
                     class="admin-nav-item"
                     id="dashboardSkMenu"
@@ -148,7 +145,7 @@
 
 
                 <a
-                    href="/superadmin/log-aktivitas"
+                    href="/admin/history"
                     class="admin-nav-item"
                 >
 
@@ -523,7 +520,7 @@
 
 
                         <a
-                            href="/admin/dashboard?filter=pengajuan"
+                            href="/admin/pengajuan"
                             class="admin-text-link"
                         >
                             Lihat Semua
@@ -626,7 +623,7 @@
                         <!-- MENUNGGU -->
 
                         <a
-                            href="/admin/dashboard?filter=menunggu"
+                            href="/admin/pengajuan?filter=menunggu"
                             class="admin-quick-action"
                         >
 
@@ -654,7 +651,7 @@
                         <!-- REVISI -->
 
                         <a
-                            href="/admin/dashboard?filter=revisi"
+                            href="/admin/pengajuan?filter=revisi"
                             class="admin-quick-action"
                             id="dashboardQuickRevision"
                         >
@@ -683,7 +680,7 @@
                         <!-- TERVERIFIKASI -->
 
                         <a
-                            href="/admin/dashboard?filter=terverifikasi"
+                            href="/admin/pengajuan?filter=terverifikasi"
                             class="admin-quick-action"
                         >
 
@@ -711,7 +708,7 @@
                         <!-- PROSES SK -->
 
                         <a
-                            href="/admin/dashboard?filter=proses-sk"
+                            href="/admin/pengajuan?filter=proses-sk"
                             class="admin-quick-action"
                             id="dashboardQuickSk"
                         >
@@ -740,7 +737,7 @@
                         <!-- HISTORY -->
 
                         <a
-                            href="/superadmin/log-aktivitas"
+                            href="/admin/history"
                             class="admin-quick-action"
                         >
 
@@ -767,16 +764,14 @@
 
                         <!-- EXPORT -->
 
-                        <button
-                            type="button"
-                            class="admin-quick-action button-action"
-                            id="quickExport"
+                        <a
+                            href="{{ route('admin.export-yudisium') }}"
+                            class="admin-quick-action"
                         >
 
                             <div class="admin-quick-icon">
                                 ↓
                             </div>
-
 
                             <div>
 
@@ -790,7 +785,7 @@
 
                             </div>
 
-                        </button>
+                        </a>
 
                     </div>
 
@@ -899,48 +894,6 @@
             </section>
 
         </main>
-
-    </div>
-
-
-
-    <!-- =====================================================
-         EXPORT MODAL
-    ====================================================== -->
-
-    <div
-        class="modal-overlay"
-        id="exportModal"
-    >
-
-        <div class="modal-card">
-
-            <div class="success-icon">
-                ↓
-            </div>
-
-
-            <h2>
-                Export Data
-            </h2>
-
-
-            <p>
-                Fitur export akan mengunduh data pengajuan
-                dalam format Excel setelah terhubung
-                dengan Laravel.
-            </p>
-
-
-            <button
-                type="button"
-                class="btn btn-primary"
-                id="closeExportModal"
-            >
-                Tutup
-            </button>
-
-        </div>
 
     </div>
 

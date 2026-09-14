@@ -89,7 +89,6 @@
 
 
                 <a
-                    href="/admin/dashboard"
                     href="/admin/pengajuan"
                     class="admin-nav-item"
                 >
@@ -104,7 +103,7 @@
 
 
                 <a
-                    href="/admin/dashboard?filter=revisi"
+                    href="/admin/pengajuan?filter=revisi"
                     class="admin-nav-item active"
                 >
                     <span class="admin-nav-icon">
@@ -125,7 +124,7 @@
 
 
                 <a
-                    href="/admin/dashboard?filter=proses-sk"
+                    href="/admin/pengajuan?filter=proses-sk"
                     class="admin-nav-item"
                 >
                     <span class="admin-nav-icon">
@@ -139,7 +138,7 @@
 
 
                 <a
-                    href="/superadmin/log-aktivitas"
+                    href="/admin/history"
                     class="admin-nav-item"
                 >
                     <span class="admin-nav-icon">

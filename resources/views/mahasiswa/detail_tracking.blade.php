@@ -13,22 +13,10 @@
     <title>
         Status Pengajuan Yudisium - FEB UPR
     </title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/student_detail_tracking.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/student_theme.css') }}">
 
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('css/style.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('css/student_theme.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ asset('css/student_detail_tracking.css') }}"
-    >
 
 </head>
 

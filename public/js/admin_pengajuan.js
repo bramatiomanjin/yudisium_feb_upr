@@ -58,6 +58,12 @@ document.addEventListener(
             );
 
 
+        const exportButton =
+            document.getElementById(
+                "submissionExportButton"
+            );
+
+
         const resultCount =
             document.getElementById(
                 "submissionResultCount"
@@ -172,10 +178,6 @@ document.addEventListener(
            ACTION
         ===================================================== */
 
-        /* =====================================================
-           ACTION
-        ===================================================== */
-
         function getAction(
             submission
         ) {
@@ -183,6 +185,7 @@ document.addEventListener(
             const STATUS =
                 window.YudisiumAPI
                     .STATUS;
+
 
             switch (
                 submission.status
@@ -586,12 +589,22 @@ document.addEventListener(
 
                             }
 
-                            if (statusTarget === "pengajuan_only") {
+
+                            if (
+                                statusTarget ===
+                                "pengajuan_only"
+                            ) {
+
                                 return [
+
                                     STATUS.MENUNGGU_VERIFIKASI,
                                     STATUS.TERVERIFIKASI
-                                ].includes(item.status);
+
+                                ].includes(
+                                    item.status
+                                );
                             }
+
 
                             const normalizedTarget =
                                 window.YudisiumAPI
@@ -609,16 +622,39 @@ document.addEventListener(
                     );
 
             } else {
-                // Default behavior if no filter selected, BUT we are on Pengajuan page
-                // Check if URL doesn't have ?filter=...
-                const params = new URLSearchParams(window.location.search);
-                if (!params.has("filter")) {
-                    result = result.filter(function (item) {
-                        return [
-                            STATUS.MENUNGGU_VERIFIKASI,
-                            STATUS.TERVERIFIKASI
-                        ].includes(item.status);
-                    });
+
+                /*
+                 * Default halaman Pengajuan:
+                 * tampilkan pengajuan yang masih masuk
+                 * kategori utama pengajuan.
+                 */
+                const params =
+                    new URLSearchParams(
+                        window.location.search
+                    );
+
+
+                if (
+                    !params.has(
+                        "filter"
+                    )
+                ) {
+
+                    result =
+                        result.filter(
+                            function (item) {
+
+                                return [
+
+                                    STATUS.MENUNGGU_VERIFIKASI,
+                                    STATUS.TERVERIFIKASI
+
+                                ].includes(
+                                    item.status
+                                );
+
+                            }
+                        );
                 }
             }
 
@@ -923,6 +959,35 @@ document.addEventListener(
 
 
                     renderTable();
+
+                }
+            );
+
+        }
+
+
+        /*
+         * =====================================================
+         * EXPORT EXCEL
+         * =====================================================
+         *
+         * File Excel dibuat backend Laravel melalui:
+         * /admin/export-yudisium
+         *
+         * Endpoint mengembalikan attachment .xlsx,
+         * sehingga browser langsung mengunduh file.
+         */
+
+        if (
+            exportButton
+        ) {
+
+            exportButton.addEventListener(
+                "click",
+                function () {
+
+                    window.location.href =
+                        "/admin/export-yudisium";
 
                 }
             );

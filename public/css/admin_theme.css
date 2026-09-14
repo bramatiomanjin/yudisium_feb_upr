@@ -1749,3 +1749,1106 @@ textarea:focus-visible {
     }
 
 }
+/* =========================================================
+   FINAL UI/UX POLISH — ADMIN FEB UPR
+   2026-09-14
+
+   Prinsip:
+   - hirarki visual jelas
+   - target klik nyaman (>= 44px)
+   - keterbacaan tinggi untuk admin berbagai usia
+   - identitas FEB: hijau institusional + emas akademik
+   - warna semantik hanya untuk status/feedback
+   - spacing konsisten berbasis 4/8px
+========================================================= */
+
+:root {
+    --admin-sidebar-width: 272px;
+    --feb-content-max: 1680px;
+    --feb-page-gutter: clamp(20px, 2.4vw, 40px);
+    --feb-control-height: 46px;
+    --feb-touch-target: 44px;
+    --feb-card-padding: clamp(20px, 2vw, 26px);
+}
+
+/* ---------- PAGE GEOMETRY ---------- */
+
+.admin-layout {
+    display: grid;
+    grid-template-columns: var(--admin-sidebar-width) minmax(0, 1fr);
+    min-height: 100vh;
+    background: var(--feb-canvas);
+}
+
+.admin-main {
+    width: 100%;
+    min-width: 0;
+    max-width: var(--feb-content-max);
+    margin: 0 auto;
+    padding: 30px var(--feb-page-gutter) 56px;
+}
+
+.admin-main > section,
+.admin-main > .admin-dashboard-grid,
+.admin-main > .admin-stats-grid {
+    width: 100%;
+}
+
+/* ---------- SIDEBAR ---------- */
+
+.admin-sidebar {
+    position: sticky;
+    top: 0;
+    width: var(--admin-sidebar-width);
+    height: 100vh;
+    padding: 20px 16px 18px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,.2) transparent;
+}
+
+.admin-sidebar-brand {
+    min-height: 70px;
+    gap: 12px;
+    padding: 6px 8px 20px;
+    margin-bottom: 10px;
+}
+
+.admin-sidebar-logo {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    border-radius: 12px;
+    font-size: .8rem;
+    letter-spacing: .03em;
+}
+
+.admin-sidebar-brand strong {
+    font-size: .96rem;
+    line-height: 1.25;
+}
+
+.admin-sidebar-brand span {
+    margin-top: 3px;
+    font-size: .74rem;
+    line-height: 1.2;
+}
+
+.admin-sidebar-nav {
+    gap: 6px;
+}
+
+.admin-nav-item {
+    min-height: 46px;
+    padding: 10px 12px;
+    gap: 11px;
+    border-radius: 11px;
+    font-size: .9rem;
+    line-height: 1.25;
+}
+
+.admin-nav-icon {
+    width: 24px;
+    flex: 0 0 24px;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.admin-nav-divider {
+    height: 1px;
+    margin: 10px 4px;
+}
+
+.admin-sidebar-footer {
+    margin-top: auto;
+    padding-top: 16px;
+}
+
+.admin-user-mini {
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 0 4px;
+}
+
+.admin-user-avatar,
+.admin-profile-avatar {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    font-size: .82rem;
+}
+
+.admin-user-mini strong {
+    font-size: .8rem;
+    line-height: 1.25;
+}
+
+.admin-user-mini span {
+    margin-top: 2px;
+    font-size: .7rem;
+    line-height: 1.2;
+}
+
+.admin-logout-button {
+    min-height: 44px;
+    padding: 10px 12px;
+    font-size: .84rem;
+}
+
+/* ---------- TOPBAR ---------- */
+
+.admin-topbar,
+.detail-topbar,
+.verification-header,
+.revision-review-header,
+.manage-admin-header,
+.detail-history-header {
+    min-height: 78px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--feb-line);
+}
+
+.admin-page-eyebrow,
+.detail-section-eyebrow,
+.sk-section-eyebrow,
+.history-card-eyebrow,
+.detail-action-label,
+.sk-action-label,
+.detail-summary-label,
+.history-access-label {
+    color: var(--feb-green-700);
+    font-size: .72rem;
+    font-weight: 850;
+    letter-spacing: .1em;
+    line-height: 1.4;
+    text-transform: uppercase;
+}
+
+.admin-topbar h1,
+.detail-topbar h1,
+.verification-header h1,
+.revision-review-header h1,
+.manage-admin-header h1,
+.detail-history-header h1 {
+    margin: 2px 0 0;
+    color: var(--feb-heading);
+    font-size: clamp(1.75rem, 2.2vw, 2.15rem);
+    font-weight: 820;
+    line-height: 1.18;
+    letter-spacing: -.025em;
+}
+
+.admin-page-description,
+.verification-header > div:first-child > p:last-child,
+.revision-review-header > div:first-child > p:last-child,
+.manage-admin-header > div:first-child > p:last-child,
+.detail-history-header > div:first-child > p:last-child {
+    max-width: 760px;
+    margin: 7px 0 0;
+    color: var(--feb-muted);
+    font-size: .92rem;
+    line-height: 1.55;
+}
+
+.admin-topbar-actions,
+.detail-header-actions,
+.verification-header-right,
+.revision-review-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.admin-date {
+    color: var(--feb-muted);
+    font-size: .82rem;
+    white-space: nowrap;
+}
+
+.admin-profile-chip {
+    min-height: 46px;
+    padding: 6px 12px 6px 7px;
+    gap: 9px;
+}
+
+.admin-profile-chip strong {
+    font-size: .82rem;
+    line-height: 1.2;
+}
+
+.admin-profile-chip span {
+    margin-top: 2px;
+    font-size: .69rem;
+    line-height: 1.2;
+}
+
+/* ---------- GRID & SPACING ---------- */
+
+.admin-stats-grid {
+    grid-template-columns: repeat(3, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.admin-dashboard-grid {
+    grid-template-columns: minmax(0, 1.9fr) minmax(300px, .85fr);
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.submission-mini-stats,
+.manage-admin-summary-grid,
+.history-summary-grid {
+    gap: 14px;
+}
+
+/* ---------- CARDS ---------- */
+
+.admin-dashboard-card,
+.admin-stat-card,
+.detail-card,
+.detail-summary-card,
+.detail-section,
+.verification-student-card,
+.verification-info-box,
+.verification-section,
+.verification-result-card,
+.revision-student-card,
+.revision-info-box,
+.revision-review-section,
+.revision-result-card,
+.sk-student-card,
+.sk-process-card,
+.sk-action-card,
+.sk-ready-card,
+.sk-note-card,
+.history-access-banner,
+.history-summary-card,
+.history-card,
+.detail-history-activity-card,
+.detail-history-card,
+.manage-admin-summary-card,
+.manage-admin-info,
+.manage-admin-card {
+    border: 1px solid var(--feb-line);
+    border-radius: 16px;
+    background: var(--feb-surface);
+    box-shadow: var(--feb-shadow-xs);
+}
+
+.admin-dashboard-card,
+.history-card,
+.manage-admin-card,
+.detail-history-card {
+    padding: var(--feb-card-padding);
+}
+
+.admin-card-header,
+.history-card-header,
+.manage-admin-card-header,
+.detail-history-card-header {
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.admin-card-header h2,
+.history-card-header h2,
+.manage-admin-card-header h2,
+.detail-history-card-header h2,
+.detail-section-header h2,
+.verification-section-header h2,
+.revision-section-header h2,
+.sk-card-heading h2 {
+    margin: 0;
+    color: var(--feb-heading);
+    font-size: 1.08rem;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+.admin-card-header p,
+.history-card-header p,
+.manage-admin-card-header p,
+.detail-history-card-header p,
+.detail-section-header p,
+.verification-section-header p,
+.revision-section-header p,
+.sk-card-heading p {
+    margin: 5px 0 0;
+    color: var(--feb-muted);
+    font-size: .86rem;
+    line-height: 1.55;
+}
+
+/* ---------- STATISTICS ---------- */
+
+.admin-stat-card {
+    min-height: 140px;
+    padding: 20px;
+    border-color: var(--feb-line);
+    background: #fff;
+}
+
+.admin-stat-card.warning,
+.admin-stat-card.success {
+    background: #fff;
+}
+
+.admin-stat-card.warning {
+    border-color: #ecdba9;
+}
+
+.admin-stat-card.success {
+    border-color: #c8dfd2;
+}
+
+.admin-stat-header {
+    margin-bottom: 12px;
+    color: var(--feb-muted);
+    font-size: .8rem;
+}
+
+.admin-stat-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    font-size: .85rem;
+}
+
+.admin-stat-value {
+    margin-bottom: 4px;
+    font-size: clamp(1.85rem, 2vw, 2.15rem);
+    line-height: 1.05;
+}
+
+.admin-stat-card p {
+    margin: 6px 0 0;
+    font-size: .8rem;
+    line-height: 1.45;
+}
+
+/* ---------- QUICK ACTION ---------- */
+
+.admin-quick-actions {
+    gap: 9px;
+}
+
+.admin-quick-action {
+    min-height: 60px;
+    gap: 12px;
+    padding: 11px 12px;
+    border-color: var(--feb-line);
+    border-radius: 12px;
+    color: var(--feb-heading);
+}
+
+.admin-quick-action:hover {
+    background: var(--feb-green-50);
+    border-color: var(--feb-green-200);
+    transform: translateY(-1px);
+    box-shadow: var(--feb-shadow-xs);
+}
+
+.admin-quick-icon {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    border-radius: 11px;
+    background: var(--feb-green-50);
+    color: var(--feb-green-700);
+    font-size: .9rem;
+}
+
+.admin-quick-action strong {
+    font-size: .86rem;
+    line-height: 1.25;
+}
+
+.admin-quick-action span {
+    margin-top: 2px;
+    color: var(--feb-muted);
+    font-size: .76rem;
+    line-height: 1.3;
+}
+
+/* ---------- TABLES ---------- */
+
+.admin-table-wrapper,
+.history-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--feb-line-soft);
+    border-radius: 12px;
+    background: #fff;
+    overscroll-behavior-x: contain;
+}
+
+.admin-table,
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .88rem;
+}
+
+.admin-table th,
+.history-table th {
+    height: 46px;
+    padding: 11px 12px;
+    border-bottom: 1px solid var(--feb-line);
+    background: var(--feb-green-50);
+    color: var(--feb-green-900);
+    font-size: .72rem;
+    font-weight: 850;
+    letter-spacing: .045em;
+    line-height: 1.25;
+    text-align: left;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.admin-table td,
+.history-table td {
+    min-height: 54px;
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--feb-line-soft);
+    color: var(--feb-ink);
+    font-size: .87rem;
+    line-height: 1.45;
+    vertical-align: middle;
+}
+
+.admin-table tbody tr:last-child td,
+.history-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.admin-table tbody tr:hover,
+.history-table tbody tr:hover {
+    background: #fbfdfc;
+}
+
+.submission-student strong,
+.history-admin-cell strong,
+.history-student strong {
+    font-size: .88rem;
+    line-height: 1.3;
+}
+
+.submission-student span,
+.history-admin-cell span,
+.history-student span,
+.history-student small {
+    margin-top: 2px;
+    color: var(--feb-muted);
+    font-size: .76rem;
+    line-height: 1.35;
+}
+
+.admin-detail-button,
+.history-detail-button,
+.detail-history-preview-button,
+.preview-document-button,
+.verification-preview-button,
+.revision-preview-button {
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border: 1px solid var(--feb-line-dark);
+    border-radius: 9px;
+    background: #fff;
+    color: var(--feb-green-900);
+    font-size: .78rem;
+    font-weight: 800;
+    line-height: 1.2;
+    text-decoration: none;
+}
+
+.admin-detail-button:hover,
+.history-detail-button:hover,
+.detail-history-preview-button:hover,
+.preview-document-button:hover,
+.verification-preview-button:hover,
+.revision-preview-button:hover {
+    border-color: var(--feb-green-300);
+    background: var(--feb-green-50);
+}
+
+/* ---------- STATUS & COUNTERS ---------- */
+
+.admin-status-badge,
+.history-action-badge,
+.detail-history-status-badge,
+.manage-admin-status-badge,
+.revision-result-status,
+.verification-result-badge {
+    min-height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 9px;
+    border-radius: 999px;
+    font-size: .72rem;
+    font-weight: 800;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.admin-nav-count,
+.manage-admin-section-count,
+.detail-document-count,
+.detail-history-document-count {
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---------- FORM & FILTERS ---------- */
+
+.submission-filter-grid,
+.history-filter-grid {
+    gap: 14px;
+}
+
+.submission-filter-group,
+.history-filter-group,
+.form-group {
+    gap: 7px;
+}
+
+.submission-filter-group label,
+.history-filter-group label,
+.admin-main label {
+    color: var(--feb-heading);
+    font-size: .82rem;
+    font-weight: 750;
+    line-height: 1.35;
+}
+
+.admin-main input,
+.admin-main select,
+.admin-main textarea,
+.submission-filter-group input,
+.submission-filter-group select,
+.history-filter-group input,
+.history-filter-group select,
+.manage-admin-search-row input {
+    min-height: var(--feb-control-height);
+    padding: 10px 12px;
+    border: 1px solid var(--feb-line-dark);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--feb-ink);
+    font-size: .88rem;
+    line-height: 1.35;
+}
+
+.admin-main textarea {
+    min-height: 112px;
+}
+
+.admin-main input::placeholder,
+.admin-main textarea::placeholder {
+    color: #87938d;
+}
+
+.submission-filter-actions,
+.history-filter-actions {
+    gap: 8px;
+}
+
+.active-filter-box,
+.history-active-filter,
+.manage-admin-filter-info {
+    border-radius: 10px;
+    font-size: .8rem;
+}
+
+/* ---------- BUTTONS ---------- */
+
+.btn,
+.admin-primary-button,
+.admin-secondary-button,
+.admin-small-button,
+.history-primary-button,
+.history-secondary-button,
+.manage-admin-primary-button,
+.manage-admin-secondary-button,
+.verification-submit-button,
+.revision-submit-button,
+.sk-primary-action {
+    min-height: var(--feb-touch-target);
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: .86rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.admin-small-button,
+.manage-admin-action {
+    min-height: 36px;
+    padding: 7px 11px;
+    font-size: .75rem;
+}
+
+/* ---------- PAGINATION ---------- */
+
+.admin-pagination {
+    gap: 14px;
+    margin-top: 20px;
+    padding-top: 16px;
+}
+
+.admin-pagination > span {
+    color: var(--feb-muted);
+    font-size: .78rem;
+}
+
+.admin-pagination button {
+    min-width: 38px;
+    min-height: 38px;
+    padding: 7px 10px;
+    border: 1px solid var(--feb-line-dark);
+    border-radius: 9px;
+    background: #fff;
+    color: var(--feb-green-900);
+    font-size: .78rem;
+    font-weight: 750;
+}
+
+.admin-pagination button.active {
+    border-color: var(--feb-green-800);
+    background: var(--feb-green-800);
+    color: #fff;
+}
+
+/* ---------- DETAIL/WORKFLOW PAGE SPACING ---------- */
+
+.detail-summary-card,
+.verification-student-card,
+.revision-student-card,
+.sk-student-card,
+.detail-history-activity-card {
+    margin-bottom: 18px;
+}
+
+.detail-section,
+.verification-section,
+.revision-review-section,
+.sk-process-card,
+.history-card,
+.manage-admin-card,
+.detail-history-card {
+    margin-bottom: 18px;
+}
+
+.detail-data-grid,
+.detail-history-info-grid,
+.revision-result-summary,
+.verification-result-summary {
+    gap: 12px;
+}
+
+.detail-data-item,
+.detail-history-info-item,
+.revision-result-summary > div,
+.verification-result-summary > div,
+.sk-meta-item {
+    border-radius: 11px;
+}
+
+.detail-data-item > span,
+.detail-history-info-item span,
+.sk-meta-item > span,
+.revision-result-summary span,
+.verification-result-summary span {
+    color: var(--feb-muted);
+    font-size: .74rem;
+    font-weight: 700;
+}
+
+.detail-data-item > strong,
+.detail-history-info-item strong,
+.sk-meta-item > strong,
+.revision-result-summary strong,
+.verification-result-summary strong {
+    color: var(--feb-heading);
+    font-size: .88rem;
+    line-height: 1.4;
+}
+
+/* ---------- MODALS ---------- */
+
+.modal-overlay,
+.document-preview-overlay,
+.verification-preview-overlay,
+.revision-preview-overlay,
+.history-document-overlay,
+.manage-admin-modal-overlay {
+    padding: 20px;
+    background: rgba(5, 27, 19, .58);
+    backdrop-filter: blur(4px);
+}
+
+.modal-card,
+.document-preview-modal,
+.verification-preview-modal,
+.revision-preview-modal,
+.history-document-modal,
+.manage-admin-modal {
+    border: 1px solid var(--feb-line);
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: var(--feb-shadow-lg);
+}
+
+.modal-card {
+    width: min(100%, 480px);
+    padding: 28px;
+}
+
+.modal-card h2,
+.manage-admin-modal h2 {
+    margin-bottom: 7px;
+    font-size: 1.25rem;
+    line-height: 1.3;
+}
+
+.modal-card p,
+.manage-admin-modal > p {
+    font-size: .88rem;
+    line-height: 1.55;
+}
+
+/* ---------- AUTH ---------- */
+
+.admin-auth-page {
+    min-height: 100vh;
+    padding: 36px 18px;
+    background:
+        radial-gradient(circle at 12% 10%, rgba(214,167,44,.10), transparent 28%),
+        linear-gradient(180deg, #f8fbf9 0%, var(--feb-canvas) 100%);
+}
+
+.admin-auth-container {
+    max-width: 470px;
+}
+
+.admin-auth-container.register-container {
+    max-width: 560px;
+}
+
+.admin-brand-badge {
+    min-height: 30px;
+    padding: 6px 12px;
+    border: 1px solid var(--feb-gold-300);
+    border-radius: 999px;
+    background: var(--feb-gold-100);
+    color: var(--feb-green-900);
+    font-size: .72rem;
+    font-weight: 850;
+    letter-spacing: .08em;
+}
+
+.admin-auth-brand h1 {
+    margin: 0 0 6px;
+    color: var(--feb-green-950);
+    font-size: clamp(1.7rem, 4vw, 2rem);
+    line-height: 1.2;
+}
+
+.admin-auth-brand p {
+    color: var(--feb-muted);
+    font-size: .88rem;
+}
+
+.admin-auth-card {
+    padding: 30px;
+    border: 1px solid var(--feb-line);
+    border-top: 4px solid var(--feb-gold-500);
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: var(--feb-shadow-md);
+}
+
+.admin-auth-header h2 {
+    margin: 0 0 5px;
+    color: var(--feb-heading);
+    font-size: 1.35rem;
+}
+
+.admin-auth-header p,
+.admin-auth-footer p,
+.admin-auth-link,
+.remember-wrapper,
+.password-strength span,
+.register-confirmation span,
+.register-status-info p {
+    font-size: .82rem;
+    line-height: 1.5;
+}
+
+.admin-auth-link {
+    color: var(--feb-green-800);
+    text-underline-offset: 2px;
+}
+
+.admin-auth-link:hover {
+    color: var(--feb-green-950);
+}
+
+.password-toggle {
+    width: 38px;
+    height: 38px;
+    right: 8px;
+}
+
+/* ---------- EMPTY STATES ---------- */
+
+.admin-empty-state,
+.submission-empty-state,
+.history-empty,
+.manage-admin-empty {
+    padding: 44px 24px;
+    color: var(--feb-muted);
+    text-align: center;
+}
+
+.admin-empty-state strong,
+.submission-empty-state strong,
+.history-empty strong,
+.manage-admin-empty strong {
+    color: var(--feb-heading);
+    font-size: .95rem;
+}
+
+.admin-empty-state p,
+.submission-empty-state p,
+.history-empty p,
+.manage-admin-empty p {
+    margin: 5px auto 0;
+    max-width: 520px;
+    font-size: .82rem;
+    line-height: 1.55;
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 1180px) {
+    .admin-stats-grid {
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
+    }
+
+    .admin-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+    .admin-layout {
+        display: block;
+    }
+
+    .admin-sidebar {
+        position: relative !important;
+        width: 100% !important;
+        height: auto !important;
+        max-height: none;
+        padding: 0;
+        overflow: visible;
+        border-right: 0;
+        box-shadow: 0 7px 24px rgba(5,46,34,.10);
+    }
+
+    .admin-sidebar-brand {
+        min-height: 64px;
+        margin: 0;
+        padding: 12px 18px;
+    }
+
+    .admin-sidebar-nav {
+        display: flex;
+        flex-direction: row;
+        gap: 7px;
+        padding: 9px 12px 12px;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scrollbar-width: thin;
+    }
+
+    .admin-nav-item {
+        flex: 0 0 auto;
+        width: auto;
+        min-width: max-content;
+        min-height: 42px;
+        padding: 9px 11px;
+    }
+
+    .admin-nav-divider {
+        display: none;
+    }
+
+    /* Logout tetap tersedia pada tablet/mobile. */
+    .admin-sidebar-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 0;
+        padding: 10px 16px 14px;
+        border-top: 1px solid rgba(255,255,255,.10);
+    }
+
+    .admin-user-mini {
+        min-width: 0;
+        flex: 1;
+        margin: 0;
+        padding: 0;
+    }
+
+    .admin-sidebar-footer form {
+        width: auto !important;
+        flex: 0 0 auto;
+    }
+
+    .admin-logout-button {
+        width: auto;
+        min-width: 92px;
+        padding-inline: 14px;
+    }
+
+    .admin-main {
+        max-width: none;
+        margin: 0;
+        padding: 24px 20px 42px;
+    }
+
+    .admin-topbar,
+    .detail-topbar,
+    .verification-header,
+    .revision-review-header,
+    .manage-admin-header,
+    .detail-history-header {
+        min-height: 0;
+        align-items: flex-start;
+        gap: 16px;
+    }
+}
+
+@media (max-width: 700px) {
+    .admin-main {
+        padding: 20px 15px 36px;
+    }
+
+    .admin-topbar,
+    .detail-topbar,
+    .verification-header,
+    .revision-review-header,
+    .manage-admin-header,
+    .detail-history-header {
+        flex-direction: column;
+        align-items: stretch;
+        margin-bottom: 22px;
+    }
+
+    .admin-topbar-actions,
+    .detail-header-actions,
+    .verification-header-right,
+    .revision-review-header-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .admin-profile-chip {
+        align-self: flex-start;
+    }
+
+    .admin-stats-grid,
+    .submission-mini-stats,
+    .manage-admin-summary-grid,
+    .history-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .submission-filter-grid,
+    .history-filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .submission-search {
+        grid-column: auto;
+    }
+
+    .submission-filter-actions,
+    .history-filter-actions,
+    .admin-pagination {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-primary-button,
+    .admin-secondary-button,
+    .history-primary-button,
+    .history-secondary-button,
+    .manage-admin-primary-button,
+    .manage-admin-secondary-button {
+        width: 100%;
+    }
+
+    .admin-pagination > div {
+        flex-wrap: wrap;
+    }
+
+    .admin-sidebar-footer {
+        align-items: stretch;
+    }
+
+    .admin-user-mini {
+        display: none;
+    }
+
+    .admin-sidebar-footer form,
+    .admin-logout-button {
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 520px) {
+    html {
+        font-size: 15px;
+    }
+
+    .admin-main {
+        padding: 18px 12px 32px;
+    }
+
+    .admin-dashboard-card,
+    .history-card,
+    .manage-admin-card,
+    .detail-history-card,
+    .admin-auth-card {
+        padding: 20px 16px;
+    }
+
+    .admin-stat-card {
+        min-height: 128px;
+        padding: 17px;
+    }
+
+    .admin-table th,
+    .history-table th,
+    .admin-table td,
+    .history-table td {
+        padding-inline: 10px;
+    }
+
+    .modal-card {
+        padding: 24px 18px;
+    }
+}
