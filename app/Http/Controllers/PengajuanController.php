@@ -95,15 +95,22 @@ class PengajuanController extends Controller
 
             // 3. Simpan pengajuan
             $pengajuan = PengajuanYudisium::create([
-                'kode_pengajuan' => $kodePengajuan,
                 'nim' => $mahasiswa->nim,
+                'kode_pengajuan' => $kodePengajuan,
                 'karya_tulis' => $request->karya_tulis,
                 'judul_karya_tulis' => $request->judul_karya_tulis,
                 'tanggal_ujian' => $request->tanggal_ujian,
                 'nilai_angka' => $request->nilai_angka,
                 'nilai_huruf' => $request->nilai_huruf,
-                'status' => 'DIAJUKAN',
+                'status' => 'MENUNGGU_VERIFIKASI',
                 'submitted_at' => now(),
+            ]);
+
+            \App\Models\RiwayatStatus::create([
+                'pengajuan_id' => $pengajuan->id,
+                'status' => 'MENUNGGU_VERIFIKASI',
+                'catatan' => 'Pendaftaran pengajuan baru',
+                'changed_by' => null // Mahasiswa (no auth)
             ]);
 
             // 4. Buat data validasi field
@@ -138,7 +145,7 @@ class PengajuanController extends Controller
 
                 /*
                  * PENTING:
-                 * name input frontend SAMA dengan kode dokumen.
+                 * name input frontend SAMA dengan kode dokumen (huruf kecil).
                  *
                  * Contoh:
                  * form_yudisium
@@ -147,7 +154,7 @@ class PengajuanController extends Controller
                  *
                  * Jadi TIDAK memakai prefix "file_".
                  */
-                $inputName = $doc->kode;
+                $inputName = strtolower($doc->kode);
 
                 /*
                  * Dokumen khusus jurusan hanya diproses

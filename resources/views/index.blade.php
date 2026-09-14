@@ -659,15 +659,15 @@
 
                 <div class="form-group file-group">
 
-                    <label for="bebas_perpus_universitas">
+                    <label for="bebas_perpus_univ">
                         Surat Bebas Pinjam Perpustakaan Universitas Asli
                         <span class="required">*</span>
                     </label>
 
                     <input
                         type="file"
-                        id="bebas_perpus_universitas"
-                        name="bebas_perpus_universitas"
+                        id="bebas_perpus_univ"
+                        name="bebas_perpus_univ"
                         accept=".pdf,application/pdf"
                         data-max-size="1"
                         required
@@ -759,15 +759,15 @@
 
                 <div class="form-group file-group">
 
-                    <label for="surat_tugas_pembimbing">
+                    <label for="surat_tugas_dosbing">
                         Surat Tugas Dosen Pembimbing Skripsi
                         <span class="required">*</span>
                     </label>
 
                     <input
                         type="file"
-                        id="surat_tugas_pembimbing"
-                        name="surat_tugas_pembimbing"
+                        id="surat_tugas_dosbing"
+                        name="surat_tugas_dosbing"
                         accept=".pdf,application/pdf"
                         data-max-size="10"
                         required
@@ -822,15 +822,15 @@
                         id="dokumenManajemen"
                     >
 
-                        <label for="jurnal_manajemen">
+                        <label for="jurnal_jmso">
                             Bukti Pengisian Jurnal "Manajemen Sains dan Organisasi" (JMSO)
                             <span class="required">*</span>
                         </label>
 
                         <input
                             type="file"
-                            id="jurnal_manajemen"
-                            name="jurnal_manajemen"
+                            id="jurnal_jmso"
+                            name="jurnal_jmso"
                             accept=".pdf,application/pdf"
                             data-max-size="1"
                         >
@@ -850,15 +850,15 @@
                         id="dokumenEkonomi"
                     >
 
-                        <label for="jurnal_ekonomi">
+                        <label for="jurnal_ep">
                             Bukti Pengisian Jurnal Jurusan Ekonomi Pembangunan
                             <span class="required">*</span>
                         </label>
 
                         <input
                             type="file"
-                            id="jurnal_ekonomi"
-                            name="jurnal_ekonomi"
+                            id="jurnal_ep"
+                            name="jurnal_ep"
                             accept=".pdf,application/pdf"
                             data-max-size="1"
                         >

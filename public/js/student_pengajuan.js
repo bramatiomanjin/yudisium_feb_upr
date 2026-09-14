@@ -118,10 +118,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     const jurnalManajemen =
-        document.getElementById("jurnal_manajemen");
+        document.getElementById("jurnal_jmso");
 
     const jurnalEkonomi =
-        document.getElementById("jurnal_ekonomi");
+        document.getElementById("jurnal_ep");
 
     const jurnalAkuntansi =
         document.getElementById("jurnal_akuntansi");
