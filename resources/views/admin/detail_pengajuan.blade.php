@@ -79,8 +79,8 @@
 
 
                 <a
-                    href="/admin/dashboard"
-                    class="admin-nav-item active"
+                    href="/admin/pengajuan"
+                    class="admin-nav-item"
                 >
                     <span class="admin-nav-icon">
                         ☷

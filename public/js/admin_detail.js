@@ -292,15 +292,23 @@ document.addEventListener(
             const STATUS = window.YudisiumAPI.STATUS;
             const status = submission.status;
 
+            // Check if we came from the History page
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromHistory = urlParams.get("from") === "history";
+
             document.querySelectorAll(".admin-nav-item").forEach(function (el) {
                 el.classList.remove("active");
             });
 
-            let activeHref = "/admin/pengajuan";
-            if (status === STATUS.PERLU_REVISI || status === STATUS.REVISI_DIKIRIM) {
+            let activeHref;
+            if (fromHistory) {
+                activeHref = "/admin/history";
+            } else if (status === STATUS.PERLU_REVISI || status === STATUS.REVISI_DIKIRIM) {
                 activeHref = "/admin/pengajuan?filter=revisi";
             } else if ([STATUS.TERVERIFIKASI, STATUS.PEMBUATAN_SK, STATUS.TTD_WAKIL_DEKAN, STATUS.TTD_DEKAN, STATUS.SK_SIAP_DIAMBIL].includes(status)) {
                 activeHref = "/admin/pengajuan?filter=proses-sk";
+            } else {
+                activeHref = "/admin/pengajuan";
             }
 
             const activeItem = document.querySelector('.admin-nav-item[href="' + activeHref + '"]');

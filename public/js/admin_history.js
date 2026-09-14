@@ -1164,7 +1164,8 @@ document.addEventListener(
                                     encodeURIComponent(
                                         activity
                                             .submissionId
-                                    )
+                                    ) +
+                                    "?from=history"
                                 )
                                 : "#";
 
