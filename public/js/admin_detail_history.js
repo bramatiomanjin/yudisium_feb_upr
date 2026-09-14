@@ -103,6 +103,37 @@ document.addEventListener(
            HELPERS
         ===================================================== */
 
+        function formatDateTime(value) {
+            if (!value) return "-";
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return value;
+            return new Intl.DateTimeFormat("id-ID", {
+                timeZone: "Asia/Jakarta",
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false
+            }).format(date).replace(".", ":") + " WIB";
+        }
+
+        function updateSidebarNav(submission) {
+            const STATUS = window.YudisiumAPI.STATUS;
+            const status = submission.status;
+
+            document.querySelectorAll(".admin-nav-item").forEach(function (el) {
+                el.classList.remove("active");
+            });
+
+            let activeHref = "/admin/history"; // Default for history
+
+            const activeItem = document.querySelector('.admin-nav-item[href="' + activeHref + '"]');
+            if (activeItem) {
+                activeItem.classList.add("active");
+            }
+        }
+
         function setText(
             id,
             value

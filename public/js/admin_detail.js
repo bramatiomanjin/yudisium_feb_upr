@@ -52,6 +52,22 @@ document.addEventListener(
         }
 
 
+        function formatDateTime(value) {
+            if (!value) return "-";
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return value;
+            return new Intl.DateTimeFormat("id-ID", {
+                timeZone: "Asia/Jakarta",
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false
+            }).format(date).replace(".", ":") + " WIB";
+        }
+
+
         function setText(
             id,
             value
@@ -102,7 +118,7 @@ document.addEventListener(
 
         setText(
             "detailSubmittedAt",
-            submission.submittedAt
+            formatDateTime(submission.submittedAt)
         );
 
         setText(
@@ -272,9 +288,33 @@ document.addEventListener(
         }
 
 
+        function updateSidebarNav(submission) {
+            const STATUS = window.YudisiumAPI.STATUS;
+            const status = submission.status;
+
+            document.querySelectorAll(".admin-nav-item").forEach(function (el) {
+                el.classList.remove("active");
+            });
+
+            let activeHref = "/admin/pengajuan";
+            if (status === STATUS.PERLU_REVISI || status === STATUS.REVISI_DIKIRIM) {
+                activeHref = "/admin/pengajuan?filter=revisi";
+            } else if ([STATUS.TERVERIFIKASI, STATUS.PEMBUATAN_SK, STATUS.TTD_WAKIL_DEKAN, STATUS.TTD_DEKAN, STATUS.SK_SIAP_DIAMBIL].includes(status)) {
+                activeHref = "/admin/pengajuan?filter=proses-sk";
+            }
+
+            const activeItem = document.querySelector('.admin-nav-item[href="' + activeHref + '"]');
+            if (activeItem) {
+                activeItem.classList.add("active");
+            }
+        }
+
+
         /* =====================================================
            DOCUMENT
         ===================================================== */
+
+        updateSidebarNav(submission);
 
         const documents =
             await window.YudisiumAPI
