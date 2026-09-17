@@ -47,7 +47,7 @@
 
 
                     <p>
-                        Masukkan NIM dan Kode SK Yudisium untuk melihat
+                        Masukkan NIM Anda untuk melihat
                         status proses, feedback admin, dan tindakan yang
                         perlu dilakukan.
                     </p>

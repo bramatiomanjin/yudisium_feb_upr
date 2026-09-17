@@ -60,7 +60,7 @@ class TrackingController extends Controller
                     false,
 
                 'message' =>
-                    'NIM dan Kode SK Yudisium tidak ditemukan.'
+                    'Data pengajuan tidak ditemukan.'
             ], 404);
         }
 

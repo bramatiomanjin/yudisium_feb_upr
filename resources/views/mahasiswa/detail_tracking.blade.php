@@ -252,8 +252,7 @@
 
 
                         <p>
-                            Pastikan NIM dan Kode SK Yudisium
-                            sesuai dengan pengajuan Anda.
+                            Pastikan data berikut sesuai dengan pengajuan Anda.
                         </p>
 
                     </div>
