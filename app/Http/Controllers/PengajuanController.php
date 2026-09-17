@@ -185,6 +185,14 @@ class PengajuanController extends Controller
                 $ukuranFile =
                     $file->getSize();
 
+                if ($ukuranFile > 1024 * 1024) {
+                    DB::rollBack();
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Ukuran file ' . $namaFileAsli . ' terlalu besar. Maksimal 1 MB.'
+                    ], 400);
+                }
+
                 $mimeType =
                     $file->getMimeType();
 

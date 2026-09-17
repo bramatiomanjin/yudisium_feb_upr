@@ -51,7 +51,8 @@ document.addEventListener(
 
             const submission =
                 await API.getSubmission(
-                    id
+                    id,
+                    code
                 );
 
 
@@ -84,7 +85,8 @@ document.addEventListener(
 
             const verification =
                 await API.getVerificationResult(
-                    submission.id
+                    submission.id,
+                    code
                 );
 
 
@@ -102,7 +104,8 @@ document.addEventListener(
 
             const documents =
                 await API.getDocuments(
-                    submission.id
+                    submission.id,
+                    code
                 );
 
 
@@ -944,6 +947,13 @@ document.addEventListener(
                                     return;
                                 }
 
+                                const maxSizeBytes = 1 * 1024 * 1024; // 1 MB
+                                if (file.size > maxSizeBytes) {
+                                    alert("Ukuran file " + file.name + " terlalu besar. Maksimal 1 MB.");
+                                    valid = false;
+                                    return;
+                                }
+
 
                                 /*
                                  * Backend TrackingController
@@ -1088,7 +1098,7 @@ document.addEventListener(
 
 
                         alert(
-                            "Revisi gagal dikirim. Silakan coba kembali."
+                            "Revisi gagal dikirim. Silakan coba kembali.\n\n" + (error.message || "")
                         );
 
                     } finally {

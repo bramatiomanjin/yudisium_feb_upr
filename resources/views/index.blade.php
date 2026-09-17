@@ -142,7 +142,7 @@
                         type="email"
                         id="email"
                         name="email"
-                        placeholder="contoh@email.com"
+                        placeholder="contoh@gmail.com / contoh@mhs.eng.upr.ac.id"
                         required
                     >
 
@@ -824,7 +824,6 @@
 
                         <label for="jurnal_jmso">
                             Bukti Pengisian Jurnal "Manajemen Sains dan Organisasi" (JMSO)
-                            <span class="required">*</span>
                         </label>
 
                         <input
@@ -840,7 +839,7 @@
                         </small>
 
                         <div class="error-message">
-                            Dokumen JMSO wajib berupa PDF maksimal 1 MB.
+                            Dokumen JMSO harus berupa PDF maksimal 1 MB.
                         </div>
 
                     </div>
@@ -852,7 +851,6 @@
 
                         <label for="jurnal_ep">
                             Bukti Pengisian Jurnal Jurusan Ekonomi Pembangunan
-                            <span class="required">*</span>
                         </label>
 
                         <input
@@ -868,7 +866,7 @@
                         </small>
 
                         <div class="error-message">
-                            Dokumen jurnal Ekonomi Pembangunan wajib berupa PDF maksimal 1 MB.
+                            Dokumen jurnal Ekonomi Pembangunan harus berupa PDF maksimal 1 MB.
                         </div>
 
                     </div>
@@ -880,7 +878,6 @@
 
                         <label for="jurnal_akuntansi">
                             Bukti Pengisian Jurnal Jurusan Akuntansi
-                            <span class="required">*</span>
                         </label>
 
                         <input
@@ -896,7 +893,7 @@
                         </small>
 
                         <div class="error-message">
-                            Dokumen jurnal Akuntansi wajib maksimal 10 MB.
+                            Dokumen jurnal Akuntansi maksimal 10 MB.
                         </div>
 
                     </div>

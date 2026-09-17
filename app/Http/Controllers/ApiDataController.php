@@ -19,7 +19,7 @@ class ApiDataController extends Controller
     // 1. GET SINGLE SUBMISSION
     // =========================================================
 
-    public function getSubmission(string $id)
+    public function getSubmission(Request $request, string $id)
     {
         $pengajuan =
             PengajuanYudisium::with([
@@ -27,6 +27,9 @@ class ApiDataController extends Controller
             ])
                 ->findOrFail($id);
 
+        if (!Auth::check() && $request->query('kode_sk') !== $pengajuan->kode_pengajuan) {
+            abort(403, 'Unauthorized');
+        }
 
         $data = [
 
@@ -130,8 +133,14 @@ class ApiDataController extends Controller
     // 2. DOCUMENTS
     // =========================================================
 
-    public function getDocuments(string $id)
+    public function getDocuments(Request $request, string $id)
     {
+        $pengajuan = PengajuanYudisium::findOrFail($id);
+        
+        if (!Auth::check() && $request->query('kode_sk') !== $pengajuan->kode_pengajuan) {
+            abort(403, 'Unauthorized');
+        }
+
         $dokumens =
             PengajuanDokumen::with(
                 'jenisDokumen'
@@ -202,8 +211,15 @@ class ApiDataController extends Controller
     // =========================================================
 
     public function getVerificationResult(
+        Request $request,
         string $id
     ) {
+        $pengajuan = PengajuanYudisium::findOrFail($id);
+        
+        if (!Auth::check() && $request->query('kode_sk') !== $pengajuan->kode_pengajuan) {
+            abort(403, 'Unauthorized');
+        }
+
         $fields =
             ValidasiField::where(
                 'pengajuan_id',
@@ -627,6 +643,26 @@ class ApiDataController extends Controller
                 'FIELD'
             ) {
 
+                $currentField =
+                    ValidasiField::where(
+                        'pengajuan_id',
+                        $id
+                    )
+                        ->where(
+                            'field_key',
+                            $r->field_key
+                        )
+                        ->first();
+
+
+                if (
+                    !$currentField ||
+                    $currentField->status_validasi !== 'PENDING'
+                ) {
+                    continue;
+                }
+
+
                 $items[] = [
 
                     'type' =>
@@ -677,28 +713,30 @@ class ApiDataController extends Controller
                         ->first();
 
 
+                if (
+                    !$dokumen ||
+                    $dokumen->status_validasi !== 'PENDING'
+                ) {
+                    continue;
+                }
+
+
                 $items[] = [
 
                     'type' =>
                         'document',
 
                     'key' =>
-                        $dokumen
-                            ? (string) $dokumen->id
-                            : (string) $r->jenis_dokumen_id,
+                        (string) $dokumen->id,
 
                     'jenisDokumenId' =>
                         $r->jenis_dokumen_id,
 
                     'label' =>
                         $dokumen
-                            ? (
-                                $dokumen
-                                    ->jenisDokumen
-                                    ->nama_dokumen
-                                    ?? 'Dokumen'
-                            )
-                            : 'Dokumen',
+                            ->jenisDokumen
+                            ->nama_dokumen
+                            ?? 'Dokumen',
 
                     'oldFile' =>
                         $r->nilai_lama,

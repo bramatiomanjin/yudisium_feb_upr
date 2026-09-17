@@ -532,7 +532,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ) {
 
             const emailPattern =
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 
             if (
@@ -867,13 +867,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 .classList
                 .add("active");
 
-
-            jurnalManajemen
-                .setAttribute(
-                    "required",
-                    ""
-                );
-
         }
 
 
@@ -886,13 +879,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 .classList
                 .add("active");
 
-
-            jurnalEkonomi
-                .setAttribute(
-                    "required",
-                    ""
-                );
-
         }
 
 
@@ -904,13 +890,6 @@ document.addEventListener("DOMContentLoaded", function () {
             dokumenAkuntansi
                 .classList
                 .add("active");
-
-
-            jurnalAkuntansi
-                .setAttribute(
-                    "required",
-                    ""
-                );
 
         }
 

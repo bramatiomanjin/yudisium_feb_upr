@@ -127,7 +127,7 @@ document.addEventListener(
                                 "block";
 
                             errorBox.textContent =
-                                "Sistem belum dapat mengakses data pengajuan.";
+                                error.message || "Sistem belum dapat mengakses data pengajuan.";
                         }
                     }
                 }
@@ -227,7 +227,8 @@ document.addEventListener(
 
                         const detail =
                             await API.getSubmission(
-                                submission.id
+                                submission.id,
+                                code
                             );
 
                         if (detail) {

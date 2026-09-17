@@ -439,6 +439,11 @@ class TrackingController extends Controller
                     $file
                 ) {
 
+                    if ($file->getSize() > 1024 * 1024) {
+                        DB::rollBack();
+                        return response('Ukuran file ' . $file->getClientOriginalName() . ' terlalu besar. Maksimal 1 MB.', 400);
+                    }
+
                     $dokumenLama =
                         PengajuanDokumen::where(
                             'id',

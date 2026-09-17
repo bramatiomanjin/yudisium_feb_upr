@@ -815,7 +815,7 @@
     }
 
 
-    async function getSubmission(id) {
+    async function getSubmission(id, kode_sk = null) {
 
         if (
             !CONFIG.backendConnected
@@ -825,11 +825,12 @@
 
         }
 
+        const query = kode_sk ? "?kode_sk=" + encodeURIComponent(kode_sk) : "";
 
         const payload =
             await request(
                 "/submissions/" +
-                encodeURIComponent(id)
+                encodeURIComponent(id) + query
             );
 
 
@@ -938,7 +939,8 @@
     ========================================================= */
 
     async function getDocuments(
-        submissionId
+        submissionId,
+        kode_sk = null
     ) {
 
         if (
@@ -949,6 +951,7 @@
 
         }
 
+        const query = kode_sk ? "?kode_sk=" + encodeURIComponent(kode_sk) : "";
 
         const payload =
             await request(
@@ -956,7 +959,7 @@
                 encodeURIComponent(
                     submissionId
                 ) +
-                "/documents"
+                "/documents" + query
             );
 
 
@@ -982,7 +985,8 @@
     ========================================================= */
 
     async function getVerificationResult(
-        submissionId
+        submissionId,
+        kode_sk = null
     ) {
 
         if (
@@ -993,6 +997,7 @@
 
         }
 
+        const query = kode_sk ? "?kode_sk=" + encodeURIComponent(kode_sk) : "";
 
         const payload =
             await request(
@@ -1000,7 +1005,7 @@
                 encodeURIComponent(
                     submissionId
                 ) +
-                "/verification"
+                "/verification" + query
             );
 
 

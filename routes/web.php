@@ -117,6 +117,28 @@ Route::post(
 
 
 // =========================================================
+// API DATA PENGAJUAN (PUBLIC WITH KODE)
+// =========================================================
+
+Route::get(
+    '/submissions/{id}',
+    [ApiDataController::class, 'getSubmission']
+);
+
+
+Route::get(
+    '/submissions/{id}/documents',
+    [ApiDataController::class, 'getDocuments']
+);
+
+
+Route::get(
+    '/submissions/{id}/verification',
+    [ApiDataController::class, 'getVerificationResult']
+);
+
+
+// =========================================================
 // AREA ADMIN
 // =========================================================
 
@@ -150,24 +172,6 @@ Route::middleware('auth')->group(
         Route::get(
             '/submissions',
             [AdminController::class, 'submissions']
-        );
-
-
-        Route::get(
-            '/submissions/{id}',
-            [ApiDataController::class, 'getSubmission']
-        );
-
-
-        Route::get(
-            '/submissions/{id}/documents',
-            [ApiDataController::class, 'getDocuments']
-        );
-
-
-        Route::get(
-            '/submissions/{id}/verification',
-            [ApiDataController::class, 'getVerificationResult']
         );
 
 
