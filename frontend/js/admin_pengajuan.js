@@ -798,10 +798,12 @@ document.addEventListener(
                         submission.status;
 
 
+                    const isDone = submission.status === window.YudisiumAPI.STATUS.SK_SIAP_DIAMBIL;
+                    
                     row.innerHTML =
                         `
                         <td class="bulk-action-td" style="display: none; text-align: center;">
-                            <input type="checkbox" class="bulk-checkbox" value="${submission.id}" data-status="${submission.status}">
+                            ${isDone ? '' : `<input type="checkbox" class="bulk-checkbox" value="${submission.id}" data-status="${submission.status}">`}
                         </td>
 
                         <td>
