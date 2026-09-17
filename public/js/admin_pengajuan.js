@@ -1160,7 +1160,13 @@ document.addEventListener(
 
         function updateBulkUI() {
             // Check if current filter is proses-sk
-            const isProsesSk = appliedFilter === 'proses-sk';
+            const statusFilter = document.getElementById("submissionStatus");
+            let statusTarget = "";
+            if (statusFilter) {
+                statusTarget = statusFilter.dataset.externalFilter || statusFilter.value.trim().toLowerCase();
+            }
+            
+            const isProsesSk = (statusTarget === 'process-group' || statusTarget === 'proses-sk');
             
             // Toggle TH visibility
             const th = document.querySelector('.bulk-action-th');
@@ -1170,6 +1176,8 @@ document.addEventListener(
             document.querySelectorAll('.bulk-action-td').forEach(td => {
                 td.style.display = isProsesSk ? 'table-cell' : 'none';
             });
+
+            if (!bulkActionBar) return;
 
             if (!isProsesSk) {
                 bulkActionBar.style.display = 'none';
@@ -1190,11 +1198,11 @@ document.addEventListener(
 
             if (selectedSubmissions.length > 0) {
                 bulkActionBar.style.display = 'flex';
-                bulkSelectedCount.textContent = selectedSubmissions.length;
+                if(bulkSelectedCount) bulkSelectedCount.textContent = selectedSubmissions.length;
 
                 // Check if all selected have the same status
                 const allSameStatus = selectedSubmissions.every(s => s.status === selectedSubmissions[0].status);
-                btnBulkLoncat.style.display = allSameStatus ? 'block' : 'none';
+                if(btnBulkLoncat) btnBulkLoncat.style.display = allSameStatus ? 'block' : 'none';
             } else {
                 bulkActionBar.style.display = 'none';
             }
