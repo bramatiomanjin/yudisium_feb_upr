@@ -1142,10 +1142,6 @@ document.addEventListener(
         }
 
 
-        loadSubmissions();
-
-    }
-);
         /* =====================================================
            BULK ACTION LOGIC
         ===================================================== */
@@ -1244,7 +1240,7 @@ document.addEventListener(
             btnBulkLanjut.addEventListener("click", async function() {
                 if (selectedSubmissions.length === 0) return;
                 
-                if (!confirm(\Lanjutkan \ pengajuan ke proses selanjutnya?\)) return;
+                if (!confirm(`Lanjutkan ${selectedSubmissions.length} pengajuan ke proses selanjutnya?`)) return;
 
                 btnBulkLanjut.disabled = true;
                 btnBulkLanjut.textContent = "Memproses...";
@@ -1325,3 +1321,7 @@ document.addEventListener(
             });
         }
 
+
+        loadSubmissions();
+    }
+);
