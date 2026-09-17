@@ -86,90 +86,34 @@ class SkController extends Controller
             );
 
 
+        $currentStatus = strtoupper(trim((string) $pengajuan->status));
+
         /*
-         * Workflow proses SK.
-         *
-         * Admin hanya boleh maju satu tahap.
+         * Mengizinkan lompatan tahapan (Loncat ke progres berikutnya)
+         * asalkan status tujuan berada SETELAH status saat ini dalam urutan progres SK.
          */
-        $transitions = [
-
-            'TERVERIFIKASI' =>
-                'PEMBUATAN_SK',
-
-            'PEMBUATAN_SK' =>
-                'TTD_WAKIL_DEKAN',
-
-            'TTD_WAKIL_DEKAN' =>
-                'TTD_DEKAN',
-
-            'TTD_DEKAN' =>
-                'SK_SIAP_DIAMBIL',
+        $skFlow = [
+            'TERVERIFIKASI',
+            'PEMBUATAN_SK',
+            'TTD_WAKIL_DEKAN',
+            'TTD_DEKAN',
+            'SK_SIAP_DIAMBIL'
         ];
 
+        $currentIndex = array_search($currentStatus, $skFlow);
+        $requestedIndex = array_search($requestedStatus, $skFlow);
 
-        $currentStatus =
-            strtoupper(
-                trim(
-                    (string) $pengajuan->status
-                )
-            );
-
-
-        /*
-         * Status saat ini harus merupakan
-         * salah satu status yang dapat
-         * dilanjutkan dalam proses SK.
-         */
-        if (
-            !array_key_exists(
-                $currentStatus,
-                $transitions
-            )
-        ) {
-
+        if ($currentIndex === false) {
             return response()->json([
-                'success' =>
-                    false,
-
-                'message' =>
-                    'Status pengajuan saat ini tidak dapat dilanjutkan ke proses SK.'
+                'success' => false,
+                'message' => 'Status pengajuan saat ini tidak dapat diproses lebih lanjut.'
             ], 422);
         }
 
-
-        /*
-         * Ambil status berikutnya yang sah.
-         */
-        $expectedNextStatus =
-            $transitions[
-                $currentStatus
-            ];
-
-
-        /*
-         * Mencegah lompatan tahapan.
-         *
-         * Contoh:
-         * TERVERIFIKASI tidak boleh langsung
-         * menjadi TTD_DEKAN.
-         */
-        if (
-            $requestedStatus !==
-            $expectedNextStatus
-        ) {
-
+        if ($requestedIndex === false || $requestedIndex <= $currentIndex) {
             return response()->json([
-                'success' =>
-                    false,
-
-                'message' =>
-                    'Perubahan status tidak valid. Tahap berikutnya seharusnya ' .
-                    str_replace(
-                        '_',
-                        ' ',
-                        $expectedNextStatus
-                    ) .
-                    '.'
+                'success' => false,
+                'message' => 'Perubahan status tidak valid. Hanya dapat maju atau loncat ke progres berikutnya.'
             ], 422);
         }
 
