@@ -2852,3 +2852,56 @@ textarea:focus-visible {
         padding: 24px 18px;
     }
 }
+/* =========================================================
+   BULK ACTION UI
+========================================================= */
+.bulk-action-bar {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    max-width: 800px;
+    padding: 16px 24px;
+    background: #fff;
+    border: 1px solid var(--feb-line);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    gap: 20px;
+}
+.bulk-action-info {
+    font-weight: 600;
+    color: var(--feb-green-800);
+}
+.bulk-action-buttons {
+    display: flex;
+    gap: 12px;
+}
+.bulk-action-th {
+    width: 40px;
+    text-align: center;
+}
+.bulk-checkbox {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--feb-green-700);
+}
+@media (max-width: 700px) {
+    .bulk-action-bar {
+        flex-direction: column;
+        padding: 16px;
+        bottom: 16px;
+    }
+    .bulk-action-buttons {
+        width: 100%;
+        flex-direction: column;
+    }
+    .bulk-action-buttons button {
+        width: 100%;
+    }
+}

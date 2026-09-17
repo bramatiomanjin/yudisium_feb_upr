@@ -800,6 +800,10 @@ document.addEventListener(
 
                     row.innerHTML =
                         `
+                        <td class="bulk-action-td" style="display: none; text-align: center;">
+                            <input type="checkbox" class="bulk-checkbox" value="${submission.id}" data-status="${submission.status}">
+                        </td>
+
                         <td>
                             <div class="admin-student-cell">
 
@@ -893,6 +897,7 @@ document.addEventListener(
             );
 
             updatePaginationControls(totalPages);
+            if (typeof updateBulkUI === "function") updateBulkUI();
         }
 
 
@@ -1141,3 +1146,182 @@ document.addEventListener(
 
     }
 );
+        /* =====================================================
+           BULK ACTION LOGIC
+        ===================================================== */
+        const selectAllCheckbox = document.getElementById("selectAllSubmissions");
+        const bulkActionBar = document.getElementById("bulkActionBar");
+        const bulkSelectedCount = document.getElementById("bulkSelectedCount");
+        const btnBulkLanjut = document.getElementById("btnBulkLanjut");
+        const btnBulkLoncat = document.getElementById("btnBulkLoncat");
+        
+        const bulkLoncatModal = document.getElementById("bulkLoncatModal");
+        const btnCancelBulkLoncat = document.getElementById("btnCancelBulkLoncat");
+        const btnConfirmBulkLoncat = document.getElementById("btnConfirmBulkLoncat");
+        const bulkTargetStatus = document.getElementById("bulkTargetStatus");
+
+        let selectedSubmissions = [];
+
+        function updateBulkUI() {
+            // Check if current filter is proses-sk
+            const isProsesSk = appliedFilter === 'proses-sk';
+            
+            // Toggle TH visibility
+            const th = document.querySelector('.bulk-action-th');
+            if (th) th.style.display = isProsesSk ? 'table-cell' : 'none';
+
+            // Toggle TDs visibility
+            document.querySelectorAll('.bulk-action-td').forEach(td => {
+                td.style.display = isProsesSk ? 'table-cell' : 'none';
+            });
+
+            if (!isProsesSk) {
+                bulkActionBar.style.display = 'none';
+                selectedSubmissions = [];
+                if(selectAllCheckbox) selectAllCheckbox.checked = false;
+                return;
+            }
+
+            const checkboxes = Array.from(document.querySelectorAll('.bulk-checkbox'));
+            selectedSubmissions = checkboxes.filter(cb => cb.checked).map(cb => ({
+                id: cb.value,
+                status: cb.dataset.status
+            }));
+
+            if (selectAllCheckbox) {
+                selectAllCheckbox.checked = checkboxes.length > 0 && selectedSubmissions.length === checkboxes.length;
+            }
+
+            if (selectedSubmissions.length > 0) {
+                bulkActionBar.style.display = 'flex';
+                bulkSelectedCount.textContent = selectedSubmissions.length;
+
+                // Check if all selected have the same status
+                const allSameStatus = selectedSubmissions.every(s => s.status === selectedSubmissions[0].status);
+                btnBulkLoncat.style.display = allSameStatus ? 'block' : 'none';
+            } else {
+                bulkActionBar.style.display = 'none';
+            }
+        }
+
+        if (selectAllCheckbox) {
+            selectAllCheckbox.addEventListener("change", function(e) {
+                const isChecked = e.target.checked;
+                document.querySelectorAll('.bulk-checkbox').forEach(cb => {
+                    cb.checked = isChecked;
+                });
+                updateBulkUI();
+            });
+        }
+
+        // Attach event delegation for row checkboxes
+        tableBody.addEventListener("change", function(e) {
+            if (e.target.classList.contains("bulk-checkbox")) {
+                updateBulkUI();
+            }
+        });
+
+        const STATUS = window.YudisiumAPI.STATUS;
+        const FLOW_STEPS = [
+            STATUS.MENUNGGU_VERIFIKASI,
+            STATUS.REVISI_DIKIRIM,
+            STATUS.TERVERIFIKASI,
+            STATUS.PEMBUATAN_SK,
+            STATUS.TTD_WAKIL_DEKAN,
+            STATUS.TTD_DEKAN,
+            STATUS.SK_SIAP_DIAMBIL
+        ];
+
+        function getNextStatus(currentStatus) {
+            const index = FLOW_STEPS.indexOf(currentStatus);
+            if (index !== -1 && index < FLOW_STEPS.length - 1) {
+                return FLOW_STEPS[index + 1];
+            }
+            return null;
+        }
+
+        if (btnBulkLanjut) {
+            btnBulkLanjut.addEventListener("click", async function() {
+                if (selectedSubmissions.length === 0) return;
+                
+                if (!confirm(\Lanjutkan \ pengajuan ke proses selanjutnya?\)) return;
+
+                btnBulkLanjut.disabled = true;
+                btnBulkLanjut.textContent = "Memproses...";
+
+                try {
+                    const promises = selectedSubmissions.map(sub => {
+                        const nextStat = getNextStatus(sub.status);
+                        if (!nextStat) return Promise.resolve(); // already done or cannot next
+                        return window.YudisiumAPI.updateSkStatus(sub.id, nextStat);
+                    });
+
+                    await Promise.all(promises);
+
+                    // Refresh
+                    await loadSubmissions();
+                    alert("Berhasil memproses pengajuan.");
+                } catch (error) {
+                    console.error("Bulk process error:", error);
+                    alert("Terjadi kesalahan saat memproses sebagian atau seluruh data.");
+                } finally {
+                    btnBulkLanjut.disabled = false;
+                    btnBulkLanjut.textContent = "Lanjutkan ke progres selanjutnya";
+                }
+            });
+        }
+
+        if (btnBulkLoncat) {
+            btnBulkLoncat.addEventListener("click", function() {
+                if (selectedSubmissions.length === 0) return;
+                const currentStatus = selectedSubmissions[0].status;
+                const currentIndex = FLOW_STEPS.indexOf(currentStatus);
+                
+                bulkTargetStatus.innerHTML = "";
+                for (let i = currentIndex + 1; i < FLOW_STEPS.length; i++) {
+                    const stat = FLOW_STEPS[i];
+                    const meta = window.YudisiumAPI.getStatusMeta(stat);
+                    const opt = document.createElement("option");
+                    opt.value = stat;
+                    opt.textContent = meta.label;
+                    bulkTargetStatus.appendChild(opt);
+                }
+
+                bulkLoncatModal.style.display = "flex";
+            });
+        }
+
+        if (btnCancelBulkLoncat) {
+            btnCancelBulkLoncat.addEventListener("click", function() {
+                bulkLoncatModal.style.display = "none";
+            });
+        }
+
+        if (btnConfirmBulkLoncat) {
+            btnConfirmBulkLoncat.addEventListener("click", async function() {
+                const targetStat = bulkTargetStatus.value;
+                if (!targetStat) return;
+
+                btnConfirmBulkLoncat.disabled = true;
+                btnConfirmBulkLoncat.textContent = "Memproses...";
+
+                try {
+                    const promises = selectedSubmissions.map(sub => {
+                        return window.YudisiumAPI.updateSkStatus(sub.id, targetStat);
+                    });
+
+                    await Promise.all(promises);
+
+                    bulkLoncatModal.style.display = "none";
+                    await loadSubmissions();
+                    alert("Berhasil memperbarui status pengajuan.");
+                } catch (error) {
+                    console.error("Bulk process error:", error);
+                    alert("Terjadi kesalahan saat memproses data.");
+                } finally {
+                    btnConfirmBulkLoncat.disabled = false;
+                    btnConfirmBulkLoncat.textContent = "Terapkan Status";
+                }
+            });
+        }
+

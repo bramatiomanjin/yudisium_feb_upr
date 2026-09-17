@@ -541,6 +541,10 @@
 
                             <tr>
 
+                                <th class="bulk-action-th" style="display: none; width: 40px; text-align: center;">
+                                    <input type="checkbox" id="selectAllSubmissions">
+                                </th>
+
                                 <th>
                                     Kode
                                 </th>
@@ -622,6 +626,35 @@
     </div>
 
 
+
+    <!-- =====================================================
+         BULK ACTION BAR & MODAL
+    ====================================================== -->
+
+    <div class="bulk-action-bar" id="bulkActionBar" style="display: none;">
+        <div class="bulk-action-info">
+            <span id="bulkSelectedCount">0</span> pengajuan dipilih
+        </div>
+        <div class="bulk-action-buttons">
+            <button class="admin-primary-button" id="btnBulkLanjut">Lanjutkan ke progres selanjutnya</button>
+            <button class="admin-secondary-button" id="btnBulkLoncat" style="display: none;">Loncat ke progres berikutnya</button>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="bulkLoncatModal" style="display: none;">
+        <div class="modal-card">
+            <h3 style="margin: 0 0 16px 0; font-size: 1.25rem;">Pilih Status Tujuan</h3>
+            <p style="margin-bottom: 24px; color: #5f6368; font-size: 0.95rem;">
+                Pilih status untuk diterapkan ke semua pengajuan yang dipilih:
+            </p>
+            <select class="admin-input" id="bulkTargetStatus" style="width: 100%; margin-bottom: 24px;">
+            </select>
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button class="admin-secondary-button" id="btnCancelBulkLoncat">Batal</button>
+                <button class="admin-primary-button" id="btnConfirmBulkLoncat">Terapkan Status</button>
+            </div>
+        </div>
+    </div>
 
     <!-- =====================================================
          SCRIPT
