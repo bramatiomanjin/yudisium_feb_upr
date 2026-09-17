@@ -463,6 +463,39 @@
 
 
 
+                    <!-- BULAN -->
+                    <div class="history-filter-group">
+                        <label for="historyMonth">Bulan</label>
+                        <select id="historyMonth">
+                            <option value="">Semua Bulan</option>
+                            <option value="1">Januari</option>
+                            <option value="2">Februari</option>
+                            <option value="3">Maret</option>
+                            <option value="4">April</option>
+                            <option value="5">Mei</option>
+                            <option value="6">Juni</option>
+                            <option value="7">Juli</option>
+                            <option value="8">Agustus</option>
+                            <option value="9">September</option>
+                            <option value="10">Oktober</option>
+                            <option value="11">November</option>
+                            <option value="12">Desember</option>
+                        </select>
+                    </div>
+
+                    <!-- TAHUN -->
+                    <div class="history-filter-group">
+                        <label for="historyYear">Tahun</label>
+                        <select id="historyYear">
+                            <option value="">Semua Tahun</option>
+                            <!-- Static for now -->
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                        </select>
+                    </div>
+
                     <div
                         class="history-filter-group"
                         id="historyAdminFilterGroup"

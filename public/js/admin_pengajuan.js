@@ -51,6 +51,15 @@ document.addEventListener(
                 "submissionStatus"
             );
 
+        const monthFilter =
+            document.getElementById(
+                "submissionMonth"
+            );
+
+        const yearFilter =
+            document.getElementById(
+                "submissionYear"
+            );
 
         const resetButton =
             document.getElementById(
@@ -690,6 +699,22 @@ document.addEventListener(
             }
 
 
+            if (monthFilter && monthFilter.value) {
+                const selectedMonth = parseInt(monthFilter.value, 10);
+                result = result.filter(item => {
+                    const date = new Date(item.submittedAt);
+                    return date.getMonth() + 1 === selectedMonth;
+                });
+            }
+
+            if (yearFilter && yearFilter.value) {
+                const selectedYear = parseInt(yearFilter.value, 10);
+                result = result.filter(item => {
+                    const date = new Date(item.submittedAt);
+                    return date.getFullYear() === selectedYear;
+                });
+            }
+
             return result;
 
         }
@@ -924,7 +949,9 @@ document.addEventListener(
         [
             fallbackSearch,
             fallbackDepartment,
-            fallbackStatus
+            fallbackStatus,
+            monthFilter,
+            yearFilter
         ]
             .filter(
                 Boolean
@@ -1003,6 +1030,10 @@ document.addEventListener(
                             .externalFilter;
 
                     }
+                    
+                    if (monthFilter) monthFilter.value = "";
+                    if (yearFilter) yearFilter.value = "";
+                    
                     currentPage = 1;
                     renderTable();
 
@@ -1031,9 +1062,22 @@ document.addEventListener(
             exportButton.addEventListener(
                 "click",
                 function () {
+                    let url = "/admin/export-yudisium";
+                    const params = [];
+                    
+                    if (monthFilter && monthFilter.value) {
+                        params.push("month=" + encodeURIComponent(monthFilter.value));
+                    }
+                    
+                    if (yearFilter && yearFilter.value) {
+                        params.push("year=" + encodeURIComponent(yearFilter.value));
+                    }
+                    
+                    if (params.length > 0) {
+                        url += "?" + params.join("&");
+                    }
 
-                    window.location.href =
-                        "/admin/export-yudisium";
+                    window.location.href = url;
 
                 }
             );

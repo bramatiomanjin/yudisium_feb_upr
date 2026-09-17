@@ -26,15 +26,17 @@ class ExcelExportController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $pengajuanList =
-            PengajuanYudisium::with([
-                'mahasiswa'
-            ])
-                ->orderBy(
-                    'created_at',
-                    'asc'
-                )
-                ->get();
+        $query = PengajuanYudisium::with(['mahasiswa']);
+
+        if ($request->has('month') && $request->month != '') {
+            $query->whereMonth('created_at', $request->month);
+        }
+
+        if ($request->has('year') && $request->year != '') {
+            $query->whereYear('created_at', $request->year);
+        }
+
+        $pengajuanList = $query->orderBy('created_at', 'asc')->get();
 
 
         /*

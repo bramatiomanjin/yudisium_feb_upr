@@ -118,6 +118,16 @@ document.addEventListener(
                 "historyActionFilter"
             );
 
+        const monthFilter =
+            document.getElementById(
+                "historyMonth"
+            );
+
+        const yearFilter =
+            document.getElementById(
+                "historyYear"
+            );
+
 
         const applyFilterButton =
             document.getElementById(
@@ -758,6 +768,19 @@ document.addEventListener(
                                 .action ===
                                 appliedAction;
 
+                        let matchMonth = true;
+                        if (monthFilter && monthFilter.value) {
+                            const selectedMonth = parseInt(monthFilter.value, 10);
+                            const date = new Date(activity.timestamp);
+                            matchMonth = (date.getMonth() + 1) === selectedMonth;
+                        }
+
+                        let matchYear = true;
+                        if (yearFilter && yearFilter.value) {
+                            const selectedYear = parseInt(yearFilter.value, 10);
+                            const date = new Date(activity.timestamp);
+                            matchYear = date.getFullYear() === selectedYear;
+                        }
 
                         return (
                             matchSearch
@@ -765,6 +788,10 @@ document.addEventListener(
                             matchAdmin
                             &&
                             matchAction
+                            &&
+                            matchMonth
+                            &&
+                            matchYear
                         );
                     }
                 );
@@ -1380,6 +1407,9 @@ document.addEventListener(
                         adminFilter.value =
                             "";
                     }
+
+                    if (monthFilter) monthFilter.value = "";
+                    if (yearFilter) yearFilter.value = "";
 
 
                     appliedSearch =

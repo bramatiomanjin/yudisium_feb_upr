@@ -369,8 +369,40 @@
                     </div>
 
 
-                    <!-- JURUSAN -->
+                    <!-- BULAN -->
+                    <div class="submission-filter-group">
+                        <label for="submissionMonth">Bulan</label>
+                        <select id="submissionMonth">
+                            <option value="">Semua Bulan</option>
+                            <option value="1">Januari</option>
+                            <option value="2">Februari</option>
+                            <option value="3">Maret</option>
+                            <option value="4">April</option>
+                            <option value="5">Mei</option>
+                            <option value="6">Juni</option>
+                            <option value="7">Juli</option>
+                            <option value="8">Agustus</option>
+                            <option value="9">September</option>
+                            <option value="10">Oktober</option>
+                            <option value="11">November</option>
+                            <option value="12">Desember</option>
+                        </select>
+                    </div>
 
+                    <!-- TAHUN -->
+                    <div class="submission-filter-group">
+                        <label for="submissionYear">Tahun</label>
+                        <select id="submissionYear">
+                            <option value="">Semua Tahun</option>
+                            <!-- You can render dynamic years if needed, but static for now up to a range -->
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                        </select>
+                    </div>
+
+                    <!-- JURUSAN -->
                     <div class="submission-filter-group">
 
                         <label for="submissionDepartment">
