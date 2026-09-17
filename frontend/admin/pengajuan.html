@@ -606,38 +606,13 @@
 
 
                 <!-- PAGINATION -->
-
-                <div class="admin-pagination">
-
-                    <span>
-                        Halaman 1 dari 1
-                    </span>
-
-                    <div>
-
-                        <button
-                            type="button"
-                            disabled
-                        >
-                            Sebelumnya
-                        </button>
-
-                        <button
-                            type="button"
-                            class="active"
-                        >
-                            1
-                        </button>
-
-                        <button
-                            type="button"
-                            disabled
-                        >
-                            Berikutnya
-                        </button>
-
+                <div class="admin-pagination" id="submissionPaginationContainer" style="display: none;">
+                    <span id="submissionPaginationInfo">Halaman 1 dari 1</span>
+                    <div id="submissionPaginationControls">
+                        <button type="button" disabled>Sebelumnya</button>
+                        <button type="button" class="active">1</button>
+                        <button type="button" disabled>Berikutnya</button>
                     </div>
-
                 </div>
 
             </section>

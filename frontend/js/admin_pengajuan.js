@@ -42,19 +42,25 @@ document.addEventListener(
 
         const departmentFilter =
             document.getElementById(
-                "departmentFilter"
+                "submissionDepartment"
             );
 
 
         const statusFilter =
             document.getElementById(
-                "statusFilter"
+                "submissionStatus"
             );
 
 
         const resetButton =
             document.getElementById(
                 "resetSubmissionFilter"
+            );
+
+
+        const exportButton =
+            document.getElementById(
+                "submissionExportButton"
             );
 
 
@@ -121,6 +127,10 @@ document.addEventListener(
         let submissions =
             [];
 
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let filteredSubmissions = [];
+
 
         /* =====================================================
            HELPERS
@@ -156,6 +166,27 @@ document.addEventListener(
         }
 
 
+        function formatDateTime(value) {
+            if (!value) {
+                return "-";
+            }
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) {
+                return value;
+            }
+            const formatted = new Intl.DateTimeFormat("id-ID", {
+                timeZone: "Asia/Jakarta",
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false
+            }).format(date);
+            return formatted.replace(".", ":") + " WIB";
+        }
+
+
         function normalizeText(value) {
 
             return String(
@@ -188,102 +219,58 @@ document.addEventListener(
                 case STATUS.MENUNGGU_VERIFIKASI:
 
                     return {
-
-                        label:
-                            "Verifikasi",
-
-                        href:
-                            "verifikasi.html?id=" +
-                            submission.id
-
+                        label: "Verifikasi",
+                        href: "/admin/verifikasi?id=" + submission.id
                     };
 
 
                 case STATUS.PERLU_REVISI:
 
                     return {
-
-                        label:
-                            "Detail",
-
-                        href:
-                            "detail_pengajuan.html?id=" +
-                            submission.id
-
+                        label: "Detail",
+                        href: "/admin/pengajuan/" + submission.id
                     };
 
 
                 case STATUS.REVISI_DIKIRIM:
 
                     return {
-
-                        label:
-                            "Review Revisi",
-
-                        href:
-                            "review_revisi.html?id=" +
-                            submission.id
-
+                        label: "Review Revisi",
+                        href: "/admin/review-revisi?id=" + submission.id
                     };
 
 
                 case STATUS.TERVERIFIKASI:
 
                     return {
-
-                        label:
-                            "Proses SK",
-
-                        href:
-                            "proses_sk.html?id=" +
-                            submission.id
-
+                        label: "Proses SK",
+                        href: "/admin/proses-sk?id=" + submission.id
                     };
 
 
                 case STATUS.PEMBUATAN_SK:
-
                 case STATUS.TTD_WAKIL_DEKAN:
-
                 case STATUS.TTD_DEKAN:
 
                     return {
-
-                        label:
-                            "Lihat Proses",
-
-                        href:
-                            "proses_sk.html?id=" +
-                            submission.id
-
+                        label: "Lihat Proses",
+                        href: "/admin/proses-sk?id=" + submission.id
                     };
 
 
                 case STATUS.SK_SIAP_DIAMBIL:
 
                     return {
-
-                        label:
-                            "Lihat Status",
-
-                        href:
-                            "proses_sk.html?id=" +
-                            submission.id
-
+                        label: "Lihat Status",
+                        href: "/admin/proses-sk?id=" + submission.id
                     };
 
 
                 default:
 
                     return {
-
-                        label:
-                            "Detail",
-
-                        href:
-                            "detail_pengajuan.html?id=" +
-                            submission.id
-
+                        label: "Detail",
+                        href: "/admin/pengajuan/" + submission.id
                     };
 
             }
@@ -474,6 +461,8 @@ document.addEventListener(
                 .externalFilter =
                 requested;
 
+            fallbackStatus.value = "";
+
         }
 
 
@@ -599,22 +588,6 @@ document.addEventListener(
 
                             if (
                                 statusTarget ===
-                                "pengajuan_only"
-                            ) {
-
-                                return [
-
-                                    STATUS.MENUNGGU_VERIFIKASI
-
-                                ].includes(
-                                    item.status
-                                );
-
-                            }
-
-
-                            if (
-                                statusTarget ===
                                 "revision-group"
                             ) {
 
@@ -650,6 +623,21 @@ document.addEventListener(
                             }
 
 
+                            if (
+                                statusTarget ===
+                                "pengajuan_only"
+                            ) {
+
+                                return [
+
+                                    STATUS.MENUNGGU_VERIFIKASI
+
+                                ].includes(
+                                    item.status
+                                );
+                            }
+
+
                             const normalizedTarget =
                                 window.YudisiumAPI
                                     .normalizeStatus(
@@ -665,6 +653,40 @@ document.addEventListener(
                         }
                     );
 
+            } else {
+
+                /*
+                 * Default halaman Pengajuan:
+                 * tampilkan pengajuan yang masih masuk
+                 * kategori utama pengajuan.
+                 */
+                const params =
+                    new URLSearchParams(
+                        window.location.search
+                    );
+
+
+                if (
+                    !params.has(
+                        "filter"
+                    )
+                ) {
+
+                    result =
+                        result.filter(
+                            function (item) {
+
+                                return [
+
+                                    STATUS.MENUNGGU_VERIFIKASI
+
+                                ].includes(
+                                    item.status
+                                );
+
+                            }
+                        );
+                }
             }
 
 
@@ -688,56 +710,51 @@ document.addEventListener(
             }
 
 
-            const data =
-                getFilteredData();
+            filteredSubmissions = getFilteredData();
 
+            const totalItems = filteredSubmissions.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+            if (currentPage < 1) currentPage = 1;
+            if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
 
             tableBody.innerHTML =
                 "";
 
-
             if (
                 resultCount
             ) {
-
                 resultCount.textContent =
-                    data.length +
+                    totalItems +
                     " pengajuan";
-
             }
 
-
             if (
-                data.length ===
+                totalItems ===
                 0
             ) {
-
                 if (
                     emptyState
                 ) {
-
                     emptyState.style.display =
                         "block";
-
                 }
-
-
+                updatePaginationControls(0);
                 return;
-
             }
-
 
             if (
                 emptyState
             ) {
-
                 emptyState.style.display =
                     "none";
-
             }
 
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedData = filteredSubmissions.slice(startIndex, endIndex);
 
-            data.forEach(
+            paginatedData.forEach(
                 function (submission) {
 
                     const meta =
@@ -831,8 +848,7 @@ document.addEventListener(
 
                         <td>
                             ${escapeHtml(
-                                submission.submittedAt ||
-                                "-"
+                                formatDateTime(submission.submittedAt)
                             )}
                         </td>
 
@@ -914,7 +930,7 @@ document.addEventListener(
 
                             }
 
-
+                            currentPage = 1;
                             renderTable();
 
                         }
@@ -965,8 +981,7 @@ document.addEventListener(
                             .externalFilter;
 
                     }
-
-
+                    currentPage = 1;
                     renderTable();
 
                 }
@@ -974,6 +989,109 @@ document.addEventListener(
 
         }
 
+
+        /*
+         * =====================================================
+         * EXPORT EXCEL
+         * =====================================================
+         *
+         * File Excel dibuat backend Laravel melalui:
+         * /admin/export-yudisium
+         *
+         * Endpoint mengembalikan attachment .xlsx,
+         * sehingga browser langsung mengunduh file.
+         */
+
+        if (
+            exportButton
+        ) {
+
+            exportButton.addEventListener(
+                "click",
+                function () {
+
+                    window.location.href =
+                        "/admin/export-yudisium";
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           PAGINATION
+        ===================================================== */
+        function updatePaginationControls(totalPages) {
+            const container = document.getElementById("submissionPaginationContainer");
+            const info = document.getElementById("submissionPaginationInfo");
+            const controls = document.getElementById("submissionPaginationControls");
+
+            if (!container || !info || !controls) return;
+
+            if (totalPages <= 1) {
+                container.style.display = "none";
+                return;
+            }
+
+            container.style.display = "flex";
+            info.textContent = "Halaman " + currentPage + " dari " + totalPages;
+            controls.innerHTML = "";
+
+            // Previous Button
+            const prevBtn = document.createElement("button");
+            prevBtn.type = "button";
+            prevBtn.textContent = "Sebelumnya";
+            if (currentPage === 1) {
+                prevBtn.disabled = true;
+            } else {
+                prevBtn.addEventListener("click", function() {
+                    currentPage--;
+                    renderTable();
+                });
+            }
+            controls.appendChild(prevBtn);
+
+            // Page Buttons
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, currentPage + 2);
+            
+            if (currentPage <= 3) {
+                endPage = Math.min(totalPages, 5);
+            }
+            if (currentPage >= totalPages - 2) {
+                startPage = Math.max(1, totalPages - 4);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.textContent = i;
+                if (i === currentPage) {
+                    btn.classList.add("active");
+                } else {
+                    btn.addEventListener("click", function() {
+                        currentPage = i;
+                        renderTable();
+                    });
+                }
+                controls.appendChild(btn);
+            }
+
+            // Next Button
+            const nextBtn = document.createElement("button");
+            nextBtn.type = "button";
+            nextBtn.textContent = "Berikutnya";
+            if (currentPage === totalPages) {
+                nextBtn.disabled = true;
+            } else {
+                nextBtn.addEventListener("click", function() {
+                    currentPage++;
+                    renderTable();
+                });
+            }
+            controls.appendChild(nextBtn);
+        }
 
         /* =====================================================
            LOAD

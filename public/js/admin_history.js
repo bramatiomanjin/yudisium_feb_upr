@@ -194,6 +194,10 @@ document.addEventListener(
         let allActivities =
             [];
 
+        let historyCurrentPage = 1;
+        const historyItemsPerPage = 10;
+        let historyFilteredActivities = [];
+
 
         let appliedSearch =
             "";
@@ -1046,9 +1050,12 @@ document.addEventListener(
                 getRoleActivities();
 
 
-            const activities =
-                getFilteredActivities();
+            historyFilteredActivities = getFilteredActivities();
+            const totalItems = historyFilteredActivities.length;
+            const totalPages = Math.ceil(totalItems / historyItemsPerPage);
 
+            if (historyCurrentPage < 1) historyCurrentPage = 1;
+            if (historyCurrentPage > totalPages && totalPages > 0) historyCurrentPage = totalPages;
 
             tableBody
                 .innerHTML =
@@ -1060,7 +1067,7 @@ document.addEventListener(
                 resultText
                     .textContent =
                     "Menampilkan " +
-                    activities.length +
+                    totalItems +
                     " dari " +
                     roleActivities.length +
                     " aktivitas";
@@ -1068,7 +1075,7 @@ document.addEventListener(
 
 
             updateSummary(
-                activities
+                historyFilteredActivities
             );
 
 
@@ -1076,7 +1083,7 @@ document.addEventListener(
 
 
             if (
-                activities.length ===
+                totalItems ===
                 0
             ) {
 
@@ -1088,7 +1095,7 @@ document.addEventListener(
                         "flex";
                 }
 
-
+                updateHistoryPagination(0);
                 return;
             }
 
@@ -1101,8 +1108,11 @@ document.addEventListener(
                     "none";
             }
 
+            const startIndex = (historyCurrentPage - 1) * historyItemsPerPage;
+            const endIndex = startIndex + historyItemsPerPage;
+            const paginatedData = historyFilteredActivities.slice(startIndex, endIndex);
 
-            activities
+            paginatedData
                 .forEach(
                     function (
                         activity
@@ -1295,6 +1305,8 @@ document.addEventListener(
                             );
                     }
                 );
+
+            updateHistoryPagination(totalPages);
         }
 
 
@@ -1332,7 +1344,7 @@ document.addEventListener(
                             )
                             : "";
 
-
+                    historyCurrentPage = 1;
                     renderHistory();
                 }
             );
@@ -1381,7 +1393,7 @@ document.addEventListener(
                     appliedAdmin =
                         "";
 
-
+                    historyCurrentPage = 1;
                     renderHistory();
                 }
             );
@@ -1409,6 +1421,74 @@ document.addEventListener(
                 }
             );
 
+
+        /* =====================================================
+           PAGINATION
+        ===================================================== */
+
+        function updateHistoryPagination(totalPages) {
+            const container = document.getElementById("historyPaginationContainer");
+            const info = document.getElementById("historyPaginationInfo");
+            const controls = document.getElementById("historyPaginationControls");
+
+            if (!container || !info || !controls) return;
+
+            if (totalPages <= 1) {
+                container.style.display = "none";
+                return;
+            }
+
+            container.style.display = "flex";
+            info.textContent = "Halaman " + historyCurrentPage + " dari " + totalPages;
+            controls.innerHTML = "";
+
+            const prevBtn = document.createElement("button");
+            prevBtn.type = "button";
+            prevBtn.textContent = "Sebelumnya";
+            if (historyCurrentPage === 1) {
+                prevBtn.disabled = true;
+            } else {
+                prevBtn.addEventListener("click", function() {
+                    historyCurrentPage--;
+                    renderHistory();
+                });
+            }
+            controls.appendChild(prevBtn);
+
+            let startPage = Math.max(1, historyCurrentPage - 2);
+            let endPage = Math.min(totalPages, historyCurrentPage + 2);
+            
+            if (historyCurrentPage <= 3) endPage = Math.min(totalPages, 5);
+            if (historyCurrentPage >= totalPages - 2) startPage = Math.max(1, totalPages - 4);
+
+            for (let i = startPage; i <= endPage; i++) {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.textContent = i;
+                if (i === historyCurrentPage) {
+                    btn.classList.add("active");
+                } else {
+                    btn.addEventListener("click", function() {
+                        historyCurrentPage = i;
+                        renderHistory();
+                    });
+                }
+                controls.appendChild(btn);
+            }
+
+            const nextBtn = document.createElement("button");
+            nextBtn.type = "button";
+            nextBtn.textContent = "Berikutnya";
+            if (historyCurrentPage === totalPages) {
+                nextBtn.disabled = true;
+            } else {
+                nextBtn.addEventListener("click", function() {
+                    historyCurrentPage++;
+                    renderHistory();
+                });
+            }
+            controls.appendChild(nextBtn);
+        }
 
         /* =====================================================
            LOAD HISTORY

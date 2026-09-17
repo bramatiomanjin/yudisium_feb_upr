@@ -674,6 +674,16 @@
 
                 </div>
 
+                <!-- PAGINATION -->
+                <div class="admin-pagination" id="historyPaginationContainer" style="display: none;">
+                    <span id="historyPaginationInfo">Halaman 1 dari 1</span>
+                    <div id="historyPaginationControls">
+                        <button type="button" disabled>Sebelumnya</button>
+                        <button type="button" class="active">1</button>
+                        <button type="button" disabled>Berikutnya</button>
+                    </div>
+                </div>
+
             </section>
 
         </main>

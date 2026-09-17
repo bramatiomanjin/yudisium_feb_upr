@@ -5,16 +5,13 @@ document.addEventListener(
         "use strict";
 
 
-        if (
-            !window.YudisiumAPI
-        ) {
+        if (!window.YudisiumAPI) {
 
             console.error(
                 "YudisiumAPI tidak ditemukan."
             );
 
             return;
-
         }
 
 
@@ -23,19 +20,40 @@ document.addEventListener(
 
 
         /* =====================================================
-           SESSION ADMIN
+           CURRENT ADMIN
+           =====================================================
+           Jangan lagi menggunakan sessionStorage.
+
+           Role dibaca dari Blade karena halaman sudah
+           menampilkan Auth::user()->role.
+
+           Authorization data tetap ditangani backend.
         ===================================================== */
 
-        const currentUsername =
-            sessionStorage.getItem(
-                "admin_username"
-            ) || "";
+        const sidebarRoleElement =
+            document.getElementById(
+                "sidebarAdminRole"
+            );
+
+
+        const topbarRoleElement =
+            document.getElementById(
+                "topbarAdminRole"
+            );
 
 
         const currentRole =
-            sessionStorage.getItem(
-                "admin_role"
-            ) || "ADMIN";
+            String(
+                sidebarRoleElement
+                    ?.textContent
+                ||
+                topbarRoleElement
+                    ?.textContent
+                ||
+                "ADMIN"
+            )
+                .trim()
+                .toUpperCase();
 
 
         const isSuperAdmin =
@@ -52,100 +70,120 @@ document.addEventListener(
                 "historyPageTitle"
             );
 
+
         const pageDescription =
             document.getElementById(
                 "historyPageDescription"
             );
+
 
         const roleTitle =
             document.getElementById(
                 "historyRoleTitle"
             );
 
+
         const roleDescription =
             document.getElementById(
                 "historyRoleDescription"
             );
+
 
         const adminFilterGroup =
             document.getElementById(
                 "historyAdminFilterGroup"
             );
 
+
         const adminFilter =
             document.getElementById(
                 "historyAdminFilter"
             );
+
 
         const adminColumnHeader =
             document.getElementById(
                 "historyAdminColumn"
             );
 
+
         const searchInput =
             document.getElementById(
                 "historySearch"
             );
+
 
         const actionFilter =
             document.getElementById(
                 "historyActionFilter"
             );
 
+
         const applyFilterButton =
             document.getElementById(
                 "applyHistoryFilter"
             );
+
 
         const resetFilterButton =
             document.getElementById(
                 "resetHistoryFilter"
             );
 
+
         const activeFilterBox =
             document.getElementById(
                 "historyActiveFilter"
             );
+
 
         const activeFilterText =
             document.getElementById(
                 "historyActiveFilterText"
             );
 
+
         const tableBody =
             document.getElementById(
                 "historyTableBody"
             );
+
 
         const emptyState =
             document.getElementById(
                 "historyEmpty"
             );
 
+
         const resultText =
             document.getElementById(
                 "historyResultText"
             );
+
 
         const totalCount =
             document.getElementById(
                 "historyTotalCount"
             );
 
+
         const verificationCount =
             document.getElementById(
                 "historyVerificationCount"
             );
+
 
         const revisionCount =
             document.getElementById(
                 "historyRevisionCount"
             );
 
+
         const skCount =
             document.getElementById(
                 "historySkCount"
             );
+
 
         const sidebarRevisionCount =
             document.getElementById(
@@ -156,12 +194,18 @@ document.addEventListener(
         let allActivities =
             [];
 
+        let historyCurrentPage = 1;
+        const historyItemsPerPage = 10;
+        let historyFilteredActivities = [];
+
 
         let appliedSearch =
             "";
 
+
         let appliedAdmin =
             "";
+
 
         let appliedAction =
             "";
@@ -196,18 +240,19 @@ document.addEventListener(
                     /'/g,
                     "&#039;"
                 );
-
         }
 
 
-        function getActionLabel(activity) {
+        function getActionLabel(
+            activity
+        ) {
 
             if (
                 activity.actionLabel
             ) {
 
-                return activity.actionLabel;
-
+                return activity
+                    .actionLabel;
             }
 
 
@@ -221,21 +266,22 @@ document.addEventListener(
 
                 UPDATE_SK_STATUS:
                     "Proses SK"
-
             };
 
 
             return (
                 labels[
                     activity.action
-                ] ||
+                ]
+                ||
                 "Aktivitas"
             );
-
         }
 
 
-        function getActionCategory(action) {
+        function getActionCategory(
+            action
+        ) {
 
             if (
                 action ===
@@ -243,7 +289,6 @@ document.addEventListener(
             ) {
 
                 return "verification";
-
             }
 
 
@@ -253,43 +298,68 @@ document.addEventListener(
             ) {
 
                 return "revision";
-
             }
 
 
             return "process";
-
         }
 
 
-        function getStatusLabel(status) {
+        function getStatusLabel(
+            status
+        ) {
 
             if (!status) {
 
                 return "-";
-
             }
 
 
-            return API
-                .getStatusLabel(
-                    status
-                );
+            if (
+                typeof API
+                    .getStatusLabel ===
+                "function"
+            ) {
 
+                return API
+                    .getStatusLabel(
+                        status
+                    );
+            }
+
+
+            return String(
+                status
+            )
+                .replace(
+                    /_/g,
+                    " "
+                )
+                .replace(
+                    /\b\w/g,
+                    function (letter) {
+
+                        return letter
+                            .toUpperCase();
+                    }
+                );
         }
 
 
-        function formatDate(value) {
+        function formatDate(
+            value
+        ) {
 
             if (!value) {
 
                 return "-";
-
             }
 
 
             const date =
-                new Date(value);
+                new Date(
+                    value
+                );
 
 
             if (
@@ -299,7 +369,6 @@ document.addEventListener(
             ) {
 
                 return value;
-
             }
 
 
@@ -307,6 +376,9 @@ document.addEventListener(
                 .toLocaleString(
                     "id-ID",
                     {
+                        timeZone:
+                            "Asia/Jakarta",
+
                         day:
                             "2-digit",
 
@@ -323,7 +395,6 @@ document.addEventListener(
                             "2-digit"
                     }
                 );
-
         }
 
 
@@ -337,29 +408,50 @@ document.addEventListener(
                 isSuperAdmin
             ) {
 
-                pageTitle.textContent =
-                    "History Seluruh Admin";
+                if (pageTitle) {
+
+                    pageTitle
+                        .textContent =
+                        "History Seluruh Admin";
+                }
 
 
-                pageDescription.textContent =
-                    "Lihat aktivitas administrasi seluruh akun Admin FEB UPR.";
+                if (
+                    pageDescription
+                ) {
+
+                    pageDescription
+                        .textContent =
+                        "Lihat aktivitas administrasi seluruh akun Admin FEB UPR.";
+                }
 
 
-                roleTitle.textContent =
-                    "Akses Super Admin";
+                if (roleTitle) {
+
+                    roleTitle
+                        .textContent =
+                        "Akses Super Admin";
+                }
 
 
-                roleDescription.textContent =
-                    "Super Admin dapat melihat aktivitas seluruh admin pada sistem.";
+                if (
+                    roleDescription
+                ) {
+
+                    roleDescription
+                        .textContent =
+                        "Super Admin dapat melihat aktivitas seluruh admin pada sistem.";
+                }
 
 
                 if (
                     adminFilterGroup
                 ) {
 
-                    adminFilterGroup.style.display =
+                    adminFilterGroup
+                        .style
+                        .display =
                         "flex";
-
                 }
 
 
@@ -367,36 +459,58 @@ document.addEventListener(
                     adminColumnHeader
                 ) {
 
-                    adminColumnHeader.style.display =
+                    adminColumnHeader
+                        .style
+                        .display =
                         "";
-
                 }
 
             } else {
 
-                pageTitle.textContent =
-                    "History Aktivitas Saya";
+                if (pageTitle) {
+
+                    pageTitle
+                        .textContent =
+                        "History Aktivitas Saya";
+                }
 
 
-                pageDescription.textContent =
-                    "Riwayat aktivitas yang dilakukan menggunakan akun Anda.";
+                if (
+                    pageDescription
+                ) {
+
+                    pageDescription
+                        .textContent =
+                        "Riwayat aktivitas yang dilakukan menggunakan akun Anda.";
+                }
 
 
-                roleTitle.textContent =
-                    "History akun Anda";
+                if (roleTitle) {
+
+                    roleTitle
+                        .textContent =
+                        "History akun Anda";
+                }
 
 
-                roleDescription.textContent =
-                    "Admin hanya dapat melihat aktivitas yang dilakukan menggunakan akun sendiri.";
+                if (
+                    roleDescription
+                ) {
+
+                    roleDescription
+                        .textContent =
+                        "Admin hanya dapat melihat aktivitas yang dilakukan menggunakan akun sendiri.";
+                }
 
 
                 if (
                     adminFilterGroup
                 ) {
 
-                    adminFilterGroup.style.display =
+                    adminFilterGroup
+                        .style
+                        .display =
                         "none";
-
                 }
 
 
@@ -404,44 +518,27 @@ document.addEventListener(
                     adminColumnHeader
                 ) {
 
-                    adminColumnHeader.style.display =
+                    adminColumnHeader
+                        .style
+                        .display =
                         "none";
-
                 }
-
             }
-
         }
 
 
         /* =====================================================
            ROLE ACCESS
+           =====================================================
+           Backend sudah memfilter berdasarkan Auth::user().
+           Frontend TIDAK memfilter ulang berdasarkan username.
         ===================================================== */
 
         function getRoleActivities() {
 
-            if (
-                isSuperAdmin
-            ) {
-
-                return [
-                    ...allActivities
-                ];
-
-            }
-
-
-            return allActivities.filter(
-                function (activity) {
-
-                    return (
-                        activity.adminUsername ===
-                        currentUsername
-                    );
-
-                }
-            );
-
+            return [
+                ...allActivities
+            ];
         }
 
 
@@ -457,60 +554,112 @@ document.addEventListener(
             ) {
 
                 return;
-
             }
 
 
-            adminFilter.innerHTML =
+            adminFilter
+                .innerHTML =
                 `
-                <option value="">
-                    Semua Admin
-                </option>
+                    <option value="">
+                        Semua Admin
+                    </option>
                 `;
 
 
-            const usernames =
-                [
-                    ...new Set(
-                        allActivities
-                            .map(
-                                function (activity) {
-
-                                    return activity
-                                        .adminUsername;
-
-                                }
-                            )
-                            .filter(Boolean)
-                    )
-                ]
-                    .sort();
+            const admins =
+                new Map();
 
 
-            usernames.forEach(
-                function (username) {
+            allActivities
+                .forEach(
+                    function (
+                        activity
+                    ) {
 
-                    const option =
-                        document.createElement(
-                            "option"
+                        const key =
+                            activity
+                                .adminUsername
+                            ||
+                            activity
+                                .adminName
+                            ||
+                            "";
+
+
+                        if (!key) {
+
+                            return;
+                        }
+
+
+                        const label =
+                            activity
+                                .adminName
+                            ||
+                            activity
+                                .adminUsername
+                            ||
+                            key;
+
+
+                        admins.set(
+                            key,
+                            label
                         );
+                    }
+                );
 
 
-                    option.value =
-                        username;
+            [
+                ...admins
+                    .entries()
+            ]
+                .sort(
+                    function (
+                        a,
+                        b
+                    ) {
+
+                        return String(
+                            a[1]
+                        )
+                            .localeCompare(
+                                String(
+                                    b[1]
+                                ),
+                                "id"
+                            );
+                    }
+                )
+                .forEach(
+                    function (
+                        [
+                            value,
+                            label
+                        ]
+                    ) {
+
+                        const option =
+                            document
+                                .createElement(
+                                    "option"
+                                );
 
 
-                    option.textContent =
-                        username;
+                        option.value =
+                            value;
 
 
-                    adminFilter.appendChild(
-                        option
-                    );
+                        option.textContent =
+                            label;
 
-                }
-            );
 
+                        adminFilter
+                            .appendChild(
+                                option
+                            );
+                    }
+                );
         }
 
 
@@ -530,65 +679,95 @@ document.addEventListener(
                     .toLowerCase();
 
 
-            return roleActivities.filter(
-                function (activity) {
+            return roleActivities
+                .filter(
+                    function (
+                        activity
+                    ) {
 
-                    const searchable = [
+                        const searchable = [
 
-                        activity.studentName,
-                        activity.nim,
-                        activity.submissionCode,
-                        activity.adminUsername,
-                        activity.department
+                            activity
+                                .studentName,
 
-                    ]
-                        .map(
-                            function (value) {
+                            activity
+                                .nim,
 
-                                return String(
-                                    value || ""
-                                )
-                                    .toLowerCase();
+                            activity
+                                .submissionCode,
 
-                            }
-                        );
+                            activity
+                                .adminUsername,
+
+                            activity
+                                .adminName,
+
+                            activity
+                                .department
+
+                        ]
+                            .map(
+                                function (
+                                    value
+                                ) {
+
+                                    return String(
+                                        value ||
+                                        ""
+                                    )
+                                        .toLowerCase();
+                                }
+                            );
 
 
-                    const matchSearch =
-                        !search ||
-                        searchable.some(
-                            function (value) {
+                        const matchSearch =
+                            !search
+                            ||
+                            searchable
+                                .some(
+                                    function (
+                                        value
+                                    ) {
 
-                                return value.includes(
-                                    search
+                                        return value
+                                            .includes(
+                                                search
+                                            );
+                                    }
                                 );
 
-                            }
+
+                        const matchAdmin =
+                            !isSuperAdmin
+                            ||
+                            !appliedAdmin
+                            ||
+                            activity
+                                .adminUsername ===
+                                appliedAdmin
+                            ||
+                            activity
+                                .adminName ===
+                                appliedAdmin;
+
+
+                        const matchAction =
+                            !appliedAction
+                            ||
+                            activity
+                                .action ===
+                                appliedAction;
+
+
+                        return (
+                            matchSearch
+                            &&
+                            matchAdmin
+                            &&
+                            matchAction
                         );
-
-
-                    const matchAdmin =
-                        !isSuperAdmin ||
-                        !appliedAdmin ||
-                        activity.adminUsername ===
-                            appliedAdmin;
-
-
-                    const matchAction =
-                        !appliedAction ||
-                        activity.action ===
-                            appliedAction;
-
-
-                    return (
-                        matchSearch &&
-                        matchAdmin &&
-                        matchAction
-                    );
-
-                }
-            );
-
+                    }
+                );
         }
 
 
@@ -604,7 +783,6 @@ document.addEventListener(
             ) {
 
                 return;
-
             }
 
 
@@ -621,7 +799,6 @@ document.addEventListener(
                     appliedSearch +
                     '"'
                 );
-
             }
 
 
@@ -630,11 +807,23 @@ document.addEventListener(
                 appliedAdmin
             ) {
 
+                const selected =
+                    adminFilter
+                        ?.selectedOptions[
+                            0
+                        ];
+
+
                 parts.push(
                     "Admin " +
-                    appliedAdmin
+                    (
+                        selected
+                            ?.textContent
+                            ?.trim()
+                        ||
+                        appliedAdmin
+                    )
                 );
-
             }
 
 
@@ -652,7 +841,6 @@ document.addEventListener(
 
                     UPDATE_SK_STATUS:
                         "Proses SK"
-
                 };
 
 
@@ -661,15 +849,16 @@ document.addEventListener(
                     (
                         labels[
                             appliedAction
-                        ] ||
+                        ]
+                        ||
                         appliedAction
                     )
                 );
-
             }
 
 
-            activeFilterText.textContent =
+            activeFilterText
+                .textContent =
                 parts.length
                     ? parts.join(
                         " • "
@@ -677,10 +866,11 @@ document.addEventListener(
                     : "Semua aktivitas";
 
 
-            activeFilterBox.classList.add(
-                "active"
-            );
-
+            activeFilterBox
+                .classList
+                .add(
+                    "active"
+                );
         }
 
 
@@ -693,64 +883,92 @@ document.addEventListener(
         ) {
 
             const verification =
-                activities.filter(
-                    function (item) {
+                activities
+                    .filter(
+                        function (
+                            item
+                        ) {
 
-                        return (
-                            item.action ===
-                            "VERIFICATION"
-                        );
-
-                    }
-                ).length;
+                            return (
+                                item.action ===
+                                "VERIFICATION"
+                            );
+                        }
+                    )
+                    .length;
 
 
             const revision =
-                activities.filter(
-                    function (item) {
+                activities
+                    .filter(
+                        function (
+                            item
+                        ) {
 
-                        return (
-                            item.action ===
-                            "REVISION"
-                        );
-
-                    }
-                ).length;
+                            return (
+                                item.action ===
+                                "REVISION"
+                            );
+                        }
+                    )
+                    .length;
 
 
             const process =
-                activities.filter(
-                    function (item) {
+                activities
+                    .filter(
+                        function (
+                            item
+                        ) {
 
-                        return (
-                            item.action ===
-                            "UPDATE_SK_STATUS"
-                        );
-
-                    }
-                ).length;
-
-
-            totalCount.textContent =
-                activities.length;
-
-
-            verificationCount.textContent =
-                verification;
+                            return (
+                                item.action ===
+                                "UPDATE_SK_STATUS"
+                            );
+                        }
+                    )
+                    .length;
 
 
-            revisionCount.textContent =
-                revision;
+            if (totalCount) {
+
+                totalCount
+                    .textContent =
+                    activities.length;
+            }
 
 
-            skCount.textContent =
-                process;
+            if (
+                verificationCount
+            ) {
 
+                verificationCount
+                    .textContent =
+                    verification;
+            }
+
+
+            if (
+                revisionCount
+            ) {
+
+                revisionCount
+                    .textContent =
+                    revision;
+            }
+
+
+            if (skCount) {
+
+                skCount
+                    .textContent =
+                    process;
+            }
         }
 
 
         /* =====================================================
-           SIDEBAR COUNT
+           SIDEBAR REVISION COUNT
         ===================================================== */
 
         async function updateSidebarCount() {
@@ -760,7 +978,6 @@ document.addEventListener(
             ) {
 
                 return;
-
             }
 
 
@@ -772,68 +989,93 @@ document.addEventListener(
 
 
                 const count =
-                    submissions.filter(
-                        function (submission) {
+                    submissions
+                        .filter(
+                            function (
+                                submission
+                            ) {
 
-                            return [
+                                return [
 
-                                API.STATUS
-                                    .PERLU_REVISI,
+                                    API.STATUS
+                                        .PERLU_REVISI,
 
-                                API.STATUS
-                                    .REVISI_DIKIRIM
+                                    API.STATUS
+                                        .REVISI_DIKIRIM
 
-                            ].includes(
-                                submission.status
-                            );
-
-                        }
-                    ).length;
+                                ]
+                                    .includes(
+                                        submission
+                                            .status
+                                    );
+                            }
+                        )
+                        .length;
 
 
                 sidebarRevisionCount
                     .textContent =
                     count;
 
-            } catch (error) {
+            } catch (
+                error
+            ) {
+
+                console.error(
+                    "Gagal menghitung revisi:",
+                    error
+                );
+
 
                 sidebarRevisionCount
                     .textContent =
                     "0";
-
             }
-
         }
 
 
         /* =====================================================
-           RENDER
+           RENDER HISTORY
         ===================================================== */
 
         function renderHistory() {
+
+            if (!tableBody) {
+
+                return;
+            }
+
 
             const roleActivities =
                 getRoleActivities();
 
 
-            const activities =
-                getFilteredActivities();
+            historyFilteredActivities = getFilteredActivities();
+            const totalItems = historyFilteredActivities.length;
+            const totalPages = Math.ceil(totalItems / historyItemsPerPage);
 
+            if (historyCurrentPage < 1) historyCurrentPage = 1;
+            if (historyCurrentPage > totalPages && totalPages > 0) historyCurrentPage = totalPages;
 
-            tableBody.innerHTML =
+            tableBody
+                .innerHTML =
                 "";
 
 
-            resultText.textContent =
-                "Menampilkan " +
-                activities.length +
-                " dari " +
-                roleActivities.length +
-                " aktivitas";
+            if (resultText) {
+
+                resultText
+                    .textContent =
+                    "Menampilkan " +
+                    totalItems +
+                    " dari " +
+                    roleActivities.length +
+                    " aktivitas";
+            }
 
 
             updateSummary(
-                activities
+                historyFilteredActivities
             );
 
 
@@ -841,187 +1083,235 @@ document.addEventListener(
 
 
             if (
-                activities.length ===
+                totalItems ===
                 0
             ) {
 
-                emptyState.style.display =
-                    "flex";
+                if (emptyState) {
 
+                    emptyState
+                        .style
+                        .display =
+                        "flex";
+                }
 
+                updateHistoryPagination(0);
                 return;
-
             }
 
 
-            emptyState.style.display =
-                "none";
+            if (emptyState) {
+
+                emptyState
+                    .style
+                    .display =
+                    "none";
+            }
+
+            const startIndex = (historyCurrentPage - 1) * historyItemsPerPage;
+            const endIndex = startIndex + historyItemsPerPage;
+            const paginatedData = historyFilteredActivities.slice(startIndex, endIndex);
+
+            paginatedData
+                .forEach(
+                    function (
+                        activity
+                    ) {
+
+                        const row =
+                            document
+                                .createElement(
+                                    "tr"
+                                );
 
 
-            activities.forEach(
-                function (activity) {
-
-                    const row =
-                        document.createElement(
-                            "tr"
-                        );
+                        const category =
+                            getActionCategory(
+                                activity
+                                    .action
+                            );
 
 
-                    const category =
-                        getActionCategory(
-                            activity.action
-                        );
+                        const adminCell =
+                            isSuperAdmin
+                                ? `
+                                    <td class="history-admin-cell">
+
+                                        <strong>
+                                            ${escapeHtml(
+                                                activity.adminName
+                                                ||
+                                                "-"
+                                            )}
+                                        </strong>
+
+                                        <span>
+                                            ${escapeHtml(
+                                                activity.adminRole
+                                                ||
+                                                "ADMIN"
+                                            )}
+                                        </span>
+
+                                        <small>
+                                            ${escapeHtml(
+                                                activity.adminUsername
+                                                ||
+                                                ""
+                                            )}
+                                        </small>
+
+                                    </td>
+                                `
+                                : "";
 
 
-                    const adminCell =
-                        isSuperAdmin
-                            ? `
-                            <td class="history-admin-cell">
-
-                                <strong>
-                                    ${escapeHtml(
-                                        activity.adminUsername ||
-                                        "-"
-                                    )}
-                                </strong>
-
-                                <span>
-                                    ${escapeHtml(
-                                        activity.adminRole ||
-                                        "ADMIN"
-                                    )}
-                                </span>
-
-                            </td>
-                            `
-                            : "";
-
-
-                    row.innerHTML =
-                        `
-                        <td>
-
-                            <div class="history-time">
-
-                                <strong>
-                                    ${escapeHtml(
-                                        formatDate(
-                                            activity.createdAt
-                                        )
-                                    )}
-                                </strong>
-
-                            </div>
-
-                        </td>
-
-
-                        ${adminCell}
-
-
-                        <td>
-
-                            <div class="history-student">
-
-                                <strong>
-                                    ${escapeHtml(
-                                        activity.studentName ||
-                                        "-"
-                                    )}
-                                </strong>
-
-                                <span>
-                                    ${escapeHtml(
-                                        activity.nim ||
-                                        "-"
-                                    )}
-                                </span>
-
-                                <small>
-                                    ${escapeHtml(
-                                        activity.submissionCode ||
-                                        "-"
-                                    )}
-                                </small>
-
-                            </div>
-
-                        </td>
-
-
-                        <td>
-
-                            <span
-                                class="history-action-badge ${escapeHtml(
-                                    category
-                                )}"
-                            >
-                                ${escapeHtml(
-                                    getActionLabel(
+                        const detailUrl =
+                            activity
+                                .submissionId
+                                ? (
+                                    "/admin/pengajuan/" +
+                                    encodeURIComponent(
                                         activity
-                                    )
-                                )}
-                            </span>
-
-                        </td>
-
-
-                        <td>
-
-                            <div class="history-change">
-
-                                <span>
-                                    ${escapeHtml(
-                                        getStatusLabel(
-                                            activity.previousStatus
-                                        )
-                                    )}
-                                </span>
-
-                                <b>
-                                    →
-                                </b>
-
-                                <strong>
-                                    ${escapeHtml(
-                                        getStatusLabel(
-                                            activity.newStatus
-                                        )
-                                    )}
-                                </strong>
-
-                            </div>
-
-                        </td>
+                                            .submissionId
+                                    ) +
+                                    "?from=history"
+                                )
+                                : "#";
 
 
-                        <td>
+                        row.innerHTML =
+                            `
+                                <td>
 
-                            <a
-                                href="detail_history.html?id=${encodeURIComponent(
-                                    activity.id
-                                )}"
-                                class="history-detail-button"
-                            >
-                                Lihat Detail
-                            </a>
+                                    <div class="history-time">
 
-                        </td>
-                        `;
+                                        <strong>
+                                            ${escapeHtml(
+                                                formatDate(
+                                                    activity
+                                                        .createdAt
+                                                )
+                                            )}
+                                        </strong>
+
+                                    </div>
+
+                                </td>
 
 
-                    tableBody.appendChild(
-                        row
-                    );
+                                ${adminCell}
 
-                }
-            );
 
+                                <td>
+
+                                    <div class="history-student">
+
+                                        <strong>
+                                            ${escapeHtml(
+                                                activity.studentName
+                                                ||
+                                                "-"
+                                            )}
+                                        </strong>
+
+                                        <span>
+                                            ${escapeHtml(
+                                                activity.nim
+                                                ||
+                                                "-"
+                                            )}
+                                        </span>
+
+                                        <small>
+                                            ${escapeHtml(
+                                                activity.submissionCode
+                                                ||
+                                                "-"
+                                            )}
+                                        </small>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    <span
+                                        class="history-action-badge ${escapeHtml(
+                                            category
+                                        )}"
+                                    >
+                                        ${escapeHtml(
+                                            getActionLabel(
+                                                activity
+                                            )
+                                        )}
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="history-change">
+
+                                        <span>
+                                            ${escapeHtml(
+                                                getStatusLabel(
+                                                    activity
+                                                        .previousStatus
+                                                )
+                                            )}
+                                        </span>
+
+                                        <b>
+                                            →
+                                        </b>
+
+                                        <strong>
+                                            ${escapeHtml(
+                                                getStatusLabel(
+                                                    activity
+                                                        .newStatus
+                                                )
+                                            )}
+                                        </strong>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    <a
+                                        href="${escapeHtml(
+                                            detailUrl
+                                        )}"
+                                        class="history-detail-button"
+                                    >
+                                        Lihat Pengajuan
+                                    </a>
+
+                                </td>
+                            `;
+
+
+                        tableBody
+                            .appendChild(
+                                row
+                            );
+                    }
+                );
+
+            updateHistoryPagination(totalPages);
         }
 
 
         /* =====================================================
-           EVENTS
+           FILTER EVENTS
         ===================================================== */
 
         applyFilterButton
@@ -1032,13 +1322,15 @@ document.addEventListener(
                     appliedSearch =
                         searchInput
                             ?.value
-                            .trim() ||
+                            .trim()
+                        ||
                         "";
 
 
                     appliedAction =
                         actionFilter
-                            ?.value ||
+                            ?.value
+                        ||
                         "";
 
 
@@ -1046,14 +1338,14 @@ document.addEventListener(
                         isSuperAdmin
                             ? (
                                 adminFilter
-                                    ?.value ||
+                                    ?.value
+                                ||
                                 ""
                             )
                             : "";
 
-
+                    historyCurrentPage = 1;
                     renderHistory();
-
                 }
             );
 
@@ -1069,7 +1361,6 @@ document.addEventListener(
 
                         searchInput.value =
                             "";
-
                     }
 
 
@@ -1079,7 +1370,6 @@ document.addEventListener(
 
                         actionFilter.value =
                             "";
-
                     }
 
 
@@ -1089,22 +1379,22 @@ document.addEventListener(
 
                         adminFilter.value =
                             "";
-
                     }
 
 
                     appliedSearch =
                         "";
 
+
                     appliedAction =
                         "";
+
 
                     appliedAdmin =
                         "";
 
-
+                    historyCurrentPage = 1;
                     renderHistory();
-
                 }
             );
 
@@ -1112,27 +1402,96 @@ document.addEventListener(
         searchInput
             ?.addEventListener(
                 "keydown",
-                function (event) {
+                function (
+                    event
+                ) {
 
                     if (
                         event.key ===
                         "Enter"
                     ) {
 
-                        event.preventDefault();
+                        event
+                            .preventDefault();
 
 
                         applyFilterButton
                             ?.click();
-
                     }
-
                 }
             );
 
 
         /* =====================================================
-           LOAD
+           PAGINATION
+        ===================================================== */
+
+        function updateHistoryPagination(totalPages) {
+            const container = document.getElementById("historyPaginationContainer");
+            const info = document.getElementById("historyPaginationInfo");
+            const controls = document.getElementById("historyPaginationControls");
+
+            if (!container || !info || !controls) return;
+
+            if (totalPages <= 1) {
+                container.style.display = "none";
+                return;
+            }
+
+            container.style.display = "flex";
+            info.textContent = "Halaman " + historyCurrentPage + " dari " + totalPages;
+            controls.innerHTML = "";
+
+            const prevBtn = document.createElement("button");
+            prevBtn.type = "button";
+            prevBtn.textContent = "Sebelumnya";
+            if (historyCurrentPage === 1) {
+                prevBtn.disabled = true;
+            } else {
+                prevBtn.addEventListener("click", function() {
+                    historyCurrentPage--;
+                    renderHistory();
+                });
+            }
+            controls.appendChild(prevBtn);
+
+            let startPage = Math.max(1, historyCurrentPage - 2);
+            let endPage = Math.min(totalPages, historyCurrentPage + 2);
+            
+            if (historyCurrentPage <= 3) endPage = Math.min(totalPages, 5);
+            if (historyCurrentPage >= totalPages - 2) startPage = Math.max(1, totalPages - 4);
+
+            for (let i = startPage; i <= endPage; i++) {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.textContent = i;
+                if (i === historyCurrentPage) {
+                    btn.classList.add("active");
+                } else {
+                    btn.addEventListener("click", function() {
+                        historyCurrentPage = i;
+                        renderHistory();
+                    });
+                }
+                controls.appendChild(btn);
+            }
+
+            const nextBtn = document.createElement("button");
+            nextBtn.type = "button";
+            nextBtn.textContent = "Berikutnya";
+            if (historyCurrentPage === totalPages) {
+                nextBtn.disabled = true;
+            } else {
+                nextBtn.addEventListener("click", function() {
+                    historyCurrentPage++;
+                    renderHistory();
+                });
+            }
+            controls.appendChild(nextBtn);
+        }
+
+        /* =====================================================
+           LOAD HISTORY
         ===================================================== */
 
         async function loadHistory() {
@@ -1143,26 +1502,25 @@ document.addEventListener(
             try {
 
                 /*
-                 * Frontend tetap melakukan role guard.
-                 * Backend nantinya WAJIB tetap menerapkan
-                 * authorization sendiri.
+                 * Backend menentukan data yang boleh
+                 * dilihat berdasarkan Auth::user().
+                 *
+                 * Tidak mengirim admin_username lagi.
                  */
-
-                const params =
-                    !isSuperAdmin &&
-                    currentUsername
-                        ? {
-                            admin_username:
-                                currentUsername
-                        }
-                        : {};
-
-
                 allActivities =
                     await API
-                        .getHistory(
-                            params
-                        );
+                        .getHistory();
+
+
+                if (
+                    !Array.isArray(
+                        allActivities
+                    )
+                ) {
+
+                    allActivities =
+                        [];
+                }
 
 
                 populateAdminFilter();
@@ -1173,7 +1531,9 @@ document.addEventListener(
 
                 await updateSidebarCount();
 
-            } catch (error) {
+            } catch (
+                error
+            ) {
 
                 console.error(
                     "Gagal memuat History:",
@@ -1198,15 +1558,11 @@ document.addEventListener(
                     sidebarRevisionCount
                         .textContent =
                         "0";
-
                 }
-
             }
-
         }
 
 
         await loadHistory();
-
     }
 );
