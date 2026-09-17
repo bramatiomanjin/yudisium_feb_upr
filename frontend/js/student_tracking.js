@@ -4,35 +4,30 @@ document.addEventListener(
 
         "use strict";
 
-
         if (!window.YudisiumAPI) {
+            console.error("YudisiumAPI tidak ditemukan.");
             return;
         }
 
+        const API =
+            window.YudisiumAPI;
 
         const trackingForm =
             document.getElementById(
                 "trackingForm"
             );
 
-
         const timeline =
             document.getElementById(
                 "trackingTimeline"
             );
 
-
         if (trackingForm) {
-
             initSearch();
-
         }
 
-
         if (timeline) {
-
             initDetail();
-
         }
 
 
@@ -47,18 +42,15 @@ document.addEventListener(
                     "tracking_nim"
                 );
 
-
             const code =
                 document.getElementById(
                     "kode_pengajuan"
                 );
 
-
             const errorBox =
                 document.getElementById(
                     "trackingLookupError"
                 );
-
 
             trackingForm.addEventListener(
                 "submit",
@@ -66,26 +58,25 @@ document.addEventListener(
 
                     event.preventDefault();
 
-
                     if (
                         !nim.value.trim() ||
                         !code.value.trim()
                     ) {
-
                         return;
-
                     }
-
 
                     try {
 
-                        const submission =
-                            await window.YudisiumAPI
-                                .findSubmission(
-                                    nim.value,
-                                    code.value
-                                );
+                        if (errorBox) {
+                            errorBox.style.display =
+                                "none";
+                        }
 
+                        const submission =
+                            await API.findSubmission(
+                                nim.value,
+                                code.value
+                            );
 
                         if (!submission) {
 
@@ -95,30 +86,23 @@ document.addEventListener(
                                     "block";
 
                                 errorBox.textContent =
-                                    window.YudisiumAPI
-                                        .config
-                                        .backendConnected
+                                    API.config.backendConnected
                                         ? "NIM dan Kode SK Yudisium tidak ditemukan."
                                         : "Sistem tracking belum terhubung ke backend.";
-
                             }
 
                             return;
-
                         }
-
 
                         sessionStorage.setItem(
                             "tracking_nim",
                             submission.nim
                         );
 
-
                         sessionStorage.setItem(
                             "tracking_kode",
                             submission.code
                         );
-
 
                         sessionStorage.setItem(
                             "tracking_submission_id",
@@ -127,11 +111,15 @@ document.addEventListener(
                             )
                         );
 
-
                         window.location.href =
-                            "detail_tracking.html";
+                            "/detail_tracking";
 
                     } catch (error) {
+
+                        console.error(
+                            "Tracking error:",
+                            error
+                        );
 
                         if (errorBox) {
 
@@ -139,35 +127,53 @@ document.addEventListener(
                                 "block";
 
                             errorBox.textContent =
-                                "Sistem belum dapat mengakses data pengajuan.";
-
+                                error.message || "Sistem belum dapat mengakses data pengajuan.";
                         }
-
                     }
-
                 }
             );
-
         }
 
 
         /* =====================================================
-           DETAIL
+           DETAIL TRACKING
         ===================================================== */
 
         async function initDetail() {
+
+            const urlParams =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+            const queryNim =
+                urlParams.get("nim");
+
+            const queryKode =
+                urlParams.get("kode") ||
+                urlParams.get("kode_sk") ||
+                urlParams.get("kode_pengajuan");
+
+            if (queryNim && queryKode) {
+                sessionStorage.setItem(
+                    "tracking_nim",
+                    queryNim.trim()
+                );
+                sessionStorage.setItem(
+                    "tracking_kode",
+                    queryKode.trim()
+                );
+            }
 
             const nim =
                 sessionStorage.getItem(
                     "tracking_nim"
                 );
 
-
             const code =
                 sessionStorage.getItem(
                     "tracking_kode"
                 );
-
 
             if (
                 !nim ||
@@ -175,107 +181,288 @@ document.addEventListener(
             ) {
 
                 window.location.href =
-                    "tracking.html";
+                    "/tracking";
 
                 return;
-
             }
 
+            try {
 
-            const submission =
-                await window.YudisiumAPI
-                    .findSubmission(
+                /*
+                 * Pertama cari pengajuan berdasarkan
+                 * NIM + kode seperti biasa.
+                 */
+                let submission =
+                    await API.findSubmission(
                         nim,
                         code
                     );
 
+                if (!submission) {
 
-            if (!submission) {
+                    window.location.href =
+                        "/tracking";
 
-                window.location.href =
-                    "tracking.html";
-
-                return;
-
-            }
+                    return;
+                }
 
 
-            setText(
-                "detailKode",
-                submission.code
-            );
+                /*
+                 * =================================================
+                 * PENTING
+                 *
+                 * Endpoint tracking mungkin hanya mengirim
+                 * data ringkas.
+                 *
+                 * Kita ambil detail submission lagi agar
+                 * mendapatkan revisionCount dari:
+                 *
+                 * GET /submissions/{id}
+                 * =================================================
+                 */
 
-            setText(
-                "detailNim",
-                submission.nim
-            );
+                if (submission.id) {
 
-            setText(
-                "detailNama",
-                submission.name
-            );
+                    try {
 
-            setText(
-                "detailJurusan",
-                submission.department
-            );
+                        const detail =
+                            await API.getSubmission(
+                                submission.id,
+                                code
+                            );
 
-            setText(
-                "detailTanggal",
-                submission.submittedAt
-            );
+                        if (detail) {
 
-            setText(
-                "detailUpdated",
-                submission.updatedAt ||
-                submission.submittedAt
-            );
+                            /*
+                             * Gabungkan data.
+                             * Detail menimpa property yang sama
+                             * karena datanya lebih lengkap.
+                             */
+                            submission = {
+                                ...submission,
+                                ...detail
+                            };
+                        }
 
-            setText(
-                "statusUpdatedAt",
-                submission.updatedAt ||
-                submission.submittedAt
-            );
+                    } catch (detailError) {
 
-
-            renderStatus(
-                submission
-            );
-
-
-            renderTimeline(
-                submission.status
-            );
-
-
-            if (
-                submission.status ===
-                window.YudisiumAPI
-                    .STATUS
-                    .PERLU_REVISI
-            ) {
-
-                const alert =
-                    document.getElementById(
-                        "revisionAlert"
-                    );
+                        /*
+                         * Tracking tetap ditampilkan meskipun
+                         * request detail gagal.
+                         */
+                        console.error(
+                            "Gagal mengambil detail submission:",
+                            detailError
+                        );
+                    }
+                }
 
 
-                alert?.classList.add(
-                    "active"
-                );
-
+                /* =================================================
+                   DATA PENGAJUAN
+                ================================================= */
 
                 setText(
-                    "revisionCount",
-                    submission.revisionCount ||
-                    "-"
+                    "detailKode",
+                    submission.code
                 );
 
-            }
+                setText(
+                    "detailNim",
+                    submission.nim
+                );
 
+                setText(
+                    "detailNama",
+                    submission.name
+                );
+
+                setText(
+                    "detailJurusan",
+                    submission.department
+                );
+
+                setText(
+    "detailTanggal",
+    formatDateTime(
+        submission.submittedAt
+    )
+);
+
+setText(
+    "detailUpdated",
+    formatDateTime(
+        submission.updatedAt ||
+        submission.submittedAt
+    )
+);
+
+setText(
+    "statusUpdatedAt",
+    formatDateTime(
+        submission.updatedAt ||
+        submission.submittedAt
+    )
+);
+
+function formatDateTime(value) {
+
+    if (!value) {
+        return "-";
+    }
+
+    const date =
+        new Date(value);
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+        return value;
+    }
+
+    return new Intl.DateTimeFormat(
+        "id-ID",
+        {
+            timeZone:
+                "Asia/Jakarta",
+
+            day:
+                "2-digit",
+
+            month:
+                "long",
+
+            year:
+                "numeric",
+
+            hour:
+                "2-digit",
+
+            minute:
+                "2-digit",
+
+            hour12:
+                false
+        }
+    )
+        .format(date)
+        .replace(
+            ".",
+            ":"
+        ) +
+        " WIB";
+}
+
+
+                /* =================================================
+                   STATUS + TIMELINE
+                ================================================= */
+
+                renderStatus(
+                    submission
+                );
+
+                renderTimeline(
+                    submission.status
+                );
+
+
+                /* =================================================
+                   REVISI
+                ================================================= */
+
+                if (
+                    submission.status ===
+                    API.STATUS.PERLU_REVISI
+                ) {
+
+                    const revisionAlert =
+                        document.getElementById(
+                            "revisionAlert"
+                        );
+
+                    revisionAlert
+                        ?.classList
+                        .add(
+                            "active"
+                        );
+
+
+                    /*
+                     * Jumlah field + dokumen yang statusnya REVISI.
+                     */
+                    const revisionCount =
+                        Number(
+                            submission.revisionCount ??
+                            0
+                        );
+
+
+                    const revisionCountElement =
+                        document.getElementById(
+                            "revisionCount"
+                        );
+
+                    if (
+                        revisionCountElement
+                    ) {
+
+                        revisionCountElement
+                            .textContent =
+                            revisionCount;
+                    }
+
+
+                    /*
+                     * Tombol pada Blade sebelumnya:
+                     *
+                     * /mahasiswa/revisi
+                     *
+                     * Sekarang diarahkan ke route Laravel:
+                     *
+                     * /revisi/{kode_pengajuan}
+                     */
+                    const revisionButton =
+                        document.querySelector(
+                            ".revision-button"
+                        );
+
+                    if (
+                        revisionButton &&
+                        submission.code
+                    ) {
+
+                        revisionButton.href =
+                            "/revisi/" +
+                            encodeURIComponent(
+                                submission.code
+                            );
+                    }
+                }
+
+                console.log(
+                    "Tracking detail:",
+                    submission
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Gagal memuat detail tracking:",
+                    error
+                );
+
+                window.location.href =
+                    "/tracking";
+            }
         }
 
+
+        /* =====================================================
+           HELPER TEXT
+        ===================================================== */
 
         function setText(
             id,
@@ -283,26 +470,41 @@ document.addEventListener(
         ) {
 
             const element =
-                document.getElementById(id);
+                document.getElementById(
+                    id
+                );
 
-
-            if (element) {
-
-                element.textContent =
-                    value || "-";
-
+            if (!element) {
+                return;
             }
 
+            if (
+                value === undefined ||
+                value === null ||
+                String(value).trim() === ""
+            ) {
+
+                element.textContent =
+                    "-";
+
+                return;
+            }
+
+            element.textContent =
+                value;
         }
 
+
+        /* =====================================================
+           STATUS
+        ===================================================== */
 
         function renderStatus(
             submission
         ) {
 
             const STATUS =
-                window.YudisiumAPI.STATUS;
-
+                API.STATUS;
 
             let title =
                 "Pengajuan Diproses";
@@ -419,7 +621,7 @@ document.addEventListener(
                 case STATUS.SK_SIAP_DIAMBIL:
 
                     title =
-                        "SK Siap Diambil";
+                        "SK Selesai";
 
                     description =
                         "SK Yudisium telah selesai diproses. Silakan mengambil SK di Bagian Akademik FEB UPR.";
@@ -428,7 +630,6 @@ document.addEventListener(
                         "✓";
 
                     break;
-
             }
 
 
@@ -437,12 +638,10 @@ document.addEventListener(
                 title
             );
 
-
             setText(
                 "statusDescription",
                 description
             );
-
 
             setText(
                 "statusIcon",
@@ -455,11 +654,18 @@ document.addEventListener(
                     "nextActionTitle"
                 );
 
-
             const nextDescription =
                 document.getElementById(
                     "nextActionDescription"
                 );
+
+
+            if (
+                !nextTitle ||
+                !nextDescription
+            ) {
+                return;
+            }
 
 
             if (
@@ -491,19 +697,24 @@ document.addEventListener(
 
                 nextDescription.textContent =
                     "Silakan pantau perkembangan pengajuan melalui halaman ini.";
-
             }
-
         }
 
+
+        /* =====================================================
+           TIMELINE
+        ===================================================== */
 
         function renderTimeline(
             status
         ) {
 
-            const STATUS =
-                window.YudisiumAPI.STATUS;
+            if (!timeline) {
+                return;
+            }
 
+            const STATUS =
+                API.STATUS;
 
             const steps = [
 
@@ -536,7 +747,7 @@ document.addEventListener(
                         STATUS.TTD_WAKIL_DEKAN,
 
                     title:
-                        "TTD Wakil Dekan"
+                        "Paraf Pimpinan"
                 },
 
                 {
@@ -552,7 +763,7 @@ document.addEventListener(
                         STATUS.SK_SIAP_DIAMBIL,
 
                     title:
-                        "SK Siap Diambil"
+                        "SK Selesai"
                 }
 
             ];
@@ -583,12 +794,11 @@ document.addEventListener(
 
                 [STATUS.SK_SIAP_DIAMBIL]:
                     5
-
             };
 
 
             const index =
-                order[status] || 0;
+                order[status] ?? 0;
 
 
             timeline.innerHTML =
@@ -606,33 +816,37 @@ document.addEventListener(
                             "div"
                         );
 
-
                     item.className =
                         "timeline-item";
 
 
-                    if (i < index) {
+                    if (
+                        i < index
+                    ) {
 
                         item.classList.add(
                             "completed"
                         );
-
                     }
 
 
-                    if (i === index) {
+                    if (
+                        i === index
+                    ) {
 
                         item.classList.add(
                             "current"
                         );
-
                     }
 
 
-                    item.innerHTML =
-                        `
+                    item.innerHTML = `
                         <div class="timeline-marker">
-                            ${i < index ? "✓" : i + 1}
+                            ${
+                                i < index
+                                    ? "✓"
+                                    : i + 1
+                            }
                         </div>
 
                         <div class="timeline-content">
@@ -640,16 +854,14 @@ document.addEventListener(
                                 ${step.title}
                             </h3>
                         </div>
-                        `;
+                    `;
 
 
                     timeline.appendChild(
                         item
                     );
-
                 }
             );
-
         }
 
     }

@@ -621,7 +621,7 @@ function formatDateTime(value) {
                 case STATUS.SK_SIAP_DIAMBIL:
 
                     title =
-                        "SK Siap Diambil";
+                        "SK Selesai";
 
                     description =
                         "SK Yudisium telah selesai diproses. Silakan mengambil SK di Bagian Akademik FEB UPR.";
@@ -747,7 +747,7 @@ function formatDateTime(value) {
                         STATUS.TTD_WAKIL_DEKAN,
 
                     title:
-                        "TTD Wakil Dekan"
+                        "Paraf Pimpinan"
                 },
 
                 {
@@ -763,7 +763,7 @@ function formatDateTime(value) {
                         STATUS.SK_SIAP_DIAMBIL,
 
                     title:
-                        "SK Siap Diambil"
+                        "SK Selesai"
                 }
 
             ];

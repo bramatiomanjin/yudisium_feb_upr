@@ -264,10 +264,10 @@ document.addEventListener(
                     STATUS.TTD_WAKIL_DEKAN,
 
                 title:
-                    "TTD Wakil Dekan",
+                    "Paraf Pimpinan",
 
                 description:
-                    "Dokumen SK menunggu atau menjalani proses tanda tangan Wakil Dekan."
+                    "Dokumen SK menunggu atau menjalani proses paraf dari Pimpinan."
 
             },
 
@@ -290,7 +290,7 @@ document.addEventListener(
                     STATUS.SK_SIAP_DIAMBIL,
 
                 title:
-                    "SK Siap Diambil",
+                    "SK Selesai",
 
                 description:
                     "Seluruh proses selesai dan SK dapat diambil oleh mahasiswa."
@@ -325,13 +325,13 @@ document.addEventListener(
                     STATUS.TTD_WAKIL_DEKAN,
 
                 title:
-                    "Lanjut ke Tanda Tangan Wakil Dekan",
+                    "Lanjut ke Paraf Pimpinan",
 
                 description:
-                    "Pastikan dokumen SK telah selesai disusun sebelum melanjutkan ke proses tanda tangan Wakil Dekan.",
+                    "Pastikan dokumen SK telah selesai disusun sebelum melanjutkan ke proses Paraf Pimpinan.",
 
                 button:
-                    "Lanjut ke TTD Wakil Dekan"
+                    "Lanjut ke Paraf Pimpinan"
 
             },
 
@@ -345,7 +345,7 @@ document.addEventListener(
                     "Lanjut ke Tanda Tangan Dekan",
 
                 description:
-                    "Pastikan proses tanda tangan Wakil Dekan sudah selesai sebelum meneruskan dokumen kepada Dekan.",
+                    "Pastikan proses paraf pimpinan sudah selesai sebelum meneruskan dokumen kepada Dekan.",
 
                 button:
                     "Lanjut ke TTD Dekan"
@@ -362,10 +362,10 @@ document.addEventListener(
                     "Finalisasi Proses SK",
 
                 description:
-                    "Jika seluruh tanda tangan dan administrasi telah selesai, tandai SK sebagai siap diambil mahasiswa.",
+                    "Jika seluruh tanda tangan dan administrasi telah selesai, tandai SK sebagai SK Selesai.",
 
                 button:
-                    "Tandai SK Siap Diambil"
+                    "Tandai SK Selesai"
 
             },
 

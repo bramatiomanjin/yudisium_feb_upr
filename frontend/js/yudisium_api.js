@@ -9,23 +9,9 @@
     ========================================================= */
 
     const CONFIG = {
-
-        /*
-         * Ubah ke true saat Laravel API sudah siap.
-         */
-        backendConnected: false,
-
-        /*
-         * Jika frontend berada dalam Laravel:
-         * /api
-         *
-         * Jika terpisah:
-         * http://127.0.0.1:8000/api
-         */
-        baseUrl: "/api",
-
+        backendConnected: true,
+        baseUrl: "",
         timeout: 15000
-
     };
 
 
@@ -90,7 +76,7 @@
         },
 
         [STATUS.TTD_WAKIL_DEKAN]: {
-            label: "TTD Wakil Dekan",
+            label: "Paraf Pimpinan",
             className: "process"
         },
 
@@ -100,7 +86,7 @@
         },
 
         [STATUS.SK_SIAP_DIAMBIL]: {
-            label: "SK Siap Diambil",
+            label: "SK Selesai",
             className: "completed"
         }
 
@@ -829,7 +815,7 @@
     }
 
 
-    async function getSubmission(id) {
+    async function getSubmission(id, kode_sk = null) {
 
         if (
             !CONFIG.backendConnected
@@ -839,11 +825,12 @@
 
         }
 
+        const query = kode_sk ? "?kode_sk=" + encodeURIComponent(kode_sk) : "";
 
         const payload =
             await request(
                 "/submissions/" +
-                encodeURIComponent(id)
+                encodeURIComponent(id) + query
             );
 
 
@@ -855,21 +842,12 @@
     }
 
 
-    async function submitApplication(
-        formData
-    ) {
-
-        const payload =
-            await request(
-                "/submissions",
+    async function submitApplication(formData) {
+        const payload = await request(
+                "/pengajuan",
                 {
-
-                    method:
-                        "POST",
-
-                    body:
-                        formData
-
+                    method: "POST",
+                    body: formData
                 }
             );
 
@@ -961,7 +939,8 @@
     ========================================================= */
 
     async function getDocuments(
-        submissionId
+        submissionId,
+        kode_sk = null
     ) {
 
         if (
@@ -972,6 +951,7 @@
 
         }
 
+        const query = kode_sk ? "?kode_sk=" + encodeURIComponent(kode_sk) : "";
 
         const payload =
             await request(
@@ -979,7 +959,7 @@
                 encodeURIComponent(
                     submissionId
                 ) +
-                "/documents"
+                "/documents" + query
             );
 
 
@@ -1005,7 +985,8 @@
     ========================================================= */
 
     async function getVerificationResult(
-        submissionId
+        submissionId,
+        kode_sk = null
     ) {
 
         if (
@@ -1016,6 +997,7 @@
 
         }
 
+        const query = kode_sk ? "?kode_sk=" + encodeURIComponent(kode_sk) : "";
 
         const payload =
             await request(
@@ -1023,7 +1005,7 @@
                 encodeURIComponent(
                     submissionId
                 ) +
-                "/verification"
+                "/verification" + query
             );
 
 
@@ -1465,69 +1447,30 @@
 
 
     function getRoute(submission) {
-
         if (!submission) {
-
-            return "pengajuan.html";
-
+            return "/admin/dashboard"; // Fallback ke dashboard
         }
 
-
-        switch (
-            normalizeStatus(
-                submission.status
-            )
-        ) {
-
+        switch (normalizeStatus(submission.status)) {
             case STATUS.MENUNGGU_VERIFIKASI:
-
-                return (
-                    "verifikasi.html?id=" +
-                    submission.id
-                );
-
+                return "/admin/verifikasi?id=" + submission.id;
 
             case STATUS.PERLU_REVISI:
-
-                return (
-                    "detail_pengajuan.html?id=" +
-                    submission.id
-                );
-
+                return "/admin/pengajuan/" + submission.id;
 
             case STATUS.REVISI_DIKIRIM:
-
-                return (
-                    "review_revisi.html?id=" +
-                    submission.id
-                );
-
+                return "/admin/review-revisi?id=" + submission.id;
 
             case STATUS.TERVERIFIKASI:
-
             case STATUS.PEMBUATAN_SK:
-
             case STATUS.TTD_WAKIL_DEKAN:
-
             case STATUS.TTD_DEKAN:
-
             case STATUS.SK_SIAP_DIAMBIL:
-
-                return (
-                    "proses_sk.html?id=" +
-                    submission.id
-                );
-
+                return "/admin/proses-sk?id=" + submission.id;
 
             default:
-
-                return (
-                    "detail_pengajuan.html?id=" +
-                    submission.id
-                );
-
+                return "/admin/pengajuan/" + submission.id;
         }
-
     }
 
 

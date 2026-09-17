@@ -76,7 +76,7 @@
         },
 
         [STATUS.TTD_WAKIL_DEKAN]: {
-            label: "TTD Wakil Dekan",
+            label: "Paraf Pimpinan",
             className: "process"
         },
 
@@ -86,7 +86,7 @@
         },
 
         [STATUS.SK_SIAP_DIAMBIL]: {
-            label: "SK Siap Diambil",
+            label: "SK Selesai",
             className: "completed"
         }
 

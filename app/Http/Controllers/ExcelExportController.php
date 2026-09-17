@@ -1106,7 +1106,7 @@ class ExcelExportController extends Controller
                 'Pembuatan SK',
 
             'TTD_WAKIL_DEKAN' =>
-                'TTD Wakil Dekan',
+                'Paraf Pimpinan',
 
             'TTD_DEKAN' =>
                 'TTD Dekan',
@@ -1115,7 +1115,7 @@ class ExcelExportController extends Controller
                 'SK Terbit',
 
             'SK_SIAP_DIAMBIL' =>
-                'SK Siap Diambil',
+                'SK Selesai',
         ];
 
 

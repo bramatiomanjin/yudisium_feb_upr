@@ -12,7 +12,6 @@ document.addEventListener(
             );
 
             return;
-
         }
 
 
@@ -37,10 +36,9 @@ document.addEventListener(
         if (!submissionId) {
 
             window.location.href =
-                "pengajuan.html?filter=proses-sk";
+                "/admin/dashboard";
 
             return;
-
         }
 
 
@@ -53,19 +51,22 @@ document.addEventListener(
         if (!submission) {
 
             window.location.href =
-                "pengajuan.html?filter=proses-sk";
+                "/admin/dashboard";
 
             return;
-
         }
 
 
         const allowedStatuses = [
 
             STATUS.TERVERIFIKASI,
+
             STATUS.PEMBUATAN_SK,
+
             STATUS.TTD_WAKIL_DEKAN,
+
             STATUS.TTD_DEKAN,
+
             STATUS.SK_SIAP_DIAMBIL
 
         ];
@@ -78,11 +79,10 @@ document.addEventListener(
         ) {
 
             window.location.href =
-                "detail_pengajuan.html?id=" +
+                "/admin/pengajuan/" +
                 submission.id;
 
             return;
-
         }
 
 
@@ -227,12 +227,13 @@ document.addEventListener(
 
 
         /* =====================================================
-           FLOW
+           PROCESS FLOW
         ===================================================== */
 
         const steps = [
 
             {
+
                 status:
                     STATUS.TERVERIFIKASI,
 
@@ -240,10 +241,12 @@ document.addEventListener(
                     "Data Terverifikasi",
 
                 description:
-                    "Data pengajuan telah dinyatakan lengkap."
+                    "Data mahasiswa telah dinyatakan lengkap dan siap masuk proses administrasi SK."
+
             },
 
             {
+
                 status:
                     STATUS.PEMBUATAN_SK,
 
@@ -251,21 +254,25 @@ document.addEventListener(
                     "Pembuatan SK",
 
                 description:
-                    "Data digunakan untuk penyusunan dokumen SK."
+                    "Data mahasiswa digunakan untuk penyusunan dokumen SK Yudisium."
+
             },
 
             {
+
                 status:
                     STATUS.TTD_WAKIL_DEKAN,
 
                 title:
-                    "TTD Wakil Dekan",
+                    "Paraf Pimpinan",
 
                 description:
-                    "SK melalui proses tanda tangan Wakil Dekan."
+                    "Dokumen SK menunggu atau menjalani proses paraf dari Pimpinan."
+
             },
 
             {
+
                 status:
                     STATUS.TTD_DEKAN,
 
@@ -273,18 +280,21 @@ document.addEventListener(
                     "TTD Dekan",
 
                 description:
-                    "SK melalui proses tanda tangan Dekan."
+                    "Dokumen SK menunggu atau menjalani proses tanda tangan Dekan."
+
             },
 
             {
+
                 status:
                     STATUS.SK_SIAP_DIAMBIL,
 
                 title:
-                    "SK Siap Diambil",
+                    "SK Selesai",
 
                 description:
-                    "SK selesai dan dapat diambil mahasiswa."
+                    "Seluruh proses selesai dan SK dapat diambil oleh mahasiswa."
+
             }
 
         ];
@@ -315,13 +325,13 @@ document.addEventListener(
                     STATUS.TTD_WAKIL_DEKAN,
 
                 title:
-                    "Lanjut ke Tanda Tangan Wakil Dekan",
+                    "Lanjut ke Paraf Pimpinan",
 
                 description:
-                    "Pastikan dokumen SK telah selesai disusun sebelum mengirimkannya ke tahap tanda tangan Wakil Dekan.",
+                    "Pastikan dokumen SK telah selesai disusun sebelum melanjutkan ke proses Paraf Pimpinan.",
 
                 button:
-                    "Lanjut ke TTD Wakil Dekan"
+                    "Lanjut ke Paraf Pimpinan"
 
             },
 
@@ -335,7 +345,7 @@ document.addEventListener(
                     "Lanjut ke Tanda Tangan Dekan",
 
                 description:
-                    "Pastikan proses tanda tangan Wakil Dekan sudah selesai sebelum melanjutkan SK ke Dekan.",
+                    "Pastikan proses paraf pimpinan sudah selesai sebelum meneruskan dokumen kepada Dekan.",
 
                 button:
                     "Lanjut ke TTD Dekan"
@@ -352,10 +362,10 @@ document.addEventListener(
                     "Finalisasi Proses SK",
 
                 description:
-                    "Jika seluruh tanda tangan dan administrasi telah selesai, tandai SK sebagai siap diambil mahasiswa.",
+                    "Jika seluruh tanda tangan dan administrasi telah selesai, tandai SK sebagai SK Selesai.",
 
                 button:
-                    "Tandai SK Siap Diambil"
+                    "Tandai SK Selesai"
 
             },
 
@@ -388,13 +398,14 @@ document.addEventListener(
             value
         ) {
 
-            if (element) {
-
-                element.textContent =
-                    value || "-";
-
+            if (!element) {
+                return;
             }
 
+
+            element.textContent =
+                value ??
+                "-";
         }
 
 
@@ -407,10 +418,136 @@ document.addEventListener(
                         step.status ===
                         submission.status
                     );
-
                 }
             );
+        }
 
+
+        function formatDateTime(
+            value
+        ) {
+
+            if (!value) {
+                return "-";
+            }
+
+
+            const date =
+                new Date(
+                    value
+                );
+
+
+            if (
+                Number.isNaN(
+                    date.getTime()
+                )
+            ) {
+
+                return value;
+            }
+
+
+            const formatted =
+                new Intl.DateTimeFormat(
+                    "id-ID",
+                    {
+
+                        timeZone:
+                            "Asia/Jakarta",
+
+                        day:
+                            "2-digit",
+
+                        month:
+                            "long",
+
+                        year:
+                            "numeric",
+
+                        hour:
+                            "2-digit",
+
+                        minute:
+                            "2-digit",
+
+                        hour12:
+                            false
+
+                    }
+                )
+                    .format(
+                        date
+                    );
+
+
+            return (
+                formatted
+                    .replace(
+                        ".",
+                        ":"
+                    )
+                +
+                " WIB"
+            );
+        }
+
+
+        function getStepState(
+            index,
+            currentIndex
+        ) {
+
+            if (
+                index <
+                currentIndex
+            ) {
+
+                return {
+                    className:
+                        "done",
+
+                    label:
+                        "Selesai",
+
+                    marker:
+                        "✓"
+                };
+            }
+
+
+            if (
+                index ===
+                currentIndex
+            ) {
+
+                return {
+                    className:
+                        "active",
+
+                    label:
+                        "Tahap Saat Ini",
+
+                    marker:
+                        String(
+                            index + 1
+                        )
+                };
+            }
+
+
+            return {
+                className:
+                    "pending",
+
+                label:
+                    "Belum Diproses",
+
+                marker:
+                    String(
+                        index + 1
+                    )
+            };
         }
 
 
@@ -436,6 +573,7 @@ document.addEventListener(
 
             setText(
                 studentSummary,
+
                 submission.nim +
                 " • " +
                 submission.department
@@ -462,7 +600,9 @@ document.addEventListener(
 
             setText(
                 submittedAt,
-                submission.submittedAt
+                formatDateTime(
+                    submission.submittedAt
+                )
             );
 
 
@@ -472,14 +612,16 @@ document.addEventListener(
                 );
 
 
-            statusBadge.textContent =
-                meta.label;
+            if (statusBadge) {
+
+                statusBadge.textContent =
+                    meta.label;
 
 
-            statusBadge.className =
-                "admin-status-badge " +
-                meta.className;
-
+                statusBadge.className =
+                    "admin-status-badge " +
+                    meta.className;
+            }
         }
 
 
@@ -506,21 +648,34 @@ document.addEventListener(
                         (
                             safeIndex +
                             1
-                        ) /
+                        )
+                        /
                         steps.length
-                    ) *
+                    )
+                    *
                     100
                 );
 
 
-            percentage.textContent =
-                progress +
-                "%";
+            if (percentage) {
+
+                percentage.textContent =
+                    progress +
+                    "%";
+            }
 
 
-            progressFill.style.width =
-                progress +
-                "%";
+            if (progressFill) {
+
+                progressFill.style.width =
+                    progress +
+                    "%";
+            }
+
+
+            if (!timeline) {
+                return;
+            }
 
 
             timeline.innerHTML =
@@ -533,70 +688,65 @@ document.addEventListener(
                     index
                 ) {
 
-                    const card =
+                    const state =
+                        getStepState(
+                            index,
+                            safeIndex
+                        );
+
+
+                    const item =
                         document.createElement(
                             "article"
                         );
 
 
-                    card.className =
-                        "sk-process-step";
+                    item.className =
+                        "sk-timeline-step " +
+                        state.className;
 
 
-                    if (
-                        index <
-                        safeIndex
-                    ) {
-
-                        card.classList.add(
-                            "completed"
-                        );
-
-                    }
-
-
-                    if (
-                        index ===
-                        safeIndex
-                    ) {
-
-                        card.classList.add(
-                            "current"
-                        );
-
-                    }
-
-
-                    const marker =
-                        index <
-                        safeIndex
-                            ? "✓"
-                            : index + 1;
-
-
-                    card.innerHTML =
+                    item.innerHTML =
                         `
-                        <div class="sk-process-step-number">
-                            ${marker}
+                        <div class="sk-timeline-dot">
+                            ${state.marker}
                         </div>
 
-                        <h3>
-                            ${step.title}
-                        </h3>
+                        <div class="sk-timeline-body">
 
-                        <p>
-                            ${step.description}
-                        </p>
+                            <span class="sk-timeline-state">
+                                ${state.label}
+                            </span>
+
+                            <strong>
+                                ${step.title}
+                            </strong>
+
+                            <p>
+                                ${step.description}
+                            </p>
+
+                        </div>
+
+                        <div class="sk-timeline-timestamp">
+                            ${
+                                state.className ===
+                                "done"
+                                    ? "Selesai"
+                                    : state.className ===
+                                      "active"
+                                        ? "Aktif"
+                                        : "Menunggu"
+                            }
+                        </div>
                         `;
 
 
                     timeline.appendChild(
-                        card
+                        item
                     );
-
                 }
             );
-
         }
 
 
@@ -610,6 +760,11 @@ document.addEventListener(
                 flow[
                     submission.status
                 ];
+
+
+            if (!current) {
+                return;
+            }
 
 
             const meta =
@@ -640,36 +795,52 @@ document.addEventListener(
                 current.button
             ) {
 
-                primaryAction.hidden =
-                    false;
+                if (primaryAction) {
+
+                    primaryAction.hidden =
+                        false;
 
 
-                primaryAction.textContent =
-                    current.button;
+                    primaryAction.textContent =
+                        current.button;
+                }
 
 
-                actionBox.hidden =
-                    false;
+                if (actionBox) {
+
+                    actionBox.hidden =
+                        false;
+                }
 
 
-                readySection.hidden =
-                    true;
+                if (readySection) {
+
+                    readySection.hidden =
+                        true;
+                }
 
             } else {
 
-                primaryAction.hidden =
-                    true;
+                if (primaryAction) {
+
+                    primaryAction.hidden =
+                        true;
+                }
 
 
-                actionBox.hidden =
-                    true;
+                if (actionBox) {
+
+                    actionBox.hidden =
+                        true;
+                }
 
 
-                readySection.hidden =
-                    false;
+                if (readySection) {
 
+                    readySection.hidden =
+                        false;
+                }
             }
-
         }
 
 
@@ -684,7 +855,6 @@ document.addEventListener(
             ) {
 
                 return;
-
             }
 
 
@@ -702,14 +872,15 @@ document.addEventListener(
                             return [
 
                                 STATUS.PERLU_REVISI,
+
                                 STATUS.REVISI_DIKIRIM
 
                             ].includes(
                                 item.status
                             );
-
                         }
-                    ).length;
+                    )
+                        .length;
 
 
                 sidebarRevisionCount.textContent =
@@ -719,9 +890,7 @@ document.addEventListener(
 
                 sidebarRevisionCount.textContent =
                     "0";
-
             }
-
         }
 
 
@@ -736,12 +905,11 @@ document.addEventListener(
             renderProgress();
 
             renderAction();
-
         }
 
 
         /* =====================================================
-           MODAL
+           CONFIRM MODAL
         ===================================================== */
 
         function openConfirm(
@@ -758,22 +926,27 @@ document.addEventListener(
                 nextStatus;
 
 
-            confirmMessage.textContent =
-                "Pastikan proses pada tahap saat ini telah selesai. Status akan diubah menjadi “" +
-                nextMeta.label +
-                "”.";
+            if (confirmMessage) {
+
+                confirmMessage.textContent =
+                    "Pastikan proses pada tahap saat ini telah selesai. Status akan diubah menjadi “" +
+                    nextMeta.label +
+                    "”.";
+            }
 
 
-            modal.classList.add(
-                "active"
-            );
+            if (modal) {
+
+                modal.classList.add(
+                    "active"
+                );
 
 
-            modal.setAttribute(
-                "aria-hidden",
-                "false"
-            );
-
+                modal.setAttribute(
+                    "aria-hidden",
+                    "false"
+                );
+            }
         }
 
 
@@ -783,16 +956,18 @@ document.addEventListener(
                 null;
 
 
-            modal.classList.remove(
-                "active"
-            );
+            if (modal) {
+
+                modal.classList.remove(
+                    "active"
+                );
 
 
-            modal.setAttribute(
-                "aria-hidden",
-                "true"
-            );
-
+                modal.setAttribute(
+                    "aria-hidden",
+                    "true"
+                );
+            }
         }
 
 
@@ -814,9 +989,7 @@ document.addEventListener(
                         openConfirm(
                             current.next
                         );
-
                     }
-
                 }
             );
 
@@ -839,9 +1012,7 @@ document.addEventListener(
                     ) {
 
                         closeConfirm();
-
                     }
-
                 }
             );
 
@@ -856,7 +1027,6 @@ document.addEventListener(
                     ) {
 
                         return;
-
                     }
 
 
@@ -873,6 +1043,10 @@ document.addEventListener(
                             );
 
 
+                        /*
+                         * Status lokal baru diubah setelah
+                         * backend berhasil menerima update.
+                         */
                         submission.status =
                             pendingStatus;
 
@@ -891,16 +1065,15 @@ document.addEventListener(
 
 
                         alert(
-                            "Status belum dapat diperbarui karena backend belum terhubung."
+                            error?.message ||
+                            "Status belum dapat diperbarui."
                         );
 
                     } finally {
 
                         confirmButton.disabled =
                             false;
-
                     }
-
                 }
             );
 

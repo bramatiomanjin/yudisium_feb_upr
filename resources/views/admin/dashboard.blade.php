@@ -458,7 +458,7 @@
                     <div class="admin-stat-header">
 
                         <span>
-                            SK Siap Diambil
+                            SK Selesai
                         </span>
 
                         <span class="admin-stat-icon">

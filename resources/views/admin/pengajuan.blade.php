@@ -435,7 +435,7 @@
                             </option>
 
                             <option value="ttd wakil dekan">
-                                TTD Wakil Dekan
+                                Paraf Pimpinan
                             </option>
 
                             <option value="ttd dekan">
@@ -443,7 +443,7 @@
                             </option>
 
                             <option value="sk_siap_diambil">
-                                SK Siap Diambil
+                                SK Selesai
                             </option>
 
                         </select>
