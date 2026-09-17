@@ -886,7 +886,7 @@ document.addEventListener(
                             <a
                                 href="${escapeHtml(action.href)}"
                                 class="admin-primary-button"
-                                style="font-size: 0.75rem; padding: 6px 10px; min-height: auto; text-decoration: none; color: white; display: inline-flex; align-items: center; justify-content: center;"
+                                style="font-size: 0.75rem; padding: 6px 10px; min-height: auto; text-decoration: none; color: white; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; text-align: center;"
                             >
                                 ${escapeHtml(action.label)}
                             </a>
@@ -896,7 +896,7 @@ document.addEventListener(
                             <button class="btn-single-lanjut admin-primary-button" 
                                     data-id="${submission.id}" 
                                     data-status="${submission.status}" 
-                                    style="font-size: 0.75rem; padding: 6px 10px; min-height: auto; display: inline-flex; align-items: center; justify-content: center;">
+                                    style="font-size: 0.75rem; padding: 6px 10px; min-height: auto; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; text-align: center;">
                                 Lanjutkan
                             </button>
                             ` : ''}
