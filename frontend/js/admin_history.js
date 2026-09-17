@@ -1057,6 +1057,10 @@ document.addEventListener(
             if (historyCurrentPage < 1) historyCurrentPage = 1;
             if (historyCurrentPage > totalPages && totalPages > 0) historyCurrentPage = totalPages;
 
+            const startIndex = (historyCurrentPage - 1) * historyItemsPerPage;
+            const endIndex = startIndex + historyItemsPerPage;
+            const paginatedData = historyFilteredActivities.slice(startIndex, endIndex);
+
             tableBody
                 .innerHTML =
                 "";
@@ -1067,7 +1071,7 @@ document.addEventListener(
                 resultText
                     .textContent =
                     "Menampilkan " +
-                    totalItems +
+                    paginatedData.length +
                     " dari " +
                     roleActivities.length +
                     " aktivitas";
@@ -1107,10 +1111,6 @@ document.addEventListener(
                     .display =
                     "none";
             }
-
-            const startIndex = (historyCurrentPage - 1) * historyItemsPerPage;
-            const endIndex = startIndex + historyItemsPerPage;
-            const paginatedData = historyFilteredActivities.slice(startIndex, endIndex);
 
             paginatedData
                 .forEach(

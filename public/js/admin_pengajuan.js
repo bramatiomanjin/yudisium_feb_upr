@@ -892,6 +892,7 @@ document.addEventListener(
                 }
             );
 
+            updatePaginationControls(totalPages);
         }
 
 
