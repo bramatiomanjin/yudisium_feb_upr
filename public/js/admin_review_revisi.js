@@ -320,6 +320,8 @@ document.addEventListener(
                                         "revision"
                                     );
 
+                                updateCounters();
+
                             }
                         );
 
@@ -328,6 +330,48 @@ document.addEventListener(
 
             }
         );
+
+
+        function updateCounters() {
+            let approved = 0;
+            let revisionCount = 0;
+            let pending = 0;
+
+            items.forEach(function(item) {
+                if (item.dataset.decision === 'approved') {
+                    approved++;
+                } else if (item.dataset.decision === 'revision') {
+                    revisionCount++;
+                } else {
+                    pending++;
+                }
+            });
+
+            const approvedEl = document.getElementById("revisionApprovedCount");
+            const revisionEl = document.getElementById("revisionAgainCount");
+            const pendingEl = document.getElementById("revisionPendingCount");
+            
+            if (approvedEl) approvedEl.textContent = approved;
+            if (revisionEl) revisionEl.textContent = revisionCount;
+            if (pendingEl) pendingEl.textContent = pending;
+
+            const statusEl = document.getElementById("revisionResultStatus");
+            if (statusEl) {
+                statusEl.className = "revision-result-status";
+                if (pending > 0) {
+                    statusEl.classList.add("pending");
+                    statusEl.textContent = "Belum Lengkap";
+                } else if (revisionCount > 0) {
+                    statusEl.classList.add("revision");
+                    statusEl.textContent = "Ada Revisi";
+                } else {
+                    statusEl.classList.add("approved");
+                    statusEl.textContent = "Semua Disetujui";
+                }
+            }
+        }
+
+        updateCounters();
 
 
         const submit =

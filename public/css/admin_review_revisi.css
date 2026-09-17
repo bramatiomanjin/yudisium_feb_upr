@@ -825,7 +825,7 @@
 .revision-confirmation {
     display: flex;
 
-    align-items: flex-start;
+    align-items: center;
 
     gap: 9px;
 
@@ -844,7 +844,7 @@
 .revision-confirmation span {
     color: #555;
 
-    font-size: 10px;
+    font-size: 14px;
 }
 
 
