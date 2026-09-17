@@ -957,10 +957,13 @@ textarea:focus-visible {
         var(--feb-green-700);
 
     font-weight:
-        750;
+        600;
 
     text-decoration:
         none;
+
+    white-space:
+        nowrap;
 
 }
 

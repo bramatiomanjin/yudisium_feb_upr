@@ -800,6 +800,13 @@ document.addEventListener(
 
                     const isDone = submission.status === window.YudisiumAPI.STATUS.SK_SIAP_DIAMBIL;
                     
+                    const statusFilterEl = document.getElementById("submissionStatus");
+                    let statusTarget = "";
+                    if (statusFilterEl) {
+                        statusTarget = statusFilterEl.dataset.externalFilter || statusFilterEl.value.trim().toLowerCase();
+                    }
+                    const appliedFilterForBtn = (statusTarget === 'process-group' || statusTarget === 'proses-sk') ? 'proses-sk' : '';
+                    
                     row.innerHTML =
                         `
                         <td class="bulk-action-td" style="display: none; text-align: center;">
@@ -886,6 +893,16 @@ document.addEventListener(
                                     action.label
                                 )}
                             </a>
+                            
+                            ${(!isDone && appliedFilterForBtn === 'proses-sk') ? `
+                            <br><br>
+                            <button class="btn-single-lanjut admin-primary-button" 
+                                    data-id="${submission.id}" 
+                                    data-status="${submission.status}" 
+                                    style="font-size: 0.75rem; padding: 6px 10px;">
+                                Lanjutkan
+                            </button>
+                            ` : ''}
 
                         </td>
                         `;
@@ -1224,6 +1241,33 @@ document.addEventListener(
         tableBody.addEventListener("change", function(e) {
             if (e.target.classList.contains("bulk-checkbox")) {
                 updateBulkUI();
+            }
+        });
+        
+        // Event delegation for single 'Lanjutkan' button
+        tableBody.addEventListener("click", async function(e) {
+            if (e.target.classList.contains("btn-single-lanjut")) {
+                const btn = e.target;
+                const submissionId = btn.dataset.id;
+                const currentStatus = btn.dataset.status;
+                const nextStatus = getNextStatus(currentStatus);
+                
+                if (!nextStatus) return;
+                
+                if (!confirm('Lanjutkan 1 pengajuan ini ke proses selanjutnya?')) return;
+                
+                btn.disabled = true;
+                btn.textContent = "Memproses...";
+                
+                try {
+                    await window.YudisiumAPI.updateSkStatus(submissionId, nextStatus);
+                    loadSubmissions(); // reload the table
+                } catch (error) {
+                    console.error("Error bulk updating status:", error);
+                    alert("Terjadi kesalahan saat memproses data.");
+                    btn.disabled = false;
+                    btn.textContent = "Lanjutkan";
+                }
             }
         });
 
