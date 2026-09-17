@@ -158,11 +158,7 @@
 
                             <label for="kode_pengajuan">
 
-                                Kode SK Yudisium
-
-                                <span class="required">
-                                    *
-                                </span>
+                                Kode SK Yudisium (Opsional)
 
                             </label>
 
@@ -175,7 +171,6 @@
                                 autocomplete="off"
                                 maxlength="30"
                                 spellcheck="false"
-                                required
                             >
 
 
@@ -196,8 +191,6 @@
 
 
 
-                        <!-- LOOKUP ERROR -->
-
                         <div
                             id="trackingLookupError"
                             style="
@@ -213,8 +206,7 @@
                                 line-height: 1.5;
                             "
                         >
-                            NIM dan Kode SK Yudisium tidak cocok
-                            dengan data pengajuan yang tersedia.
+                            Data pengajuan tidak ditemukan.
                         </div>
 
 
@@ -232,9 +224,8 @@
 
 
                             <p>
-                                NIM dan Kode SK Yudisium digunakan
-                                untuk membuka data pengajuan Anda.
-                                Jangan membagikan kode kepada orang lain.
+                                NIM digunakan untuk melacak status
+                                pengajuan Anda secara berkala.
                             </p>
 
                         </div>

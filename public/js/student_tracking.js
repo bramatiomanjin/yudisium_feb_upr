@@ -59,8 +59,7 @@ document.addEventListener(
                     event.preventDefault();
 
                     if (
-                        !nim.value.trim() ||
-                        !code.value.trim()
+                        !nim.value.trim()
                     ) {
                         return;
                     }
@@ -87,7 +86,7 @@ document.addEventListener(
 
                                 errorBox.textContent =
                                     API.config.backendConnected
-                                        ? "NIM dan Kode SK Yudisium tidak ditemukan."
+                                        ? "Data pengajuan tidak ditemukan."
                                         : "Sistem tracking belum terhubung ke backend.";
                             }
 
@@ -154,15 +153,17 @@ document.addEventListener(
                 urlParams.get("kode_sk") ||
                 urlParams.get("kode_pengajuan");
 
-            if (queryNim && queryKode) {
+            if (queryNim) {
                 sessionStorage.setItem(
                     "tracking_nim",
                     queryNim.trim()
                 );
-                sessionStorage.setItem(
-                    "tracking_kode",
-                    queryKode.trim()
-                );
+                if (queryKode) {
+                    sessionStorage.setItem(
+                        "tracking_kode",
+                        queryKode.trim()
+                    );
+                }
             }
 
             const nim =
@@ -176,8 +177,7 @@ document.addEventListener(
                 );
 
             if (
-                !nim ||
-                !code
+                !nim
             ) {
 
                 window.location.href =

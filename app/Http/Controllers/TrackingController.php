@@ -37,19 +37,20 @@ class TrackingController extends Controller
             $request->kode_pengajuan;
 
 
-        $pengajuan =
+        $query =
             PengajuanYudisium::with(
                 'mahasiswa'
             )
                 ->where(
                     'nim',
                     $request->nim
-                )
-                ->where(
-                    'kode_pengajuan',
-                    $kode
-                )
-                ->first();
+                );
+
+        if (!empty($kode)) {
+            $query->where('kode_pengajuan', $kode);
+        }
+
+        $pengajuan = $query->latest('created_at')->first();
 
 
         if (!$pengajuan) {
