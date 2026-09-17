@@ -423,7 +423,13 @@ document.addEventListener(
                     STATUS.TERVERIFIKASI,
 
                 "proses-sk":
-                    "process-group"
+                    "process-group",
+
+                semua:
+                    "semua",
+
+                all:
+                    "all"
 
             };
 

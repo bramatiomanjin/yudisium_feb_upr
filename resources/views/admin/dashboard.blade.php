@@ -516,7 +516,7 @@
 
 
                         <a
-                            href="/admin/pengajuan"
+                            href="/admin/pengajuan?filter=semua"
                             class="admin-text-link"
                         >
                             Lihat Semua
