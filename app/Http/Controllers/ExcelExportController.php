@@ -36,6 +36,28 @@ class ExcelExportController extends Controller
             $query->whereYear('created_at', $request->year);
         }
 
+        if ($request->has('department') && $request->department != '') {
+            $query->whereHas('mahasiswa', function ($q) use ($request) {
+                $q->where('jurusan', $request->department);
+            });
+        }
+
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('kode_pengajuan', 'LIKE', "%{$search}%")
+                  ->orWhere('nim', 'LIKE', "%{$search}%")
+                  ->orWhereHas('mahasiswa', function ($q2) use ($search) {
+                      $q2->where('nama_lengkap', 'LIKE', "%{$search}%")
+                         ->orWhere('nim', 'LIKE', "%{$search}%");
+                  });
+            });
+        }
+
         $pengajuanList = $query->orderBy('created_at', 'asc')->get();
 
 

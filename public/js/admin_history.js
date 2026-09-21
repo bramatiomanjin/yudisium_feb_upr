@@ -771,14 +771,14 @@ document.addEventListener(
                         let matchMonth = true;
                         if (monthFilter && monthFilter.value) {
                             const selectedMonth = parseInt(monthFilter.value, 10);
-                            const date = new Date(activity.timestamp);
+                            const date = new Date(activity.createdAt);
                             matchMonth = (date.getMonth() + 1) === selectedMonth;
                         }
 
                         let matchYear = true;
                         if (yearFilter && yearFilter.value) {
                             const selectedYear = parseInt(yearFilter.value, 10);
-                            const date = new Date(activity.timestamp);
+                            const date = new Date(activity.createdAt);
                             matchYear = date.getFullYear() === selectedYear;
                         }
 

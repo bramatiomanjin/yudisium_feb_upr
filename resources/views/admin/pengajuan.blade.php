@@ -558,6 +558,7 @@
                     <a
                         href="{{ route('admin.export-yudisium') }}"
                         class="admin-secondary-button"
+                        id="submissionExportButton"
                     >
                         Export Excel
                     </a>

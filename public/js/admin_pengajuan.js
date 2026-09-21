@@ -1061,7 +1061,8 @@ document.addEventListener(
 
             exportButton.addEventListener(
                 "click",
-                function () {
+                function (event) {
+                    event.preventDefault();
                     let url = "/admin/export-yudisium";
                     const params = [];
                     
@@ -1071,6 +1072,18 @@ document.addEventListener(
                     
                     if (yearFilter && yearFilter.value) {
                         params.push("year=" + encodeURIComponent(yearFilter.value));
+                    }
+
+                    if (departmentFilter && departmentFilter.value) {
+                        params.push("department=" + encodeURIComponent(departmentFilter.value));
+                    }
+
+                    if (statusFilter && statusFilter.value) {
+                        params.push("status=" + encodeURIComponent(statusFilter.value));
+                    }
+
+                    if (searchInput && searchInput.value.trim() !== "") {
+                        params.push("search=" + encodeURIComponent(searchInput.value.trim()));
                     }
                     
                     if (params.length > 0) {
