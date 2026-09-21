@@ -183,6 +183,7 @@
                 @endif
 
             
+                @if(Auth::user()->role === 'SUPER_ADMIN')
                 <a
                     href="/admin/pengaturan-dokumen"
                     class="admin-nav-item"
@@ -190,6 +191,7 @@
                     <span class="admin-nav-icon">⚙️</span>
                     <span>Pengaturan Dokumen</span>
                 </a>
+                @endif
 
 </nav>
 
