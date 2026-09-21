@@ -10,6 +10,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ApiDataController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\SkController;
+use App\Http\Controllers\SettingController;
 
 
 // =========================================================
@@ -153,6 +154,20 @@ Route::middleware('auth')->group(
             '/admin/dashboard',
             [AdminController::class, 'index']
         )->name('admin.dashboard');
+
+        // =================================================
+        // PENGATURAN DOKUMEN
+        // =================================================
+
+        Route::get(
+            '/admin/pengaturan-dokumen',
+            [SettingController::class, 'pengaturanDokumen']
+        )->name('admin.pengaturan-dokumen');
+
+        Route::post(
+            '/admin/pengaturan-dokumen',
+            [SettingController::class, 'updatePengaturanDokumen']
+        )->name('admin.pengaturan-dokumen.update');
 
 
         // =================================================

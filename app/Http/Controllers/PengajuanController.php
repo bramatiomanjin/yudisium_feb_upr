@@ -15,7 +15,8 @@ class PengajuanController extends Controller
     // 1. Menampilkan halaman form
     public function create()
     {
-        return view('index');
+        $activeDocs = JenisDokumen::where('is_active', 1)->pluck('kode')->toArray();
+        return view('index', compact('activeDocs'));
     }
 
     // 2. Memproses pengiriman form

@@ -13,7 +13,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>
-        Dashboard Admin - Yudisium FEB UPR
+        Pengaturan Dokumen - Yudisium FEB UPR
     </title>
 
 
@@ -72,7 +72,7 @@
 
                 <a
                     href="/admin/dashboard"
-                    class="admin-nav-item active"
+                    class="admin-nav-item"
                 >
 
                     <span class="admin-nav-icon">
@@ -183,14 +183,10 @@
                 @endif
 
             
-                <a
-                    href="/admin/pengaturan-dokumen"
-                    class="admin-nav-item"
-                >
-                    <span class="admin-nav-icon">⚙️</span>
-                    <span>Pengaturan Dokumen</span>
-                </a>
-
+    <a href="/admin/pengaturan-dokumen" class="admin-nav-item active">
+        <span class="admin-nav-icon">⚙️</span>
+        <span>Pengaturan Dokumen</span>
+    </a>
 </nav>
 
 
