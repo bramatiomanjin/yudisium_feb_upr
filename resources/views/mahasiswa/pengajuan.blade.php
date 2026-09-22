@@ -489,18 +489,18 @@
                         type="file"
                         id="foto_3x4"
                         name="foto_3x4"
-                        accept=".pdf,application/pdf"
+                        accept=".jpg,.jpeg,.png,image/jpeg,image/png"
                         data-max-size="1"
                         required
                     >
 
                     <small>
                         Kebaya untuk perempuan dan jas untuk laki-laki.
-                        PDF, maksimal 1 MB.
+                        Format JPG/PNG, maksimal 1 MB.
                     </small>
 
                     <div class="error-message">
-                        Foto 3×4 wajib berupa PDF maksimal 1 MB.
+                        Foto 3×4 wajib berupa gambar (JPG/PNG) maksimal 1 MB.
                     </div>
 
                 </div>

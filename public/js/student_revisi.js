@@ -611,6 +611,13 @@ document.addEventListener(
                         "";
 
 
+                    let acceptAttr = ".pdf,.doc,.docx,application/pdf";
+                    let formatText = "Pilih file pengganti sesuai feedback Admin.";
+                    if (item.key === 'foto_3x4') {
+                        acceptAttr = ".jpg,.jpeg,.png,image/jpeg,image/png";
+                        formatText = "Pilih file gambar (JPG/PNG) pengganti sesuai feedback Admin.";
+                    }
+
                     if (isDocument) {
 
                         inputHtml = `
@@ -624,12 +631,12 @@ document.addEventListener(
                             <input
                                 type="file"
                                 data-revision-file
-                                accept=".pdf,.doc,.docx"
+                                accept="${acceptAttr}"
                                 required
                             >
 
                             <small>
-                                Pilih file pengganti sesuai feedback Admin.
+                                ${formatText}
                             </small>
                         `;
 
