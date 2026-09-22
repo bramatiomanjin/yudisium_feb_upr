@@ -9,12 +9,20 @@ class SettingController extends Controller
 {
     public function pengaturanDokumen()
     {
+        if (\Illuminate\Support\Facades\Auth::user()->role !== 'SUPER_ADMIN') {
+            abort(403);
+        }
+
         $dokumen = JenisDokumen::all();
         return view('admin.pengaturan_dokumen', compact('dokumen'));
     }
 
     public function updatePengaturanDokumen(Request $request)
     {
+        if (\Illuminate\Support\Facades\Auth::user()->role !== 'SUPER_ADMIN') {
+            abort(403);
+        }
+
         $activeIds = $request->input('active_docs', []);
         
         // Set all to 0

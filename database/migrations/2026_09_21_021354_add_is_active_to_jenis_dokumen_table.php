@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('jenis_dokumen', function (Blueprint $table) {
+            //
             $table->boolean('is_active')->default(true)->after('wajib');
         });
     }
@@ -22,6 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('jenis_dokumen', function (Blueprint $table) {
+            //
             $table->dropColumn('is_active');
         });
     }

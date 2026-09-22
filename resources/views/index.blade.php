@@ -476,9 +476,9 @@
                     <div class="error-message">
                         Formulir Pendaftaran Yudisium wajib berupa PDF maksimal 1 MB.
                     </div>
-                @endif
 
                 </div>
+                @endif
 
                 @if(in_array('FOTO_3X4', $activeDocs))
                 <div class="form-group file-group">
@@ -505,9 +505,9 @@
                     <div class="error-message">
                         Foto 3×4 wajib berupa PDF maksimal 1 MB.
                     </div>
-                @endif
 
                 </div>
+                @endif
 
                 @if(in_array('IJAZAH_SLTA', $activeDocs))
                 <div class="form-group file-group">
@@ -531,9 +531,9 @@
                     <div class="error-message">
                         Ijazah SLTA wajib berupa PDF maksimal 1 MB.
                     </div>
-                @endif
 
                 </div>
+                @endif
 
                 @if(in_array('BERITA_ACARA_UJIAN', $activeDocs))
                 <div class="form-group file-group">
@@ -559,9 +559,9 @@
                     <div class="error-message">
                         Berita Acara Ujian wajib berupa PDF maksimal 1 MB.
                     </div>
-                @endif
 
                 </div>
+                @endif
 
                 @if(in_array('REKAP_NILAI', $activeDocs))
                 <div class="form-group file-group">
@@ -587,9 +587,9 @@
                     <div class="error-message">
                         Rekapitulasi Nilai wajib berupa PDF maksimal 1 MB.
                     </div>
-                @endif
 
                 </div>
+                @endif
 
                 @if(in_array('BLANKO_REVISI', $activeDocs))
                 <div class="form-group file-group">
@@ -615,9 +615,9 @@
                     <div class="error-message">
                         Blanko Revisi wajib berupa PDF maksimal 1 MB.
                     </div>
-                @endif
 
                 </div>
+                @endif
 
                 @if(in_array('TANDA_TERIMA', $activeDocs))
                 <div class="form-group file-group">
@@ -643,9 +643,9 @@
                     <div class="error-message">
                         Tanda Terima wajib berupa PDF/DOC/DOCX maksimal 10 MB.
                     </div>
-                @endif
 
                 </div>
+                @endif
 
                 @if(in_array('SURAT_PERNYATAAN_IJAZAH', $activeDocs))
                 <div class="form-group file-group">
@@ -669,9 +669,9 @@
                     <div class="error-message">
                         Surat Pernyataan wajib berupa PDF maksimal 1 MB.
                     </div>
-                @endif
 
                 </div>
+                @endif
 
                 @if(in_array('BEBAS_PERPUS_UNIV', $activeDocs))
                 <div class="form-group file-group">
@@ -695,9 +695,9 @@
                     <div class="error-message">
                         Surat Bebas Pinjam Perpustakaan Universitas wajib berupa PDF maksimal 1 MB.
                     </div>
-                @endif
 
                 </div>
+                @endif
 
                 @if(in_array('BEBAS_PERPUS_FAKULTAS', $activeDocs))
                 <div class="form-group file-group">
@@ -721,9 +721,9 @@
                     <div class="error-message">
                         File harus berupa PDF maksimal 1 MB.
                     </div>
-                @endif
 
                 </div>
+                @endif
 
                 @if(in_array('KHS', $activeDocs))
                 <div class="form-group file-group">
@@ -749,9 +749,38 @@
                     <div class="error-message">
                         KHS wajib berupa PDF maksimal 1 MB.
                     </div>
-                @endif
 
                 </div>
+                @endif
+
+                @if(in_array('KHS_SEMESTER_BERJALAN', $activeDocs))
+                <div class="form-group file-group">
+
+                    <label for="khs_semester_berjalan">
+                        KHS Semester Berjalan Saat Mendaftar Yudisium
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="file"
+                        id="khs_semester_berjalan"
+                        name="khs_semester_berjalan"
+                        accept=".pdf,application/pdf"
+                        data-max-size="1"
+                        required
+                    >
+
+                    <small>
+                        PDF, maksimal 1 MB.
+                    </small>
+
+                    <div class="error-message">
+                        KHS Semester Berjalan wajib berupa PDF maksimal 1 MB.
+                    </div>
+
+                </div>
+                @endif
+
 
                 @if(in_array('TRANSKRIP', $activeDocs))
                 <div class="form-group file-group">
@@ -777,9 +806,9 @@
                     <div class="error-message">
                         Transkrip Nilai wajib berupa PDF maksimal 1 MB.
                     </div>
-                @endif
 
                 </div>
+                @endif
 
                 @if(in_array('SURAT_TUGAS_DOSBING', $activeDocs))
                 <div class="form-group file-group">
@@ -805,9 +834,9 @@
                     <div class="error-message">
                         Surat Tugas Pembimbing wajib berupa PDF maksimal 10 MB.
                     </div>
-                @endif
 
                 </div>
+                @endif
 
                 @if(in_array('BEBAS_TUNGGAKAN', $activeDocs))
                 <div class="form-group file-group">
@@ -831,9 +860,9 @@
                     <div class="error-message">
                         Surat Bebas Tunggakan wajib berupa PDF maksimal 1 MB.
                     </div>
-                @endif
 
                 </div>
+                @endif
 
 
                 <!-- DOKUMEN KHUSUS JURUSAN -->
@@ -867,9 +896,9 @@
                         <div class="error-message">
                             Dokumen JMSO harus berupa PDF maksimal 1 MB.
                         </div>
-                    @endif
 
                     </div>
+                    @endif
 
                     @if(in_array('JURNAL_EP', $activeDocs))
                     <div class="form-group file-group jurusan-document" id="dokumenEkonomi">
@@ -893,9 +922,9 @@
                         <div class="error-message">
                             Dokumen jurnal Ekonomi Pembangunan harus berupa PDF maksimal 1 MB.
                         </div>
-                    @endif
 
                     </div>
+                    @endif
 
                     @if(in_array('JURNAL_AKUNTANSI', $activeDocs))
                     <div class="form-group file-group jurusan-document" id="dokumenAkuntansi">
@@ -919,9 +948,9 @@
                         <div class="error-message">
                             Dokumen jurnal Akuntansi maksimal 10 MB.
                         </div>
-                    @endif
 
                     </div>
+                    @endif
 
                 </div>
 
