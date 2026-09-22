@@ -613,7 +613,8 @@ document.addEventListener(
 
                     let acceptAttr = ".pdf,.doc,.docx,application/pdf";
                     let formatText = "Pilih file pengganti sesuai feedback Admin.";
-                    if (item.key === 'foto_3x4') {
+                    const isFoto = item.label && item.label.toLowerCase().includes('foto 3');
+                    if (isFoto) {
                         acceptAttr = ".jpg,.jpeg,.png,image/jpeg,image/png";
                         formatText = "Pilih file gambar (JPG/PNG) pengganti sesuai feedback Admin.";
                     }

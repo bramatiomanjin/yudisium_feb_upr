@@ -154,28 +154,18 @@ document.addEventListener("DOMContentLoaded", function () {
         const extension = getExtension(file.name);
 
         if (accept && extension) {
-            const acceptsPdf =
-                accept.includes(".pdf");
-
-            const acceptsDoc =
-                accept.includes(".doc");
-
-            const acceptsDocx =
-                accept.includes(".docx");
+            const acceptsPdf = accept.includes(".pdf");
+            const acceptsDoc = accept.includes(".doc");
+            const acceptsDocx = accept.includes(".docx");
+            const acceptsJpg = accept.includes(".jpg") || accept.includes(".jpeg");
+            const acceptsPng = accept.includes(".png");
 
             const extensionAllowed =
-                (
-                    extension === "pdf" &&
-                    acceptsPdf
-                ) ||
-                (
-                    extension === "doc" &&
-                    acceptsDoc
-                ) ||
-                (
-                    extension === "docx" &&
-                    acceptsDocx
-                );
+                (extension === "pdf" && acceptsPdf) ||
+                (extension === "doc" && acceptsDoc) ||
+                (extension === "docx" && acceptsDocx) ||
+                ((extension === "jpg" || extension === "jpeg") && acceptsJpg) ||
+                (extension === "png" && acceptsPng);
 
             if (!extensionAllowed) {
                 setFieldError(input, true);

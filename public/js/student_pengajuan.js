@@ -432,35 +432,40 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let extensionValid = false;
 
-
         if (
             accept.includes(".pdf") &&
             fileName.endsWith(".pdf")
         ) {
-
             extensionValid = true;
-
         }
-
 
         if (
             accept.includes(".docx") &&
             fileName.endsWith(".docx")
         ) {
-
             extensionValid = true;
-
         }
-
 
         if (
             accept.includes(".doc") &&
             !fileName.endsWith(".docx") &&
             fileName.endsWith(".doc")
         ) {
-
             extensionValid = true;
+        }
 
+        if (
+            accept.includes(".jpg") &&
+            (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg"))
+        ) {
+            extensionValid = true;
+        }
+
+        if (
+            accept.includes(".png") &&
+            fileName.endsWith(".png")
+        ) {
+            extensionValid = true;
         }
 
 
