@@ -863,9 +863,11 @@ document.addEventListener("DOMContentLoaded", function () {
             "MANAJEMEN"
         ) {
 
-            dokumenManajemen
-                .classList
-                .add("active");
+            if (dokumenManajemen) {
+                dokumenManajemen
+                    .classList
+                    .add("active");
+            }
 
         }
 
@@ -875,9 +877,11 @@ document.addEventListener("DOMContentLoaded", function () {
             "EKONOMI PEMBANGUNAN"
         ) {
 
-            dokumenEkonomi
-                .classList
-                .add("active");
+            if (dokumenEkonomi) {
+                dokumenEkonomi
+                    .classList
+                    .add("active");
+            }
 
         }
 
@@ -887,9 +891,11 @@ document.addEventListener("DOMContentLoaded", function () {
             "AKUNTANSI"
         ) {
 
-            dokumenAkuntansi
-                .classList
-                .add("active");
+            if (dokumenAkuntansi) {
+                dokumenAkuntansi
+                    .classList
+                    .add("active");
+            }
 
         }
 
