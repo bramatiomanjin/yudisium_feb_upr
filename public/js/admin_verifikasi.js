@@ -407,20 +407,18 @@ document.addEventListener(
                                 <span>${filename}</span>
                             </div>
                         </div>
-                        ${previewUrl ? `
-                            <button
-                                type="button"
-                                class="verification-preview-button admin-secondary-button"
-                                style="width: 100%; margin-top: 8px;"
-                                data-preview-url="${previewUrl}"
-                                data-preview-title="${title}"
-                                data-preview-filename="${filename}"
-                            >
-                                Preview
-                            </button>
-                        ` : ""}
                             <div class="verification-decision">
-
+                                ${previewUrl ? `
+                                    <button
+                                        type="button"
+                                        class="verification-preview-button admin-secondary-button"
+                                        data-preview-url="${previewUrl}"
+                                        data-preview-title="${title}"
+                                        data-preview-filename="${filename}"
+                                    >
+                                        Preview
+                                    </button>
+                                ` : ""}
                                 <button
                                     type="button"
                                     class="verification-choice approve"
