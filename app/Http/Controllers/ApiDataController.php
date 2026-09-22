@@ -741,10 +741,7 @@ class ApiDataController extends Controller
                     'oldFile' =>
                         $r->nilai_lama,
 
-                    'newFile' => [
-                        'name' =>
-                            $r->nilai_baru
-                    ],
+                    'newFile' => ['name' => $r->nilai_baru, 'url' => '/admin/file/' . $dokumen->id],
 
                     'feedback' =>
                         $r->feedback_admin,

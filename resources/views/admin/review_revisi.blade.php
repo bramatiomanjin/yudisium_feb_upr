@@ -523,26 +523,12 @@
 
 
             <div class="revision-preview-body">
-
-                <div class="revision-preview-placeholder">
-
-                    <div>
-                        FILE
-                    </div>
-
-
-                    <strong id="revisionPreviewFilename">
-                        file.pdf
-                    </strong>
-
-
-                    <p>
-                        Preview file asli akan menggunakan
-                        URL yang diberikan backend Laravel.
-                    </p>
-
+                <iframe id="revisionPreviewFrame" title="Preview Dokumen" style="width: 100%; height: 600px; display: none; border: none;"></iframe>
+                <div class="revision-preview-placeholder" id="revisionPreviewPlaceholder">
+                    <div>FILE</div>
+                    <strong id="revisionPreviewFilename">file.pdf</strong>
+                    <p>Memuat dokumen...</p>
                 </div>
-
             </div>
 
 

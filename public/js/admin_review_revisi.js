@@ -206,6 +206,19 @@ document.addEventListener(
                                         "-"
                                     }
                                 </p>
+                                
+                                ${item.type === 'document' && item.newFile?.url ? `
+                                    <button
+                                        type="button"
+                                        class="revision-preview-button admin-secondary-button"
+                                        data-preview-url="${item.newFile.url}"
+                                        data-preview-title="${item.label || item.key}"
+                                        data-preview-filename="${item.newFile.name}"
+                                        style="margin-top: 8px; padding: 4px 12px; font-size: 12px;"
+                                    >
+                                        Preview Dokumen
+                                    </button>
+                                ` : ""}
 
                             </div>
 
@@ -499,6 +512,51 @@ document.addEventListener(
 
             }
         );
+
+
+
+        const modal = document.getElementById("revisionPreviewModal");
+        const closeBtn = document.getElementById("closeRevisionPreview");
+        const iframe = document.getElementById("revisionPreviewFrame");
+        const placeholder = document.getElementById("revisionPreviewPlaceholder");
+        const titleEl = document.getElementById("revisionPreviewTitle");
+        const filenameEl = document.getElementById("revisionPreviewFilename");
+        const openNewTab = document.getElementById("revisionOpenNewTab");
+        let currentUrl = "";
+
+        document.addEventListener("click", function(e) {
+            if (e.target.classList.contains("revision-preview-button")) {
+                currentUrl = e.target.dataset.previewUrl;
+                const title = e.target.dataset.previewTitle;
+                const filename = e.target.dataset.previewFilename;
+
+                if (titleEl) titleEl.textContent = title;
+                if (filenameEl) filenameEl.textContent = filename;
+
+                if (iframe && placeholder) {
+                    placeholder.style.display = "none";
+                    iframe.style.display = "block";
+                    iframe.src = currentUrl;
+                }
+
+                if (modal) modal.classList.add("active");
+            }
+        });
+
+        if (closeBtn && modal) {
+            closeBtn.addEventListener("click", function () {
+                modal.classList.remove("active");
+                if (iframe) iframe.src = "";
+            });
+        }
+
+        if (openNewTab) {
+            openNewTab.addEventListener("click", function () {
+                if (currentUrl) {
+                    window.open(currentUrl, "_blank");
+                }
+            });
+        }
 
     }
 );
