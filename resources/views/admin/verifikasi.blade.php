@@ -1288,7 +1288,7 @@
 
 
                         <div class="verification-preview-body">
-                <iframe id="verificationPreviewFrame" title="Preview Dokumen" style="width: 100%; height: 600px; display: none; border: none;"></iframe>
+                <iframe id="verificationPreviewFrame" title="Preview Dokumen" style="width: 100%; height: 100%; display: none; border: none;"></iframe>
                 <div class="verification-preview-placeholder" id="verificationPreviewPlaceholder">
                     <div>PDF</div>
                     <strong id="verificationPreviewFilename">file.pdf</strong>
@@ -1297,9 +1297,7 @@
             </div>
             <div class="verification-preview-footer">
 
-                <span>
-                    Preview tersedia untuk Admin dan Super Admin.
-                </span>
+                
 
                 <button
                     type="button"

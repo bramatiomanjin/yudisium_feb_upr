@@ -534,9 +534,19 @@ document.addEventListener(
                 if (filenameEl) filenameEl.textContent = filename;
 
                 if (iframe && placeholder) {
-                    placeholder.style.display = "none";
-                    iframe.style.display = "block";
-                    iframe.src = currentUrl;
+                    const isPdf = filename.toLowerCase().endsWith(".pdf");
+                    if (!isPdf) {
+                        iframe.style.display = "none";
+                        placeholder.style.display = "flex";
+                        const p = placeholder.querySelector("p");
+                        if (p) p.textContent = "Format file tidak mendukung preview langsung. Silakan klik Buka di Tab Baru untuk mengunduh.";
+                        // Still trigger the download in background
+                        iframe.src = currentUrl; 
+                    } else {
+                        placeholder.style.display = "none";
+                        iframe.style.display = "block";
+                        iframe.src = currentUrl;
+                    }
                 }
 
                 if (modal) modal.classList.add("active");

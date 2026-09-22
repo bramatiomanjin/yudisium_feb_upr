@@ -398,60 +398,27 @@ document.addEventListener(
 
 
                         item.innerHTML = `
-                                                        <div class="verification-document-main">
-
-                                <div class="verification-document-icon">
-                                    FILE
-                                </div>
-
-                                <div class="verification-document-info">
-                                    <strong>${title}</strong>
-                                    <span>${filename}</span>
-                                </div>
-
-                                ${previewUrl ? `
-                                    <button
-                                        type="button"
-                                        class="verification-preview-button"
-                                        data-preview-url="${previewUrl}"
-                                        data-preview-title="${title}"
-                                        data-preview-filename="${filename}"
-                                    >
-                                        Preview
-                                    </button>
-                                ` : ""}
-
+                        <div class="verification-document-main">
+                            <div class="verification-document-icon">
+                                FILE
                             </div>
-
-                                <div class="verification-document-info">
-
-                                    <strong>
-                                        ${title}
-                                    </strong>
-
-                                    <span>
-                                        ${filename}
-                                    </span>
-
-                                </div>
-
-                                ${
-                                    previewUrl
-                                        ? `
-                                            <a
-                                                href="${previewUrl}"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                class="verification-preview-button"
-                                            >
-                                                Preview
-                                            </a>
-                                        `
-                                        : ""
-                                }
-
+                            <div class="verification-document-info">
+                                <strong>${title}</strong>
+                                <span>${filename}</span>
                             </div>
-
+                        </div>
+                        ${previewUrl ? `
+                            <button
+                                type="button"
+                                class="verification-preview-button admin-secondary-button"
+                                style="width: 100%; margin-top: 8px;"
+                                data-preview-url="${previewUrl}"
+                                data-preview-title="${title}"
+                                data-preview-filename="${filename}"
+                            >
+                                Preview
+                            </button>
+                        ` : ""}
                             <div class="verification-decision">
 
                                 <button
@@ -1104,9 +1071,18 @@ document.addEventListener(
                 if (filenameEl) filenameEl.textContent = filename;
 
                 if (iframe && placeholder) {
-                    placeholder.style.display = "none";
-                    iframe.style.display = "block";
-                    iframe.src = currentUrl;
+                    const isPdf = filename.toLowerCase().endsWith(".pdf");
+                    if (!isPdf) {
+                        iframe.style.display = "none";
+                        placeholder.style.display = "flex";
+                        const p = placeholder.querySelector("p");
+                        if (p) p.textContent = "Format file tidak mendukung preview langsung. Silakan klik Buka di Tab Baru untuk mengunduh.";
+                        iframe.src = currentUrl;
+                    } else {
+                        placeholder.style.display = "none";
+                        iframe.style.display = "block";
+                        iframe.src = currentUrl;
+                    }
                 }
 
                 if (modal) modal.classList.add("active");

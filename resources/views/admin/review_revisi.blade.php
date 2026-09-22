@@ -523,7 +523,7 @@
 
 
             <div class="revision-preview-body">
-                <iframe id="revisionPreviewFrame" title="Preview Dokumen" style="width: 100%; height: 600px; display: none; border: none;"></iframe>
+                <iframe id="revisionPreviewFrame" title="Preview Dokumen" style="width: 100%; height: 100%; display: none; border: none;"></iframe>
                 <div class="revision-preview-placeholder" id="revisionPreviewPlaceholder">
                     <div>FILE</div>
                     <strong id="revisionPreviewFilename">file.pdf</strong>
