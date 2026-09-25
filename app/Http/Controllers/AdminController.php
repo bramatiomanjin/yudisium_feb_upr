@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\PengajuanYudisium;
 use App\Models\PengajuanDokumen;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class AdminController extends Controller
 {
@@ -56,17 +57,51 @@ class AdminController extends Controller
 
     // 3. Fungsi untuk membuka file privat (diperbaiki menggunakan Storage Laravel)
     public function viewFile(string $id_dokumen)
-    {
-        $dokumen = PengajuanDokumen::findOrFail($id_dokumen);
-        
-        // Cek apakah file ada di disk default local Laravel (storage/app)
-        if (!Storage::exists($dokumen->file_path)) {
-            abort(404, 'File PDF tidak ditemukan di server. Path DB: ' . $dokumen->file_path);
-        }
+{
+    $dokumen = PengajuanDokumen::findOrFail($id_dokumen);
 
-        // Response file menggunakan Storage::path
-        return response()->file(Storage::path($dokumen->file_path));
+    if (!Storage::exists($dokumen->file_path)) {
+        abort(
+            404,
+            'File tidak ditemukan di server. Path DB: ' .
+            $dokumen->file_path
+        );
     }
+
+    $path = Storage::path($dokumen->file_path);
+
+    $filename = $dokumen->nama_file_asli
+        ?: basename($path);
+
+    $extension = strtolower(
+        pathinfo($filename, PATHINFO_EXTENSION)
+    );
+
+    $mimeType = match ($extension) {
+        'pdf' => 'application/pdf',
+        'jpg', 'jpeg' => 'image/jpeg',
+        'png' => 'image/png',
+        'webp' => 'image/webp',
+        default => $dokumen->mime_type
+            ?: 'application/octet-stream',
+    };
+
+    $response = response()->file(
+        $path,
+        [
+            'Content-Type' => $mimeType,
+            'Cache-Control' => 'private, no-store, max-age=0',
+            'Pragma' => 'no-cache',
+        ]
+    );
+
+    $response->setContentDisposition(
+        ResponseHeaderBag::DISPOSITION_INLINE,
+        $filename
+    );
+
+    return $response;
+}
 
     // 4. Memproses dan Menyimpan Hasil Verifikasi Admin
     public function verifikasi(Request $request, string $id)

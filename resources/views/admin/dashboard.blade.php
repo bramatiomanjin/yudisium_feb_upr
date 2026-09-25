@@ -158,7 +158,18 @@
                     </span>
 
                 </a>
+<a
+    href="{{ route('admin.backup-dokumen') }}"
+    class="admin-nav-item"
+>
+    <span class="admin-nav-icon">
+        ↓
+    </span>
 
+    <span>
+        Backup Dokumen
+    </span>
+</a>
 
                 <div class="admin-nav-divider">
                 </div>

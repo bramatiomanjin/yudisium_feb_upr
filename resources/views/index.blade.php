@@ -754,32 +754,32 @@
                 @endif
 
                 @if(in_array('KHS_SEMESTER_BERJALAN', $activeDocs))
-                <div class="form-group file-group">
+<div class="form-group file-group">
 
-                    <label for="khs_semester_berjalan">
-                        KHS Semester Berjalan Saat Mendaftar Yudisium
-                        <span class="required">*</span>
-                    </label>
+    <label for="khs_semester_berjalan">
+        KHS terbaru yang ada nilai skripsi dan tanda tangan ketua jurusan
+        <span class="required">*</span>
+    </label>
 
-                    <input
-                        type="file"
-                        id="khs_semester_berjalan"
-                        name="khs_semester_berjalan"
-                        accept=".pdf,application/pdf"
-                        data-max-size="1"
-                        required
-                    >
+    <input
+        type="file"
+        id="khs_semester_berjalan"
+        name="khs_semester_berjalan"
+        accept=".pdf,application/pdf"
+        data-max-size="1"
+        required
+    >
 
-                    <small>
-                        PDF, maksimal 1 MB.
-                    </small>
+    <small>
+        PDF, maksimal 1 MB.
+    </small>
 
-                    <div class="error-message">
-                        KHS Semester Berjalan wajib berupa PDF maksimal 1 MB.
-                    </div>
+    <div class="error-message">
+        KHS terbaru wajib berupa PDF maksimal 1 MB.
+    </div>
 
-                </div>
-                @endif
+</div>
+@endif
 
 
                 @if(in_array('TRANSKRIP', $activeDocs))

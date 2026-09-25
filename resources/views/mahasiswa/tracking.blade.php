@@ -130,11 +130,7 @@
                                 placeholder="Contoh: 2301110001"
                                 inputmode="numeric"
                                 autocomplete="off"
-                                maxlength="20"
-                                required
-                            >
-
-
+                                maxlength="20"                            >
                             <small>
                                 Masukkan NIM tanpa spasi,
                                 titik, atau tanda lainnya.

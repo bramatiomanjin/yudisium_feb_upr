@@ -206,7 +206,7 @@ document.addEventListener(
                                         "-"
                                     }
                                 </p>
-                                
+
                                 ${item.type === 'document' && item.newFile?.url ? `
                                     <button
                                         type="button"
@@ -214,6 +214,7 @@ document.addEventListener(
                                         data-preview-url="${item.newFile.url}"
                                         data-preview-title="${item.label || item.key}"
                                         data-preview-filename="${item.newFile.name}"
+                                        data-preview-mime="${item.newFile.mimeType || ''}"
                                         style="margin-top: 8px; padding: 4px 12px; font-size: 12px;"
                                     >
                                         Preview Dokumen
@@ -363,7 +364,7 @@ document.addEventListener(
             const approvedEl = document.getElementById("revisionApprovedCount");
             const revisionEl = document.getElementById("revisionAgainCount");
             const pendingEl = document.getElementById("revisionPendingCount");
-            
+
             if (approvedEl) approvedEl.textContent = approved;
             if (revisionEl) revisionEl.textContent = revisionCount;
             if (pendingEl) pendingEl.textContent = pending;
@@ -540,8 +541,6 @@ document.addEventListener(
                         placeholder.style.display = "flex";
                         const p = placeholder.querySelector("p");
                         if (p) p.textContent = "Format file tidak mendukung preview langsung. Silakan klik Buka di Tab Baru untuk mengunduh.";
-                        // Still trigger the download in background
-                        iframe.src = currentUrl; 
                     } else {
                         placeholder.style.display = "none";
                         iframe.style.display = "block";

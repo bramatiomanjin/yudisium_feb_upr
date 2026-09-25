@@ -59,10 +59,17 @@ document.addEventListener(
                     event.preventDefault();
 
                     if (
-                        !nim.value.trim()
-                    ) {
-                        return;
-                    }
+    !nim.value.trim() &&
+    !code.value.trim()
+) {
+    if (errorBox) {
+        errorBox.style.display = "block";
+        errorBox.textContent =
+            "Masukkan NIM atau Kode SK Yudisium.";
+    }
+
+    return;
+}
 
                     try {
 

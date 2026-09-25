@@ -29,12 +29,28 @@ class ExcelExportController extends Controller
         $query = PengajuanYudisium::with(['mahasiswa']);
 
         if ($request->has('month') && $request->month != '') {
-            $query->whereMonth('created_at', $request->month);
-        }
+    $month = $request->month;
+
+    $query->where(function ($q) use ($month) {
+        $q->whereMonth('submitted_at', $month)
+            ->orWhere(function ($q2) use ($month) {
+                $q2->whereNull('submitted_at')
+                    ->whereMonth('created_at', $month);
+            });
+    });
+}
 
         if ($request->has('year') && $request->year != '') {
-            $query->whereYear('created_at', $request->year);
-        }
+    $year = $request->year;
+
+    $query->where(function ($q) use ($year) {
+        $q->whereYear('submitted_at', $year)
+            ->orWhere(function ($q2) use ($year) {
+                $q2->whereNull('submitted_at')
+                    ->whereYear('created_at', $year);
+            });
+    });
+}
 
         if ($request->has('department') && $request->department != '') {
             $query->whereHas('mahasiswa', function ($q) use ($request) {
@@ -58,7 +74,9 @@ class ExcelExportController extends Controller
             });
         }
 
-        $pengajuanList = $query->orderBy('created_at', 'asc')->get();
+        $pengajuanList = $query
+    ->orderByRaw('COALESCE(submitted_at, created_at) ASC')
+    ->get();
 
 
         /*
@@ -366,14 +384,16 @@ class ExcelExportController extends Controller
 
 
             /*
-             * TANGGAL PENGAJUAN
-             */
-            $this->setExcelDate(
-                $sheet,
-                'M' . $row,
-                $pengajuan
-                    ->created_at
-            );
+ * TANGGAL PENGAJUAN
+ * Menggunakan waktu pertama kali mahasiswa
+ * mengirim pengajuan.
+ */
+$this->setExcelDate(
+    $sheet,
+    'M' . $row,
+    $pengajuan->submitted_at
+        ?? $pengajuan->created_at
+);
 
 
             /*

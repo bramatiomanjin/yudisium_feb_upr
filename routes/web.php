@@ -11,7 +11,7 @@ use App\Http\Controllers\ApiDataController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\SkController;
 use App\Http\Controllers\SettingController;
-
+use App\Http\Controllers\BackupDokumenController;
 
 // =========================================================
 // MAHASISWA
@@ -241,6 +241,14 @@ Route::middleware('auth')->group(
     [ExcelExportController::class, 'export']
 )->name('admin.export-yudisium');
 
+// =================================================
+// BACKUP DOKUMEN MAHASISWA
+// =================================================
+
+Route::get(
+    '/admin/backup-dokumen',
+    [BackupDokumenController::class, 'download']
+)->name('admin.backup-dokumen');
 
 Route::get(
     '/admin/history',

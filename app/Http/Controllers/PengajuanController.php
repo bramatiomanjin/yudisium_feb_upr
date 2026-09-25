@@ -12,12 +12,29 @@ use App\Models\ValidasiField;
 
 class PengajuanController extends Controller
 {
+    private const DOCUMENT_CODE_ALIASES = [
+    'BEBAS_PERPUS_UNIVERSITAS' => 'BEBAS_PERPUS_UNIV',
+    'SURAT_TUGAS_PEMBIMBING' => 'SURAT_TUGAS_DOSBING',
+    'JURNAL_MANAJEMEN' => 'JURNAL_JMSO',
+    'JURNAL_EKONOMI' => 'JURNAL_EP',
+];
+
+private function canonicalDocumentCode(string $code): string
+{
+    $code = strtoupper(trim($code));
+
+    return self::DOCUMENT_CODE_ALIASES[$code] ?? $code;
+}
     // 1. Menampilkan halaman form
     public function create()
-    {
-        $activeDocs = JenisDokumen::where('is_active', 1)->pluck('kode')->toArray();
-        return view('index', compact('activeDocs'));
-    }
+   {
+    $activeDocs = JenisDokumen::where('is_active', 1)
+        ->pluck('kode')
+        ->map(fn ($kode) => $this->canonicalDocumentCode($kode))
+        ->toArray();
+
+    return view('index', compact('activeDocs'));
+}
 
     // 2. Memproses pengiriman form
     public function store(Request $request)
@@ -139,7 +156,7 @@ class PengajuanController extends Controller
 
             // 5. Ambil master dokumen
             $dokumenPersyaratan =
-                JenisDokumen::all();
+    JenisDokumen::where('is_active', 1)->get();
 
             // 6. Proses upload dokumen
             foreach ($dokumenPersyaratan as $doc) {
@@ -155,7 +172,9 @@ class PengajuanController extends Controller
                  *
                  * Jadi TIDAK memakai prefix "file_".
                  */
-                $inputName = strtolower($doc->kode);
+                $inputName = strtolower(
+    $this->canonicalDocumentCode($doc->kode)
+);
 
                 /*
                  * Dokumen khusus jurusan hanya diproses

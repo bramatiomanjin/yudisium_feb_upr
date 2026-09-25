@@ -723,32 +723,47 @@ class ApiDataController extends Controller
 
                 $items[] = [
 
-                    'type' =>
-                        'document',
+    'type' =>
+        'document',
 
-                    'key' =>
-                        (string) $dokumen->id,
+    'key' =>
+        (string) $dokumen->id,
 
-                    'jenisDokumenId' =>
-                        $r->jenis_dokumen_id,
+    'jenisDokumenId' =>
+        $r->jenis_dokumen_id,
 
-                    'label' =>
-                        $dokumen
-                            ->jenisDokumen
-                            ->nama_dokumen
-                            ?? 'Dokumen',
+    'label' =>
+        $dokumen
+            ->jenisDokumen
+            ->nama_dokumen
+            ?? 'Dokumen',
 
-                    'oldFile' =>
-                        $r->nilai_lama,
+    'oldFile' =>
+        $r->nilai_lama,
 
-                    'newFile' => ['name' => $r->nilai_baru, 'url' => '/admin/file/' . $dokumen->id],
+  'oldFile' =>
+    $r->nilai_lama,
 
-                    'feedback' =>
-                        $r->feedback_admin,
+'newFile' => [
+    'name' =>
+        $dokumen->nama_file_asli
+        ?? $r->nilai_baru,
 
-                    'revisionNumber' =>
-                        $r->revisi_ke
-                ];
+    'url' =>
+        '/admin/file/' .
+        $dokumen->id,
+
+    'mimeType' =>
+        $dokumen->mime_type
+        ?? '',
+],
+
+'feedback' =>
+    $r->feedback_admin,
+
+'revisionNumber' =>
+    $r->revisi_ke,
+];
             }
         }
 

@@ -28,132 +28,99 @@ class TrackingController extends Controller
     // 2. SEARCH TRACKING
     // =========================================================
 
-    public function search(
-        Request $request
-    ) {
-        $kode =
-            $request->kode_sk
-            ??
-            $request->kode_pengajuan;
+    public function search(Request $request)
+{
+    $nim = trim((string) $request->input('nim', ''));
 
-
-        $query =
-            PengajuanYudisium::with(
-                'mahasiswa'
+    $kode = strtoupper(
+        trim(
+            (string) (
+                $request->input('kode_sk')
+                ?? $request->input('kode_pengajuan')
+                ?? ''
             )
-                ->where(
-                    'nim',
-                    $request->nim
-                );
+        )
+    );
 
-        if (!empty($kode)) {
-            $query->where('kode_pengajuan', $kode);
-        }
-
-        $pengajuan = $query->latest('created_at')->first();
-
-
-        if (!$pengajuan) {
-
-            return response()->json([
-                'success' =>
-                    false,
-
-                'message' =>
-                    'Data pengajuan tidak ditemukan.'
-            ], 404);
-        }
-
-
-        $jumlahRevisiField =
-            ValidasiField::where(
-                'pengajuan_id',
-                $pengajuan->id
-            )
-                ->where(
-                    'status_validasi',
-                    'REVISI'
-                )
-                ->count();
-
-
-        $jumlahRevisiDokumen =
-            PengajuanDokumen::where(
-                'pengajuan_id',
-                $pengajuan->id
-            )
-                ->where(
-                    'status_validasi',
-                    'REVISI'
-                )
-                ->count();
-
-
+    if ($nim === '' && $kode === '') {
         return response()->json([
-
-            'success' =>
-                true,
-
-            'data' => [
-
-                'id' =>
-                    $pengajuan->id,
-
-                'kode_sk' =>
-                    $pengajuan
-                        ->kode_pengajuan,
-
-                'kode_pengajuan' =>
-                    $pengajuan
-                        ->kode_pengajuan,
-
-                'nim' =>
-                    $pengajuan
-                        ->nim,
-
-                'nama' =>
-                    $pengajuan
-                        ->mahasiswa
-                        ->nama_lengkap ?? '-',
-
-                'jurusan' =>
-                    $pengajuan
-                        ->mahasiswa
-                        ->jurusan ?? '-',
-
-                'status' =>
-                    $pengajuan
-                        ->status,
-
-                'tanggal_pengajuan' =>
-                    $pengajuan
-                        ->created_at
-                        ->timezone(
-                            'Asia/Jakarta'
-                        )
-                        ->format(
-                            'd F Y'
-                        ),
-
-                'updated_at' =>
-                    $pengajuan
-                        ->updated_at
-                        ->timezone(
-                            'Asia/Jakarta'
-                        )
-                        ->format(
-                            'd F Y, H:i'
-                        )
-                    .
-                    ' WIB',
-
-                'revision_count' =>
-                    $jumlahRevisiField
-                    +
-                    $jumlahRevisiDokumen
-            ]
-        ]);
+            'success' => false,
+            'message' => 'Masukkan NIM atau Kode SK Yudisium.',
+        ], 422);
     }
+
+    $query = PengajuanYudisium::with('mahasiswa');
+
+    if ($nim !== '') {
+        $query->where('nim', $nim);
+    }
+
+    if ($kode !== '') {
+        $query->where('kode_pengajuan', $kode);
+    }
+
+    $pengajuan = $query
+        ->latest('created_at')
+        ->first();
+
+    if (!$pengajuan) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Data pengajuan tidak ditemukan.',
+        ], 404);
+    }
+
+    $jumlahRevisiField = ValidasiField::where(
+        'pengajuan_id',
+        $pengajuan->id
+    )
+        ->where('status_validasi', 'REVISI')
+        ->count();
+
+    $jumlahRevisiDokumen = PengajuanDokumen::where(
+        'pengajuan_id',
+        $pengajuan->id
+    )
+        ->where('status_validasi', 'REVISI')
+        ->count();
+
+    return response()->json([
+        'success' => true,
+
+        'data' => [
+            'id' => $pengajuan->id,
+
+            'kode_sk' => $pengajuan->kode_pengajuan,
+
+            'kode_pengajuan' => $pengajuan->kode_pengajuan,
+
+            'nim' => $pengajuan->nim,
+
+            'nama' => $pengajuan->mahasiswa->nama_lengkap ?? '-',
+
+            'jurusan' => $pengajuan->mahasiswa->jurusan ?? '-',
+
+            'status' => $pengajuan->status,
+
+            'tanggal_pengajuan' => (
+                $pengajuan->submitted_at
+                ?? $pengajuan->created_at
+            )
+                ->timezone('Asia/Jakarta')
+                ->format('d F Y'),
+
+            'updated_at' => $pengajuan
+                ->updated_at
+                ->timezone('Asia/Jakarta')
+                ->format('d F Y, H:i')
+                . ' WIB',
+
+            'revision_count' =>
+                $jumlahRevisiField
+                + $jumlahRevisiDokumen,
+        ],
+    ]);
+}
 
 
     // =========================================================
