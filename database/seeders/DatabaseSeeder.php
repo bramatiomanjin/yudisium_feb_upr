@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\JenisDokumen;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use App\Models\JenisDokumen;
+use RuntimeException;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,25 +16,25 @@ class DatabaseSeeder extends Seeder
         // 1. SUPER ADMIN
         // =====================================================
 
-        User::updateOrCreate(
-            [
-                'email' =>
-                    'superadmin@feb.upr.ac.id',
-            ],
-            [
-                'name' =>
-                    'Super Admin FEB UPR',
+        $superAdmin = User::firstOrNew([
+            'email' => 'superadmin@feb.upr.ac.id',
+        ]);
 
-                'password' =>
-                    Hash::make(
-                        'Admin123!'
-                    ),
+        if (! $superAdmin->exists) {
+            $password = config('auth.super_admin.password');
 
-                'role' =>
-                    'SUPER_ADMIN',
-            ]
-        );
+            if (! is_string($password) || $password === '') {
+                throw new RuntimeException(
+                    'SUPER_ADMIN_PASSWORD wajib diatur saat membuat akun Super Admin.'
+                );
+            }
 
+            $superAdmin->password = Hash::make($password);
+        }
+
+        $superAdmin->name = 'Super Admin FEB UPR';
+        $superAdmin->role = 'SUPER_ADMIN';
+        $superAdmin->save();
 
         // =====================================================
         // 2. MASTER JENIS DOKUMEN
