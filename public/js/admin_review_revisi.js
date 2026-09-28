@@ -9,6 +9,31 @@ document.addEventListener(
             return;
         }
 
+        function escapeHtml(value) {
+            const element = document.createElement("div");
+            element.textContent = value ?? "";
+
+            return element.innerHTML;
+        }
+
+
+        function safeDocumentUrl(value) {
+            if (!value) {
+                return "";
+            }
+
+            try {
+                const url = new URL(String(value), window.location.origin);
+
+                return url.origin === window.location.origin &&
+                    ["http:", "https:"].includes(url.protocol)
+                    ? url.href
+                    : "";
+            } catch (error) {
+                return "";
+            }
+        }
+
 
         const params =
             new URLSearchParams(
@@ -148,13 +173,19 @@ document.addEventListener(
                     "revision-review-section";
 
 
+                const previewUrl =
+                    safeDocumentUrl(
+                        item.newFile?.url
+                    );
+
+
                 card.innerHTML =
                     `
                     <article
                         class="revision-review-item"
                         data-review-item
-                        data-item-key="${item.key}"
-                        data-item-type="${item.type}"
+                        data-item-key="${escapeHtml(item.key)}"
+                        data-item-type="${escapeHtml(item.type)}"
                     >
 
                         <div class="revision-item-title">
@@ -165,7 +196,7 @@ document.addEventListener(
                                 </span>
 
                                 <strong>
-                                    ${item.label || item.key}
+                                    ${escapeHtml(item.label || item.key)}
                                 </strong>
                             </div>
 
@@ -180,11 +211,11 @@ document.addEventListener(
                                 </span>
 
                                 <p>
-                                    ${
+                                    ${escapeHtml(
                                         item.oldValue ||
                                         item.oldFile ||
                                         "-"
-                                    }
+                                    )}
                                 </p>
 
                             </div>
@@ -200,21 +231,21 @@ document.addEventListener(
                                 </span>
 
                                 <p>
-                                    ${
+                                    ${escapeHtml(
                                         item.newValue ||
                                         item.newFile?.name ||
                                         "-"
-                                    }
+                                    )}
                                 </p>
 
-                                ${item.type === 'document' && item.newFile?.url ? `
+                                ${item.type === 'document' && previewUrl ? `
                                     <button
                                         type="button"
                                         class="revision-preview-button admin-secondary-button"
-                                        data-preview-url="${item.newFile.url}"
-                                        data-preview-title="${item.label || item.key}"
-                                        data-preview-filename="${item.newFile.name}"
-                                        data-preview-mime="${item.newFile.mimeType || ''}"
+                                        data-preview-url="${escapeHtml(previewUrl)}"
+                                        data-preview-title="${escapeHtml(item.label || item.key)}"
+                                        data-preview-filename="${escapeHtml(item.newFile.name)}"
+                                        data-preview-mime="${escapeHtml(item.newFile.mimeType || '')}"
                                         style="margin-top: 8px; padding: 4px 12px; font-size: 12px;"
                                     >
                                         Preview Dokumen
@@ -232,7 +263,7 @@ document.addEventListener(
                             </span>
 
                             <p>
-                                ${item.feedback || "-"}
+                                ${escapeHtml(item.feedback || "-")}
                             </p>
 
                         </div>

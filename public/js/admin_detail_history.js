@@ -187,6 +187,24 @@ document.addEventListener(
         }
 
 
+        function safeDocumentUrl(value) {
+            if (!value) {
+                return "";
+            }
+
+            try {
+                const url = new URL(String(value), window.location.origin);
+
+                return url.origin === window.location.origin &&
+                    ["http:", "https:"].includes(url.protocol)
+                    ? url.href
+                    : "";
+            } catch (error) {
+                return "";
+            }
+        }
+
+
         function getActionLabel(activity) {
 
             if (
@@ -503,6 +521,11 @@ document.addEventListener(
             documents.forEach(
                 function (documentData) {
 
+                    const previewUrl =
+                        safeDocumentUrl(
+                            documentData.url
+                        );
+
                     const item =
                         document.createElement(
                             "div"
@@ -544,11 +567,11 @@ document.addEventListener(
 
 
                         ${
-                            documentData.url
+                            previewUrl
                                 ? `
                                 <a
                                     href="${escapeHtml(
-                                        documentData.url
+                                        previewUrl
                                     )}"
                                     target="_blank"
                                     rel="noopener noreferrer"

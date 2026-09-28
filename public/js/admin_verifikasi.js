@@ -62,6 +62,32 @@ document.addEventListener(
         }
 
 
+        function escapeHtml(value) {
+            const element = document.createElement("div");
+            element.textContent = value ?? "";
+
+            return element.innerHTML;
+        }
+
+
+        function safeDocumentUrl(value) {
+            if (!value) {
+                return "";
+            }
+
+            try {
+                const url = new URL(String(value), window.location.origin);
+
+                return url.origin === window.location.origin &&
+                    ["http:", "https:"].includes(url.protocol)
+                    ? url.href
+                    : "";
+            } catch (error) {
+                return "";
+            }
+        }
+
+
         function formatDate(value) {
 
             if (!value) {
@@ -392,9 +418,10 @@ document.addEventListener(
 
 
                         const previewUrl =
-                            doc.url ||
-                            doc.file_url ||
-                            null;
+                            safeDocumentUrl(
+                                doc.url ||
+                                doc.file_url
+                            );
 
 
                         item.innerHTML = `
@@ -403,8 +430,8 @@ document.addEventListener(
                                 FILE
                             </div>
                             <div class="verification-document-info">
-                                <strong>${title}</strong>
-                                <span>${filename}</span>
+                                <strong>${escapeHtml(title)}</strong>
+                                <span>${escapeHtml(filename)}</span>
                             </div>
                         </div>
                             <div class="verification-decision">
@@ -412,9 +439,9 @@ document.addEventListener(
                                     <button
                                         type="button"
                                         class="verification-preview-button admin-secondary-button"
-                                        data-preview-url="${previewUrl}"
-                                        data-preview-title="${title}"
-                                        data-preview-filename="${filename}"
+                                        data-preview-url="${escapeHtml(previewUrl)}"
+                                        data-preview-title="${escapeHtml(title)}"
+                                        data-preview-filename="${escapeHtml(filename)}"
                                     >
                                         Preview
                                     </button>

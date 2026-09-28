@@ -68,6 +68,32 @@ document.addEventListener(
         }
 
 
+        function escapeHtml(value) {
+            const element = document.createElement("div");
+            element.textContent = value ?? "";
+
+            return element.innerHTML;
+        }
+
+
+        function safeDocumentUrl(value) {
+            if (!value) {
+                return "";
+            }
+
+            try {
+                const url = new URL(String(value), window.location.origin);
+
+                return url.origin === window.location.origin &&
+                    ["http:", "https:"].includes(url.protocol)
+                    ? url.href
+                    : "";
+            } catch (error) {
+                return "";
+            }
+        }
+
+
         function setText(
             id,
             value
@@ -380,6 +406,11 @@ document.addEventListener(
         documents.forEach(
             function (documentData) {
 
+                const previewUrl =
+                    safeDocumentUrl(
+                        documentData.url
+                    );
+
                 const item =
                     document.createElement(
                         "div"
@@ -400,11 +431,11 @@ document.addEventListener(
 
                         <div>
                             <strong>
-                                ${documentData.title || documentData.label || "-"}
+                                ${escapeHtml(documentData.title || documentData.label || "-")}
                             </strong>
 
                             <span>
-                                ${documentData.filename || "-"}
+                                ${escapeHtml(documentData.filename || "-")}
                             </span>
                         </div>
 
@@ -413,11 +444,12 @@ document.addEventListener(
                     <div class="detail-document-actions">
 
                         ${
-                            documentData.url
+                            previewUrl
                                 ? `
                                     <a
-                                        href="${documentData.url}"
+                                        href="${escapeHtml(previewUrl)}"
                                         target="_blank"
+                                        rel="noopener noreferrer"
                                         class="admin-detail-button"
                                     >
                                         Preview

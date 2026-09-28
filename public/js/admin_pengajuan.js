@@ -835,7 +835,7 @@ document.addEventListener(
                     row.innerHTML =
                         `
                         <td class="bulk-action-td" style="display: none; text-align: center;">
-                            ${isDone ? '' : `<input type="checkbox" class="bulk-checkbox" value="${submission.id}" data-status="${submission.status}">`}
+                            ${isDone ? '' : `<input type="checkbox" class="bulk-checkbox" value="${escapeHtml(submission.id)}" data-status="${escapeHtml(submission.status)}">`}
                         </td>
 
                         <td>
@@ -919,8 +919,8 @@ document.addEventListener(
                             ${(!isDone && appliedFilterForBtn === 'proses-sk') ? `
                             <div style="margin-top: 8px;"></div>
                             <button class="btn-single-lanjut admin-primary-button" 
-                                    data-id="${submission.id}" 
-                                    data-status="${submission.status}" 
+                                    data-id="${escapeHtml(submission.id)}"
+                                    data-status="${escapeHtml(submission.status)}"
                                     style="font-size: 0.75rem; padding: 6px 10px; min-height: auto; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; text-align: center;">
                                 Lanjutkan
                             </button>
