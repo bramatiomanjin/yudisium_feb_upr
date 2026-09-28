@@ -168,12 +168,12 @@ Route::middleware('auth')->group(
         Route::get(
             '/admin/pengaturan-dokumen',
             [SettingController::class, 'pengaturanDokumen']
-        )->name('admin.pengaturan-dokumen');
+        )->middleware('super.admin')->name('admin.pengaturan-dokumen');
 
         Route::post(
             '/admin/pengaturan-dokumen',
             [SettingController::class, 'updatePengaturanDokumen']
-        )->name('admin.pengaturan-dokumen.update');
+        )->middleware('super.admin')->name('admin.pengaturan-dokumen.update');
 
 
         // =================================================
@@ -254,7 +254,7 @@ Route::middleware('auth')->group(
 Route::get(
     '/admin/backup-dokumen',
     [BackupDokumenController::class, 'download']
-)->name('admin.backup-dokumen');
+)->middleware('super.admin')->name('admin.backup-dokumen');
 
 Route::get(
     '/admin/history',
@@ -335,45 +335,47 @@ Route::get(
         // SUPER ADMIN
         // =================================================
 
-        Route::get(
-            '/superadmin/kelola-admin',
-            [SuperAdminController::class, 'index']
-        );
+        Route::middleware('super.admin')->group(function () {
+            Route::get(
+                '/superadmin/kelola-admin',
+                [SuperAdminController::class, 'index']
+            );
 
 
-        Route::get(
-            '/superadmin/log-aktivitas',
-            [SuperAdminController::class, 'logAktivitas']
-        );
+            Route::get(
+                '/superadmin/log-aktivitas',
+                [SuperAdminController::class, 'logAktivitas']
+            );
 
 
-        Route::post(
-            '/superadmin/tambah-admin',
-            [SuperAdminController::class, 'store']
-        );
+            Route::post(
+                '/superadmin/tambah-admin',
+                [SuperAdminController::class, 'store']
+            );
 
 
-        Route::post(
-            '/superadmin/hapus-admin/{id}',
-            [SuperAdminController::class, 'destroy']
-        );
+            Route::post(
+                '/superadmin/hapus-admin/{id}',
+                [SuperAdminController::class, 'destroy']
+            );
 
 
-        Route::post(
-            '/superadmin/approve-admin/{id}',
-            [SuperAdminController::class, 'approve']
-        );
+            Route::post(
+                '/superadmin/approve-admin/{id}',
+                [SuperAdminController::class, 'approve']
+            );
 
 
-        Route::post(
-            '/superadmin/reject-admin/{id}',
-            [SuperAdminController::class, 'reject']
-        );
+            Route::post(
+                '/superadmin/reject-admin/{id}',
+                [SuperAdminController::class, 'reject']
+            );
 
 
-        Route::post(
-            '/superadmin/activate-admin/{id}',
-            [SuperAdminController::class, 'activate']
-        );
+            Route::post(
+                '/superadmin/activate-admin/{id}',
+                [SuperAdminController::class, 'activate']
+            );
+        });
     }
 );
