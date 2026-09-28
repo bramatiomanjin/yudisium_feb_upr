@@ -9,6 +9,7 @@ use App\Models\Mahasiswa;
 use App\Models\ValidasiField;
 use App\Models\PengajuanDokumen;
 use App\Models\RiwayatRevisi;
+use App\Support\DocumentUploadValidator;
 
 class TrackingController extends Controller
 {
@@ -235,7 +236,8 @@ class TrackingController extends Controller
 
     public function prosesRevisi(
         Request $request,
-        string $kode_pengajuan
+        string $kode_pengajuan,
+        DocumentUploadValidator $documentUploadValidator
     ) {
         $pengajuan =
             PengajuanYudisium::where(
@@ -258,6 +260,20 @@ class TrackingController extends Controller
                 $pengajuan->nim
             )
                 ->firstOrFail();
+
+        $dokumenRevisi = PengajuanDokumen::with('jenisDokumen')
+            ->where('pengajuan_id', $pengajuan->id)
+            ->where('status_validasi', 'REVISI')
+            ->get();
+
+        foreach ($dokumenRevisi as $dokumen) {
+            $documentUploadValidator->validate(
+                $request,
+                'revisi_dokumen.'.$dokumen->id,
+                $dokumen->jenisDokumen,
+                (bool) $dokumen->jenisDokumen->wajib
+            );
+        }
 
 
         $kolomMahasiswa = [
@@ -472,11 +488,6 @@ class TrackingController extends Controller
                     =>
                     $file
                 ) {
-
-                    if ($file->getSize() > 1024 * 1024) {
-                        DB::rollBack();
-                        return response('Ukuran file ' . $file->getClientOriginalName() . ' terlalu besar. Maksimal 1 MB.', 400);
-                    }
 
                     $dokumenLama =
                         PengajuanDokumen::where(

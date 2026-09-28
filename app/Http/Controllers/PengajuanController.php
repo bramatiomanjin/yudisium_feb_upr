@@ -9,6 +9,7 @@ use App\Models\PengajuanYudisium;
 use App\Models\JenisDokumen;
 use App\Models\PengajuanDokumen;
 use App\Models\ValidasiField;
+use App\Support\DocumentUploadValidator;
 
 class PengajuanController extends Controller
 {
@@ -37,7 +38,10 @@ private function canonicalDocumentCode(string $code): string
 }
 
     // 2. Memproses pengiriman form
-    public function store(Request $request)
+    public function store(
+        Request $request,
+        DocumentUploadValidator $documentUploadValidator
+    )
     {
         // --- A. NORMALISASI NILAI ANGKA ---
         if ($request->has('nilai_angka')) {
@@ -61,6 +65,23 @@ private function canonicalDocumentCode(string $code): string
             'nilai_angka' => 'required|numeric',
             'nilai_huruf' => 'required|in:A,A-,A/B,B+,B,B-',
         ]);
+
+        $dokumenPersyaratan = JenisDokumen::where('is_active', 1)
+            ->get()
+            ->filter(function (JenisDokumen $doc) use ($request): bool {
+                return $doc->jurusan === null || $doc->jurusan === $request->jurusan;
+            });
+
+        foreach ($dokumenPersyaratan as $doc) {
+            $inputName = strtolower($this->canonicalDocumentCode($doc->kode));
+
+            $documentUploadValidator->validate(
+                $request,
+                $inputName,
+                $doc,
+                (bool) $doc->wajib
+            );
+        }
 
         // --- C. CEK DUPLIKASI NIM ---
         $cekPengajuan = PengajuanYudisium::where(
@@ -155,9 +176,6 @@ private function canonicalDocumentCode(string $code): string
             }
 
             // 5. Ambil master dokumen
-            $dokumenPersyaratan =
-    JenisDokumen::where('is_active', 1)->get();
-
             // 6. Proses upload dokumen
             foreach ($dokumenPersyaratan as $doc) {
 
@@ -187,10 +205,6 @@ private function canonicalDocumentCode(string $code): string
                     continue;
                 }
 
-                /*
-                 * Kalau file tidak dikirim, lewati.
-                 * Untuk saat ini kita mengikuti validasi frontend.
-                 */
                 if (!$request->hasFile($inputName)) {
                     continue;
                 }
@@ -204,14 +218,6 @@ private function canonicalDocumentCode(string $code): string
 
                 $ukuranFile =
                     $file->getSize();
-
-                if ($ukuranFile > 1024 * 1024) {
-                    DB::rollBack();
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Ukuran file ' . $namaFileAsli . ' terlalu besar. Maksimal 1 MB.'
-                    ], 400);
-                }
 
                 $mimeType =
                     $file->getMimeType();
