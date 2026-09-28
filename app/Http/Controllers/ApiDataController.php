@@ -27,9 +27,7 @@ class ApiDataController extends Controller
             ])
                 ->findOrFail($id);
 
-        if (!Auth::check() && $request->query('kode_sk') !== $pengajuan->kode_pengajuan) {
-            abort(403, 'Unauthorized');
-        }
+        $this->authorizePublicSubmissionRequest($request, $pengajuan, true);
 
         $data = [
 
@@ -137,9 +135,7 @@ class ApiDataController extends Controller
     {
         $pengajuan = PengajuanYudisium::findOrFail($id);
         
-        if (!Auth::check() && $request->query('kode_sk') !== $pengajuan->kode_pengajuan) {
-            abort(403, 'Unauthorized');
-        }
+        $this->authorizePublicSubmissionRequest($request, $pengajuan, true);
 
         $dokumens =
             PengajuanDokumen::with(
@@ -216,9 +212,7 @@ class ApiDataController extends Controller
     ) {
         $pengajuan = PengajuanYudisium::findOrFail($id);
         
-        if (!Auth::check() && $request->query('kode_sk') !== $pengajuan->kode_pengajuan) {
-            abort(403, 'Unauthorized');
-        }
+        $this->authorizePublicSubmissionRequest($request, $pengajuan, true);
 
         $fields =
             ValidasiField::where(
@@ -260,6 +254,32 @@ class ApiDataController extends Controller
             'items' =>
                 $items
         ]);
+    }
+
+    private function authorizePublicSubmissionRequest(
+        Request $request,
+        PengajuanYudisium $pengajuan,
+        bool $revisionSensitive = false
+    ): void {
+        if (Auth::check()) {
+            return;
+        }
+
+        abort_unless(
+            $request->query('kode_sk') === $pengajuan->kode_pengajuan,
+            403
+        );
+
+        if ($revisionSensitive && in_array(
+            $pengajuan->status,
+            ['PERLU_REVISI', 'REVISI_DIKIRIM'],
+            true
+        )) {
+            abort_unless(
+                $pengajuan->hasValidRevisionAccessToken($request->query('token')),
+                403
+            );
+        }
     }
 
 

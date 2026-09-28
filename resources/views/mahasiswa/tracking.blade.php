@@ -4,6 +4,7 @@
 <head>
 
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <meta
         name="viewport"
@@ -172,7 +173,8 @@
 
                             <small>
                                 Kode ini diberikan setelah
-                                pengajuan berhasil dikirim.
+                                pengajuan berhasil dikirim. NIM dan kode
+                                wajib diisi bersama untuk membuka revisi.
                             </small>
 
 

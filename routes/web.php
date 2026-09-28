@@ -51,6 +51,12 @@ Route::post(
 )->name('tracking.search');
 
 
+Route::post(
+    '/tracking/revision-access',
+    [TrackingController::class, 'revisionAccess']
+)->name('tracking.revision-access');
+
+
 // Detail tracking
 Route::get(
     '/detail_tracking',

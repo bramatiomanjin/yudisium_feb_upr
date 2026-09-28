@@ -118,9 +118,59 @@ class TrackingController extends Controller
             'revision_count' =>
                 $jumlahRevisiField
                 + $jumlahRevisiDokumen,
+
+            'revision_access_required' => in_array(
+                $pengajuan->status,
+                ['PERLU_REVISI', 'REVISI_DIKIRIM'],
+                true
+            ),
         ],
     ]);
 }
+
+    public function revisionAccess(Request $request)
+    {
+        $nim = trim((string) $request->input('nim', ''));
+        $kode = strtoupper(trim((string) $request->input('kode_pengajuan', '')));
+
+        if ($nim === '' || $kode === '') {
+            return response()->json([
+                'success' => false,
+                'message' => 'NIM dan Kode SK Yudisium wajib diisi untuk membuka revisi.',
+            ], 422);
+        }
+
+        $pengajuan = PengajuanYudisium::query()
+            ->where('nim', $nim)
+            ->where('kode_pengajuan', $kode)
+            ->first();
+
+        if (!$pengajuan) {
+            return response()->json([
+                'success' => false,
+                'message' => 'NIM dan Kode SK Yudisium tidak cocok.',
+            ], 404);
+        }
+
+        if (!in_array($pengajuan->status, ['PERLU_REVISI', 'REVISI_DIKIRIM'], true)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Pengajuan ini tidak sedang berada pada alur revisi.',
+            ], 422);
+        }
+
+        $revisionToken = $pengajuan->getOrCreateRevisionAccessToken();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'revision_url' => route('tracking.revisi', [
+                    'kode_pengajuan' => $pengajuan->kode_pengajuan,
+                    'token' => $revisionToken,
+                ], false),
+            ],
+        ])->header('Cache-Control', 'no-store, private');
+    }
 
 
     // =========================================================
@@ -128,6 +178,7 @@ class TrackingController extends Controller
     // =========================================================
 
     public function revisiPage(
+        Request $request,
         string $kode_pengajuan
     ) {
         $pengajuan =
@@ -141,6 +192,11 @@ class TrackingController extends Controller
                     $kode_pengajuan
                 )
                 ->firstOrFail();
+
+        abort_unless(
+            $pengajuan->hasValidRevisionAccessToken($request->query('token')),
+            403
+        );
 
 
         if (
@@ -160,13 +216,16 @@ class TrackingController extends Controller
         }
 
 
-        return view(
-            'mahasiswa.revisi',
-            [
-                'pengajuan' =>
-                    $pengajuan
-            ]
-        );
+        return response()
+            ->view(
+                'mahasiswa.revisi',
+                [
+                    'pengajuan' =>
+                        $pengajuan
+                ]
+            )
+            ->header('Cache-Control', 'no-store, private')
+            ->header('Referrer-Policy', 'no-referrer');
     }
 
 
@@ -184,6 +243,13 @@ class TrackingController extends Controller
                 $kode_pengajuan
             )
                 ->firstOrFail();
+
+        $revisionToken = $request->query('token');
+
+        abort_unless(
+            $pengajuan->hasValidRevisionAccessToken($revisionToken),
+            403
+        );
 
 
         $mahasiswa =
@@ -625,10 +691,12 @@ class TrackingController extends Controller
             DB::commit();
 
 
-            return redirect(
-                '/revisi/'
-                .
-                $kode_pengajuan
+            return redirect()->route(
+                'tracking.revisi',
+                [
+                    'kode_pengajuan' => $kode_pengajuan,
+                    'token' => $revisionToken,
+                ]
             )
                 ->with(
                     'pesan',

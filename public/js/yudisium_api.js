@@ -361,6 +361,18 @@
                     0
                 ),
 
+            revisionUrl:
+                data.revisionUrl ??
+                data.revision_url ??
+                null,
+
+            revisionAccessRequired:
+                Boolean(
+                    data.revisionAccessRequired ??
+                    data.revision_access_required ??
+                    false
+                ),
+
             digitalSkAvailable:
                 Boolean(
                     data.digitalSkAvailable ??
@@ -611,6 +623,14 @@
                 options.body instanceof
                 FormData;
 
+            const csrfToken =
+                document.querySelector(
+                    'meta[name="csrf-token"]'
+                )?.content ||
+                document.querySelector(
+                    'input[name="_token"]'
+                )?.value;
+
 
             const response =
                 await fetch(
@@ -637,6 +657,15 @@
                                         "Content-Type":
                                             "application/json"
                                     }
+                            ),
+
+                            ...(
+                                csrfToken
+                                    ? {
+                                        "X-CSRF-TOKEN":
+                                            csrfToken
+                                    }
+                                    : {}
                             ),
 
                             ...(
@@ -815,7 +844,7 @@
     }
 
 
-    async function getSubmission(id, kode_sk = null) {
+    async function getSubmission(id, kode_sk = null, revisionToken = null) {
 
         if (
             !CONFIG.backendConnected
@@ -825,7 +854,7 @@
 
         }
 
-        const query = kode_sk ? "?kode_sk=" + encodeURIComponent(kode_sk) : "";
+        const query = buildStudentAccessQuery(kode_sk, revisionToken);
 
         const payload =
             await request(
@@ -838,6 +867,26 @@
             payload?.data ||
             payload
         );
+
+    }
+
+
+    function buildStudentAccessQuery(kode_sk = null, revisionToken = null) {
+
+        const query =
+            new URLSearchParams();
+
+        if (kode_sk) {
+            query.set("kode_sk", kode_sk);
+        }
+
+        if (revisionToken) {
+            query.set("token", revisionToken);
+        }
+
+        return query.toString()
+            ? "?" + query.toString()
+            : "";
 
     }
 
@@ -934,13 +983,43 @@
     }
 
 
+    async function requestRevisionAccess(nim, code) {
+
+        if (
+            !CONFIG.backendConnected
+        ) {
+
+            return null;
+
+        }
+
+        const payload =
+            await request(
+                "/tracking/revision-access",
+                {
+                    method: "POST",
+                    body: {
+                        nim: String(nim || "").trim(),
+                        kode_pengajuan: String(code || "")
+                            .trim()
+                            .toUpperCase()
+                    }
+                }
+            );
+
+        return payload?.data?.revision_url ?? null;
+
+    }
+
+
     /* =========================================================
        DOCUMENTS
     ========================================================= */
 
     async function getDocuments(
         submissionId,
-        kode_sk = null
+        kode_sk = null,
+        revisionToken = null
     ) {
 
         if (
@@ -951,7 +1030,7 @@
 
         }
 
-        const query = kode_sk ? "?kode_sk=" + encodeURIComponent(kode_sk) : "";
+        const query = buildStudentAccessQuery(kode_sk, revisionToken);
 
         const payload =
             await request(
@@ -986,7 +1065,8 @@
 
     async function getVerificationResult(
         submissionId,
-        kode_sk = null
+        kode_sk = null,
+        revisionToken = null
     ) {
 
         if (
@@ -997,7 +1077,7 @@
 
         }
 
-        const query = kode_sk ? "?kode_sk=" + encodeURIComponent(kode_sk) : "";
+        const query = buildStudentAccessQuery(kode_sk, revisionToken);
 
         const payload =
             await request(
@@ -1536,6 +1616,9 @@
 
         findSubmission:
             findSubmission,
+
+        requestRevisionAccess:
+            requestRevisionAccess,
 
         getDocuments:
             getDocuments,

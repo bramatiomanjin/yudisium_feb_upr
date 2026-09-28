@@ -52,6 +52,16 @@ document.addEventListener(
                     "trackingLookupError"
                 );
 
+            if (
+                new URLSearchParams(window.location.search)
+                    .get("revision_access") === "required" &&
+                errorBox
+            ) {
+                errorBox.style.display = "block";
+                errorBox.textContent =
+                    "Masukkan NIM dan Kode SK Yudisium untuk membuka halaman revisi.";
+            }
+
             trackingForm.addEventListener(
                 "submit",
                 async function (event) {
@@ -78,10 +88,20 @@ document.addEventListener(
                                 "none";
                         }
 
+                        const enteredNim =
+                            nim.value.trim();
+
+                        const enteredCode =
+                            code.value.trim().toUpperCase();
+
+                        sessionStorage.removeItem(
+                            "revision_access_url"
+                        );
+
                         const submission =
                             await API.findSubmission(
-                                nim.value,
-                                code.value
+                                enteredNim,
+                                enteredCode
                             );
 
                         if (!submission) {
@@ -98,6 +118,25 @@ document.addEventListener(
                             }
 
                             return;
+                        }
+
+                        if (
+                            submission.revisionAccessRequired &&
+                            enteredNim &&
+                            enteredCode
+                        ) {
+                            const revisionUrl =
+                                await API.requestRevisionAccess(
+                                    enteredNim,
+                                    enteredCode
+                                );
+
+                            if (revisionUrl) {
+                                sessionStorage.setItem(
+                                    "revision_access_url",
+                                    revisionUrl
+                                );
+                            }
                         }
 
                         sessionStorage.setItem(
@@ -183,6 +222,19 @@ document.addEventListener(
                     "tracking_kode"
                 );
 
+            const revisionUrl =
+                sessionStorage.getItem(
+                    "revision_access_url"
+                );
+
+            const revisionToken =
+                revisionUrl
+                    ? new URL(
+                        revisionUrl,
+                        window.location.origin
+                    ).searchParams.get("token")
+                    : null;
+
             if (
                 !nim
             ) {
@@ -235,7 +287,8 @@ document.addEventListener(
                         const detail =
                             await API.getSubmission(
                                 submission.id,
-                                code
+                                code,
+                                revisionToken
                             );
 
                         if (detail) {
@@ -441,18 +494,17 @@ function formatDateTime(value) {
                         submission.code
                     ) {
 
-                        revisionButton.href =
-                            "/revisi/" +
-                            encodeURIComponent(
-                                submission.code
-                            );
+                        if (revisionUrl) {
+                            revisionButton.href =
+                                revisionUrl;
+                        } else {
+                            revisionButton.href =
+                                "/tracking?revision_access=required";
+                            revisionButton.textContent =
+                                "Verifikasi NIM + Kode untuk Revisi";
+                        }
                     }
                 }
-
-                console.log(
-                    "Tracking detail:",
-                    submission
-                );
 
             } catch (error) {
 

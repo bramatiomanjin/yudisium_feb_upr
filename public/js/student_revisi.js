@@ -29,11 +29,17 @@ document.addEventListener(
                 "tracking_kode"
             );
 
+        const revisionToken =
+            new URLSearchParams(
+                window.location.search
+            ).get("token");
+
 
         if (
             !id ||
             !nim ||
-            !code
+            !code ||
+            !revisionToken
         ) {
 
             window.location.href =
@@ -52,7 +58,8 @@ document.addEventListener(
             const submission =
                 await API.getSubmission(
                     id,
-                    code
+                    code,
+                    revisionToken
                 );
 
 
@@ -86,7 +93,8 @@ document.addEventListener(
             const verification =
                 await API.getVerificationResult(
                     submission.id,
-                    code
+                    code,
+                    revisionToken
                 );
 
 
@@ -105,7 +113,8 @@ document.addEventListener(
             const documents =
                 await API.getDocuments(
                     submission.id,
-                    code
+                    code,
+                    revisionToken
                 );
 
 
@@ -1043,6 +1052,10 @@ document.addEventListener(
                                 "/revisi/" +
                                 encodeURIComponent(
                                     submission.code
+                                ) +
+                                "?token=" +
+                                encodeURIComponent(
+                                    revisionToken
                                 ),
                                 {
                                     method:
