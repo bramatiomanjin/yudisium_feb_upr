@@ -165,6 +165,18 @@ document.addEventListener(
             );
 
 
+        const tableWrapper =
+            document.getElementById(
+                "historyTableWrapper"
+            );
+
+
+        const retryButton =
+            document.getElementById(
+                "historyRetryButton"
+            );
+
+
         const resultText =
             document.getElementById(
                 "historyResultText"
@@ -219,6 +231,48 @@ document.addEventListener(
 
         let appliedAction =
             "";
+
+
+        function showHistoryState(state, filteredEmpty = false) {
+            if (tableWrapper) {
+                tableWrapper.style.display = state === "ready" ? "block" : "none";
+            }
+
+            if (!emptyState) {
+                return;
+            }
+
+            if (state === "ready") {
+                emptyState.style.display = "none";
+                return;
+            }
+
+            const content = {
+                loading: ["Memuat riwayat aktivitas...", "Mohon tunggu sebentar."],
+                empty: filteredEmpty
+                    ? ["Tidak ada aktivitas yang sesuai", "Coba ubah kata kunci atau filter riwayat."]
+                    : ["Belum ada riwayat aktivitas", "Aktivitas verifikasi, revisi, dan proses SK akan tampil di sini."],
+                error: ["Riwayat gagal dimuat", "Periksa koneksi, lalu coba muat kembali riwayat aktivitas."]
+            }[state];
+
+            emptyState.dataset.state = state;
+            emptyState.style.display = "flex";
+            emptyState.querySelector("strong").textContent = content[0];
+            emptyState.querySelector("p").textContent = content[1];
+
+            if (retryButton) {
+                retryButton.style.display = state === "error" ? "inline-flex" : "none";
+            }
+        }
+
+
+        function setHistorySummaryUnavailable() {
+            [totalCount, verificationCount, revisionCount, skCount].forEach(function (element) {
+                if (element) {
+                    element.textContent = "—";
+                }
+            });
+        }
 
 
         /* =====================================================
@@ -1022,19 +1076,7 @@ document.addEventListener(
                                 submission
                             ) {
 
-                                return [
-
-                                    API.STATUS
-                                        .PERLU_REVISI,
-
-                                    API.STATUS
-                                        .REVISI_DIKIRIM
-
-                                ]
-                                    .includes(
-                                        submission
-                                            .status
-                                    );
+                                return submission.status === API.STATUS.REVISI_DIKIRIM;
                             }
                         )
                         .length;
@@ -1056,7 +1098,7 @@ document.addEventListener(
 
                 sidebarRevisionCount
                     .textContent =
-                    "0";
+                    "—";
             }
         }
 
@@ -1117,27 +1159,13 @@ document.addEventListener(
                 totalItems ===
                 0
             ) {
-
-                if (emptyState) {
-
-                    emptyState
-                        .style
-                        .display =
-                        "flex";
-                }
-
+                showHistoryState("empty", roleActivities.length > 0);
                 updateHistoryPagination(0);
                 return;
             }
 
 
-            if (emptyState) {
-
-                emptyState
-                    .style
-                    .display =
-                    "none";
-            }
+            showHistoryState("ready");
 
             paginatedData
                 .forEach(
@@ -1528,6 +1556,9 @@ document.addEventListener(
 
             setupRoleUI();
 
+            showHistoryState("loading");
+            setHistorySummaryUnavailable();
+
 
             try {
 
@@ -1547,9 +1578,7 @@ document.addEventListener(
                         allActivities
                     )
                 ) {
-
-                    allActivities =
-                        [];
+                    throw new Error("Format data history tidak valid.");
                 }
 
 
@@ -1571,14 +1600,13 @@ document.addEventListener(
                 );
 
 
-                allActivities =
-                    [];
+                tableBody.innerHTML = "";
+                setHistorySummaryUnavailable();
+                showHistoryState("error");
 
-
-                populateAdminFilter();
-
-
-                renderHistory();
+                if (resultText) {
+                    resultText.textContent = "Data riwayat tidak tersedia";
+                }
 
 
                 if (
@@ -1587,10 +1615,13 @@ document.addEventListener(
 
                     sidebarRevisionCount
                         .textContent =
-                        "0";
+                        "—";
                 }
             }
         }
+
+
+        retryButton?.addEventListener("click", loadHistory);
 
 
         await loadHistory();

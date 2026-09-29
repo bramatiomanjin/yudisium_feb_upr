@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
-use App\Models\PengajuanYudisium;
 use App\Models\PengajuanDokumen;
+use App\Models\PengajuanYudisium;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class AdminController extends Controller
@@ -13,7 +15,14 @@ class AdminController extends Controller
     // 1. Menampilkan Dashboard
     public function index()
     {
-        return view('admin.dashboard');
+        $pendingAdmins = Auth::user()->role === 'SUPER_ADMIN'
+            ? User::query()
+                ->where('status', 'PENDING')
+                ->orderBy('created_at')
+                ->get(['id', 'name', 'email'])
+            : collect();
+
+        return view('admin.dashboard', compact('pendingAdmins'));
     }
 
     // 1c. Menampilkan Halaman Daftar Pengajuan (terpisah dari dashboard)

@@ -215,9 +215,17 @@ document.addEventListener(
                 );
 
 
+        const adminStatusLabel =
+            submission.status === window.YudisiumAPI.STATUS.PERLU_REVISI
+                ? "Menunggu Perbaikan Mahasiswa"
+                : submission.status === window.YudisiumAPI.STATUS.REVISI_DIKIRIM
+                    ? "Revisi Siap Direview"
+                    : meta.label;
+
+
         setText(
             "detailSubmissionStatusText",
-            meta.label
+            adminStatusLabel
         );
 
 
@@ -230,7 +238,7 @@ document.addEventListener(
         if (badge) {
 
             badge.textContent =
-                meta.label;
+                adminStatusLabel;
 
             badge.className =
                 "admin-status-badge " +
@@ -253,6 +261,14 @@ document.addEventListener(
                         submission
                     );
 
+            action.style.pointerEvents = "";
+            action.style.opacity = "";
+            action.removeAttribute("aria-disabled");
+
+            let title = "Proses SK";
+            let description = "Lihat dan lanjutkan tahapan proses SK sesuai status pengajuan saat ini.";
+            let actionLabel = "Proses SK";
+
 
             switch (
                 submission.status
@@ -262,8 +278,9 @@ document.addEventListener(
                     .STATUS
                     .MENUNGGU_VERIFIKASI:
 
-                    action.textContent =
-                        "Mulai Verifikasi";
+                    title = "Verifikasi Pengajuan";
+                    description = "Periksa data dan dokumen mahasiswa sebelum menentukan hasil verifikasi.";
+                    actionLabel = "Verifikasi Pengajuan";
 
                     break;
 
@@ -272,14 +289,17 @@ document.addEventListener(
                     .STATUS
                     .PERLU_REVISI:
 
-                    action.textContent =
-                        "Menunggu Revisi Mahasiswa";
+                    title = "Menunggu Perbaikan Mahasiswa";
+                    description = "Mahasiswa belum mengirim perbaikan. Tidak ada tindakan Admin yang diperlukan saat ini.";
+                    actionLabel = "Menunggu Perbaikan Mahasiswa";
 
                     action.style.pointerEvents =
                         "none";
 
                     action.style.opacity =
                         ".55";
+
+                    action.setAttribute("aria-disabled", "true");
 
                     break;
 
@@ -288,28 +308,25 @@ document.addEventListener(
                     .STATUS
                     .REVISI_DIKIRIM:
 
-                    action.textContent =
-                        "Review Revisi";
-
-                    break;
-
-
-                case window.YudisiumAPI
-                    .STATUS
-                    .SK_SIAP_DIAMBIL:
-
-                    action.textContent =
-                        "Lihat Status SK";
+                    title = "Review Revisi";
+                    description = "Perbaikan sudah dikirim mahasiswa dan siap diperiksa oleh Admin.";
+                    actionLabel = "Review Revisi";
 
                     break;
 
 
                 default:
 
-                    action.textContent =
-                        "Proses SK";
+                    title = "Proses SK";
+                    description = "Lihat dan lanjutkan tahapan proses SK sesuai status pengajuan saat ini.";
+                    actionLabel = "Proses SK";
 
             }
+
+            setText("detailActionTitle", title);
+            setText("detailActionDescription", description);
+            setText("detailPageDescription", description);
+            action.textContent = actionLabel;
 
         }
 
@@ -329,8 +346,10 @@ document.addEventListener(
             let activeHref;
             if (fromHistory) {
                 activeHref = "/admin/history";
-            } else if (status === STATUS.PERLU_REVISI || status === STATUS.REVISI_DIKIRIM) {
-                activeHref = "/admin/pengajuan?filter=revisi";
+            } else if (status === STATUS.PERLU_REVISI) {
+                activeHref = "/admin/pengajuan?filter=menunggu-revisi";
+            } else if (status === STATUS.REVISI_DIKIRIM) {
+                activeHref = "/admin/pengajuan?filter=review-revisi";
             } else if ([STATUS.TERVERIFIKASI, STATUS.PEMBUATAN_SK, STATUS.PARAF_PIMPINAN, STATUS.TTD_DEKAN, STATUS.SK_SIAP_DIAMBIL].includes(status)) {
                 activeHref = "/admin/pengajuan?filter=proses-sk";
             } else {

@@ -869,15 +869,7 @@ document.addEventListener(
                     submissions.filter(
                         function (item) {
 
-                            return [
-
-                                STATUS.PERLU_REVISI,
-
-                                STATUS.REVISI_DIKIRIM
-
-                            ].includes(
-                                item.status
-                            );
+                            return item.status === STATUS.REVISI_DIKIRIM;
                         }
                     )
                         .length;
@@ -889,7 +881,7 @@ document.addEventListener(
             } catch (error) {
 
                 sidebarRevisionCount.textContent =
-                    "0";
+                    "—";
             }
         }
 

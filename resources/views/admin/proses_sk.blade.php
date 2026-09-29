@@ -106,14 +106,14 @@
 
 
                 <a
-                    href="/admin/pengajuan?filter=revisi"
+                    href="/admin/pengajuan?filter=review-revisi"
                     class="admin-nav-item"
                 >
                     <span class="admin-nav-icon">
                         !
                     </span>
                     <span>
-                        Perlu Revisi
+                        Revisi Siap Direview
                     </span>
 
                     <span

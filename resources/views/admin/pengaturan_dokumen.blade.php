@@ -103,7 +103,7 @@
 
 
                 <a
-                    href="/admin/pengajuan?filter=revisi"
+                    href="/admin/pengajuan?filter=review-revisi"
                     class="admin-nav-item"
                     id="dashboardRevisionMenu"
                 >
@@ -113,7 +113,7 @@
                     </span>
 
                     <span>
-                        Perlu Revisi
+                        Revisi Siap Direview
                     </span>
 
 

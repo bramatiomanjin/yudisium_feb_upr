@@ -43,6 +43,11 @@ document.addEventListener(
                     "dashboardRevisionCount"
                 ),
 
+            revisionSubmitted:
+                document.getElementById(
+                    "dashboardRevisionSubmittedCount"
+                ),
+
             verified:
                 document.getElementById(
                     "dashboardVerifiedCount"
@@ -73,6 +78,11 @@ document.addEventListener(
                     "dashboardQuickRevisionText"
                 ),
 
+            quickRevisionSubmitted:
+                document.getElementById(
+                    "dashboardQuickRevisionSubmittedText"
+                ),
+
             quickVerified:
                 document.getElementById(
                     "dashboardQuickVerifiedText"
@@ -88,9 +98,19 @@ document.addEventListener(
                     "dashboardSubmissionTableBody"
                 ),
 
-            empty:
+            dataState:
                 document.getElementById(
-                    "dashboardEmptyState"
+                    "dashboardDataState"
+                ),
+
+            retry:
+                document.getElementById(
+                    "dashboardRetryButton"
+                ),
+
+            tableWrapper:
+                document.getElementById(
+                    "dashboardSubmissionTableWrapper"
                 ),
 
             date:
@@ -149,6 +169,63 @@ document.addEventListener(
         }
 
 
+        function showDashboardState(state) {
+            if (elements.tableWrapper) {
+                elements.tableWrapper.style.display = state === "ready" ? "block" : "none";
+            }
+
+            if (!elements.dataState) {
+                return;
+            }
+
+            if (state === "ready") {
+                elements.dataState.style.display = "none";
+                return;
+            }
+
+            const content = {
+                loading: ["Memuat pengajuan...", "Mohon tunggu sebentar."],
+                empty: ["Belum ada pengajuan", "Pengajuan mahasiswa akan tampil di sini setelah dikirim."],
+                error: ["Pengajuan gagal dimuat", "Periksa koneksi, lalu coba muat kembali data dashboard."]
+            }[state];
+
+            elements.dataState.dataset.state = state;
+            elements.dataState.style.display = "flex";
+            elements.dataState.querySelector("strong").textContent = content[0];
+            elements.dataState.querySelector("p").textContent = content[1];
+
+            if (elements.retry) {
+                elements.retry.style.display = state === "error" ? "inline-flex" : "none";
+            }
+        }
+
+
+        function setStatisticsUnavailable() {
+            [
+                elements.total,
+                elements.pending,
+                elements.revision,
+                elements.revisionSubmitted,
+                elements.verified,
+                elements.process,
+                elements.ready,
+                elements.sidebarRevision
+            ].forEach(function (element) {
+                setText(element, "—");
+            });
+
+            [
+                elements.quickPending,
+                elements.quickRevision,
+                elements.quickRevisionSubmitted,
+                elements.quickVerified,
+                elements.quickProcess
+            ].forEach(function (element) {
+                setText(element, "Data belum tersedia");
+            });
+        }
+
+
         function setText(
             element,
             value
@@ -163,6 +240,19 @@ document.addEventListener(
 
             }
 
+        }
+
+
+        function getAdminStatusLabel(status, fallback) {
+            if (status === STATUS.PERLU_REVISI) {
+                return "Menunggu Perbaikan Mahasiswa";
+            }
+
+            if (status === STATUS.REVISI_DIKIRIM) {
+                return "Revisi Siap Direview";
+            }
+
+            return fallback;
         }
 
 
@@ -338,6 +428,12 @@ document.addEventListener(
 
 
             setText(
+                elements.revisionSubmitted,
+                stats.revisionSubmitted
+            );
+
+
+            setText(
                 elements.verified,
                 stats.verified
             );
@@ -355,18 +451,10 @@ document.addEventListener(
             );
 
 
-            /*
-             * Sidebar "Perlu Revisi" menunjukkan
-             * seluruh pekerjaan revisi yang masih aktif:
-             *
-             * - mahasiswa belum mengirim revisi
-             * - mahasiswa sudah mengirim dan menunggu review
-             */
             setText(
 
                 elements.sidebarRevision,
 
-                stats.revision +
                 stats.revisionSubmitted
 
             );
@@ -382,35 +470,16 @@ document.addEventListener(
             );
 
 
-            if (
-                elements.quickRevision
-            ) {
+            setText(
+                elements.quickRevision,
+                stats.revision + " mahasiswa sedang memperbaiki"
+            );
 
-                if (
-                    stats.revisionSubmitted >
-                    0
-                ) {
 
-                    elements.quickRevision
-                        .textContent =
-
-                        stats.revision +
-                        " perlu revisi • " +
-
-                        stats.revisionSubmitted +
-                        " menunggu review";
-
-                } else {
-
-                    elements.quickRevision
-                        .textContent =
-
-                        stats.revision +
-                        " mahasiswa perlu revisi";
-
-                }
-
-            }
+            setText(
+                elements.quickRevisionSubmitted,
+                stats.revisionSubmitted + " revisi menunggu review Admin"
+            );
 
 
             setText(
@@ -538,46 +607,13 @@ document.addEventListener(
                 submissions.length ===
                 0
             ) {
-
-                if (
-                    elements.empty
-                ) {
-
-                    elements.empty.style.display =
-                        "block";
-
-
-                    const title =
-                        elements.empty.querySelector(
-                            "strong"
-                        );
-
-
-                    if (
-                        title
-                    ) {
-
-                        title.textContent =
-                            "Belum ada pengajuan";
-
-                    }
-
-                }
-
-
+                showDashboardState("empty");
                 return;
 
             }
 
 
-            if (
-                elements.empty
-            ) {
-
-                elements.empty.style.display =
-                    "none";
-
-            }
+            showDashboardState("ready");
 
 
             const latest =
@@ -662,7 +698,7 @@ document.addEventListener(
                                 )}"
                             >
                                 ${escapeHtml(
-                                    meta.label
+                                    getAdminStatusLabel(submission.status, meta.label)
                                 )}
                             </span>
 
@@ -705,6 +741,9 @@ document.addEventListener(
 
             renderDate();
 
+            showDashboardState("loading");
+            setStatisticsUnavailable();
+
 
             try {
 
@@ -723,8 +762,10 @@ document.addEventListener(
                     // show all - no filter needed
                 } else if (filter === 'menunggu') {
                     filtered = submissions.filter(function(s) { return s.status === STATUS.MENUNGGU_VERIFIKASI; });
-                } else if (filter === 'revisi') {
-                    filtered = submissions.filter(function(s) { return s.status === STATUS.PERLU_REVISI || s.status === STATUS.REVISI_DIKIRIM; });
+                } else if (filter === 'menunggu-revisi') {
+                    filtered = submissions.filter(function(s) { return s.status === STATUS.PERLU_REVISI; });
+                } else if (filter === 'review-revisi' || filter === 'revisi') {
+                    filtered = submissions.filter(function(s) { return s.status === STATUS.REVISI_DIKIRIM; });
                 } else if (filter === 'terverifikasi') {
                     filtered = submissions.filter(function(s) { return s.status === STATUS.TERVERIFIKASI; });
                 } else if (filter === 'proses-sk') {
@@ -743,18 +784,18 @@ document.addEventListener(
                 );
 
 
-                renderStatistics(
-                    []
-                );
-
-
-                renderTable(
-                    []
-                );
+                if (elements.tableBody) {
+                    elements.tableBody.innerHTML = "";
+                }
+                setStatisticsUnavailable();
+                showDashboardState("error");
 
             }
 
         }
+
+
+        elements.retry?.addEventListener("click", loadDashboard);
 
 
         /* =====================================================

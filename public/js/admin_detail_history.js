@@ -436,17 +436,7 @@ document.addEventListener(
                     submissions.filter(
                         function (submission) {
 
-                            return [
-
-                                API.STATUS
-                                    .PERLU_REVISI,
-
-                                API.STATUS
-                                    .REVISI_DIKIRIM
-
-                            ].includes(
-                                submission.status
-                            );
+                            return submission.status === API.STATUS.REVISI_DIKIRIM;
 
                         }
                     ).length;
@@ -458,7 +448,7 @@ document.addEventListener(
             } catch (error) {
 
                 sidebarBadge.textContent =
-                    "0";
+                    "—";
 
             }
 

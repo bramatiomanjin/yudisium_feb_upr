@@ -1422,10 +1422,7 @@
     display: grid;
 
     grid-template-columns:
-        repeat(
-            4,
-            minmax(0, 1fr)
-        );
+        repeat(auto-fit, minmax(160px, 1fr));
 
     gap: 12px;
 
@@ -1757,6 +1754,68 @@
 
 .submission-empty-state p {
     font-size: 11px;
+}
+
+
+/* ==========================================
+   DATA LOADING / EMPTY / ERROR STATE
+========================================== */
+
+.admin-data-state {
+    display: flex;
+    min-height: 170px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 7px;
+    padding: 30px 20px;
+    color: #64748b;
+    text-align: center;
+}
+
+.admin-data-state.compact {
+    min-height: 110px;
+}
+
+.admin-data-state strong {
+    color: #1f2937;
+    font-size: 14px;
+}
+
+.admin-data-state p {
+    margin: 0;
+    font-size: 12px;
+}
+
+.admin-data-state button,
+.submission-empty-state button,
+.history-empty button {
+    margin-top: 10px;
+}
+
+.admin-data-state[data-state="error"],
+.submission-empty-state[data-state="error"],
+.history-empty[data-state="error"] {
+    color: #9f2d24;
+}
+
+.bulk-transition-summary {
+    padding: 12px 14px;
+    border: 1px solid #d7e6de;
+    border-radius: 10px;
+    background: #f4faf7;
+}
+
+.bulk-transition-summary p {
+    margin: 0;
+    color: #173f31;
+    font-size: 0.88rem;
+    font-weight: 700;
+    line-height: 1.55;
+}
+
+.bulk-transition-summary p + p {
+    margin-top: 6px;
 }
 
 

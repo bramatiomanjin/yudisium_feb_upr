@@ -106,14 +106,14 @@
 
 
                 <a
-                    href="/admin/pengajuan?filter=revisi"
+                    href="/admin/pengajuan?filter=review-revisi"
                     class="admin-nav-item"
                 >
                     <span class="admin-nav-icon">
                         !
                     </span>
                     <span>
-                        Perlu Revisi
+                        Revisi Siap Direview
                     </span>
 
                     <span
@@ -638,7 +638,7 @@
 
 
 
-                <div class="history-table-wrapper">
+                <div class="history-table-wrapper" id="historyTableWrapper" style="display: none;">
 
                     <table class="history-table">
 
@@ -698,6 +698,8 @@
                 <div
                     class="history-empty"
                     id="historyEmpty"
+                    data-state="loading"
+                    role="status"
                 >
 
                     <div class="history-empty-symbol">
@@ -706,15 +708,22 @@
 
 
                     <strong>
-                        Belum Ada Riwayat Aktivitas
+                        Memuat riwayat aktivitas...
                     </strong>
 
 
                     <p>
-                        Aktivitas verifikasi, revisi, dan proses SK
-                        akan muncul di halaman ini setelah backend
-                        mencatat aktivitas Admin.
+                        Mohon tunggu sebentar.
                     </p>
+
+                    <button
+                        type="button"
+                        class="history-secondary-button"
+                        id="historyRetryButton"
+                        style="display: none;"
+                    >
+                        Coba Lagi
+                    </button>
 
                 </div>
 

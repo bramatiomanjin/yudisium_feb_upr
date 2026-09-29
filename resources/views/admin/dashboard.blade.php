@@ -103,7 +103,7 @@
 
 
                 <a
-                    href="/admin/pengajuan?filter=revisi"
+                    href="/admin/pengajuan?filter=review-revisi"
                     class="admin-nav-item"
                     id="dashboardRevisionMenu"
                 >
@@ -113,7 +113,7 @@
                     </span>
 
                     <span>
-                        Perlu Revisi
+                        Revisi Siap Direview
                     </span>
 
 
@@ -158,18 +158,15 @@
                     </span>
 
                 </a>
-<a
-    href="{{ route('admin.backup-dokumen') }}"
-    class="admin-nav-item"
->
-    <span class="admin-nav-icon">
-        ↓
-    </span>
-
-    <span>
-        Backup Dokumen
-    </span>
-</a>
+                @if(Auth::user()->role === 'SUPER_ADMIN')
+                <a
+                    href="{{ route('admin.backup-dokumen') }}"
+                    class="admin-nav-item"
+                >
+                    <span class="admin-nav-icon">↓</span>
+                    <span>Backup Dokumen</span>
+                </a>
+                @endif
 
                 <div class="admin-nav-divider">
                 </div>
@@ -406,6 +403,38 @@
                 </article>
 
 
+                <!-- REVISI DIKIRIM -->
+
+                <article class="admin-stat-card warning">
+
+                    <div class="admin-stat-header">
+
+                        <span>
+                            Revisi Siap Direview
+                        </span>
+
+                        <span class="admin-stat-icon">
+                            ✓
+                        </span>
+
+                    </div>
+
+
+                    <strong
+                        class="admin-stat-value"
+                        id="dashboardRevisionSubmittedCount"
+                    >
+                        0
+                    </strong>
+
+
+                    <p>
+                        Perlu ditindaklanjuti Admin
+                    </p>
+
+                </article>
+
+
 
                 <!-- TERVERIFIKASI -->
 
@@ -547,7 +576,7 @@
                     </div>
 
 
-                    <div class="admin-table-wrapper">
+                    <div class="admin-table-wrapper" id="dashboardSubmissionTableWrapper" style="display: none;">
 
                         <table class="admin-table">
 
@@ -594,18 +623,16 @@
 
 
                     <div
-                        id="dashboardEmptyState"
-                        style="
-                            display: none;
-                            padding: 30px 20px;
-                            text-align: center;
-                        "
+                        class="admin-data-state"
+                        id="dashboardDataState"
+                        data-state="loading"
+                        role="status"
                     >
-
-                        <strong>
-                            Belum ada pengajuan
-                        </strong>
-
+                        <strong>Memuat pengajuan...</strong>
+                        <p>Mohon tunggu sebentar.</p>
+                        <button type="button" class="admin-secondary-button" id="dashboardRetryButton">
+                            Coba Lagi
+                        </button>
                     </div>
 
                 </div>
@@ -666,12 +693,11 @@
 
 
 
-                        <!-- REVISI -->
+                        <!-- MENUNGGU PERBAIKAN -->
 
                         <a
-                            href="/admin/pengajuan?filter=revisi"
+                            href="/admin/pengajuan?filter=menunggu-revisi"
                             class="admin-quick-action"
-                            id="dashboardQuickRevision"
                         >
 
                             <div class="admin-quick-icon warning">
@@ -682,11 +708,39 @@
                             <div>
 
                                 <strong>
-                                    Periksa Revisi
+                                    Menunggu Perbaikan Mahasiswa
                                 </strong>
 
                                 <span id="dashboardQuickRevisionText">
-                                    0 mahasiswa perlu revisi
+                                    0 mahasiswa sedang memperbaiki
+                                </span>
+
+                            </div>
+
+                        </a>
+
+
+                        <!-- REVISI SIAP DIREVIEW -->
+
+                        <a
+                            href="/admin/pengajuan?filter=review-revisi"
+                            class="admin-quick-action"
+                            id="dashboardQuickRevision"
+                        >
+
+                            <div class="admin-quick-icon warning">
+                                ✓
+                            </div>
+
+
+                            <div>
+
+                                <strong>
+                                    Revisi Siap Direview
+                                </strong>
+
+                                <span id="dashboardQuickRevisionSubmittedText">
+                                    0 revisi menunggu review Admin
                                 </span>
 
                             </div>
@@ -817,8 +871,9 @@
                  SUPER ADMIN
             ================================================== -->
 
+            @if(Auth::user()->role === 'SUPER_ADMIN')
             <section
-                class="admin-dashboard-card super-admin-section"
+                class="admin-dashboard-card super-admin-section active"
                 id="superAdminDashboardSection"
             >
 
@@ -850,66 +905,33 @@
 
                 <div class="admin-super-admin-list">
 
-                    <div class="admin-account-request">
+                    @forelse($pendingAdmins as $pendingAdmin)
+                        <div class="admin-account-request">
+                            <div>
+                                <strong>{{ $pendingAdmin->name }}</strong>
+                                <span>{{ $pendingAdmin->email }}</span>
+                            </div>
 
-                        <div>
-
-                            <strong>
-                                Budi Santoso
-                            </strong>
-
-                            <span>
-                                budi.santoso@example.com
-                            </span>
-
+                            <div class="admin-account-actions">
+                                <a
+                                    href="/superadmin/kelola-admin"
+                                    class="admin-small-button approve"
+                                >
+                                    Tinjau Akun
+                                </a>
+                            </div>
                         </div>
-
-
-                        <div class="admin-account-actions">
-
-                            <a
-                                href="/superadmin/kelola-admin"
-                                class="admin-small-button approve"
-                            >
-                                Kelola
-                            </a>
-
+                    @empty
+                        <div class="admin-data-state compact" data-state="empty">
+                            <strong>Tidak ada permintaan akun baru</strong>
+                            <p>Semua permintaan akun Admin sudah ditangani.</p>
                         </div>
-
-                    </div>
-
-
-                    <div class="admin-account-request">
-
-                        <div>
-
-                            <strong>
-                                Rina Marlina
-                            </strong>
-
-                            <span>
-                                rina.marlina@example.com
-                            </span>
-
-                        </div>
-
-
-                        <div class="admin-account-actions">
-
-                            <a
-                                href="/superadmin/kelola-admin"
-                                class="admin-small-button approve"
-                            >
-                                Kelola
-                            </a>
-
-                        </div>
-
-                    </div>
+                    @endforelse
 
                 </div>
 
             </section>
+            @endif
 
         </main>
 

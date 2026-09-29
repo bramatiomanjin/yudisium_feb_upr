@@ -97,6 +97,12 @@ document.addEventListener(
             );
 
 
+        const statRevisionSubmitted =
+            document.getElementById(
+                "submissionStatRevisionSubmitted"
+            );
+
+
         const statVerified =
             document.getElementById(
                 "submissionStatVerified"
@@ -106,6 +112,18 @@ document.addEventListener(
         const sidebarRevisionCount =
             document.getElementById(
                 "revisionSidebarCount"
+            );
+
+
+        const tableWrapper =
+            document.getElementById(
+                "submissionTableWrapper"
+            );
+
+
+        const retryButton =
+            document.getElementById(
+                "submissionRetryButton"
             );
 
 
@@ -205,6 +223,66 @@ document.addEventListener(
                 .trim()
                 .toLowerCase();
 
+        }
+
+
+        function getAdminStatusLabel(status, fallback) {
+            if (status === window.YudisiumAPI.STATUS.PERLU_REVISI) {
+                return "Menunggu Perbaikan Mahasiswa";
+            }
+
+            if (status === window.YudisiumAPI.STATUS.REVISI_DIKIRIM) {
+                return "Revisi Siap Direview";
+            }
+
+            return fallback;
+        }
+
+
+        function showSubmissionState(state) {
+            if (tableWrapper) {
+                tableWrapper.style.display = state === "ready" ? "block" : "none";
+            }
+
+            if (!emptyState) {
+                return;
+            }
+
+            if (state === "ready") {
+                emptyState.style.display = "none";
+                return;
+            }
+
+            const content = {
+                loading: ["Memuat pengajuan...", "Mohon tunggu sebentar."],
+                empty: ["Tidak ada pengajuan ditemukan", "Coba ubah kata kunci atau filter pencarian."],
+                error: ["Pengajuan gagal dimuat", "Periksa koneksi, lalu coba muat kembali data pengajuan."]
+            }[state];
+
+            emptyState.dataset.state = state;
+            emptyState.style.display = "flex";
+            emptyState.querySelector("strong").textContent = content[0];
+            emptyState.querySelector("p").textContent = content[1];
+
+            if (retryButton) {
+                retryButton.style.display = state === "error" ? "inline-flex" : "none";
+            }
+        }
+
+
+        function setStatisticsUnavailable() {
+            [
+                statTotal,
+                statPending,
+                statRevision,
+                statRevisionSubmitted,
+                statVerified,
+                sidebarRevisionCount
+            ].forEach(function (element) {
+                if (element) {
+                    element.textContent = "—";
+                }
+            });
         }
 
 
@@ -317,7 +395,18 @@ document.addEventListener(
 
                         return (
                             item.status ===
-                                STATUS.PERLU_REVISI ||
+                                STATUS.PERLU_REVISI
+                        );
+
+                    }
+                ).length;
+
+
+            const revisionSubmitted =
+                submissions.filter(
+                    function (item) {
+
+                        return (
                             item.status ===
                                 STATUS.REVISI_DIKIRIM
                         );
@@ -370,6 +459,16 @@ document.addEventListener(
 
 
             if (
+                statRevisionSubmitted
+            ) {
+
+                statRevisionSubmitted.textContent =
+                    revisionSubmitted;
+
+            }
+
+
+            if (
                 statVerified
             ) {
 
@@ -384,7 +483,7 @@ document.addEventListener(
             ) {
 
                 sidebarRevisionCount.textContent =
-                    revision;
+                    revisionSubmitted;
 
             }
 
@@ -430,7 +529,13 @@ document.addEventListener(
                     STATUS.MENUNGGU_VERIFIKASI,
 
                 revisi:
-                    "revision-group",
+                    STATUS.REVISI_DIKIRIM,
+
+                "menunggu-revisi":
+                    STATUS.PERLU_REVISI,
+
+                "review-revisi":
+                    STATUS.REVISI_DIKIRIM,
 
                 terverifikasi:
                     STATUS.TERVERIFIKASI,
@@ -597,23 +702,6 @@ document.addEventListener(
 
                             if (
                                 statusTarget ===
-                                "revision-group"
-                            ) {
-
-                                return [
-
-                                    STATUS.PERLU_REVISI,
-                                    STATUS.REVISI_DIKIRIM
-
-                                ].includes(
-                                    item.status
-                                );
-
-                            }
-
-
-                            if (
-                                statusTarget ===
                                 "process-group"
                             ) {
 
@@ -761,19 +849,13 @@ document.addEventListener(
                 if (
                     emptyState
                 ) {
-                    emptyState.style.display =
-                        "block";
+                    showSubmissionState("empty");
                 }
                 updatePaginationControls(0);
                 return;
             }
 
-            if (
-                emptyState
-            ) {
-                emptyState.style.display =
-                    "none";
-            }
+            showSubmissionState("ready");
 
             const startIndex = (currentPage - 1) * itemsPerPage;
             const endIndex = startIndex + itemsPerPage;
@@ -899,7 +981,7 @@ document.addEventListener(
                                 )}"
                             >
                                 ${escapeHtml(
-                                    meta.label
+                                    getAdminStatusLabel(submission.status, meta.label)
                                 )}
                             </span>
 
@@ -1178,6 +1260,9 @@ document.addEventListener(
 
         async function loadSubmissions() {
 
+            showSubmissionState("loading");
+            setStatisticsUnavailable();
+
             try {
 
                 submissions =
@@ -1201,18 +1286,21 @@ document.addEventListener(
                 );
 
 
-                submissions =
-                    [];
+                tableBody.innerHTML = "";
+                setStatisticsUnavailable();
 
+                if (resultCount) {
+                    resultCount.textContent = "Data pengajuan tidak tersedia";
+                }
 
-                renderStatistics();
-
-
-                renderTable();
+                showSubmissionState("error");
 
             }
 
         }
+
+
+        retryButton?.addEventListener("click", loadSubmissions);
 
 
         /* =====================================================
@@ -1228,8 +1316,110 @@ document.addEventListener(
         const btnCancelBulkLoncat = document.getElementById("btnCancelBulkLoncat");
         const btnConfirmBulkLoncat = document.getElementById("btnConfirmBulkLoncat");
         const bulkTargetStatus = document.getElementById("bulkTargetStatus");
+        const bulkTargetStatusGroup = document.getElementById("bulkTargetStatusGroup");
+        const bulkConfirmationTitle = document.getElementById("bulkConfirmationTitle");
+        const bulkConfirmationCount = document.getElementById("bulkConfirmationCount");
+        const bulkTransitionSummary = document.getElementById("bulkTransitionSummary");
 
         let selectedSubmissions = [];
+        let bulkConfirmationMode = "next";
+
+        const STATUS = window.YudisiumAPI.STATUS;
+        const SK_FLOW = [
+            STATUS.TERVERIFIKASI,
+            STATUS.PEMBUATAN_SK,
+            STATUS.PARAF_PIMPINAN,
+            STATUS.TTD_DEKAN,
+            STATUS.SK_SIAP_DIAMBIL
+        ];
+
+        function getNextStatus(currentStatus) {
+            const index = SK_FLOW.indexOf(currentStatus);
+
+            return index !== -1 && index < SK_FLOW.length - 1
+                ? SK_FLOW[index + 1]
+                : null;
+        }
+
+        function isLegalSkTransition(currentStatus, targetStatus) {
+            const currentIndex = SK_FLOW.indexOf(currentStatus);
+            const targetIndex = SK_FLOW.indexOf(targetStatus);
+
+            return currentIndex !== -1 && targetIndex > currentIndex;
+        }
+
+        function getSelectedTarget(submission) {
+            return bulkConfirmationMode === "target"
+                ? bulkTargetStatus.value
+                : getNextStatus(submission.status);
+        }
+
+        function renderBulkTransitionSummary() {
+            if (!bulkTransitionSummary) return;
+
+            bulkTransitionSummary.replaceChildren();
+
+            const transitions = new Map();
+
+            selectedSubmissions.forEach(function (submission) {
+                const targetStatus = getSelectedTarget(submission);
+
+                if (!isLegalSkTransition(submission.status, targetStatus)) {
+                    return;
+                }
+
+                const key = submission.status + "|" + targetStatus;
+                transitions.set(key, (transitions.get(key) || 0) + 1);
+            });
+
+            transitions.forEach(function (count, key) {
+                const [currentStatus, targetStatus] = key.split("|");
+                const item = document.createElement("p");
+                item.textContent = count + " pengajuan: " +
+                    window.YudisiumAPI.getStatusMeta(currentStatus).label +
+                    " → " +
+                    window.YudisiumAPI.getStatusMeta(targetStatus).label;
+                bulkTransitionSummary.appendChild(item);
+            });
+        }
+
+        function openBulkConfirmation(mode) {
+            if (selectedSubmissions.length === 0 || !bulkLoncatModal) return;
+
+            bulkConfirmationMode = mode;
+
+            if (bulkConfirmationTitle) {
+                bulkConfirmationTitle.textContent = mode === "target"
+                    ? "Konfirmasi Status Tujuan SK"
+                    : "Konfirmasi Tahap Berikutnya";
+            }
+
+            if (bulkConfirmationCount) {
+                bulkConfirmationCount.textContent =
+                    selectedSubmissions.length + " pengajuan dipilih.";
+            }
+
+            if (bulkTargetStatusGroup) {
+                bulkTargetStatusGroup.style.display = mode === "target" ? "block" : "none";
+            }
+
+            if (mode === "target") {
+                const currentStatus = selectedSubmissions[0].status;
+                const currentIndex = SK_FLOW.indexOf(currentStatus);
+
+                bulkTargetStatus.replaceChildren();
+
+                SK_FLOW.slice(currentIndex + 1).forEach(function (status) {
+                    const option = document.createElement("option");
+                    option.value = status;
+                    option.textContent = window.YudisiumAPI.getStatusMeta(status).label;
+                    bulkTargetStatus.appendChild(option);
+                });
+            }
+
+            renderBulkTransitionSummary();
+            bulkLoncatModal.style.display = "flex";
+        }
 
         function updateBulkUI() {
             // Check if current filter is proses-sk
@@ -1273,7 +1463,7 @@ document.addEventListener(
                 bulkActionBar.style.display = 'flex';
                 if(bulkSelectedCount) bulkSelectedCount.textContent = selectedSubmissions.length;
 
-                // Check if all selected have the same status
+                // Pemilihan status tujuan hanya relevan jika status awal sama.
                 const allSameStatus = selectedSubmissions.every(s => s.status === selectedSubmissions[0].status);
                 if(btnBulkLoncat) btnBulkLoncat.style.display = allSameStatus ? 'block' : 'none';
             } else {
@@ -1325,75 +1515,19 @@ document.addEventListener(
             }
         });
 
-        const STATUS = window.YudisiumAPI.STATUS;
-        const FLOW_STEPS = [
-            STATUS.MENUNGGU_VERIFIKASI,
-            STATUS.REVISI_DIKIRIM,
-            STATUS.TERVERIFIKASI,
-            STATUS.PEMBUATAN_SK,
-            STATUS.PARAF_PIMPINAN,
-            STATUS.TTD_DEKAN,
-            STATUS.SK_SIAP_DIAMBIL
-        ];
-
-        function getNextStatus(currentStatus) {
-            const index = FLOW_STEPS.indexOf(currentStatus);
-            if (index !== -1 && index < FLOW_STEPS.length - 1) {
-                return FLOW_STEPS[index + 1];
-            }
-            return null;
-        }
-
         if (btnBulkLanjut) {
-            btnBulkLanjut.addEventListener("click", async function() {
-                if (selectedSubmissions.length === 0) return;
-                
-                if (!confirm(`Lanjutkan ${selectedSubmissions.length} pengajuan ke proses selanjutnya?`)) return;
-
-                btnBulkLanjut.disabled = true;
-                btnBulkLanjut.textContent = "Memproses...";
-
-                try {
-                    const promises = selectedSubmissions.map(sub => {
-                        const nextStat = getNextStatus(sub.status);
-                        if (!nextStat) return Promise.resolve(); // already done or cannot next
-                        return window.YudisiumAPI.updateSkStatus(sub.id, nextStat);
-                    });
-
-                    await Promise.all(promises);
-
-                    // Refresh
-                    await loadSubmissions();
-                    alert("Berhasil memproses pengajuan.");
-                } catch (error) {
-                    console.error("Bulk process error:", error);
-                    alert("Terjadi kesalahan saat memproses sebagian atau seluruh data.");
-                } finally {
-                    btnBulkLanjut.disabled = false;
-                    btnBulkLanjut.textContent = "Lanjutkan ke progres selanjutnya";
-                }
+            btnBulkLanjut.addEventListener("click", function() {
+                openBulkConfirmation("next");
             });
         }
 
         if (btnBulkLoncat) {
             btnBulkLoncat.addEventListener("click", function() {
-                if (selectedSubmissions.length === 0) return;
-                const currentStatus = selectedSubmissions[0].status;
-                const currentIndex = FLOW_STEPS.indexOf(currentStatus);
-                
-                bulkTargetStatus.innerHTML = "";
-                for (let i = currentIndex + 1; i < FLOW_STEPS.length; i++) {
-                    const stat = FLOW_STEPS[i];
-                    const meta = window.YudisiumAPI.getStatusMeta(stat);
-                    const opt = document.createElement("option");
-                    opt.value = stat;
-                    opt.textContent = meta.label;
-                    bulkTargetStatus.appendChild(opt);
-                }
-
-                bulkLoncatModal.style.display = "flex";
+                openBulkConfirmation("target");
             });
         }
+
+        bulkTargetStatus?.addEventListener("change", renderBulkTransitionSummary);
 
         if (btnCancelBulkLoncat) {
             btnCancelBulkLoncat.addEventListener("click", function() {
@@ -1403,15 +1537,36 @@ document.addEventListener(
 
         if (btnConfirmBulkLoncat) {
             btnConfirmBulkLoncat.addEventListener("click", async function() {
-                const targetStat = bulkTargetStatus.value;
-                if (!targetStat) return;
+                const transitions = selectedSubmissions.map(function (submission) {
+                    return {
+                        id: submission.id,
+                        currentStatus: submission.status,
+                        targetStatus: getSelectedTarget(submission)
+                    };
+                });
+
+                if (
+                    transitions.length === 0 ||
+                    transitions.some(function (transition) {
+                        return !isLegalSkTransition(
+                            transition.currentStatus,
+                            transition.targetStatus
+                        );
+                    })
+                ) {
+                    alert("Pilihan status tidak valid. Muat ulang data lalu coba kembali.");
+                    return;
+                }
 
                 btnConfirmBulkLoncat.disabled = true;
                 btnConfirmBulkLoncat.textContent = "Memproses...";
 
                 try {
-                    const promises = selectedSubmissions.map(sub => {
-                        return window.YudisiumAPI.updateSkStatus(sub.id, targetStat);
+                    const promises = transitions.map(function (transition) {
+                        return window.YudisiumAPI.updateSkStatus(
+                            transition.id,
+                            transition.targetStatus
+                        );
                     });
 
                     await Promise.all(promises);
@@ -1424,7 +1579,7 @@ document.addEventListener(
                     alert("Terjadi kesalahan saat memproses data.");
                 } finally {
                     btnConfirmBulkLoncat.disabled = false;
-                    btnConfirmBulkLoncat.textContent = "Terapkan Status";
+                    btnConfirmBulkLoncat.textContent = "Konfirmasi dan Proses";
                 }
             });
         }

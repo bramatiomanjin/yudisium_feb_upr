@@ -93,18 +93,14 @@
 
 
                 <a
-                    href="/admin/pengajuan?filter=revisi"
+                    href="/admin/pengajuan?filter=review-revisi"
                     class="admin-nav-item"
                 >
                     <span class="admin-nav-icon">
                         !
                     </span>
                     <span>
-                        Perlu Revisi
-                    </span>
-
-                    <span class="admin-nav-count">
-                        3
+                        Revisi Siap Direview
                     </span>
                 </a>
 
@@ -227,7 +223,7 @@
                         -
                     </h1>
 
-                    <p class="admin-page-description">
+                    <p class="admin-page-description" id="detailPageDescription">
                         Periksa informasi mahasiswa dan dokumen
                         pengajuan yudisium.
                     </p>

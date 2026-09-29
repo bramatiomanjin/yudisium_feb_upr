@@ -101,14 +101,14 @@
 
 
                 <a
-                    href="/admin/pengajuan?filter=revisi"
-                    class="admin-nav-item {{ request('filter') == 'revisi' ? 'active' : '' }}"
+                    href="/admin/pengajuan?filter=review-revisi"
+                    class="admin-nav-item {{ in_array(request('filter'), ['review-revisi', 'revisi'], true) ? 'active' : '' }}"
                 >
                     <span class="admin-nav-icon">
                         !
                     </span>
                     <span>
-                        Perlu Revisi
+                        Revisi Siap Direview
                     </span>
 
                     <span
@@ -311,10 +311,23 @@
                 <div class="submission-mini-card revision">
 
                     <span>
-                        Revisi
+                        Menunggu Perbaikan
                     </span>
 
                     <strong id="submissionStatRevision">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="submission-mini-card revision">
+
+                    <span>
+                        Siap Direview
+                    </span>
+
+                    <strong id="submissionStatRevisionSubmitted">
                         0
                     </strong>
 
@@ -462,11 +475,11 @@
                             </option>
 
                             <option value="perlu revisi">
-                                Perlu Revisi
+                                Menunggu Perbaikan Mahasiswa
                             </option>
 
                             <option value="revisi dikirim">
-                                Revisi Dikirim
+                                Revisi Siap Direview
                             </option>
 
                             <option value="terverifikasi">
@@ -577,7 +590,7 @@
                 </div>
 
 
-                <div class="admin-table-wrapper">
+                <div class="admin-table-wrapper" id="submissionTableWrapper" style="display: none;">
 
                     <table class="admin-table submission-table">
 
@@ -639,16 +652,25 @@
                 <div
                     class="submission-empty-state"
                     id="submissionEmptyState"
-                    style="display: none;"
+                    data-state="loading"
+                    role="status"
+                    style="display: flex;"
                 >
 
                     <strong>
-                        Tidak ada pengajuan ditemukan
+                        Memuat pengajuan...
                     </strong>
 
-                    <span>
-                        Coba ubah kata kunci atau filter pencarian.
-                    </span>
+                    <p>Mohon tunggu sebentar.</p>
+
+                    <button
+                        type="button"
+                        class="admin-secondary-button"
+                        id="submissionRetryButton"
+                        style="display: none;"
+                    >
+                        Coba Lagi
+                    </button>
 
                 </div>
 
@@ -680,22 +702,29 @@
             <span id="bulkSelectedCount">0</span> pengajuan dipilih
         </div>
         <div class="bulk-action-buttons">
-            <button class="admin-primary-button" id="btnBulkLanjut">Lanjutkan ke progres selanjutnya</button>
-            <button class="admin-secondary-button" id="btnBulkLoncat" style="display: none;">Loncat ke progres berikutnya</button>
+            <button type="button" class="admin-primary-button" id="btnBulkLanjut">Proses ke Tahap Berikutnya</button>
+            <button type="button" class="admin-secondary-button" id="btnBulkLoncat" style="display: none;">Pilih Tahap SK Tujuan</button>
         </div>
     </div>
 
     <div class="modal-overlay" id="bulkLoncatModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1100; align-items: center; justify-content: center; background: rgba(5, 27, 19, 0.58); backdrop-filter: blur(4px);">
         <div class="modal-card">
-            <h3 style="margin: 0 0 16px 0; font-size: 1.25rem;">Pilih Status Tujuan</h3>
-            <p style="margin-bottom: 24px; color: #5f6368; font-size: 0.95rem;">
-                Pilih status untuk diterapkan ke semua pengajuan yang dipilih:
+            <h3 id="bulkConfirmationTitle" style="margin: 0 0 12px 0; font-size: 1.25rem;">Konfirmasi Proses SK</h3>
+            <p id="bulkConfirmationCount" style="margin-bottom: 12px; color: #5f6368; font-size: 0.95rem;"></p>
+            <div id="bulkTargetStatusGroup" style="display: none; margin-bottom: 16px;">
+                <label for="bulkTargetStatus" style="display: block; margin-bottom: 6px; font-weight: 700;">
+                    Status tujuan
+                </label>
+                <select class="admin-input" id="bulkTargetStatus" style="width: 100%;">
+                </select>
+            </div>
+            <div class="bulk-transition-summary" id="bulkTransitionSummary"></div>
+            <p style="margin: 14px 0 24px; color: #5f6368; font-size: 0.88rem;">
+                Mahasiswa akan menerima pembaruan status dan email pemberitahuan setelah proses berhasil.
             </p>
-            <select class="admin-input" id="bulkTargetStatus" style="width: 100%; margin-bottom: 24px;">
-            </select>
             <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                <button class="admin-secondary-button" id="btnCancelBulkLoncat">Batal</button>
-                <button class="admin-primary-button" id="btnConfirmBulkLoncat">Terapkan Status</button>
+                <button type="button" class="admin-secondary-button" id="btnCancelBulkLoncat">Batal</button>
+                <button type="button" class="admin-primary-button" id="btnConfirmBulkLoncat">Konfirmasi dan Proses</button>
             </div>
         </div>
     </div>

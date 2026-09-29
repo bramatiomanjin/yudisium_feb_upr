@@ -103,22 +103,16 @@
 
 
                 <a
-                    href="/admin/pengajuan?filter=revisi"
+                    href="/admin/pengajuan?filter=review-revisi"
                     class="admin-nav-item active"
                 >
                     <span class="admin-nav-icon">
                         !
                     </span>
                     <span>
-                        Perlu Revisi
+                        Revisi Siap Direview
                     </span>
 
-                    <span
-                        class="admin-nav-count"
-                        id="reviewSidebarRevisionCount"
-                    >
-                        0
-                    </span>
                 </a>
 
 
