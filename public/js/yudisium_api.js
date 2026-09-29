@@ -36,8 +36,8 @@
         PEMBUATAN_SK:
             "pembuatan_sk",
 
-        TTD_WAKIL_DEKAN:
-            "ttd_wakil_dekan",
+        PARAF_PIMPINAN:
+            "paraf_pimpinan",
 
         TTD_DEKAN:
             "ttd_dekan",
@@ -75,7 +75,7 @@
             className: "process"
         },
 
-        [STATUS.TTD_WAKIL_DEKAN]: {
+        [STATUS.PARAF_PIMPINAN]: {
             label: "Paraf Pimpinan",
             className: "process"
         },
@@ -232,8 +232,8 @@
             pembuatan_sk:
                 STATUS.PEMBUATAN_SK,
 
-            ttd_wakil_dekan:
-                STATUS.TTD_WAKIL_DEKAN,
+            paraf_pimpinan:
+                STATUS.PARAF_PIMPINAN,
 
             ttd_dekan:
                 STATUS.TTD_DEKAN,
@@ -1543,7 +1543,7 @@
 
             case STATUS.TERVERIFIKASI:
             case STATUS.PEMBUATAN_SK:
-            case STATUS.TTD_WAKIL_DEKAN:
+            case STATUS.PARAF_PIMPINAN:
             case STATUS.TTD_DEKAN:
             case STATUS.SK_SIAP_DIAMBIL:
                 return "/admin/proses-sk?id=" + submission.id;

@@ -63,7 +63,7 @@ document.addEventListener(
 
             STATUS.PEMBUATAN_SK,
 
-            STATUS.TTD_WAKIL_DEKAN,
+            STATUS.PARAF_PIMPINAN,
 
             STATUS.TTD_DEKAN,
 
@@ -261,7 +261,7 @@ document.addEventListener(
             {
 
                 status:
-                    STATUS.TTD_WAKIL_DEKAN,
+                    STATUS.PARAF_PIMPINAN,
 
                 title:
                     "Paraf Pimpinan",
@@ -322,7 +322,7 @@ document.addEventListener(
             [STATUS.PEMBUATAN_SK]: {
 
                 next:
-                    STATUS.TTD_WAKIL_DEKAN,
+                    STATUS.PARAF_PIMPINAN,
 
                 title:
                     "Lanjut ke Paraf Pimpinan",
@@ -336,7 +336,7 @@ document.addEventListener(
             },
 
 
-            [STATUS.TTD_WAKIL_DEKAN]: {
+            [STATUS.PARAF_PIMPINAN]: {
 
                 next:
                     STATUS.TTD_DEKAN,

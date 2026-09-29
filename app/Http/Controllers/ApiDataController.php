@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PengajuanStatus;
 use Illuminate\Http\Request;
 
 use App\Models\PengajuanYudisium;
@@ -272,7 +273,7 @@ class ApiDataController extends Controller
 
         if ($revisionSensitive && in_array(
             $pengajuan->status,
-            ['PERLU_REVISI', 'REVISI_DIKIRIM'],
+            PengajuanStatus::revisionAccessValues(),
             true
         )) {
             abort_unless(
@@ -296,6 +297,21 @@ class ApiDataController extends Controller
                 $id
             );
 
+        abort_unless(
+            $pengajuan->status === PengajuanStatus::MENUNGGU_VERIFIKASI->value,
+            409,
+            'Pengajuan tidak berada pada tahap verifikasi awal.'
+        );
+
+
+        $validated = $request->validate([
+            'items' => ['required', 'array', 'min:1'],
+            'items.*.type' => ['required', 'in:field,document'],
+            'items.*.key' => ['required'],
+            'items.*.decision' => ['required', 'in:approved,revision'],
+            'items.*.feedback' => ['nullable', 'string', 'max:2000'],
+        ]);
+
 
         /*
          * Simpan status sebelum verifikasi.
@@ -311,21 +327,13 @@ class ApiDataController extends Controller
             );
 
 
-        $items =
-            $request->input(
-                'items',
-                []
-            );
+        $items = $validated['items'];
 
 
         DB::beginTransaction();
 
 
         try {
-
-            $adaRevisi =
-                false;
-
 
             foreach (
                 $items as $item
@@ -341,16 +349,6 @@ class ApiDataController extends Controller
                 $feedback =
                     $item['feedback']
                     ?? null;
-
-
-                if (
-                    $status ===
-                    'REVISI'
-                ) {
-
-                    $adaRevisi =
-                        true;
-                }
 
 
                 if (
@@ -414,6 +412,30 @@ class ApiDataController extends Controller
             }
 
 
+            $masihRevisiField =
+                ValidasiField::where(
+                    'pengajuan_id',
+                    $id
+                )
+                    ->where(
+                        'status_validasi',
+                        'REVISI'
+                    )
+                    ->exists();
+
+
+            $masihRevisiDokumen =
+                PengajuanDokumen::where(
+                    'pengajuan_id',
+                    $id
+                )
+                    ->where(
+                        'status_validasi',
+                        'REVISI'
+                    )
+                    ->exists();
+
+
             $masihPendingField =
                 ValidasiField::where(
                     'pengajuan_id',
@@ -438,56 +460,17 @@ class ApiDataController extends Controller
                     ->exists();
 
 
-            /*
-             * Tentukan status akhir hasil verifikasi.
-             */
-            if (
-                $adaRevisi
-            ) {
-
-                $statusBaru =
-                    'PERLU_REVISI';
+            $statusBaru = PengajuanStatus::resolveVerificationResult(
+                $masihRevisiField || $masihRevisiDokumen,
+                $masihPendingField || $masihPendingDokumen
+            );
 
 
-                $pengajuan->update([
-                    'status' =>
-                        $statusBaru,
-
-                    'verified_at' =>
-                        null
-                ]);
-
-            } elseif (
-                !$masihPendingField &&
-                !$masihPendingDokumen
-            ) {
-
-                $statusBaru =
-                    'TERVERIFIKASI';
-
-
-                $pengajuan->update([
-                    'status' =>
-                        $statusBaru,
-
-                    'verified_at' =>
-                        now()
-                ]);
-
-            } else {
-
-                $statusBaru =
-                    'VERIFIKASI_ADMIN';
-
-
-                $pengajuan->update([
-                    'status' =>
-                        $statusBaru,
-
-                    'verified_at' =>
-                        null
-                ]);
-            }
+            $pengajuan->transitionTo($statusBaru, [
+                'verified_at' => $statusBaru === PengajuanStatus::TERVERIFIKASI
+                    ? now()
+                    : null,
+            ]);
 
 
             /*
@@ -506,14 +489,14 @@ class ApiDataController extends Controller
              */
             if (
                 $statusBaru ===
-                'PERLU_REVISI'
+                PengajuanStatus::PERLU_REVISI
             ) {
 
                 $catatanHistory =
                     'REVISI: ' .
                     $statusSebelumnya .
                     ' → ' .
-                    $statusBaru;
+                    $statusBaru->value;
 
             } else {
 
@@ -521,7 +504,7 @@ class ApiDataController extends Controller
                     'VERIFIKASI: ' .
                     $statusSebelumnya .
                     ' → ' .
-                    $statusBaru;
+                    $statusBaru->value;
             }
 
 
@@ -531,7 +514,7 @@ class ApiDataController extends Controller
                     $pengajuan->id,
 
                 'status' =>
-                    $statusBaru,
+                    $statusBaru->value,
 
                 'catatan' =>
                     $catatanHistory,
@@ -841,6 +824,21 @@ class ApiDataController extends Controller
                 $id
             );
 
+        abort_unless(
+            $pengajuan->status === PengajuanStatus::REVISI_DIKIRIM->value,
+            409,
+            'Pengajuan tidak berada pada tahap review revisi.'
+        );
+
+
+        $validated = $request->validate([
+            'items' => ['required', 'array', 'min:1'],
+            'items.*.type' => ['required', 'in:field,document'],
+            'items.*.key' => ['required'],
+            'items.*.decision' => ['required', 'in:approved,revision'],
+            'items.*.feedback' => ['nullable', 'string', 'max:2000'],
+        ]);
+
 
         /*
          * Status sebelum Admin melakukan
@@ -854,21 +852,13 @@ class ApiDataController extends Controller
             );
 
 
-        $items =
-            $request->input(
-                'items',
-                []
-            );
+        $items = $validated['items'];
 
 
         DB::beginTransaction();
 
 
         try {
-
-            $adaRevisiLagi =
-                false;
-
 
             foreach (
                 $items as $item
@@ -889,16 +879,6 @@ class ApiDataController extends Controller
                     'approved'
                         ? 'DISETUJUI'
                         : 'REVISI';
-
-
-                if (
-                    $status ===
-                    'REVISI'
-                ) {
-
-                    $adaRevisiLagi =
-                        true;
-                }
 
 
                 // =========================================
@@ -1070,66 +1050,18 @@ class ApiDataController extends Controller
                     ->exists();
 
 
-            /*
-             * Tentukan status akhir setelah
-             * Admin mereview hasil revisi.
-             */
-            if (
-                $adaRevisiLagi ||
-                $masihRevisiField ||
-                $masihRevisiDokumen
-            ) {
-
-                $statusBaru =
-                    'PERLU_REVISI';
+            $statusBaru = PengajuanStatus::resolveVerificationResult(
+                $masihRevisiField || $masihRevisiDokumen,
+                $masihPendingField || $masihPendingDokumen,
+                PengajuanStatus::REVISI_DIKIRIM
+            );
 
 
-                $pengajuan->update([
-
-                    'status' =>
-                        $statusBaru,
-
-                    'verified_at' =>
-                        null
-                ]);
-            }
-
-
-            elseif (
-                !$masihPendingField &&
-                !$masihPendingDokumen
-            ) {
-
-                $statusBaru =
-                    'TERVERIFIKASI';
-
-
-                $pengajuan->update([
-
-                    'status' =>
-                        $statusBaru,
-
-                    'verified_at' =>
-                        now()
-                ]);
-            }
-
-
-            else {
-
-                $statusBaru =
-                    'VERIFIKASI_ADMIN';
-
-
-                $pengajuan->update([
-
-                    'status' =>
-                        $statusBaru,
-
-                    'verified_at' =>
-                        null
-                ]);
-            }
+            $pengajuan->transitionTo($statusBaru, [
+                'verified_at' => $statusBaru === PengajuanStatus::TERVERIFIKASI
+                    ? now()
+                    : null,
+            ]);
 
 
             /*
@@ -1146,13 +1078,13 @@ class ApiDataController extends Controller
                     $pengajuan->id,
 
                 'status' =>
-                    $statusBaru,
+                    $statusBaru->value,
 
                 'catatan' =>
                     'REVIEW REVISI: ' .
                     $statusSebelumnya .
                     ' → ' .
-                    $statusBaru,
+                    $statusBaru->value,
 
                 'changed_by' =>
                     Auth::id(),
@@ -1280,10 +1212,10 @@ class ApiDataController extends Controller
                      * Contoh:
                      *
                      * VERIFIKASI:
-                     * DIAJUKAN → TERVERIFIKASI
+                     * MENUNGGU_VERIFIKASI → TERVERIFIKASI
                      *
                      * REVISI:
-                     * DIAJUKAN → PERLU_REVISI
+                     * MENUNGGU_VERIFIKASI → PERLU_REVISI
                      *
                      * REVIEW REVISI:
                      * REVISI_DIKIRIM → TERVERIFIKASI

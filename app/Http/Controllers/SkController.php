@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PengajuanStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 use App\Models\PengajuanYudisium;
 use App\Models\RiwayatStatus;
@@ -49,7 +51,7 @@ class SkController extends Controller
                     'status' => [
                         'required',
                         'string',
-                        'in:PEMBUATAN_SK,TTD_WAKIL_DEKAN,TTD_DEKAN,SK_SIAP_DIAMBIL'
+                        Rule::in(PengajuanStatus::skTargetValues()),
                     ]
                 ],
                 [
@@ -86,31 +88,23 @@ class SkController extends Controller
             );
 
 
-        $currentStatus = strtoupper(trim((string) $pengajuan->status));
+        $currentStatus = PengajuanStatus::tryFrom(
+            strtoupper(trim((string) $pengajuan->status))
+        );
+        $nextStatus = PengajuanStatus::from($requestedStatus);
 
         /*
          * Mengizinkan lompatan tahapan (Loncat ke progres berikutnya)
          * asalkan status tujuan berada SETELAH status saat ini dalam urutan progres SK.
          */
-        $skFlow = [
-            'TERVERIFIKASI',
-            'PEMBUATAN_SK',
-            'TTD_WAKIL_DEKAN',
-            'TTD_DEKAN',
-            'SK_SIAP_DIAMBIL'
-        ];
-
-        $currentIndex = array_search($currentStatus, $skFlow);
-        $requestedIndex = array_search($requestedStatus, $skFlow);
-
-        if ($currentIndex === false) {
+        if ($currentStatus === null || ! in_array($currentStatus, PengajuanStatus::skFlow(), true)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Status pengajuan saat ini tidak dapat diproses lebih lanjut.'
             ], 422);
         }
 
-        if ($requestedIndex === false || $requestedIndex <= $currentIndex) {
+        if (! $currentStatus->canTransitionTo($nextStatus)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Perubahan status tidak valid. Hanya dapat maju atau loncat ke progres berikutnya.'
@@ -126,11 +120,7 @@ class SkController extends Controller
             /*
              * Simpan status baru pada pengajuan.
              */
-            $pengajuan->status =
-                $requestedStatus;
-
-
-            $pengajuan->save();
+            $pengajuan->transitionTo($nextStatus);
 
 
             /*
@@ -147,13 +137,13 @@ class SkController extends Controller
                     $pengajuan->id,
 
                 'status' =>
-                    $requestedStatus,
+                    $nextStatus->value,
 
                 'catatan' =>
                     'Proses SK: ' .
-                    $currentStatus .
+                    $currentStatus->value .
                     ' → ' .
-                    $requestedStatus,
+                    $nextStatus->value,
 
                 'changed_by' =>
                     Auth::id(),

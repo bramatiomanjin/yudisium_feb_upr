@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PengajuanStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Mahasiswa;
@@ -10,6 +11,7 @@ use App\Models\JenisDokumen;
 use App\Models\PengajuanDokumen;
 use App\Models\ValidasiField;
 use App\Support\DocumentUploadValidator;
+use App\Support\PengajuanCodeGenerator;
 
 class PengajuanController extends Controller
 {
@@ -40,7 +42,8 @@ private function canonicalDocumentCode(string $code): string
     // 2. Memproses pengiriman form
     public function store(
         Request $request,
-        DocumentUploadValidator $documentUploadValidator
+        DocumentUploadValidator $documentUploadValidator,
+        PengajuanCodeGenerator $codeGenerator
     )
     {
         // --- A. NORMALISASI NILAI ANGKA ---
@@ -115,22 +118,8 @@ private function canonicalDocumentCode(string $code): string
                 ]
             );
 
-            // 2. Buat kode pengajuan
-            $tahun = date('Y');
-
-            $urutan =
-                PengajuanYudisium::count() + 1;
-
-            $kodePengajuan =
-                'YDS-' .
-                $tahun .
-                '-' .
-                str_pad(
-                    $urutan,
-                    4,
-                    '0',
-                    STR_PAD_LEFT
-                );
+            // 2. Buat kode pengajuan melalui counter tahunan yang dikunci transaksi.
+            $kodePengajuan = $codeGenerator->generate();
 
             // 3. Simpan pengajuan
             $pengajuan = PengajuanYudisium::create([
@@ -141,13 +130,13 @@ private function canonicalDocumentCode(string $code): string
                 'tanggal_ujian' => $request->tanggal_ujian,
                 'nilai_angka' => $request->nilai_angka,
                 'nilai_huruf' => $request->nilai_huruf,
-                'status' => 'MENUNGGU_VERIFIKASI',
+                'status' => PengajuanStatus::MENUNGGU_VERIFIKASI->value,
                 'submitted_at' => now(),
             ]);
 
             \App\Models\RiwayatStatus::create([
                 'pengajuan_id' => $pengajuan->id,
-                'status' => 'MENUNGGU_VERIFIKASI',
+                'status' => PengajuanStatus::MENUNGGU_VERIFIKASI->value,
                 'catatan' => 'Pendaftaran pengajuan baru',
                 'changed_by' => null // Mahasiswa (no auth)
             ]);

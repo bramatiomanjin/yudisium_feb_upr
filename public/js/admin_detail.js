@@ -331,7 +331,7 @@ document.addEventListener(
                 activeHref = "/admin/history";
             } else if (status === STATUS.PERLU_REVISI || status === STATUS.REVISI_DIKIRIM) {
                 activeHref = "/admin/pengajuan?filter=revisi";
-            } else if ([STATUS.TERVERIFIKASI, STATUS.PEMBUATAN_SK, STATUS.TTD_WAKIL_DEKAN, STATUS.TTD_DEKAN, STATUS.SK_SIAP_DIAMBIL].includes(status)) {
+            } else if ([STATUS.TERVERIFIKASI, STATUS.PEMBUATAN_SK, STATUS.PARAF_PIMPINAN, STATUS.TTD_DEKAN, STATUS.SK_SIAP_DIAMBIL].includes(status)) {
                 activeHref = "/admin/pengajuan?filter=proses-sk";
             } else {
                 activeHref = "/admin/pengajuan";

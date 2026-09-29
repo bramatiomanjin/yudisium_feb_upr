@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Enums\PengajuanStatus;
+use DomainException;
 use Illuminate\Database\Eloquent\Model;
+use InvalidArgumentException;
 use Illuminate\Support\Str;
 
 class PengajuanYudisium extends Model
@@ -21,6 +24,39 @@ class PengajuanYudisium extends Model
         'submitted_at' => 'datetime',
         'verified_at' => 'datetime',
     ];
+
+    protected static function booted(): void
+    {
+        static::saving(function (self $pengajuan): void {
+            $status = strtoupper(trim((string) $pengajuan->status));
+
+            if (PengajuanStatus::tryFrom($status) === null) {
+                throw new InvalidArgumentException("Status pengajuan tidak valid: {$status}");
+            }
+
+            $pengajuan->status = $status;
+        });
+    }
+
+    public function transitionTo(
+        PengajuanStatus $nextStatus,
+        array $attributes = []
+    ): void {
+        $currentStatus = PengajuanStatus::tryFrom((string) $this->status);
+
+        if ($currentStatus === null || ! $currentStatus->canTransitionTo($nextStatus)) {
+            throw new DomainException(sprintf(
+                'Transisi status %s ke %s tidak valid.',
+                (string) $this->status,
+                $nextStatus->value
+            ));
+        }
+
+        $this->forceFill([
+            ...$attributes,
+            'status' => $nextStatus->value,
+        ])->save();
+    }
 
     public function getOrCreateRevisionAccessToken(): string
     {

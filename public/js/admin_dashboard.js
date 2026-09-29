@@ -281,7 +281,7 @@ document.addEventListener(
                             return [
 
                                 STATUS.PEMBUATAN_SK,
-                                STATUS.TTD_WAKIL_DEKAN,
+                                STATUS.PARAF_PIMPINAN,
                                 STATUS.TTD_DEKAN
 
                             ].includes(
@@ -484,7 +484,7 @@ document.addEventListener(
 
 
                 case STATUS.PEMBUATAN_SK:
-                case STATUS.TTD_WAKIL_DEKAN:
+                case STATUS.PARAF_PIMPINAN:
                 case STATUS.TTD_DEKAN:
 
                     return {
@@ -728,7 +728,7 @@ document.addEventListener(
                 } else if (filter === 'terverifikasi') {
                     filtered = submissions.filter(function(s) { return s.status === STATUS.TERVERIFIKASI; });
                 } else if (filter === 'proses-sk') {
-                    filtered = submissions.filter(function(s) { return [STATUS.TERVERIFIKASI, STATUS.PEMBUATAN_SK, STATUS.TTD_WAKIL_DEKAN, STATUS.TTD_DEKAN].includes(s.status); });
+                    filtered = submissions.filter(function(s) { return [STATUS.TERVERIFIKASI, STATUS.PEMBUATAN_SK, STATUS.PARAF_PIMPINAN, STATUS.TTD_DEKAN].includes(s.status); });
                 }
 
                 renderTable(

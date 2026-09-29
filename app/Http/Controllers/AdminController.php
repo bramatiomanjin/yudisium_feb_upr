@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\PengajuanYudisium;
 use App\Models\PengajuanDokumen;
@@ -103,75 +101,4 @@ class AdminController extends Controller
     return $response;
 }
 
-    // 4. Memproses dan Menyimpan Hasil Verifikasi Admin
-    public function verifikasi(Request $request, string $id)
-    {
-        $pengajuan = PengajuanYudisium::findOrFail($id);
-        $adaRevisi = false;
-
-        // 1. Simpan Status Validasi Field Teks
-        if ($request->has('validasi')) {
-            foreach ($request->validasi as $validasi_id => $data) {
-                // Update ke database
-                \App\Models\ValidasiField::where('id', $validasi_id)->update([
-                    'status_validasi' => $data['status'],
-                    'feedback' => $data['feedback'],
-                    'checked_by' => Auth::id(),
-                    'checked_at' => now(),
-                ]);
-                
-                if ($data['status'] == 'REVISI') {
-                    $adaRevisi = true;
-                }
-            }
-        }
-
-        // 2. Simpan Status Validasi Dokumen PDF
-        if ($request->has('dokumen')) {
-            foreach ($request->dokumen as $dokumen_id => $data) {
-                // Update ke database
-                \App\Models\PengajuanDokumen::where('id', $dokumen_id)->update([
-                    'status_validasi' => $data['status'],
-                    'feedback' => $data['feedback'],
-                    'checked_by' => Auth::id(),
-                    'checked_at' => now(),
-                ]);
-                
-                if ($data['status'] == 'REVISI') {
-                    $adaRevisi = true;
-                }
-            }
-        }
-
-        // 3. Tentukan Status Akhir Pengajuan
-        // Kita cek apakah masih ada data yang belum diperiksa (PENDING)
-        $masihPendingField = \App\Models\ValidasiField::where('pengajuan_id', $id)->where('status_validasi', 'PENDING')->exists();
-        $masihPendingDokumen = \App\Models\PengajuanDokumen::where('pengajuan_id', $id)->where('status_validasi', 'PENDING')->exists();
-
-        $oldStatus = $pengajuan->status;
-        if ($adaRevisi) {
-            $newStatus = 'PERLU_REVISI';
-        } elseif (!$masihPendingField && !$masihPendingDokumen) {
-            $newStatus = 'TERVERIFIKASI';
-            $pengajuan->verified_at = now();
-        } else {
-            $newStatus = 'MENUNGGU_VERIFIKASI';
-        }
-
-        $pengajuan->status = $newStatus;
-        if ($pengajuan->isDirty('status')) {
-            $pengajuan->save();
-            \App\Models\RiwayatStatus::create([
-                'pengajuan_id' => $pengajuan->id,
-                'status' => $newStatus,
-                'catatan' => 'Verifikasi dokumen dan field (Klasik)',
-                'changed_by' => Auth::id()
-            ]);
-        } else {
-            $pengajuan->save();
-        }
-
-        // Redirect kembali ke halaman detail
-        return redirect('/admin/pengajuan/'.$id);
-    }
 }

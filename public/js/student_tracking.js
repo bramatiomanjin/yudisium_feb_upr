@@ -649,7 +649,7 @@ function formatDateTime(value) {
                     break;
 
 
-                case STATUS.TTD_WAKIL_DEKAN:
+                case STATUS.PARAF_PIMPINAN:
 
                     title =
                         "Tanda Tangan Wakil Dekan";
@@ -803,7 +803,7 @@ function formatDateTime(value) {
 
                 {
                     key:
-                        STATUS.TTD_WAKIL_DEKAN,
+                        STATUS.PARAF_PIMPINAN,
 
                     title:
                         "Paraf Pimpinan"
@@ -845,7 +845,7 @@ function formatDateTime(value) {
                 [STATUS.PEMBUATAN_SK]:
                     2,
 
-                [STATUS.TTD_WAKIL_DEKAN]:
+                [STATUS.PARAF_PIMPINAN]:
                     3,
 
                 [STATUS.TTD_DEKAN]:

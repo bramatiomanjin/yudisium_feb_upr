@@ -52,6 +52,12 @@ class DocumentUploadValidationTest extends TestCase
             $table->timestamps();
         });
 
+        Schema::create('pengajuan_code_sequences', function (Blueprint $table): void {
+            $table->unsignedSmallInteger('year')->primary();
+            $table->unsignedInteger('last_number')->default(0);
+            $table->timestamps();
+        });
+
         Schema::create('jenis_dokumen', function (Blueprint $table): void {
             $table->id();
             $table->string('kode')->unique();
@@ -121,6 +127,7 @@ class DocumentUploadValidationTest extends TestCase
         Schema::dropIfExists('pengajuan_dokumen');
         Schema::dropIfExists('validasi_field');
         Schema::dropIfExists('jenis_dokumen');
+        Schema::dropIfExists('pengajuan_code_sequences');
         Schema::dropIfExists('pengajuan_yudisium');
         Schema::dropIfExists('mahasiswa');
 

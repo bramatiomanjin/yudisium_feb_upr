@@ -477,7 +477,7 @@
                                 Pembuatan SK
                             </option>
 
-                            <option value="ttd wakil dekan">
+                            <option value="paraf_pimpinan">
                                 Paraf Pimpinan
                             </option>
 

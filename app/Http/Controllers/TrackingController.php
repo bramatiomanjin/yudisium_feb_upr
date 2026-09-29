@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PengajuanStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\PengajuanYudisium;
@@ -122,7 +123,7 @@ class TrackingController extends Controller
 
             'revision_access_required' => in_array(
                 $pengajuan->status,
-                ['PERLU_REVISI', 'REVISI_DIKIRIM'],
+                PengajuanStatus::revisionAccessValues(),
                 true
             ),
         ],
@@ -153,7 +154,7 @@ class TrackingController extends Controller
             ], 404);
         }
 
-        if (!in_array($pengajuan->status, ['PERLU_REVISI', 'REVISI_DIKIRIM'], true)) {
+        if (! in_array($pengajuan->status, PengajuanStatus::revisionAccessValues(), true)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Pengajuan ini tidak sedang berada pada alur revisi.',
@@ -203,10 +204,7 @@ class TrackingController extends Controller
         if (
             !in_array(
                 $pengajuan->status,
-                [
-                    'PERLU_REVISI',
-                    'REVISI_DIKIRIM'
-                ],
+                PengajuanStatus::revisionAccessValues(),
                 true
             )
         ) {
@@ -670,10 +668,7 @@ class TrackingController extends Controller
                 $sisaRevisiDokumen
             ) {
 
-                $pengajuan->update([
-                    'status' =>
-                        'PERLU_REVISI'
-                ]);
+                $pengajuan->transitionTo(PengajuanStatus::PERLU_REVISI);
 
 
                 $pesan =
@@ -681,14 +676,11 @@ class TrackingController extends Controller
 
             } else {
 
-                $pengajuan->update([
-                    'status' =>
-                        'REVISI_DIKIRIM'
-                ]);
+                $pengajuan->transitionTo(PengajuanStatus::REVISI_DIKIRIM);
                 
                 \App\Models\RiwayatStatus::create([
                     'pengajuan_id' => $pengajuan->id,
-                    'status' => 'REVISI_DIKIRIM',
+                    'status' => PengajuanStatus::REVISI_DIKIRIM->value,
                     'catatan' => 'Mahasiswa telah mengirimkan seluruh perbaikan revisi',
                     'changed_by' => null
                 ]);

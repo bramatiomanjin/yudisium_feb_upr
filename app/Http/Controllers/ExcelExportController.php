@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PengajuanStatus;
 use App\Models\PengajuanYudisium;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -1129,46 +1130,8 @@ $this->setExcelDate(
             );
 
 
-        $labels = [
-
-            'DIAJUKAN' =>
-                'Diajukan',
-
-            'VERIFIKASI_ADMIN' =>
-                'Verifikasi Admin',
-
-            'PERLU_REVISI' =>
-                'Perlu Revisi',
-
-            'REVISI_DIKIRIM' =>
-                'Revisi Dikirim',
-
-            'TERVERIFIKASI' =>
-                'Terverifikasi',
-
-            'PEMBUATAN_SK' =>
-                'Pembuatan SK',
-
-            'TTD_WAKIL_DEKAN' =>
-                'Paraf Pimpinan',
-
-            'TTD_DEKAN' =>
-                'TTD Dekan',
-
-            'SK_TERBIT' =>
-                'SK Terbit',
-
-            'SK_SIAP_DIAMBIL' =>
-                'SK Selesai',
-        ];
-
-
-        return
-            $labels[
-                $status
-            ]
-            ??
-            ucwords(
+        return PengajuanStatus::tryFrom($status)?->label()
+            ?? ucwords(
                 strtolower(
                     str_replace(
                         '_',
@@ -1197,46 +1160,8 @@ $this->setExcelDate(
          * Background semua status dibuat seragam.
          */
 
-        $colors = [
-
-            'DIAJUKAN' =>
-                'FF475569',
-
-            'VERIFIKASI_ADMIN' =>
-                'FF0369A1',
-
-            'PERLU_REVISI' =>
-                'FFB91C1C',
-
-            'REVISI_DIKIRIM' =>
-                'FFC2410C',
-
-            'TERVERIFIKASI' =>
-                'FF1D4ED8',
-
-            'PEMBUATAN_SK' =>
-                'FFB45309',
-
-            'TTD_WAKIL_DEKAN' =>
-                'FFB45309',
-
-            'TTD_DEKAN' =>
-                'FFB45309',
-
-            'SK_TERBIT' =>
-                'FF15803D',
-
-            'SK_SIAP_DIAMBIL' =>
-                'FF15803D',
-        ];
-
-
-        $color =
-            $colors[
-                $status
-            ]
-            ??
-            'FF334155';
+        $color = PengajuanStatus::tryFrom($status)?->textColor()
+            ?? 'FF334155';
 
 
         $sheet

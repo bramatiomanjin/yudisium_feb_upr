@@ -277,13 +277,6 @@ Route::get(
             [AdminController::class, 'show']
         );
 
-
-        Route::post(
-            '/admin/pengajuan/{id}/verifikasi',
-            [AdminController::class, 'verifikasi']
-        );
-
-
         // =================================================
         // FILE PRIVATE
         // =================================================

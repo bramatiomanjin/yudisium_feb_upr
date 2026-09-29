@@ -278,7 +278,7 @@ document.addEventListener(
                             return [
 
                                 STATUS.PEMBUATAN_SK,
-                                STATUS.TTD_WAKIL_DEKAN,
+                                STATUS.PARAF_PIMPINAN,
                                 STATUS.TTD_DEKAN
 
                             ].includes(
@@ -502,7 +502,7 @@ document.addEventListener(
 
                 case STATUS.PEMBUATAN_SK:
 
-                case STATUS.TTD_WAKIL_DEKAN:
+                case STATUS.PARAF_PIMPINAN:
 
                 case STATUS.TTD_DEKAN:
 
