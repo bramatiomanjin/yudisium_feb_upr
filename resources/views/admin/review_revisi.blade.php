@@ -487,6 +487,11 @@
     <div
         class="revision-preview-overlay"
         id="revisionPreviewModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="revisionPreviewTitle"
+        aria-hidden="true"
+        tabindex="-1"
     >
 
         <div class="revision-preview-modal">
@@ -509,6 +514,7 @@
                 <button
                     type="button"
                     id="closeRevisionPreview"
+                    aria-label="Tutup preview dokumen revisi"
                 >
                     ×
                 </button>
@@ -593,7 +599,8 @@
          SCRIPT
     ====================================================== -->
 
-<script src="{{ asset('js/yudisium_api.js') }}"></script>
+    <script src="{{ asset('js/yudisium_api.js') }}"></script>
+    <script src="{{ asset('js/modal_accessibility.js') }}"></script>
     <script src="{{ asset('js/admin.js') }}"></script>
     <script src="{{ asset('js/admin_review_revisi.js') }}"></script>
 

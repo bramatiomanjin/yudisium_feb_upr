@@ -1419,7 +1419,23 @@ document.addEventListener(
 
             renderBulkTransitionSummary();
             bulkLoncatModal.style.display = "flex";
+            window.YudisiumModalAccessibility?.open(
+                bulkLoncatModal,
+                mode === "target" ? btnBulkLoncat : btnBulkLanjut
+            );
         }
+
+        function closeBulkConfirmation() {
+            if (!bulkLoncatModal) return;
+
+            bulkLoncatModal.style.display = "none";
+            window.YudisiumModalAccessibility?.close(bulkLoncatModal);
+        }
+
+        window.YudisiumModalAccessibility?.enhance(
+            bulkLoncatModal,
+            closeBulkConfirmation
+        );
 
         function updateBulkUI() {
             // Check if current filter is proses-sk
@@ -1530,9 +1546,7 @@ document.addEventListener(
         bulkTargetStatus?.addEventListener("change", renderBulkTransitionSummary);
 
         if (btnCancelBulkLoncat) {
-            btnCancelBulkLoncat.addEventListener("click", function() {
-                bulkLoncatModal.style.display = "none";
-            });
+            btnCancelBulkLoncat.addEventListener("click", closeBulkConfirmation);
         }
 
         if (btnConfirmBulkLoncat) {
@@ -1571,7 +1585,7 @@ document.addEventListener(
 
                     await Promise.all(promises);
 
-                    bulkLoncatModal.style.display = "none";
+                    closeBulkConfirmation();
                     await loadSubmissions();
                     alert("Berhasil memperbarui status pengajuan.");
                 } catch (error) {

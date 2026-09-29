@@ -22,6 +22,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const generatedCode = document.getElementById("generatedSubmissionCode");
     const copyFeedback = document.getElementById("copyCodeFeedback");
     const goToTracking = document.getElementById("goToTracking");
+    let hasUnsavedChanges = false;
+
+    form.addEventListener("input", function () {
+        hasUnsavedChanges = true;
+    });
+
+    form.addEventListener("change", function () {
+        hasUnsavedChanges = true;
+    });
+
+    window.addEventListener("beforeunload", function (event) {
+        if (!hasUnsavedChanges) {
+            return;
+        }
+
+        event.preventDefault();
+        event.returnValue = "";
+    });
 
 
     /* =========================================================
@@ -399,8 +417,15 @@ document.addEventListener("DOMContentLoaded", function () {
                  * Tampilkan modal sukses.
                  */
                 if (successModal) {
+                    hasUnsavedChanges = false;
+
                     successModal.classList.add(
                         "active"
+                    );
+
+                    window.YudisiumModalAccessibility?.open(
+                        successModal,
+                        submitButton
                     );
 
                     document.body.style.overflow =

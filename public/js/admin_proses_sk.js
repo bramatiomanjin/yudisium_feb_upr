@@ -938,6 +938,11 @@ document.addEventListener(
                     "aria-hidden",
                     "false"
                 );
+
+                window.YudisiumModalAccessibility?.open(
+                    modal,
+                    primaryAction
+                );
             }
         }
 
@@ -959,8 +964,17 @@ document.addEventListener(
                     "aria-hidden",
                     "true"
                 );
+
+                window.YudisiumModalAccessibility?.close(
+                    modal
+                );
             }
         }
+
+        window.YudisiumModalAccessibility?.enhance(
+            modal,
+            closeConfirm
+        );
 
 
         primaryAction

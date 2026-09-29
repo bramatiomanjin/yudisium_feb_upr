@@ -1105,6 +1105,11 @@ document.addEventListener(
                                 "active"
                             );
 
+                        window.YudisiumModalAccessibility?.open(
+                            modal,
+                            submitButton
+                        );
+
 
                         document.body.style.overflow =
                             "hidden";
@@ -1149,15 +1154,30 @@ document.addEventListener(
                     "closeRevisionModal"
                 );
 
+            const successModal =
+                document.getElementById(
+                    "revisionSuccessModal"
+                );
+
+            function closeRevisionSuccess() {
+                window.YudisiumModalAccessibility?.close(
+                    successModal
+                );
+
+                window.location.href =
+                    "/detail_tracking";
+            }
+
+            window.YudisiumModalAccessibility?.enhance(
+                successModal,
+                closeRevisionSuccess
+            );
+
 
             closeButton
                 ?.addEventListener(
                     "click",
-                    function () {
-
-                        window.location.href =
-                            "/detail_tracking";
-                    }
+                    closeRevisionSuccess
                 );
         }
 

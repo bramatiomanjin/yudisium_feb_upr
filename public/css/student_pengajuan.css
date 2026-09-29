@@ -191,6 +191,28 @@ body::before {
     color: var(--reg-green-900);
 }
 
+.student-readiness-checklist {
+    display: flex;
+    gap: 14px;
+    margin: 0 0 24px;
+    padding: 18px 20px;
+    border: 1px solid #d8e7df;
+    border-radius: 14px;
+    background: #f5faf7;
+    color: #24463a;
+}
+
+.student-readiness-checklist h2 {
+    margin: 0 0 8px;
+    font-size: 1rem;
+}
+
+.student-readiness-checklist ul {
+    margin: 0;
+    padding-left: 20px;
+    line-height: 1.65;
+}
+
 /* ---------- STEPPER ---------- */
 
 .step-indicator {

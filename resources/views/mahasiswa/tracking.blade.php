@@ -48,9 +48,8 @@
 
 
                     <p>
-                        Masukkan NIM Anda untuk melihat
-                        status proses, feedback admin, dan tindakan yang
-                        perlu dilakukan.
+                        Masukkan NIM atau Kode Pengajuan untuk melihat status.
+                        Untuk membuka revisi, masukkan keduanya.
                     </p>
 
                 </div>
@@ -117,10 +116,6 @@
 
                                 NIM
 
-                                <span class="required">
-                                    *
-                                </span>
-
                             </label>
 
 
@@ -133,8 +128,8 @@
                                 autocomplete="off"
                                 maxlength="20"                            >
                             <small>
-                                Masukkan NIM tanpa spasi,
-                                titik, atau tanda lainnya.
+                                Isi NIM atau Kode Pengajuan. Gunakan NIM tanpa
+                                spasi, titik, atau tanda lainnya.
                             </small>
 
 
@@ -142,7 +137,7 @@
                                 class="error-message"
                                 id="trackingNimError"
                             >
-                                NIM wajib diisi dan hanya boleh berisi angka.
+                                NIM hanya boleh berisi angka.
                             </div>
 
                         </div>
@@ -155,7 +150,7 @@
 
                             <label for="kode_pengajuan">
 
-                                Kode SK Yudisium (Opsional)
+                                Kode Pengajuan
 
                             </label>
 
@@ -172,9 +167,8 @@
 
 
                             <small>
-                                Kode ini diberikan setelah
-                                pengajuan berhasil dikirim. NIM dan kode
-                                wajib diisi bersama untuk membuka revisi.
+                                Isi NIM atau Kode Pengajuan untuk melihat status.
+                                Keduanya diperlukan hanya untuk membuka revisi.
                             </small>
 
 
@@ -182,7 +176,7 @@
                                 class="error-message"
                                 id="trackingKodeError"
                             >
-                                Kode SK Yudisium wajib diisi.
+                                Gunakan format kode seperti YDS-2026-0001.
                             </div>
 
                         </div>
@@ -222,8 +216,8 @@
 
 
                             <p>
-                                NIM digunakan untuk melacak status
-                                pengajuan Anda secara berkala.
+                                NIM atau Kode Pengajuan dapat digunakan untuk
+                                tracking. Akses revisi memerlukan keduanya.
                             </p>
 
                         </div>

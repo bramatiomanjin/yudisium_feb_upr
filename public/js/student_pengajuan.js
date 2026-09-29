@@ -1898,7 +1898,16 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.style.overflow =
             "";
 
+        window.YudisiumModalAccessibility?.close(
+            successModal
+        );
+
     }
+
+    window.YudisiumModalAccessibility?.enhance(
+        successModal,
+        closeModal
+    );
 
 
     closeSuccessModal.addEventListener(
@@ -1914,28 +1923,6 @@ document.addEventListener("DOMContentLoaded", function () {
             if (
                 event.target ===
                 successModal
-            ) {
-
-                closeModal();
-
-            }
-
-        }
-    );
-
-
-    document.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (
-                event.key ===
-                    "Escape" &&
-                successModal
-                    .classList
-                    .contains(
-                        "active"
-                    )
             ) {
 
                 closeModal();

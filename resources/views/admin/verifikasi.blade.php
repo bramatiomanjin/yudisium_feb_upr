@@ -1255,6 +1255,11 @@
     <div
         class="verification-preview-overlay"
         id="verificationPreviewModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="verificationPreviewTitle"
+        aria-hidden="true"
+        tabindex="-1"
     >
 
         <div class="verification-preview-modal">
@@ -1277,6 +1282,7 @@
                 <button
                     type="button"
                     id="closeVerificationPreview"
+                    aria-label="Tutup preview dokumen"
                 >
                     ×
                 </button>
@@ -1353,6 +1359,7 @@
 
 
     <script src="{{ asset('js/yudisium_api.js') }}"></script>
+    <script src="{{ asset('js/modal_accessibility.js') }}"></script>
     <script src="{{ asset('js/admin.js') }}"></script>
     <script src="{{ asset('js/admin_verifikasi.js') }}"></script>
 

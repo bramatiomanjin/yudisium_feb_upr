@@ -707,7 +707,7 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="bulkLoncatModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1100; align-items: center; justify-content: center; background: rgba(5, 27, 19, 0.58); backdrop-filter: blur(4px);">
+    <div class="modal-overlay" id="bulkLoncatModal" role="dialog" aria-modal="true" aria-labelledby="bulkConfirmationTitle" aria-hidden="true" tabindex="-1" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1100; align-items: center; justify-content: center; background: rgba(5, 27, 19, 0.58); backdrop-filter: blur(4px);">
         <div class="modal-card">
             <h3 id="bulkConfirmationTitle" style="margin: 0 0 12px 0; font-size: 1.25rem;">Konfirmasi Proses SK</h3>
             <p id="bulkConfirmationCount" style="margin-bottom: 12px; color: #5f6368; font-size: 0.95rem;"></p>
@@ -723,7 +723,7 @@
                 Mahasiswa akan menerima pembaruan status dan email pemberitahuan setelah proses berhasil.
             </p>
             <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                <button type="button" class="admin-secondary-button" id="btnCancelBulkLoncat">Batal</button>
+                <button type="button" class="admin-secondary-button" id="btnCancelBulkLoncat" aria-label="Tutup konfirmasi proses SK">Batal</button>
                 <button type="button" class="admin-primary-button" id="btnConfirmBulkLoncat">Konfirmasi dan Proses</button>
             </div>
         </div>
@@ -734,6 +734,8 @@
     ====================================================== -->
 
     <script src="{{ asset('js/yudisium_api.js') }}"></script>
+
+    <script src="{{ asset('js/modal_accessibility.js') }}"></script>
 
     <script src="{{ asset('js/admin.js') }}"></script>
 

@@ -593,10 +593,10 @@ function formatDateTime(value) {
                 case STATUS.PARAF_PIMPINAN:
 
                     title =
-                        "Tanda Tangan Wakil Dekan";
+                        "Paraf Pimpinan";
 
                     description =
-                        "SK sedang melalui proses tanda tangan Wakil Dekan.";
+                        "SK sedang melalui proses paraf pimpinan.";
 
                     icon =
                         "✎";

@@ -1110,15 +1110,25 @@ document.addEventListener(
                     }
                 }
 
-                if (modal) modal.classList.add("active");
+                if (modal) {
+                    modal.classList.add("active");
+                    window.YudisiumModalAccessibility?.open(modal, e.target);
+                }
             }
         });
 
+        function closePreview() {
+            if (!modal) return;
+
+            modal.classList.remove("active");
+            if (iframe) iframe.src = "";
+            window.YudisiumModalAccessibility?.close(modal);
+        }
+
+        window.YudisiumModalAccessibility?.enhance(modal, closePreview);
+
         if (closeBtn && modal) {
-            closeBtn.addEventListener("click", function() {
-                modal.classList.remove("active");
-                if (iframe) iframe.src = "";
-            });
+            closeBtn.addEventListener("click", closePreview);
         }
 
         if (openNewTab) {

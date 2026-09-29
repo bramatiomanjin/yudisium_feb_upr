@@ -357,6 +357,8 @@
         role="dialog"
         aria-modal="true"
         aria-labelledby="revisionSuccessTitle"
+        aria-hidden="true"
+        tabindex="-1"
     >
 
         <div class="modal-card revision-success-modal">
@@ -399,6 +401,7 @@
                 type="button"
                 class="btn btn-primary"
                 id="closeRevisionModal"
+                aria-label="Tutup dan kembali ke status pengajuan"
             >
                 Kembali ke Status Pengajuan
             </button>
@@ -414,6 +417,7 @@
     ====================================================== -->
 
     <script src="{{ asset('js/yudisium_api.js') }}"></script>
+    <script src="{{ asset('js/modal_accessibility.js') }}"></script>
     <script src="{{ asset('js/student_revisi.js') }}"></script>
 
 

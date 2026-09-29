@@ -43,6 +43,20 @@
             </div>
         </div>
 
+        <section class="student-readiness-checklist" aria-labelledby="readinessChecklistTitle">
+            <div>
+                <span class="student-helper-icon" aria-hidden="true">✓</span>
+            </div>
+            <div>
+                <h2 id="readinessChecklistTitle">Siapkan sebelum mulai</h2>
+                <ul>
+                    <li>Data identitas dan akademik sesuai dokumen resmi.</li>
+                    <li>Dokumen persyaratan sudah dipindai dengan jelas.</li>
+                    <li>File sesuai format dan batas ukuran yang tercantum pada form.</li>
+                </ul>
+            </div>
+        </section>
+
 
         <!-- STEP INDICATOR -->
         <div class="step-indicator">
@@ -1180,7 +1194,7 @@
 
 
     <!-- MODAL PENGAJUAN BERHASIL -->
-    <div class="modal-overlay" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successModalTitle">
+    <div class="modal-overlay" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successModalTitle" aria-hidden="true" tabindex="-1">
 
         <div class="modal-card student-success-modal">
 
@@ -1224,6 +1238,7 @@
                     type="button"
                     class="btn btn-secondary"
                     id="closeSuccessModal"
+                    aria-label="Tutup informasi pengajuan berhasil"
                 >
                     Tutup
                 </button>
@@ -1243,6 +1258,7 @@
 
 
     <script src="{{ asset('js/yudisium_api.js') }}"></script>
+    <script src="{{ asset('js/modal_accessibility.js') }}"></script>
     <script src="{{ asset('js/student_pengajuan_api_bridge.js') }}"></script>
     <script src="{{ asset('js/student_pengajuan.js') }}"></script>
 

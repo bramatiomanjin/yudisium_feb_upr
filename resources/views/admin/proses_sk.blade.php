@@ -611,13 +611,14 @@
         class="modal-overlay"
         id="skConfirmModal"
         aria-hidden="true"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="skConfirmTitle"
+        tabindex="-1"
     >
 
         <div
             class="modal-card sk-confirm-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="skConfirmTitle"
         >
 
             <div class="sk-confirm-icon">
@@ -642,6 +643,7 @@
                     type="button"
                     class="admin-secondary-button"
                     id="cancelSkAction"
+                    aria-label="Tutup konfirmasi perubahan status"
                 >
                     Batal
                 </button>
@@ -664,6 +666,7 @@
 
 
     <script src="{{ asset('js/yudisium_api.js') }}"></script>
+    <script src="{{ asset('js/modal_accessibility.js') }}"></script>
     <script src="{{ asset('js/admin.js') }}"></script>
     <script src="{{ asset('js/admin_proses_sk.js') }}"></script>
 
