@@ -236,7 +236,8 @@ class ExcelExportController extends Controller
             /*
              * KODE PENGAJUAN
              */
-            $sheet->setCellValue(
+            $this->setExcelText(
+                $sheet,
                 'B' . $row,
                 $pengajuan
                     ->kode_pengajuan
@@ -265,7 +266,8 @@ class ExcelExportController extends Controller
             /*
              * NAMA
              */
-            $sheet->setCellValue(
+            $this->setExcelText(
+                $sheet,
                 'D' . $row,
                 $mahasiswa
                     ?->nama_lengkap
@@ -276,7 +278,8 @@ class ExcelExportController extends Controller
             /*
              * PROGRAM STUDI
              */
-            $sheet->setCellValue(
+            $this->setExcelText(
+                $sheet,
                 'E' . $row,
                 $mahasiswa
                     ?->jurusan
@@ -298,7 +301,8 @@ class ExcelExportController extends Controller
             /*
              * JENIS KARYA TULIS
              */
-            $sheet->setCellValue(
+            $this->setExcelText(
+                $sheet,
                 'G' . $row,
                 $pengajuan
                     ->karya_tulis
@@ -309,7 +313,8 @@ class ExcelExportController extends Controller
             /*
              * JUDUL
              */
-            $sheet->setCellValue(
+            $this->setExcelText(
+                $sheet,
                 'H' . $row,
                 $pengajuan
                     ->judul_karya_tulis
@@ -356,7 +361,8 @@ class ExcelExportController extends Controller
             /*
              * NILAI HURUF
              */
-            $sheet->setCellValue(
+            $this->setExcelText(
+                $sheet,
                 'K' . $row,
                 $pengajuan
                     ->nilai_huruf
@@ -376,7 +382,8 @@ class ExcelExportController extends Controller
                 );
 
 
-            $sheet->setCellValue(
+            $this->setExcelText(
+                $sheet,
                 'L' . $row,
                 $this->statusLabel(
                     $status
@@ -1045,6 +1052,25 @@ $this->setExcelDate(
             ->deleteFileAfterSend(
                 true
             );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | EXCEL TEXT
+    |--------------------------------------------------------------------------
+    */
+
+    private function setExcelText(
+        $sheet,
+        string $cell,
+        mixed $value
+    ): void {
+        $sheet->setCellValueExplicit(
+            $cell,
+            (string) ($value ?? '-'),
+            DataType::TYPE_STRING
+        );
     }
 
 
