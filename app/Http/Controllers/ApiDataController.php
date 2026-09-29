@@ -14,6 +14,7 @@ use App\Models\RiwayatStatus;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Support\StudentYudisiumNotifier;
 
 class ApiDataController extends Controller
 {
@@ -291,7 +292,8 @@ class ApiDataController extends Controller
 
     public function verifySubmission(
         Request $request,
-        string $id
+        string $id,
+        StudentYudisiumNotifier $notifier
     ) {
         $pengajuan =
             PengajuanYudisium::findOrFail(
@@ -526,6 +528,7 @@ class ApiDataController extends Controller
 
 
             DB::commit();
+            $notifier->statusChanged($pengajuan, $statusSebelumnya, $statusBaru);
 
 
             return response()->json([
@@ -819,7 +822,8 @@ class ApiDataController extends Controller
 
     public function reviewRevision(
         Request $request,
-        string $id
+        string $id,
+        StudentYudisiumNotifier $notifier
     ) {
         $pengajuan =
             PengajuanYudisium::findOrFail(
@@ -1094,6 +1098,7 @@ class ApiDataController extends Controller
 
 
             DB::commit();
+            $notifier->statusChanged($pengajuan, $statusSebelumnya, $statusBaru);
 
 
             return response()->json([

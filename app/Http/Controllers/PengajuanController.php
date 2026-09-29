@@ -13,6 +13,7 @@ use App\Models\PengajuanDokumen;
 use App\Models\ValidasiField;
 use App\Support\DocumentUploadValidator;
 use App\Support\PengajuanCodeGenerator;
+use App\Support\StudentYudisiumNotifier;
 
 class PengajuanController extends Controller
 {
@@ -44,7 +45,8 @@ private function canonicalDocumentCode(string $code): string
     public function store(
         Request $request,
         DocumentUploadValidator $documentUploadValidator,
-        PengajuanCodeGenerator $codeGenerator
+        PengajuanCodeGenerator $codeGenerator,
+        StudentYudisiumNotifier $notifier
     )
     {
         // --- A. NORMALISASI NILAI ANGKA ---
@@ -259,6 +261,7 @@ private function canonicalDocumentCode(string $code): string
             }
 
             DB::commit();
+            $notifier->submissionReceived($pengajuan);
 
             return response()->json([
                 'success' => true,

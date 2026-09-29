@@ -12,12 +12,14 @@ use Illuminate\Validation\Rule;
 
 use App\Models\PengajuanYudisium;
 use App\Models\RiwayatStatus;
+use App\Support\StudentYudisiumNotifier;
 
 class SkController extends Controller
 {
     public function updateStatus(
         Request $request,
-        string $id
+        string $id,
+        StudentYudisiumNotifier $notifier
     ) {
         /*
          * Frontend YudisiumAPI mengirim status
@@ -152,6 +154,7 @@ class SkController extends Controller
 
 
             DB::commit();
+            $notifier->statusChanged($pengajuan, $currentStatus->value, $nextStatus);
 
 
             return response()->json([

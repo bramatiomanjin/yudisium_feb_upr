@@ -12,6 +12,7 @@ use App\Models\ValidasiField;
 use App\Models\PengajuanDokumen;
 use App\Models\RiwayatRevisi;
 use App\Support\DocumentUploadValidator;
+use App\Support\StudentYudisiumNotifier;
 
 class TrackingController extends Controller
 {
@@ -236,7 +237,8 @@ class TrackingController extends Controller
     public function prosesRevisi(
         Request $request,
         string $kode_pengajuan,
-        DocumentUploadValidator $documentUploadValidator
+        DocumentUploadValidator $documentUploadValidator,
+        StudentYudisiumNotifier $notifier
     ) {
         $pengajuan =
             PengajuanYudisium::where(
@@ -246,6 +248,7 @@ class TrackingController extends Controller
                 ->firstOrFail();
 
         $revisionToken = $request->query('token');
+        $statusSebelumnya = (string) $pengajuan->status;
 
         abort_unless(
             $pengajuan->hasValidRevisionAccessToken($revisionToken),
@@ -693,6 +696,11 @@ class TrackingController extends Controller
 
 
             DB::commit();
+            $notifier->statusChanged(
+                $pengajuan,
+                $statusSebelumnya,
+                PengajuanStatus::from((string) $pengajuan->status)
+            );
 
 
             return redirect()->route(
