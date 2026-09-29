@@ -309,6 +309,57 @@
     width: 100%;
 }
 
+.admin-auth-alert {
+    margin: 0 0 20px;
+    padding: 14px 16px;
+    border: 1px solid;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.admin-auth-alert strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.admin-auth-alert p,
+.admin-auth-alert ul {
+    margin: 4px 0 0;
+}
+
+.admin-auth-alert ul {
+    padding-left: 20px;
+}
+
+.admin-auth-alert.error {
+    border-color: #f2c4c0;
+    background: #fff1f0;
+    color: #912018;
+}
+
+.admin-auth-alert.success {
+    border-color: #b9dec9;
+    background: #edf9f2;
+    color: #065f46;
+}
+
+.admin-auth-field-error {
+    margin-top: 7px;
+    color: #b42318;
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+.admin-auth-help {
+    max-width: 235px;
+    color: #596760;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    text-align: right;
+}
+
 
 /* ==========================================
    AUTH FOOTER

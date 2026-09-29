@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -18,25 +18,35 @@ class AuthController extends Controller
     {
         $credentials = $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
+        ], [
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Masukkan alamat email yang valid.',
+            'password.required' => 'Password wajib diisi.',
         ]);
 
         // Cek kecocokan di database
         if (Auth::attempt($credentials)) {
             if (Auth::user()->status !== 'ACTIVE') {
+                $status = Auth::user()->status;
+
                 Auth::logout();
+
                 return back()->withErrors([
-                    'email' => 'Akun Anda masih berstatus PENDING atau INACTIVE. Silakan tunggu persetujuan Super Admin.',
-                ]);
+                    'email' => $status === 'PENDING'
+                        ? 'Akun sedang menunggu persetujuan Super Admin.'
+                        : 'Akun tidak aktif. Silakan hubungi Super Admin atau Bagian IT.',
+                ])->withInput($request->only('email'));
             }
-            
+
             $request->session()->regenerate();
+
             return redirect()->intended('/admin/dashboard'); // Jika benar, arahkan ke dashboard
         }
 
         return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ]);
+            'email' => 'Email atau password tidak sesuai.',
+        ])->withInput($request->only('email'));
     }
 
     public function logout(Request $request)
@@ -44,6 +54,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect('/admin/login');
     }
 
@@ -53,6 +64,15 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed',
+        ], [
+            'name.required' => 'Nama lengkap wajib diisi.',
+            'name.max' => 'Nama lengkap maksimal 255 karakter.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Masukkan alamat email yang valid.',
+            'email.unique' => 'Email sudah terdaftar. Silakan gunakan email lain atau hubungi Super Admin.',
+            'password.required' => 'Password wajib diisi.',
+            'password.min' => 'Password minimal 8 karakter.',
+            'password.confirmed' => 'Konfirmasi password tidak sama.',
         ]);
 
         User::create([
@@ -63,6 +83,9 @@ class AuthController extends Controller
             'status' => 'PENDING',
         ]);
 
-        return redirect('/admin/login')->with('success', 'Registrasi berhasil! Akun Anda menunggu persetujuan Super Admin.');
+        return redirect('/admin/login')->with(
+            'success',
+            'Akun berhasil dibuat dan sedang menunggu persetujuan Super Admin.'
+        );
     }
 }

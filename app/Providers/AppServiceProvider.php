@@ -35,27 +35,44 @@ class AppServiceProvider extends ServiceProvider
             };
         };
 
+        $authResponse = static function (string $message): callable {
+            return static function (Request $request, array $headers) use ($message) {
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $message,
+                    ], 429, $headers);
+                }
+
+                return redirect()
+                    ->back()
+                    ->withInput($request->only('email'))
+                    ->withErrors(['rate_limit' => $message])
+                    ->withHeaders($headers);
+            };
+        };
+
         $key = static fn (string ...$parts): string => hash(
             'sha256',
             implode('|', array_map('strtolower', $parts))
         );
 
-        RateLimiter::for('login', function (Request $request) use ($key, $response): array {
+        RateLimiter::for('login', function (Request $request) use ($key, $authResponse): array {
             $identity = (string) $request->input('email', 'anonymous');
 
             return [
                 Limit::perMinute(5)
                     ->by('login-identity:'.$key($identity, $request->ip()))
-                    ->response($response('Terlalu banyak percobaan login. Silakan coba lagi sebentar.')),
+                    ->response($authResponse('Terlalu banyak percobaan login. Silakan coba lagi sebentar.')),
                 Limit::perMinute(60)
                     ->by('login-ip:'.$key($request->ip()))
-                    ->response($response('Terlalu banyak percobaan login. Silakan coba lagi sebentar.')),
+                    ->response($authResponse('Terlalu banyak percobaan login. Silakan coba lagi sebentar.')),
             ];
         });
 
         RateLimiter::for('admin-register', fn (Request $request): Limit => Limit::perHour(20)
             ->by('admin-register:'.$key($request->ip()))
-            ->response($response('Terlalu banyak permintaan registrasi. Silakan coba lagi nanti.')));
+            ->response($authResponse('Terlalu banyak permintaan registrasi. Silakan coba lagi nanti.')));
 
         RateLimiter::for('tracking', fn (Request $request): Limit => Limit::perMinute(60)
             ->by('tracking:'.$key($request->ip()))

@@ -66,6 +66,22 @@ document.addEventListener("DOMContentLoaded", function () {
         );
     }
 
+    const loginForm = document.getElementById("adminLoginForm");
+    const loginLoading = document.getElementById("adminLoginLoading");
+    const loginSubmit = document.getElementById("adminLoginSubmit");
+
+    if (loginForm && loginLoading) {
+        loginForm.addEventListener("submit", function () {
+            loginLoading.classList.add("active");
+            loginLoading.setAttribute("aria-live", "polite");
+
+            if (loginSubmit) {
+                loginSubmit.disabled = true;
+                loginSubmit.textContent = "Memproses...";
+            }
+        });
+    }
+
     /* =====================================
        LOGOUT
     ===================================== */

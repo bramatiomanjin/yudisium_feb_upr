@@ -66,6 +66,23 @@
 
                 </div>
 
+                @if(session('success'))
+                    <div class="admin-auth-alert success" role="status">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="admin-auth-alert error" role="alert" tabindex="-1" id="adminLoginErrorSummary">
+                        <strong>Login belum berhasil.</strong>
+                        <ul>
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
 
                 <form
                     id="adminLoginForm"
@@ -75,26 +92,30 @@
                 >
                     @csrf
 
-                    <!-- USERNAME -->
+                    <!-- EMAIL -->
                     <div class="form-group">
 
-                        <label for="admin_username">
-                            Username
+                        <label for="admin_email">
+                            Email
                             <span class="required">*</span>
                         </label>
 
                         <input
-                            type="text"
-                            id="admin_username"
+                            type="email"
+                            id="admin_email"
                             name="email"
                             placeholder="Masukkan email"
                             autocomplete="email"
+                            value="{{ old('email') }}"
+                            @error('email') aria-invalid="true" aria-describedby="adminEmailError" @enderror
                             required
                         >
 
-                        <div class="error-message">
-                            Username wajib diisi.
-                        </div>
+                        @error('email')
+                            <div class="admin-auth-field-error" id="adminEmailError">
+                                {{ $message }}
+                            </div>
+                        @enderror
 
                     </div>
 
@@ -115,6 +136,7 @@
                                 name="password"
                                 placeholder="Masukkan password"
                                 autocomplete="current-password"
+                                @error('password') aria-invalid="true" aria-describedby="adminPasswordError" @enderror
                                 required
                             >
 
@@ -172,9 +194,11 @@
 
                         </div>
 
-                        <div class="error-message">
-                            Password wajib diisi.
-                        </div>
+                        @error('password')
+                            <div class="admin-auth-field-error" id="adminPasswordError">
+                                {{ $message }}
+                            </div>
+                        @enderror
 
                     </div>
 
@@ -197,13 +221,9 @@
                         </label>
 
 
-                        <a
-                            href="#"
-                            onclick="alert('Fitur pemulihan kata sandi sedang dalam pengembangan tim IT.'); return false;"
-                            class="admin-auth-link"
-                        >
-                            Lupa username / password?
-                        </a>
+                        <span class="admin-auth-help">
+                            Lupa password? Hubungi Super Admin atau Bagian IT.
+                        </span>
 
                     </div>
 
@@ -212,6 +232,7 @@
                     <button
                         type="submit"
                         class="btn btn-primary admin-auth-submit"
+                        id="adminLoginSubmit"
                     >
                         Masuk
                     </button>

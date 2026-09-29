@@ -69,6 +69,18 @@
 
                 </div>
 
+                @if($errors->any())
+                    <div class="admin-auth-alert error" role="alert" tabindex="-1" id="adminRegisterErrorSummary">
+                        <strong>Registrasi belum berhasil.</strong>
+                        <p>Periksa kembali bagian berikut:</p>
+                        <ul>
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
 
                 <form
                     id="adminRegisterForm"
@@ -92,47 +104,18 @@
                             name="name"
                             placeholder="Masukkan nama lengkap"
                             autocomplete="name"
+                            value="{{ old('name') }}"
+                            @error('name') aria-invalid="true" aria-describedby="registerNameError" @enderror
                             required
                         >
 
-                        <div class="error-message">
-                            Nama lengkap wajib diisi.
-                        </div>
+                        @error('name')
+                            <div class="admin-auth-field-error" id="registerNameError">
+                                {{ $message }}
+                            </div>
+                        @enderror
 
                     </div>
-
-
-                    <!-- USERNAME -->
-                    <div class="form-group">
-
-                        <label for="register_username">
-                            Username
-                            <span class="required">*</span>
-                        </label>
-
-                        <input
-                            type="text"
-                            id="register_username"
-                            name="username"
-                            placeholder="Buat username"
-                            autocomplete="username"
-                            minlength="4"
-                            maxlength="30"
-                            required
-                        >
-
-                        <small>
-                            Minimal 4 karakter. Gunakan huruf, angka, titik,
-                            atau underscore.
-                        </small>
-
-                        <div class="error-message">
-                            Username minimal 4 karakter dan hanya boleh
-                            menggunakan huruf, angka, titik, atau underscore.
-                        </div>
-
-                    </div>
-
 
                     <!-- EMAIL -->
                     <div class="form-group">
@@ -148,16 +131,21 @@
                             name="email"
                             placeholder="contoh@email.com"
                             autocomplete="email"
+                            value="{{ old('email') }}"
+                            @error('email') aria-invalid="true" aria-describedby="registerEmailError" @enderror
                             required
                         >
 
                         <small>
-                            Email akan digunakan untuk pemulihan akun.
+                            Email digunakan untuk login. Jika lupa password,
+                            hubungi Super Admin atau Bagian IT.
                         </small>
 
-                        <div class="error-message">
-                            Masukkan alamat email yang valid.
-                        </div>
+                        @error('email')
+                            <div class="admin-auth-field-error" id="registerEmailError">
+                                {{ $message }}
+                            </div>
+                        @enderror
 
                     </div>
 
@@ -178,6 +166,7 @@
                                 name="password"
                                 placeholder="Buat password"
                                 autocomplete="new-password"
+                                @error('password') aria-invalid="true" aria-describedby="registerPasswordError" @enderror
                                 required
                             >
 
@@ -250,9 +239,11 @@
 
                         </div>
 
-                        <div class="error-message">
-                            Password minimal 8 karakter.
-                        </div>
+                        @error('password')
+                            <div class="admin-auth-field-error" id="registerPasswordError">
+                                {{ $message }}
+                            </div>
+                        @enderror
 
                     </div>
 
