@@ -6,11 +6,13 @@ use App\Models\JenisDokumen;
 use App\Models\Mahasiswa;
 use App\Models\PengajuanDokumen;
 use App\Models\PengajuanYudisium;
+use App\Models\User;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
+use ZipArchive;
 
 class DocumentUploadValidationTest extends TestCase
 {
@@ -23,6 +25,17 @@ class DocumentUploadValidationTest extends TestCase
         ]);
 
         Storage::fake('local');
+
+        Schema::create('users', function (Blueprint $table): void {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->string('role')->default('ADMIN');
+            $table->string('status')->default('ACTIVE');
+            $table->rememberToken();
+            $table->timestamps();
+        });
 
         Schema::create('mahasiswa', function (Blueprint $table): void {
             $table->string('nim', 20)->primary();
@@ -130,6 +143,7 @@ class DocumentUploadValidationTest extends TestCase
         Schema::dropIfExists('pengajuan_code_sequences');
         Schema::dropIfExists('pengajuan_yudisium');
         Schema::dropIfExists('mahasiswa');
+        Schema::dropIfExists('users');
 
         parent::tearDown();
     }
@@ -191,6 +205,56 @@ class DocumentUploadValidationTest extends TestCase
         ]);
     }
 
+    public function test_uploaded_document_uses_normalized_path_and_remains_available_to_preview_and_backup(): void
+    {
+        $this->createDocumentType();
+
+        $this->postJson(route('pengajuan.store'), $this->initialPayload([
+            'form_yudisium' => $this->pdfFile('document.pdf', 1),
+        ]))->assertOk();
+
+        $document = PengajuanDokumen::query()->sole();
+        $expectedPrefix = 'yudisium/2301110001/';
+
+        $this->assertStringStartsWith($expectedPrefix, $document->file_path);
+        $this->assertStringNotContainsString('private/yudisium/', $document->file_path);
+        Storage::disk('local')->assertExists($document->file_path);
+        $sourceContents = Storage::disk('local')->get($document->file_path);
+
+        $superAdmin = User::query()->create([
+            'name' => 'Super Admin Test',
+            'email' => 'superadmin@example.test',
+            'password' => 'password',
+            'role' => 'SUPER_ADMIN',
+            'status' => 'ACTIVE',
+        ]);
+
+        $this->actingAs($superAdmin)
+            ->get('/admin/file/'.$document->id)
+            ->assertOk()
+            ->assertHeader('content-type', 'application/pdf');
+
+        $response = $this->actingAs($superAdmin)
+            ->get(route('admin.backup-dokumen'))
+            ->assertOk()
+            ->assertHeader('content-type', 'application/zip');
+
+        $zipPath = $response->baseResponse->getFile()->getPathname();
+        $zip = new ZipArchive();
+        $this->assertTrue($zip->open($zipPath) === true);
+
+        $entry = 'Yudisium/Mahasiswa Test - 2301110001/Form Yudisium.pdf';
+        $this->assertSame($sourceContents, $zip->getFromName($entry));
+        $zip->close();
+
+        Storage::disk('local')->assertExists($document->file_path);
+        $this->assertSame($sourceContents, Storage::disk('local')->get($document->file_path));
+
+        if (is_file($zipPath)) {
+            unlink($zipPath);
+        }
+    }
+
     public function test_revision_submission_rejects_a_missing_required_file(): void
     {
         [$pengajuan, $document] = $this->createRevisionSubmission();
@@ -239,6 +303,9 @@ class DocumentUploadValidationTest extends TestCase
             'nama_file_asli' => 'replacement.pdf',
             'status_validasi' => 'PENDING',
         ]);
+        $updatedDocument = $document->fresh();
+        $this->assertStringStartsWith('yudisium/2301110001/', $updatedDocument->file_path);
+        Storage::disk('local')->assertExists($updatedDocument->file_path);
         $this->assertSame('REVISI_DIKIRIM', $pengajuan->fresh()->status);
     }
 

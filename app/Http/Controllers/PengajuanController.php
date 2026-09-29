@@ -240,9 +240,10 @@ private function canonicalDocumentCode(string $code): string
                  */
                 $path =
                     $file->storeAs(
-                        'private/yudisium/' .
+                        'yudisium/' .
                             $mahasiswa->nim,
-                        $namaFileStorage
+                        $namaFileStorage,
+                        'local'
                     );
 
                 /*

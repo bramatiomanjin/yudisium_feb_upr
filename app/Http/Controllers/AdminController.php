@@ -58,8 +58,9 @@ class AdminController extends Controller
     public function viewFile(string $id_dokumen)
 {
     $dokumen = PengajuanDokumen::findOrFail($id_dokumen);
+    $disk = Storage::disk('local');
 
-    if (!Storage::exists($dokumen->file_path)) {
+    if (!$disk->exists($dokumen->file_path)) {
         Log::warning('Dokumen pengajuan tidak ditemukan di storage.', [
             'dokumen_id' => $dokumen->id,
             'file_path' => $dokumen->file_path,
@@ -68,7 +69,7 @@ class AdminController extends Controller
         abort(404, 'File tidak ditemukan.');
     }
 
-    $path = Storage::path($dokumen->file_path);
+    $path = $disk->path($dokumen->file_path);
 
     $filename = $dokumen->nama_file_asli
         ?: basename($path);

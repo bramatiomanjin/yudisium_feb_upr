@@ -595,11 +595,13 @@ class TrackingController extends Controller
                     $path =
                         $file->storeAs(
 
-                            'private/yudisium/'
+                            'yudisium/'
                             .
                             $mahasiswa->nim,
 
-                            $namaFileStorage
+                            $namaFileStorage,
+
+                            'local'
                         );
 
 

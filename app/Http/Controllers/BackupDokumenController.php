@@ -10,6 +10,8 @@ class BackupDokumenController extends Controller
 {
     public function download()
     {
+        $disk = Storage::disk('local');
+
         /*
          * Pastikan ekstensi ZIP tersedia.
          */
@@ -41,7 +43,7 @@ class BackupDokumenController extends Controller
         /*
          * Folder sementara untuk menyimpan ZIP.
          */
-        Storage::makeDirectory('temp');
+        $disk->makeDirectory('temp');
 
         $namaZip =
             'Backup_Dokumen_Yudisium_' .
@@ -51,7 +53,7 @@ class BackupDokumenController extends Controller
             '.zip';
 
         $zipPath =
-            Storage::path(
+            $disk->path(
                 'temp/' . $namaZip
             );
 
@@ -133,7 +135,7 @@ class BackupDokumenController extends Controller
 
                 if (
                     empty($dokumen->file_path) ||
-                    !Storage::exists(
+                    !$disk->exists(
                         $dokumen->file_path
                     )
                 ) {
@@ -141,7 +143,7 @@ class BackupDokumenController extends Controller
                 }
 
                 $pathAsli =
-                    Storage::path(
+                    $disk->path(
                         $dokumen->file_path
                     );
 
