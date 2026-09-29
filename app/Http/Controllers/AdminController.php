@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use App\Models\PengajuanYudisium;
 use App\Models\PengajuanDokumen;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -59,11 +60,12 @@ class AdminController extends Controller
     $dokumen = PengajuanDokumen::findOrFail($id_dokumen);
 
     if (!Storage::exists($dokumen->file_path)) {
-        abort(
-            404,
-            'File tidak ditemukan di server. Path DB: ' .
-            $dokumen->file_path
-        );
+        Log::warning('Dokumen pengajuan tidak ditemukan di storage.', [
+            'dokumen_id' => $dokumen->id,
+            'file_path' => $dokumen->file_path,
+        ]);
+
+        abort(404, 'File tidak ditemukan.');
     }
 
     $path = Storage::path($dokumen->file_path);

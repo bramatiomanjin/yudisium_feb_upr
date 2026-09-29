@@ -28,7 +28,7 @@ Route::get(
 Route::post(
     '/pengajuan',
     [PengajuanController::class, 'store']
-)->name('pengajuan.store');
+)->middleware('throttle:submission')->name('pengajuan.store');
 
 
 // Halaman sukses
@@ -48,13 +48,13 @@ Route::get(
 Route::post(
     '/tracking',
     [TrackingController::class, 'search']
-)->name('tracking.search');
+)->middleware('throttle:tracking')->name('tracking.search');
 
 
 Route::post(
     '/tracking/revision-access',
     [TrackingController::class, 'revisionAccess']
-)->name('tracking.revision-access');
+)->middleware('throttle:revision-access')->name('tracking.revision-access');
 
 
 // Detail tracking
@@ -80,7 +80,7 @@ Route::get(
 Route::post(
     '/revisi/{kode_pengajuan}',
     [TrackingController::class, 'prosesRevisi']
-)->name('tracking.proses');
+)->middleware('throttle:revision-submit')->name('tracking.proses');
 
 
 // =========================================================
@@ -96,7 +96,7 @@ Route::get(
 Route::post(
     '/admin/login',
     [AuthController::class, 'loginProses']
-);
+)->middleware('throttle:login');
 
 
 Route::post(
@@ -120,7 +120,7 @@ Route::get(
 Route::post(
     '/admin/register',
     [AuthController::class, 'registerProses']
-);
+)->middleware('throttle:admin-register');
 
 
 // =========================================================

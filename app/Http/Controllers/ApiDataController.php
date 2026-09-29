@@ -13,6 +13,7 @@ use App\Models\RiwayatStatus;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ApiDataController extends Controller
 {
@@ -542,6 +543,10 @@ class ApiDataController extends Controller
         } catch (\Throwable $e) {
 
             DB::rollBack();
+            Log::error('Gagal menyimpan hasil verifikasi pengajuan.', [
+                'pengajuan_id' => $id,
+                'exception' => $e,
+            ]);
 
 
             return response()->json([
@@ -549,10 +554,7 @@ class ApiDataController extends Controller
                     false,
 
                 'message' =>
-                    'Gagal menyimpan hasil verifikasi.',
-
-                'error' =>
-                    $e->getMessage()
+                    'Gagal menyimpan hasil verifikasi.'
 
             ], 500);
         }
@@ -1110,6 +1112,10 @@ class ApiDataController extends Controller
         } catch (\Throwable $e) {
 
             DB::rollBack();
+            Log::error('Gagal menyimpan hasil review revisi.', [
+                'pengajuan_id' => $id,
+                'exception' => $e,
+            ]);
 
 
             return response()->json([
@@ -1118,7 +1124,7 @@ class ApiDataController extends Controller
                     false,
 
                 'message' =>
-                    $e->getMessage()
+                    'Gagal menyimpan hasil review revisi.'
 
             ], 500);
         }

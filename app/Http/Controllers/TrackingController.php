@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\PengajuanStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Models\PengajuanYudisium;
 use App\Models\Mahasiswa;
 use App\Models\ValidasiField;
@@ -709,12 +710,14 @@ class TrackingController extends Controller
         } catch (\Throwable $e) {
 
             DB::rollBack();
+            Log::error('Gagal memproses revisi mahasiswa.', [
+                'pengajuan_id' => $pengajuan->id,
+                'exception' => $e,
+            ]);
 
 
             return response(
-                'Terjadi Kesalahan saat merevisi: '
-                .
-                $e->getMessage(),
+                'Revisi belum dapat disimpan. Silakan coba lagi.',
                 500
             );
         }

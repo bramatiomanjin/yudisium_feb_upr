@@ -6,6 +6,7 @@ use App\Enums\PengajuanStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -189,6 +190,10 @@ class SkController extends Controller
         } catch (\Throwable $e) {
 
             DB::rollBack();
+            Log::error('Gagal memperbarui status proses SK.', [
+                'pengajuan_id' => $id,
+                'exception' => $e,
+            ]);
 
 
             return response()->json([
@@ -196,10 +201,7 @@ class SkController extends Controller
                     false,
 
                 'message' =>
-                    'Gagal memperbarui status proses SK.',
-
-                'error' =>
-                    $e->getMessage()
+                    'Gagal memperbarui status proses SK.'
             ], 500);
         }
     }
