@@ -1,84 +1,74 @@
-# Sistem Informasi SK Yudisium FEB UPR
+# Sistem Informasi Yudisium FEB UPR
 
-Sistem berbasis web untuk digitalisasi pengajuan dan verifikasi berkas Surat Keputusan (SK) Yudisium di Fakultas Ekonomi dan Bisnis, Universitas Palangka Raya (UPR). Repositori ini berisi struktur inti *backend* yang dibangun menggunakan framework Laravel.
+Sistem Informasi Yudisium Fakultas Ekonomi dan Bisnis Universitas Palangka Raya merupakan aplikasi berbasis web untuk membantu proses pengajuan, verifikasi, revisi, tracking, hingga proses penerbitan SK Yudisium.
 
-## 🚀 Fitur Utama
+Sistem ini dibangun menggunakan Laravel dan MySQL dengan dukungan antarmuka untuk Mahasiswa, Admin Akademik, dan Super Admin.
 
-**👨‍🎓 Modul Mahasiswa (Publik)**
-* **Pengajuan Terpadu:** Pengisian form identitas, data akademik, dan unggah dokumen persyaratan (PDF) dalam satu pintu dengan proteksi transaksi *database*.
-* **Tracking Status:** Pengecekan status pengajuan secara *real-time* menggunakan NIM dan Kode Pengajuan tanpa perlu memiliki akun.
-* **Sistem Revisi Pintar:** Mahasiswa hanya perlu (dan hanya bisa) memperbaiki *field* data atau dokumen spesifik yang ditolak oleh Admin. Data yang sudah disetujui akan otomatis terkunci.
+## Fitur Utama
 
-**🧑‍💼 Modul Admin Akademik**
-* **Validasi Mikro:** Pemeriksaan berkas dan data teks dilakukan secara detail per-kolom (Field-by-Field) dan per-dokumen (Document-by-Document).
-* **Feedback Revisi:** Pemberian catatan penolakan spesifik pada data yang salah agar mahasiswa tahu persis apa yang harus diperbaiki.
-* **Automasi Status:** Sistem secara cerdas menyimpulkan status akhir pengajuan (*Terverifikasi*, *Verifikasi Admin*, atau *Perlu Revisi*) berdasarkan kalkulasi hasil validasi seluruh baris data.
-* **Keamanan Dokumen Private:** File PDF mahasiswa disimpan di direktori internal (`storage/app/private`) dan hanya bisa dirender oleh Admin yang memiliki sesi *login* valid.
+### Mahasiswa
 
-**👑 Modul Super Admin**
-* **Manajemen Pengguna:** Sistem CRUD untuk mengelola otorisasi penambahan dan penghapusan akun Admin (staf akademik).
-* **Log Aktivitas (Audit Trail):** Perekaman riwayat aktivitas validasi yang transparan (melacak identitas Admin yang memverifikasi data, waktu eksekusi, serta keputusan yang diambil).
+Mahasiswa dapat menggunakan sistem tanpa perlu membuat akun.
 
-## 🛠️ Tech Stack
+Fitur yang tersedia meliputi:
 
-* **Framework Backend:** Laravel
-* **Database:** MySQL
-* **Environment Server:** Laragon (PHP, Node.js, Composer)
+- Mengisi data identitas dan data akademik.
+- Mengunggah dokumen persyaratan Yudisium.
+- Mendapatkan Kode Pengajuan Yudisium setelah pengajuan berhasil.
+- Melakukan tracking pengajuan menggunakan NIM atau Kode Pengajuan.
+- Melihat status pengajuan secara berkala.
+- Melihat feedback dari Admin apabila terdapat data atau dokumen yang perlu diperbaiki.
+- Mengirim revisi hanya pada field atau dokumen yang diminta Admin.
+- Melihat perkembangan proses SK sampai siap diambil.
 
-## 🗄️ Struktur Database Inti
+### Admin Akademik
 
-Sistem ini didukung oleh arsitektur *relational database* dengan 8 tabel utama untuk menjaga integritas data pengajuan dan riwayat revisi:
-1. `users` - Autentikasi dan otorisasi tingkatan Admin/Super Admin.
-2. `mahasiswa` - Entitas biodata dan riwayat identitas akademik mahasiswa.
-3. `pengajuan_yudisium` - Entitas *header* pendaftaran SK Yudisium.
-4. `jenis_dokumen` - Master data untuk persyaratan dokumen (Ijazah, KHS, dll).
-5. `pengajuan_dokumen` - Penyimpanan referensi *path* file PDF dan status validasi lampiran.
-6. `validasi_field` - Tabel *tracking* log status persetujuan untuk masing-masing baris inputan teks mahasiswa.
-7. `riwayat_revisi` - Tabel pencatatan nilai historis (perubahan nilai lama ke nilai baru) setiap kali mahasiswa mensubmit ulang perbaikan data.
-8. `riwayat_status` - (Opsional/Mendatang) Pencatatan pergerakan status makro pengajuan.
+Admin Akademik digunakan oleh staf untuk memproses pengajuan mahasiswa.
 
-## 💻 Panduan Instalasi Lokal
+Fitur utama:
 
-1. **Clone repositori**
-```bash
-git clone https://github.com/bramatiomanjin/yudisium_feb_upr.git
-cd yudisium-feb
+- Dashboard pengajuan.
+- Daftar seluruh pengajuan Yudisium.
+- Pemeriksaan data mahasiswa per field.
+- Pemeriksaan dokumen per dokumen.
+- Pemberian feedback revisi.
+- Review hasil revisi mahasiswa.
+- Verifikasi pengajuan.
+- Proses status SK Yudisium.
+- History aktivitas pengajuan.
+- Export data Yudisium ke Excel.
+- Preview dokumen mahasiswa secara private.
 
-```
+### Super Admin
 
-2. **Install dependensi backend**
-```bash
-composer install
+Super Admin memiliki akses tambahan untuk pengelolaan sistem.
 
-```
+Fitur utama:
 
+- Mengelola akun Admin.
+- Approve dan reject pendaftaran Admin.
+- Mengaktifkan dan menonaktifkan Admin.
+- Mengatur dokumen persyaratan.
+- Melihat log aktivitas.
+- Melakukan backup dokumen mahasiswa.
 
-3. **Konfigurasi Environment**
-Salin file `.env.example` menjadi `.env`, lalu atur konfigurasi koneksi *database* MySQL (misal: `DB_DATABASE=yudisium_feb`).
-```bash
-copy .env.example .env
-php artisan key:generate
+## Alur Status Pengajuan
 
-```
+Status utama pengajuan pada sistem:
 
-
-4. **Migrasi dan Seeding Database**
-Jalankan perintah ini untuk membangun seluruh relasi tabel dan memasukkan data *dummy* awal (termasuk persyaratan dokumen dan akun *Super Admin* default).
-```bash
-php artisan migrate --seed
-
-```
-
-
-5. **Jalankan Aplikasi**
-Akses melalui *virtual host* Laragon (contoh: `[http://yudisium-feb.test](http://yudisium-feb.test)`) atau jalankan server lokal bawaan Laravel:
-```bash
-php artisan serve
-
-```
-
-
-
----
-
-*Dikembangkan oleh Ciko Christian untuk proyek Sistem Informasi Fakultas Ekonomi dan Bisnis Universitas Palangka Raya.*
+```text
+MENUNGGU_VERIFIKASI
+        ↓
+PERLU_REVISI
+        ↓
+REVISI_DIKIRIM
+        ↓
+TERVERIFIKASI
+        ↓
+PEMBUATAN_SK
+        ↓
+PARAF_PIMPINAN
+        ↓
+TTD_DEKAN
+        ↓
+SK_SIAP_DIAMBIL
