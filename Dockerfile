@@ -1,4 +1,4 @@
-FROM php:8.2-apache
+FROM php:8.3-apache
 
 # Install ekstensi PHP yang dibutuhkan Laravel & MySQL
 RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libzip-dev zip unzip \
