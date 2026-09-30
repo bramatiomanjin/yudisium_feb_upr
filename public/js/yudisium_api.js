@@ -11,7 +11,7 @@
     const CONFIG = {
         backendConnected: true,
         baseUrl: "",
-        timeout: 15000
+        timeout: 120000
     };
 
 

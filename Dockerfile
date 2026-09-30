@@ -32,6 +32,13 @@ RUN composer install \
     --no-interaction \
     --prefer-dist
 
+# Production PHP upload limits
+RUN echo "upload_max_filesize=20M" > /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "post_max_size=100M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "max_file_uploads=30" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "memory_limit=256M" >> /usr/local/etc/php/conf.d/uploads.ini
+
+    
 # Build frontend assets
 RUN npm ci \
     && npm run build \
