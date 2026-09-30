@@ -32,14 +32,22 @@ private function canonicalDocumentCode(string $code): string
 }
     // 1. Menampilkan halaman form
     public function create()
-   {
-    $activeDocs = JenisDokumen::where('is_active', 1)
-        ->pluck('kode')
-        ->map(fn ($kode) => $this->canonicalDocumentCode($kode))
-        ->toArray();
+    {
+        $documents = JenisDokumen::where('is_active', 1)->get();
 
-    return view('index', compact('activeDocs'));
-}
+        $activeDocs = $documents
+            ->map(fn (JenisDokumen $document) => $this->canonicalDocumentCode($document->kode))
+            ->values()
+            ->all();
+
+        $requiredDocs = $documents
+            ->filter(fn (JenisDokumen $document): bool => (bool) $document->wajib)
+            ->map(fn (JenisDokumen $document) => $this->canonicalDocumentCode($document->kode))
+            ->values()
+            ->all();
+
+        return view('index', compact('activeDocs', 'requiredDocs'));
+    }
 
     // 2. Memproses pengiriman form
     public function store(

@@ -431,6 +431,10 @@
             =================================================== -->
             <section class="form-section" id="step3">
 
+                @php
+                    $isDocumentRequired = fn (string $code): bool => in_array($code, $requiredDocs, true);
+                @endphp
+
                 <div class="section-header">
 
                     <h2>Upload Dokumen Persyaratan</h2>
@@ -445,7 +449,7 @@
                 <div class="document-upload-summary" aria-live="polite">
                     <div class="document-upload-summary-main">
                         <span class="document-upload-summary-label">Kelengkapan Dokumen</span>
-                        <strong id="documentProgressText">0 dari 14 dokumen wajib dipilih</strong>
+                        <strong id="documentProgressText">0 dokumen wajib dipilih</strong>
                         <p>Dokumen khusus jurusan akan dihitung otomatis sesuai jurusan Anda.</p>
                     </div>
 
@@ -459,7 +463,9 @@
 
                     <label for="form_yudisium">
                         Formulir Pendaftaran Yudisium
-                        <span class="required">*</span>
+                        @if($isDocumentRequired('FORM_YUDISIUM'))
+                            <span class="required">*</span>
+                        @endif
                     </label>
 
                     <input
@@ -468,7 +474,8 @@
                         name="form_yudisium"
                         accept=".pdf,application/pdf"
                         data-max-size="1"
-                        required
+                        data-required="{{ $isDocumentRequired('FORM_YUDISIUM') ? 'true' : 'false' }}"
+                        @if($isDocumentRequired('FORM_YUDISIUM')) required @endif
                     >
 
                     <small>PDF, maksimal 1 MB.</small>
@@ -485,7 +492,9 @@
 
                     <label for="foto_3x4">
                         Foto 3×4 Berwarna
-                        <span class="required">*</span>
+                        @if($isDocumentRequired('FOTO_3X4'))
+                            <span class="required">*</span>
+                        @endif
                     </label>
 
                     <input
@@ -494,7 +503,8 @@
                         name="foto_3x4"
                         accept=".pdf,application/pdf"
                         data-max-size="1"
-                        required
+                        data-required="{{ $isDocumentRequired('FOTO_3X4') ? 'true' : 'false' }}"
+                        @if($isDocumentRequired('FOTO_3X4')) required @endif
                     >
 
                     <small>
@@ -514,7 +524,9 @@
 
                     <label for="ijazah_slta">
                         Ijazah SLTA
-                        <span class="required">*</span>
+                        @if($isDocumentRequired('IJAZAH_SLTA'))
+                            <span class="required">*</span>
+                        @endif
                     </label>
 
                     <input
@@ -523,7 +535,8 @@
                         name="ijazah_slta"
                         accept=".pdf,application/pdf"
                         data-max-size="1"
-                        required
+                        data-required="{{ $isDocumentRequired('IJAZAH_SLTA') ? 'true' : 'false' }}"
+                        @if($isDocumentRequired('IJAZAH_SLTA')) required @endif
                     >
 
                     <small>PDF, maksimal 1 MB.</small>
@@ -540,7 +553,9 @@
 
                     <label for="berita_acara_ujian">
                         Berita Acara Ujian Skripsi / Artikel
-                        <span class="required">*</span>
+                        @if($isDocumentRequired('BERITA_ACARA_UJIAN'))
+                            <span class="required">*</span>
+                        @endif
                     </label>
 
                     <input
@@ -549,7 +564,8 @@
                         name="berita_acara_ujian"
                         accept=".pdf,application/pdf"
                         data-max-size="1"
-                        required
+                        data-required="{{ $isDocumentRequired('BERITA_ACARA_UJIAN') ? 'true' : 'false' }}"
+                        @if($isDocumentRequired('BERITA_ACARA_UJIAN')) required @endif
                     >
 
                     <small>
@@ -568,7 +584,9 @@
 
                     <label for="rekap_nilai">
                         Rekapitulasi Nilai Ujian Skripsi / Artikel
-                        <span class="required">*</span>
+                        @if($isDocumentRequired('REKAP_NILAI'))
+                            <span class="required">*</span>
+                        @endif
                     </label>
 
                     <input
@@ -577,7 +595,8 @@
                         name="rekap_nilai"
                         accept=".pdf,application/pdf"
                         data-max-size="1"
-                        required
+                        data-required="{{ $isDocumentRequired('REKAP_NILAI') ? 'true' : 'false' }}"
+                        @if($isDocumentRequired('REKAP_NILAI')) required @endif
                     >
 
                     <small>
@@ -596,7 +615,9 @@
 
                     <label for="blanko_revisi">
                         Blanko Revisi
-                        <span class="required">*</span>
+                        @if($isDocumentRequired('BLANKO_REVISI'))
+                            <span class="required">*</span>
+                        @endif
                     </label>
 
                     <input
@@ -605,7 +626,8 @@
                         name="blanko_revisi"
                         accept=".pdf,application/pdf"
                         data-max-size="1"
-                        required
+                        data-required="{{ $isDocumentRequired('BLANKO_REVISI') ? 'true' : 'false' }}"
+                        @if($isDocumentRequired('BLANKO_REVISI')) required @endif
                     >
 
                     <small>
@@ -624,7 +646,9 @@
 
                     <label for="tanda_terima">
                         Tanda Terima Skripsi / Artikel
-                        <span class="required">*</span>
+                        @if($isDocumentRequired('TANDA_TERIMA'))
+                            <span class="required">*</span>
+                        @endif
                     </label>
 
                     <input
@@ -633,7 +657,8 @@
                         name="tanda_terima"
                         accept=".pdf,.doc,.docx"
                         data-max-size="10"
-                        required
+                        data-required="{{ $isDocumentRequired('TANDA_TERIMA') ? 'true' : 'false' }}"
+                        @if($isDocumentRequired('TANDA_TERIMA')) required @endif
                     >
 
                     <small>
@@ -652,7 +677,9 @@
 
                     <label for="surat_pernyataan_ijazah">
                         Surat Pernyataan untuk Proses Penulisan Ijazah
-                        <span class="required">*</span>
+                        @if($isDocumentRequired('SURAT_PERNYATAAN_IJAZAH'))
+                            <span class="required">*</span>
+                        @endif
                     </label>
 
                     <input
@@ -661,7 +688,8 @@
                         name="surat_pernyataan_ijazah"
                         accept=".pdf,application/pdf"
                         data-max-size="1"
-                        required
+                        data-required="{{ $isDocumentRequired('SURAT_PERNYATAAN_IJAZAH') ? 'true' : 'false' }}"
+                        @if($isDocumentRequired('SURAT_PERNYATAAN_IJAZAH')) required @endif
                     >
 
                     <small>PDF, maksimal 1 MB.</small>
@@ -678,7 +706,9 @@
 
                     <label for="bebas_perpus_univ">
                         Surat Bebas Pinjam Perpustakaan Universitas Asli
-                        <span class="required">*</span>
+                        @if($isDocumentRequired('BEBAS_PERPUS_UNIV'))
+                            <span class="required">*</span>
+                        @endif
                     </label>
 
                     <input
@@ -687,7 +717,8 @@
                         name="bebas_perpus_univ"
                         accept=".pdf,application/pdf"
                         data-max-size="1"
-                        required
+                        data-required="{{ $isDocumentRequired('BEBAS_PERPUS_UNIV') ? 'true' : 'false' }}"
+                        @if($isDocumentRequired('BEBAS_PERPUS_UNIV')) required @endif
                     >
 
                     <small>PDF, maksimal 1 MB.</small>
@@ -704,6 +735,9 @@
 
                     <label for="bebas_perpus_fakultas">
                         Surat Bebas Pinjam Perpustakaan Fakultas Asli
+                        @if($isDocumentRequired('BEBAS_PERPUS_FAKULTAS'))
+                            <span class="required">*</span>
+                        @endif
                     </label>
 
                     <input
@@ -712,6 +746,8 @@
                         name="bebas_perpus_fakultas"
                         accept=".pdf,application/pdf"
                         data-max-size="1"
+                        data-required="{{ $isDocumentRequired('BEBAS_PERPUS_FAKULTAS') ? 'true' : 'false' }}"
+                        @if($isDocumentRequired('BEBAS_PERPUS_FAKULTAS')) required @endif
                     >
 
                     <small>
@@ -730,7 +766,9 @@
 
                     <label for="khs">
                         KHS Semester 1 s/d Terbaru
-                        <span class="required">*</span>
+                        @if($isDocumentRequired('KHS'))
+                            <span class="required">*</span>
+                        @endif
                     </label>
 
                     <input
@@ -739,7 +777,8 @@
                         name="khs"
                         accept=".pdf,application/pdf"
                         data-max-size="1"
-                        required
+                        data-required="{{ $isDocumentRequired('KHS') ? 'true' : 'false' }}"
+                        @if($isDocumentRequired('KHS')) required @endif
                     >
 
                     <small>
@@ -758,7 +797,9 @@
 
     <label for="khs_semester_berjalan">
         KHS terbaru yang ada nilai skripsi dan tanda tangan ketua jurusan
-        <span class="required">*</span>
+        @if($isDocumentRequired('KHS_SEMESTER_BERJALAN'))
+            <span class="required">*</span>
+        @endif
     </label>
 
     <input
@@ -767,7 +808,8 @@
         name="khs_semester_berjalan"
         accept=".pdf,application/pdf"
         data-max-size="1"
-        required
+        data-required="{{ $isDocumentRequired('KHS_SEMESTER_BERJALAN') ? 'true' : 'false' }}"
+        @if($isDocumentRequired('KHS_SEMESTER_BERJALAN')) required @endif
     >
 
     <small>
@@ -787,7 +829,9 @@
 
                     <label for="transkrip">
                         Transkrip Nilai Ujian Skripsi
-                        <span class="required">*</span>
+                        @if($isDocumentRequired('TRANSKRIP'))
+                            <span class="required">*</span>
+                        @endif
                     </label>
 
                     <input
@@ -796,7 +840,8 @@
                         name="transkrip"
                         accept=".pdf,application/pdf"
                         data-max-size="1"
-                        required
+                        data-required="{{ $isDocumentRequired('TRANSKRIP') ? 'true' : 'false' }}"
+                        @if($isDocumentRequired('TRANSKRIP')) required @endif
                     >
 
                     <small>
@@ -815,7 +860,9 @@
 
                     <label for="surat_tugas_dosbing">
                         Surat Tugas Dosen Pembimbing Skripsi
-                        <span class="required">*</span>
+                        @if($isDocumentRequired('SURAT_TUGAS_DOSBING'))
+                            <span class="required">*</span>
+                        @endif
                     </label>
 
                     <input
@@ -824,7 +871,8 @@
                         name="surat_tugas_dosbing"
                         accept=".pdf,application/pdf"
                         data-max-size="10"
-                        required
+                        data-required="{{ $isDocumentRequired('SURAT_TUGAS_DOSBING') ? 'true' : 'false' }}"
+                        @if($isDocumentRequired('SURAT_TUGAS_DOSBING')) required @endif
                     >
 
                     <small>
@@ -843,7 +891,9 @@
 
                     <label for="bebas_tunggakan">
                         Surat Verifikasi Bebas Tunggakan dari Keuangan Rektorat
-                        <span class="required">*</span>
+                        @if($isDocumentRequired('BEBAS_TUNGGAKAN'))
+                            <span class="required">*</span>
+                        @endif
                     </label>
 
                     <input
@@ -852,7 +902,8 @@
                         name="bebas_tunggakan"
                         accept=".pdf,application/pdf"
                         data-max-size="1"
-                        required
+                        data-required="{{ $isDocumentRequired('BEBAS_TUNGGAKAN') ? 'true' : 'false' }}"
+                        @if($isDocumentRequired('BEBAS_TUNGGAKAN')) required @endif
                     >
 
                     <small>PDF, maksimal 1 MB.</small>
@@ -879,6 +930,9 @@
 
                         <label for="jurnal_jmso">
                             Bukti Pengisian Jurnal "Manajemen Sains dan Organisasi" (JMSO)
+                            @if($isDocumentRequired('JURNAL_JMSO'))
+                                <span class="required">*</span>
+                            @endif
                         </label>
 
                         <input
@@ -887,6 +941,7 @@
                             name="jurnal_jmso"
                             accept=".pdf,application/pdf"
                             data-max-size="1"
+                            data-required="{{ $isDocumentRequired('JURNAL_JMSO') ? 'true' : 'false' }}"
                         >
 
                         <small>
@@ -905,6 +960,9 @@
 
                         <label for="jurnal_ep">
                             Bukti Pengisian Jurnal Jurusan Ekonomi Pembangunan
+                            @if($isDocumentRequired('JURNAL_EP'))
+                                <span class="required">*</span>
+                            @endif
                         </label>
 
                         <input
@@ -913,6 +971,7 @@
                             name="jurnal_ep"
                             accept=".pdf,application/pdf"
                             data-max-size="1"
+                            data-required="{{ $isDocumentRequired('JURNAL_EP') ? 'true' : 'false' }}"
                         >
 
                         <small>
@@ -931,6 +990,9 @@
 
                         <label for="jurnal_akuntansi">
                             Bukti Pengisian Jurnal Jurusan Akuntansi
+                            @if($isDocumentRequired('JURNAL_AKUNTANSI'))
+                                <span class="required">*</span>
+                            @endif
                         </label>
 
                         <input
@@ -939,6 +1001,7 @@
                             name="jurnal_akuntansi"
                             accept=".pdf,.doc,.docx"
                             data-max-size="10"
+                            data-required="{{ $isDocumentRequired('JURNAL_AKUNTANSI') ? 'true' : 'false' }}"
                         >
 
                         <small>

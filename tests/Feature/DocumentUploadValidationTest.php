@@ -150,13 +150,39 @@ class DocumentUploadValidationTest extends TestCase
 
     public function test_initial_submission_rejects_a_missing_required_file(): void
     {
-        $this->createDocumentType();
+        $this->createDocumentType(true, 'JURNAL_AKUNTANSI', 'AKUNTANSI');
 
-        $this->postJson(route('pengajuan.store'), $this->initialPayload())
+        $this->get(route('pengajuan.create'))
+            ->assertOk()
+            ->assertSee('name="jurnal_akuntansi"', false)
+            ->assertSee('data-required="true"', false);
+
+        $this->postJson(route('pengajuan.store'), $this->initialPayload([
+            'jurusan' => 'AKUNTANSI',
+        ]))
             ->assertUnprocessable()
-            ->assertJsonValidationErrors('form_yudisium');
+            ->assertJsonValidationErrors('jurnal_akuntansi');
 
         $this->assertDatabaseCount('pengajuan_yudisium', 0);
+    }
+
+    public function test_initial_submission_allows_a_missing_optional_file(): void
+    {
+        $this->createDocumentType(false, 'JURNAL_AKUNTANSI', 'AKUNTANSI');
+
+        $this->get(route('pengajuan.create'))
+            ->assertOk()
+            ->assertSee('name="jurnal_akuntansi"', false)
+            ->assertSee('data-required="false"', false);
+
+        $this->postJson(route('pengajuan.store'), $this->initialPayload([
+            'jurusan' => 'AKUNTANSI',
+        ]))
+            ->assertOk()
+            ->assertJsonPath('success', true);
+
+        $this->assertDatabaseCount('pengajuan_yudisium', 1);
+        $this->assertDatabaseCount('pengajuan_dokumen', 0);
     }
 
     public function test_initial_submission_rejects_a_wrong_extension(): void
@@ -309,13 +335,17 @@ class DocumentUploadValidationTest extends TestCase
         $this->assertSame('REVISI_DIKIRIM', $pengajuan->fresh()->status);
     }
 
-    private function createDocumentType(): JenisDokumen
+    private function createDocumentType(
+        bool $required = true,
+        string $code = 'FORM_YUDISIUM',
+        ?string $department = null
+    ): JenisDokumen
     {
         return JenisDokumen::query()->create([
-            'kode' => 'FORM_YUDISIUM',
+            'kode' => $code,
             'nama_dokumen' => 'Form Yudisium',
-            'jurusan' => null,
-            'wajib' => true,
+            'jurusan' => $department,
+            'wajib' => $required,
             'max_size_mb' => 2,
             'allowed_extensions' => 'pdf',
             'is_active' => true,

@@ -819,6 +819,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateJurusanDocument() {
 
+        function activateSpecialDocument(group, field) {
+
+            if (!group) {
+                return;
+            }
+
+
+            group.classList.add(
+                "active"
+            );
+
+
+            if (
+                field &&
+                field.dataset.required === "true"
+            ) {
+
+                field.setAttribute(
+                    "required",
+                    "required"
+                );
+
+            }
+
+        }
+
         const specialGroups = [
             dokumenManajemen,
             dokumenEkonomi,
@@ -869,9 +895,10 @@ document.addEventListener("DOMContentLoaded", function () {
         ) {
 
             if (dokumenManajemen) {
-                dokumenManajemen
-                    .classList
-                    .add("active");
+                activateSpecialDocument(
+                    dokumenManajemen,
+                    jurnalManajemen
+                );
             }
 
         }
@@ -883,9 +910,10 @@ document.addEventListener("DOMContentLoaded", function () {
         ) {
 
             if (dokumenEkonomi) {
-                dokumenEkonomi
-                    .classList
-                    .add("active");
+                activateSpecialDocument(
+                    dokumenEkonomi,
+                    jurnalEkonomi
+                );
             }
 
         }
@@ -897,9 +925,10 @@ document.addEventListener("DOMContentLoaded", function () {
         ) {
 
             if (dokumenAkuntansi) {
-                dokumenAkuntansi
-                    .classList
-                    .add("active");
+                activateSpecialDocument(
+                    dokumenAkuntansi,
+                    jurnalAkuntansi
+                );
             }
 
         }
@@ -1419,12 +1448,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 } else {
 
-                    status.textContent =
-                        "Opsional";
+                    if (field.required) {
 
-                    status.classList.add(
-                        "optional"
-                    );
+                        status.textContent =
+                            "Wajib";
+
+                    } else {
+
+                        status.textContent =
+                            "Opsional";
+
+                        status.classList.add(
+                            "optional"
+                        );
+
+                    }
 
                 }
 
