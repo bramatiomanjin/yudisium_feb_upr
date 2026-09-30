@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Database\Seeders;
 
+use App\Models\JenisDokumen;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Database\Schema\Blueprint;
@@ -127,5 +128,33 @@ class DatabaseSeederTest extends TestCase
             ->count());
         $this->assertSame($originalPasswordHash, $superAdmin->password);
         $this->assertTrue(Hash::check('InitialSecurePassword!', $superAdmin->password));
+    }
+
+    public function test_department_journal_documents_are_optional_while_required_documents_remain_required(): void
+    {
+        config(['auth.super_admin.password' => 'InitialSecurePassword!']);
+
+        $this->seed(DatabaseSeeder::class);
+
+        $documents = JenisDokumen::query()
+            ->whereIn('kode', [
+                'JURNAL_JMSO',
+                'JURNAL_EP',
+                'JURNAL_AKUNTANSI',
+                'FORM_YUDISIUM',
+            ])
+            ->get()
+            ->keyBy('kode');
+
+        $this->assertFalse((bool) $documents['JURNAL_JMSO']->wajib);
+        $this->assertFalse((bool) $documents['JURNAL_EP']->wajib);
+        $this->assertFalse((bool) $documents['JURNAL_AKUNTANSI']->wajib);
+
+        $this->assertTrue((bool) $documents['JURNAL_JMSO']->is_active);
+        $this->assertTrue((bool) $documents['JURNAL_EP']->is_active);
+        $this->assertTrue((bool) $documents['JURNAL_AKUNTANSI']->is_active);
+
+        // Kontrol: dokumen lain yang memang wajib tidak boleh ikut menjadi opsional.
+        $this->assertTrue((bool) $documents['FORM_YUDISIUM']->wajib);
     }
 }

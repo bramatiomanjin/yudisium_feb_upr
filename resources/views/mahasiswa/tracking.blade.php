@@ -252,7 +252,7 @@
 
 
                     <h2>
-                        Belum memiliki Kode SK Yudisium?
+                        Belum memiliki Kode Pengajuan Yudisium?
                     </h2>
 
 

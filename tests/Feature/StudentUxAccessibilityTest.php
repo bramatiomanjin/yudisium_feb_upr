@@ -18,9 +18,10 @@ class StudentUxAccessibilityTest extends TestCase
             'Untuk membuka revisi, masukkan keduanya.',
             $view
         );
-        $this->assertStringNotContainsString('Kode SK Yudisium (Opsional)', $view);
+        $this->assertStringNotContainsString('Kode Pengajuan Yudisium (Opsional)', $view);
         $this->assertStringNotContainsString('NIM wajib diisi', $view);
-        $this->assertStringNotContainsString('Kode SK Yudisium wajib diisi', $view);
+        $this->assertStringNotContainsString('Kode Pengajuan Yudisium wajib diisi', $view);
+
     }
 
     public function test_runtime_status_copy_uses_paraf_pimpinan(): void
@@ -91,5 +92,37 @@ class StudentUxAccessibilityTest extends TestCase
         $this->assertStringContainsString('event.key !== "Tab"', $helper);
         $this->assertStringContainsString('controller.previousFocus.focus()', $helper);
         $this->assertStringContainsString('modal.querySelectorAll(focusableSelector)', $helper);
+    }
+
+    public function test_runtime_submission_code_wording_uses_kode_pengajuan_yudisium(): void
+    {
+        $runtimeFiles = [
+            app_path('Http/Controllers/TrackingController.php'),
+            resource_path('views/index.blade.php'),
+            resource_path('views/mahasiswa/pengajuan.blade.php'),
+            resource_path('views/mahasiswa/tracking.blade.php'),
+            resource_path('views/mahasiswa/revisi.blade.php'),
+            resource_path('views/mahasiswa/detail_tracking.blade.php'),
+            resource_path('views/admin/pengajuan.blade.php'),
+            resource_path('views/admin/history.blade.php'),
+            resource_path('views/admin/proses_sk.blade.php'),
+            public_path('js/student_tracking.js'),
+            public_path('js/student_pengajuan_api_bridge.js'),
+        ];
+
+        foreach ($runtimeFiles as $file) {
+            $contents = file_get_contents($file);
+
+            $this->assertStringNotContainsString(
+                'Kode SK Yudisium',
+                $contents,
+                $file
+            );
+        }
+
+        $this->assertStringContainsString(
+            'Kode Pengajuan Yudisium',
+            file_get_contents(resource_path('views/index.blade.php'))
+        );
     }
 }

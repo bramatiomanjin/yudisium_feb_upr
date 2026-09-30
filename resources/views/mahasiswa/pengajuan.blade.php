@@ -1204,7 +1204,7 @@
 
             <span class="success-eyebrow">Pengajuan Berhasil</span>
 
-            <h2 id="successModalTitle">Simpan Kode SK Yudisium Anda</h2>
+            <h2 id="successModalTitle">Simpan Kode Pengajuan Yudisium Anda</h2>
 
             <p class="success-description">
                 Kode ini digunakan bersama NIM untuk membuka status pengajuan dan melihat feedback dari admin.
@@ -1212,7 +1212,7 @@
             </p>
 
             <div class="submission-code-box">
-                <span>Kode SK Yudisium</span>
+                <span>Kode Pengajuan Yudisium</span>
 
                 <div class="submission-code-row">
                     <strong id="generatedSubmissionCode">-</strong>

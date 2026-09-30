@@ -1069,6 +1069,175 @@
 
     font-size: 9px;
 }
+/* =========================================================
+   PRE-RELEASE READABILITY POLISH
+   Menyamakan keterbacaan halaman review revisi dengan
+   halaman detail dan verifikasi admin.
+========================================================= */
+
+.revision-review-back a {
+    font-size: 0.82rem;
+    line-height: 1.4;
+}
+
+.revision-review-header > div:first-child > p:last-child {
+    font-size: 0.9rem;
+    line-height: 1.55;
+}
+
+.revision-student-card h2 {
+    font-size: 1rem;
+    line-height: 1.35;
+}
+
+.revision-student-card p {
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+
+.revision-round span {
+    font-size: 0.72rem;
+    line-height: 1.4;
+}
+
+.revision-info-box p {
+    font-size: 0.82rem;
+    line-height: 1.55;
+}
+
+.revision-section-number {
+    font-size: 0.8rem;
+}
+
+.revision-section-header h2 {
+    font-size: 1rem;
+    line-height: 1.35;
+}
+
+.revision-section-header p {
+    font-size: 0.78rem;
+    line-height: 1.45;
+}
+
+.revision-item-title span {
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.revision-item-title strong {
+    font-size: 0.92rem;
+    line-height: 1.4;
+}
+
+.revision-item-type {
+    font-size: 0.7rem;
+    line-height: 1.35;
+}
+
+.revision-old-value span,
+.revision-new-value span {
+    font-size: 0.72rem;
+    line-height: 1.4;
+}
+
+.revision-old-value p,
+.revision-new-value p {
+    font-size: 0.9rem;
+    line-height: 1.55;
+}
+
+.revision-file-card span {
+    font-size: 0.72rem;
+    line-height: 1.4;
+}
+
+.revision-file-card strong {
+    font-size: 0.88rem;
+    line-height: 1.4;
+}
+
+.revision-file-card small {
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.revision-preview-button {
+    font-size: 0.78rem;
+}
+
+.revision-admin-feedback span {
+    font-size: 0.72rem;
+    line-height: 1.4;
+}
+
+.revision-admin-feedback p {
+    font-size: 0.88rem;
+    line-height: 1.55;
+}
+
+.revision-review-choice {
+    min-height: 38px;
+    font-size: 0.82rem;
+}
+
+.revision-review-feedback label {
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.revision-review-feedback textarea {
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.revision-feedback-error {
+    font-size: 0.78rem;
+    line-height: 1.4;
+}
+
+.revision-result-header p {
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+
+.revision-result-status {
+    font-size: 0.75rem;
+}
+
+.revision-result-summary span {
+    font-size: 0.8rem;
+}
+
+.revision-confirmation-error {
+    font-size: 0.78rem;
+    line-height: 1.4;
+}
+
+.revision-submit-button {
+    min-height: 44px;
+    font-size: 0.88rem;
+}
+
+.revision-preview-header span {
+    font-size: 0.72rem;
+    line-height: 1.4;
+}
+
+.revision-preview-header h2 {
+    font-size: 1rem;
+    line-height: 1.35;
+}
+
+.revision-preview-placeholder p {
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+
+.revision-preview-footer span {
+    font-size: 0.78rem;
+    line-height: 1.45;
+}
 
 
 /* RESPONSIVE */

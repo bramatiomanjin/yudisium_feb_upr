@@ -359,7 +359,7 @@
                         <input
                             type="text"
                             id="submissionSearch"
-                            placeholder="Nama, NIM, atau Kode SK Yudisium"
+                            placeholder="Nama, NIM, atau Kode Pengajuan Yudisium"
                         >
 
                     </div>

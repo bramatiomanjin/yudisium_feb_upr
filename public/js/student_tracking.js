@@ -59,7 +59,7 @@ document.addEventListener(
             ) {
                 errorBox.style.display = "block";
                 errorBox.textContent =
-                    "Masukkan NIM dan Kode SK Yudisium untuk membuka halaman revisi.";
+                    "Masukkan NIM dan Kode Pengajuan Yudisium untuk membuka halaman revisi.";
             }
 
             trackingForm.addEventListener(
@@ -75,7 +75,7 @@ document.addEventListener(
     if (errorBox) {
         errorBox.style.display = "block";
         errorBox.textContent =
-            "Masukkan NIM atau Kode SK Yudisium.";
+            "Masukkan NIM atau Kode Pengajuan Yudisium.";
     }
 
     return;

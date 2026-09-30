@@ -102,7 +102,7 @@
                 <div>
 
                     <span>
-                        Kode SK Yudisium
+                        Kode Pengajuan Yudisium
                     </span>
 
                     <strong id="revisionKode">

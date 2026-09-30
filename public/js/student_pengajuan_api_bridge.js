@@ -361,7 +361,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     !response.code
                 ) {
                     throw new Error(
-                        "Backend tidak mengembalikan Kode SK Yudisium."
+                        "Backend tidak mengembalikan Kode Pengajuan Yudisium."
                     );
                 }
 
@@ -410,7 +410,7 @@ document.addEventListener("DOMContentLoaded", function () {
                  */
                 if (copyFeedback) {
                     copyFeedback.textContent =
-                        "Simpan Kode SK Yudisium ini. Kode dan NIM diperlukan untuk melakukan tracking pengajuan.";
+                        "Simpan Kode Pengajuan Yudisium ini. Kode dan NIM diperlukan untuk melakukan tracking pengajuan.";
                 }
 
                 /*
@@ -435,7 +435,7 @@ document.addEventListener("DOMContentLoaded", function () {
                      * Fallback jika modal ternyata tidak ada.
                      */
                     alert(
-                        "Pengajuan berhasil dikirim. Kode SK Yudisium Anda: " +
+                        "Pengajuan berhasil dikirim. Kode Pengajuan Yudisium Anda: " +
                         submissionCode
                     );
                 }

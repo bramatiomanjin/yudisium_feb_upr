@@ -327,7 +327,7 @@
                     <div class="sk-meta-item">
 
                         <span>
-                            Kode SK Yudisium
+                            Kode Pengajuan Yudisium
                         </span>
 
                         <strong id="skCode">

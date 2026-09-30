@@ -338,7 +338,7 @@ class DatabaseSeeder extends Seeder
                     'MANAJEMEN',
 
                 'wajib' =>
-                    true,
+                    false,
 
                 'max_size_mb' =>
                     1,
@@ -358,7 +358,7 @@ class DatabaseSeeder extends Seeder
                     'EKONOMI PEMBANGUNAN',
 
                 'wajib' =>
-                    true,
+                    false,
 
                 'max_size_mb' =>
                     1,
@@ -378,7 +378,7 @@ class DatabaseSeeder extends Seeder
                     'AKUNTANSI',
 
                 'wajib' =>
-                    true,
+                    false,
 
                 'max_size_mb' =>
                     10,

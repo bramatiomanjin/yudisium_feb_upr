@@ -438,7 +438,7 @@
                         <input
                             type="search"
                             id="historySearch"
-                            placeholder="Nama mahasiswa, NIM, atau Kode SK Yudisium"
+                            placeholder="Nama mahasiswa, NIM, atau Kode Pengajuan Yudisium"
                             autocomplete="off"
                         >
 

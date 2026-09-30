@@ -267,7 +267,7 @@
                     <div class="detail-info-item detail-code-item">
 
                         <span>
-                            Kode SK Yudisium
+                            Kode Pengajuan Yudisium
                         </span>
 
                         <strong id="detailKode">
@@ -417,7 +417,7 @@
                     <p>
                         Simpan
                         <strong>
-                            Kode SK Yudisium
+                            Kode Pengajuan Yudisium
                         </strong>
                         Anda karena kode tersebut diperlukan
                         bersama NIM untuk membuka kembali

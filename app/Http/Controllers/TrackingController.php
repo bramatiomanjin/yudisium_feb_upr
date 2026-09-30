@@ -49,7 +49,7 @@ class TrackingController extends Controller
     if ($nim === '' && $kode === '') {
         return response()->json([
             'success' => false,
-            'message' => 'Masukkan NIM atau Kode SK Yudisium.',
+            'message' => 'Masukkan NIM atau Kode Pengajuan Yudisium.',
         ], 422);
     }
 
@@ -140,7 +140,7 @@ class TrackingController extends Controller
         if ($nim === '' || $kode === '') {
             return response()->json([
                 'success' => false,
-                'message' => 'NIM dan Kode SK Yudisium wajib diisi untuk membuka revisi.',
+                'message' => 'NIM dan Kode Pengajuan Yudisium wajib diisi untuk membuka revisi.',
             ], 422);
         }
 
@@ -152,7 +152,7 @@ class TrackingController extends Controller
         if (!$pengajuan) {
             return response()->json([
                 'success' => false,
-                'message' => 'NIM dan Kode SK Yudisium tidak cocok.',
+                'message' => 'NIM dan Kode Pengajuan Yudisium tidak cocok.',
             ], 404);
         }
 
