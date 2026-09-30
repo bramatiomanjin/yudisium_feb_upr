@@ -158,48 +158,10 @@
                     </span>
 
                 </a>
-                @if(Auth::user()->role === 'SUPER_ADMIN')
-                <a
-                    href="{{ route('admin.backup-dokumen') }}"
-                    class="admin-nav-item"
-                >
-                    <span class="admin-nav-icon">↓</span>
-                    <span>Backup Dokumen</span>
-                </a>
-                @endif
-
                 <div class="admin-nav-divider">
                 </div>
 
-
-                @if(Auth::user()->role === 'SUPER_ADMIN')
-                <a
-                    href="/superadmin/kelola-admin"
-                    class="admin-nav-item"
-                    id="manageAdminMenu"
-                >
-
-                    <span class="admin-nav-icon">
-                        ♙
-                    </span>
-
-                    <span>
-                        Kelola Admin
-                    </span>
-
-                </a>
-                @endif
-
-            
-                @if(Auth::user()->role === 'SUPER_ADMIN')
-                <a
-                    href="/admin/pengaturan-dokumen"
-                    class="admin-nav-item"
-                >
-                    <span class="admin-nav-icon">⚙️</span>
-                    <span>Pengaturan Dokumen</span>
-                </a>
-                @endif
+                @include('admin.partials.super_admin_navigation')
 
 </nav>
 
@@ -894,7 +856,7 @@
 
 
                     <a
-                        href="/superadmin/kelola-admin"
+                        href="{{ route('superadmin.kelola-admin') }}"
                         class="admin-text-link"
                     >
                         Kelola Admin
@@ -914,7 +876,7 @@
 
                             <div class="admin-account-actions">
                                 <a
-                                    href="/superadmin/kelola-admin"
+                                    href="{{ route('superadmin.kelola-admin') }}"
                                     class="admin-small-button approve"
                                 >
                                     Tinjau Akun

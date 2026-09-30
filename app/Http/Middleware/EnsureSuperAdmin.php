@@ -11,7 +11,7 @@ class EnsureSuperAdmin
     public function handle(Request $request, Closure $next): Response
     {
         abort_unless(
-            strtoupper((string) $request->user()?->role) === 'SUPER_ADMIN',
+            strtoupper(trim((string) $request->user()?->role)) === 'SUPER_ADMIN',
             403
         );
 

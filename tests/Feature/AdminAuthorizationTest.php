@@ -192,20 +192,132 @@ class AdminAuthorizationTest extends TestCase
             ->assertJsonCount(2);
     }
 
-    public function test_a_super_admin_can_use_privileged_management_routes(): void
+    public function test_a_super_admin_can_open_manage_admin_page(): void
+    {
+        $superAdmin = $this->createUser('SUPER_ADMIN');
+        $this->actingAs($superAdmin);
+
+        $this->get(route('superadmin.kelola-admin'))
+            ->assertOk()
+            ->assertSee('Kelola Admin');
+    }
+
+    public function test_a_super_admin_can_deactivate_a_regular_admin(): void
+    {
+        $superAdmin = $this->createUser('SUPER_ADMIN');
+        $admin = $this->createUser('ADMIN', 'ACTIVE', 2);
+        $this->actingAs($superAdmin);
+
+        $this->post(route('superadmin.nonaktifkan-admin', $admin))
+            ->assertRedirect(route('superadmin.kelola-admin'));
+
+        $this->assertSame('INACTIVE', $admin->fresh()->status);
+    }
+
+    public function test_a_super_admin_can_reactivate_a_regular_admin(): void
+    {
+        $superAdmin = $this->createUser('SUPER_ADMIN');
+        $admin = $this->createUser('ADMIN', 'INACTIVE', 2);
+        $this->actingAs($superAdmin);
+
+        $this->post(route('superadmin.activate-admin', $admin))
+            ->assertRedirect(route('superadmin.kelola-admin'));
+
+        $this->assertSame('ACTIVE', $admin->fresh()->status);
+    }
+
+    public function test_a_super_admin_cannot_deactivate_their_own_account(): void
+    {
+        $superAdmin = $this->createUser('SUPER_ADMIN');
+        $this->actingAs($superAdmin);
+
+        $this->post(route('superadmin.nonaktifkan-admin', $superAdmin))
+            ->assertRedirect(route('superadmin.kelola-admin'))
+            ->assertSessionHasErrors();
+
+        $this->assertSame('ACTIVE', $superAdmin->fresh()->status);
+    }
+
+    public function test_admin_status_mutations_do_not_accept_get_requests(): void
+    {
+        $superAdmin = $this->createUser('SUPER_ADMIN');
+        $admin = $this->createUser('ADMIN', 'ACTIVE', 2);
+        $this->actingAs($superAdmin);
+
+        $this->get(route('superadmin.nonaktifkan-admin', $admin))
+            ->assertMethodNotAllowed();
+
+        $this->assertSame('ACTIVE', $admin->fresh()->status);
+    }
+
+    public function test_a_super_admin_can_open_document_settings(): void
+    {
+        $superAdmin = $this->createUser('SUPER_ADMIN');
+        $this->actingAs($superAdmin);
+
+        $this->get(route('admin.pengaturan-dokumen'))
+            ->assertOk()
+            ->assertSee('Pengaturan Dokumen');
+    }
+
+    public function test_a_super_admin_can_approve_a_pending_admin(): void
     {
         $superAdmin = $this->createUser('SUPER_ADMIN');
         $pendingAdmin = $this->createUser('ADMIN', 'PENDING', 2);
         $this->actingAs($superAdmin);
 
-        $this->get('/superadmin/kelola-admin')->assertOk();
-        $this->get('/superadmin/log-aktivitas')->assertOk();
-        $this->get(route('admin.pengaturan-dokumen'))->assertOk();
-
-        $this->post("/superadmin/approve-admin/{$pendingAdmin->id}")
-            ->assertRedirect('/superadmin/kelola-admin');
+        $this->post(route('superadmin.approve-admin', $pendingAdmin))
+            ->assertRedirect(route('superadmin.kelola-admin'));
 
         $this->assertSame('ACTIVE', $pendingAdmin->fresh()->status);
+    }
+
+    public function test_super_admin_navigation_is_consistent_on_admin_pages(): void
+    {
+        $superAdmin = $this->createUser('SUPER_ADMIN');
+        $this->actingAs($superAdmin);
+
+        $pages = [
+            route('admin.dashboard'),
+            route('admin.pengajuan'),
+            route('admin.history'),
+            '/admin/verifikasi',
+            '/admin/review-revisi',
+            '/admin/proses-sk',
+            route('superadmin.kelola-admin'),
+            route('admin.pengaturan-dokumen'),
+        ];
+
+        foreach ($pages as $page) {
+            $this->get($page)
+                ->assertOk()
+                ->assertSee('href="'.route('admin.backup-dokumen').'"', false)
+                ->assertSee('href="'.route('superadmin.kelola-admin').'"', false)
+                ->assertSee('href="'.route('admin.pengaturan-dokumen').'"', false);
+        }
+    }
+
+    public function test_regular_admin_navigation_hides_super_admin_features(): void
+    {
+        $admin = $this->createUser('ADMIN');
+        $this->actingAs($admin);
+
+        $pages = [
+            route('admin.dashboard'),
+            route('admin.pengajuan'),
+            route('admin.history'),
+            '/admin/verifikasi',
+            '/admin/review-revisi',
+            '/admin/proses-sk',
+        ];
+
+        foreach ($pages as $page) {
+            $this->get($page)
+                ->assertOk()
+                ->assertDontSee('href="'.route('admin.backup-dokumen').'"', false)
+                ->assertDontSee('href="'.route('superadmin.kelola-admin').'"', false)
+                ->assertDontSee('href="'.route('admin.pengaturan-dokumen').'"', false);
+        }
     }
 
     private function createUser(

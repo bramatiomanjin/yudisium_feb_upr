@@ -134,32 +134,7 @@
 
                 <div class="admin-nav-divider"></div>
 
-
-                @if(Auth::user()->role === 'SUPER_ADMIN')
-                <a
-                    href="/superadmin/kelola-admin"
-                    class="admin-nav-item active"
-                >
-                    <span class="admin-nav-icon">
-                        ♙
-                    </span>
-
-                    <span>
-                        Kelola Admin
-                    </span>
-                </a>
-                @endif
-
-            
-                @if(Auth::user()->role === 'SUPER_ADMIN')
-                <a
-                    href="/admin/pengaturan-dokumen"
-                    class="admin-nav-item"
-                >
-                    <span class="admin-nav-icon">⚙️</span>
-                    <span>Pengaturan Dokumen</span>
-                </a>
-                @endif
+                @include('admin.partials.super_admin_navigation')
 
 </nav>
 
@@ -180,7 +155,7 @@
                         </strong>
 
                         <span id="sidebarAdminRole">
-                            {{ Auth::user()->role }}
+                            {{ str_replace('_', ' ', strtoupper(Auth::user()->role)) }}
                         </span>
 
                     </div>
@@ -235,7 +210,7 @@
 
                         <strong id="topbarAdminName">{{ Auth::user()->name }}</strong>
 
-                        <span id="topbarAdminRole">{{ Auth::user()->role === 'SUPER_ADMIN' ? 'SUPER ADMIN' : 'ADMIN' }}</span>
+                        <span id="topbarAdminRole">{{ str_replace('_', ' ', strtoupper(Auth::user()->role)) }}</span>
 
                     </div>
 
@@ -245,38 +220,8 @@
 
 
             <!-- =====================================
-                 ACCESS DENIED
-            ====================================== -->
-            @if(Auth::user()->role !== 'SUPER_ADMIN')
-            <section
-                class="manage-admin-access-denied"
-                id="manageAdminAccessDenied"
-            >
-
-                <div class="manage-admin-denied-icon">
-                    !
-                </div>
-
-                <h2>
-                    Akses Ditolak
-                </h2>
-
-                <p>
-                    Halaman Kelola Admin hanya dapat diakses oleh Super Admin.
-                </p>
-
-                <a href="/admin/dashboard">
-                    Kembali ke Dashboard
-                </a>
-
-            </section>
-            @endif
-
-
-            <!-- =====================================
                  CONTENT
             ====================================== -->
-            @if(Auth::user()->role === 'SUPER_ADMIN')
             <div id="manageAdminContent">
 
                 <!-- SUMMARY -->
@@ -375,7 +320,7 @@
                             </h2>
 
                             <p>
-                                Cari berdasarkan nama, username, atau email.
+                                Cari berdasarkan nama, email, role, atau status.
                             </p>
 
                         </div>
@@ -388,7 +333,7 @@
                         <input
                             type="text"
                             id="manageAdminSearch"
-                            placeholder="Cari nama, username, atau email..."
+                            placeholder="Cari nama, email, role, atau status..."
                         >
 
 
@@ -466,21 +411,31 @@
                     >
                         @foreach($admins->where('status', 'PENDING') as $admin)
                         <div class="manage-admin-item">
-                            <div class="manage-admin-item-info">
-                                <div class="manage-admin-item-avatar">{{ strtoupper(substr($admin->name, 0, 1)) }}</div>
+                            <div class="manage-admin-user">
+                                <div class="manage-admin-avatar">{{ strtoupper(substr($admin->name, 0, 1)) }}</div>
                                 <div>
                                     <strong>{{ $admin->name }}</strong>
-                                    <span>{{ $admin->email }}</span>
                                 </div>
                             </div>
+                            <div class="manage-admin-meta">
+                                <div>
+                                    <span>Email</span>
+                                    <strong>{{ $admin->email }}</strong>
+                                </div>
+                                <div>
+                                    <span>Role</span>
+                                    <strong>{{ str_replace('_', ' ', $admin->role) }}</strong>
+                                </div>
+                            </div>
+                            <span class="manage-admin-status-badge pending">Pending</span>
                             <div class="manage-admin-item-actions">
-                                <form action="/superadmin/approve-admin/{{ $admin->id }}" method="POST" style="display:inline">
+                                <form action="{{ route('superadmin.approve-admin', $admin) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="manage-admin-primary-button" style="padding: 6px 16px; font-size: 13px;">Setujui</button>
+                                    <button type="submit" class="manage-admin-action approve">Setujui</button>
                                 </form>
-                                <form action="/superadmin/reject-admin/{{ $admin->id }}" method="POST" style="display:inline">
+                                <form action="{{ route('superadmin.reject-admin', $admin) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="manage-admin-secondary-button" style="padding: 6px 16px; font-size: 13px;">Tolak</button>
+                                    <button type="submit" class="manage-admin-action reject">Tolak</button>
                                 </form>
                             </div>
                         </div>
@@ -543,22 +498,31 @@
                     >
                         @foreach($admins->where('status', 'ACTIVE') as $admin)
                         <div class="manage-admin-item">
-                            <div class="manage-admin-item-info">
-                                <div class="manage-admin-item-avatar">{{ strtoupper(substr($admin->name, 0, 1)) }}</div>
+                            <div class="manage-admin-user">
+                                <div class="manage-admin-avatar">{{ strtoupper(substr($admin->name, 0, 1)) }}</div>
                                 <div>
                                     <strong>{{ $admin->name }}</strong>
-                                    <span>{{ $admin->email }} — {{ $admin->role }}</span>
                                 </div>
                             </div>
-                            <div class="manage-admin-item-meta">
-                                <span class="manage-admin-badge active">Aktif</span>
+                            <div class="manage-admin-meta">
+                                <div>
+                                    <span>Email</span>
+                                    <strong>{{ $admin->email }}</strong>
+                                </div>
+                                <div>
+                                    <span>Role</span>
+                                    <strong>{{ str_replace('_', ' ', $admin->role) }}</strong>
+                                </div>
+                            </div>
+                            <span class="manage-admin-status-badge active">Aktif</span>
+                            <div class="manage-admin-item-actions">
                                 @if($admin->id !== Auth::id())
-                                <form action="/superadmin/hapus-admin/{{ $admin->id }}" method="POST" style="display:inline">
+                                <form action="{{ route('superadmin.nonaktifkan-admin', $admin) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="manage-admin-secondary-button" style="padding: 6px 16px; font-size: 13px;" onclick="return confirm('Yakin ingin menonaktifkan admin ini?')">Nonaktifkan</button>
+                                    <button type="submit" class="manage-admin-action deactivate" onclick="return confirm('Yakin ingin menonaktifkan admin ini?')">Nonaktifkan</button>
                                 </form>
                                 @else
-                                <span style="color: var(--feb-muted, #777); font-size: 12px;">(Anda)</span>
+                                <span>(Anda)</span>
                                 @endif
                             </div>
                         </div>
@@ -617,18 +581,27 @@
                     >
                         @foreach($admins->where('status', 'INACTIVE') as $admin)
                         <div class="manage-admin-item">
-                            <div class="manage-admin-item-info">
-                                <div class="manage-admin-item-avatar">{{ strtoupper(substr($admin->name, 0, 1)) }}</div>
+                            <div class="manage-admin-user">
+                                <div class="manage-admin-avatar">{{ strtoupper(substr($admin->name, 0, 1)) }}</div>
                                 <div>
                                     <strong>{{ $admin->name }}</strong>
-                                    <span>{{ $admin->email }} — {{ $admin->role }}</span>
                                 </div>
                             </div>
-                            <div class="manage-admin-item-meta">
-                                <span class="manage-admin-badge inactive">Nonaktif</span>
-                                <form action="/superadmin/activate-admin/{{ $admin->id }}" method="POST" style="display:inline">
+                            <div class="manage-admin-meta">
+                                <div>
+                                    <span>Email</span>
+                                    <strong>{{ $admin->email }}</strong>
+                                </div>
+                                <div>
+                                    <span>Role</span>
+                                    <strong>{{ str_replace('_', ' ', $admin->role) }}</strong>
+                                </div>
+                            </div>
+                            <span class="manage-admin-status-badge inactive">Nonaktif</span>
+                            <div class="manage-admin-item-actions">
+                                <form action="{{ route('superadmin.activate-admin', $admin) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="manage-admin-primary-button" style="padding: 6px 16px; font-size: 13px;">Aktifkan Kembali</button>
+                                    <button type="submit" class="manage-admin-action activate">Aktifkan Kembali</button>
                                 </form>
                             </div>
                         </div>
@@ -651,7 +624,6 @@
                 </section>
 
             </div>
-            @endif
 
         </main>
 
@@ -692,8 +664,8 @@
                     Admin
                 </strong>
 
-                <span id="adminActionAccountUsername">
-                    username
+                <span id="adminActionAccountEmail">
+                    email
                 </span>
 
             </div>

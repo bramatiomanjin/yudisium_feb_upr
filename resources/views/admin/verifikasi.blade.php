@@ -135,35 +135,7 @@
 
                 <div class="admin-nav-divider"></div>
 
-
-                @if(Auth::user()->role === 'SUPER_ADMIN')
-                <a
-                    href="/superadmin/kelola-admin"
-                    class="admin-nav-item"
-                    id="manageAdminMenu"
-                >
-
-                    <span class="admin-nav-icon">
-                        ♙
-                    </span>
-
-                    <span>
-                        Kelola Admin
-                    </span>
-
-                </a>
-                @endif
-
-            
-                @if(Auth::user()->role === 'SUPER_ADMIN')
-                <a
-                    href="/admin/pengaturan-dokumen"
-                    class="admin-nav-item"
-                >
-                    <span class="admin-nav-icon">⚙️</span>
-                    <span>Pengaturan Dokumen</span>
-                </a>
-                @endif
+                @include('admin.partials.super_admin_navigation')
 
 </nav>
 

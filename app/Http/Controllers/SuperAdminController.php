@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\ValidasiField;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 
 class SuperAdminController extends Controller
 {
     // 1. Menampilkan Halaman Kelola Admin
-    public function index()
+    public function index(): View
     {
-        if (Auth::user()->role !== 'SUPER_ADMIN') {
-            abort(403);
-        }
-
         $admins = User::orderBy('created_at', 'desc')->get();
 
         $counts = (object) [
@@ -29,17 +27,13 @@ class SuperAdminController extends Controller
     }
 
     // 2. Memproses Penambahan Admin
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        if (Auth::user()->role !== 'SUPER_ADMIN') {
-            abort(403);
-        }
-
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
-            'role' => 'required|in:ADMIN,SUPER_ADMIN'
+            'role' => 'required|in:ADMIN,SUPER_ADMIN',
         ]);
 
         User::create([
@@ -50,72 +44,57 @@ class SuperAdminController extends Controller
             'status' => 'ACTIVE',
         ]);
 
-        return redirect('/superadmin/kelola-admin');
+        return redirect()->route('superadmin.kelola-admin');
     }
 
     // 3. Memproses Hapus / Nonaktifkan Admin
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id): RedirectResponse
     {
-        // Proteksi ganda
-        if (Auth::user()->role !== 'SUPER_ADMIN') {
-            abort(403);
-        }
-
-        // Cegah menghapus akun sendiri
-        if ($id == Auth::id()) {
-            return redirect('/superadmin/kelola-admin')->withErrors('Tidak bisa menonaktifkan akun Anda sendiri.');
-        }
-
         $user = User::findOrFail($id);
+
+        if ($request->user()->is($user)) {
+            return redirect()
+                ->route('superadmin.kelola-admin')
+                ->withErrors('Tidak bisa menonaktifkan akun Anda sendiri.');
+        }
+
         $user->update(['status' => 'INACTIVE']);
 
-        return redirect('/superadmin/kelola-admin');
+        return redirect()->route('superadmin.kelola-admin');
     }
 
     // 4. Menyetujui Admin (PENDING → ACTIVE)
-    public function approve(string $id)
+    public function approve(string $id): RedirectResponse
     {
-        if (Auth::user()->role !== 'SUPER_ADMIN') {
-            abort(403);
-        }
-
         $user = User::findOrFail($id);
         $user->update(['status' => 'ACTIVE']);
 
-        return redirect('/superadmin/kelola-admin');
+        return redirect()->route('superadmin.kelola-admin');
     }
 
     // 5. Menolak Admin (PENDING → INACTIVE)
-    public function reject(string $id)
+    public function reject(string $id): RedirectResponse
     {
-        if (Auth::user()->role !== 'SUPER_ADMIN') {
-            abort(403);
-        }
-
         $user = User::findOrFail($id);
         $user->update(['status' => 'INACTIVE']);
 
-        return redirect('/superadmin/kelola-admin');
+        return redirect()->route('superadmin.kelola-admin');
     }
 
     // 6. Mengaktifkan Kembali Admin (INACTIVE → ACTIVE)
-    public function activate(string $id)
+    public function activate(string $id): RedirectResponse
     {
-        if (Auth::user()->role !== 'SUPER_ADMIN') {
-            abort(403);
-        }
-
         $user = User::findOrFail($id);
         $user->update(['status' => 'ACTIVE']);
 
-        return redirect('/superadmin/kelola-admin');
+        return redirect()->route('superadmin.kelola-admin');
     }
 
     // 7. Menampilkan History/Log Aktivitas Admin
-    public function logAktivitas()
+    public function logAktivitas(): View
     {
         // Mengambil 50 aktivitas pengecekan field terbaru beserta nama Admin dan nama Mahasiswa
-        $logs = \App\Models\ValidasiField::with('pengajuan.mahasiswa')
+        $logs = ValidasiField::with('pengajuan.mahasiswa')
             ->join('users', 'validasi_field.checked_by', '=', 'users.id')
             ->select('validasi_field.*', 'users.name as nama_admin')
             ->whereNotNull('checked_by')
