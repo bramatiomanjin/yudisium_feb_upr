@@ -785,6 +785,8 @@
 
                         </div>
 
+                    </div>
+
                     <div style="display: flex; align-items: center; gap: 16px;">
                         <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.88rem; font-weight: 600; color: #15382b;">
                             <input type="checkbox" class="section-select-all" data-section="2">
@@ -1156,6 +1158,8 @@
                             </p>
 
                         </div>
+                        
+                    </div>
 
                     <div style="display: flex; align-items: center; gap: 16px;">
                         <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.88rem; font-weight: 600; color: #15382b;">
