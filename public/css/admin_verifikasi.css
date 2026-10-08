@@ -432,7 +432,7 @@
 /* ---------- DOCUMENT ITEMS CREATED BY JS ---------- */
 
 .verification-document-item {
-    grid-template-columns: minmax(280px, 1fr) auto;
+    grid-template-columns: auto minmax(280px, 1fr) auto;
 }
 
 .verification-document-main {
