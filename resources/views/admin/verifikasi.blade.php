@@ -312,12 +312,7 @@
             </section>
 
 
-    <div style="display: flex; align-items: center; justify-content: flex-end; margin-bottom: 12px; margin-top: 16px; padding-right: 24px;">
-        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; color: #15382b;">
-            <input type="checkbox" id="selectAllVerification" style="width: 16px; height: 16px;">
-            Pilih Semua Item
-        </label>
-    </div>
+
 
             <!-- =====================================
                  DATA MAHASISWA
@@ -347,12 +342,18 @@
                     </div>
 
 
-                    <span
-                        class="verification-section-status"
-                        id="studentDataStatus"
-                    >
-                        Belum selesai
-                    </span>
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.88rem; font-weight: 600; color: #15382b;">
+                            <input type="checkbox" class="section-select-all" data-section="1">
+                            Pilih Semua
+                        </label>
+                        <span
+                            class="verification-section-status"
+                            id="studentDataStatus"
+                        >
+                            Belum selesai
+                        </span>
+                    </div>
 
                 </div>
 
@@ -784,6 +785,11 @@
 
                         </div>
 
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.88rem; font-weight: 600; color: #15382b;">
+                            <input type="checkbox" class="section-select-all" data-section="2">
+                            Pilih Semua
+                        </label>
                     </div>
 
                 </div>
@@ -1151,6 +1157,11 @@
 
                         </div>
 
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.88rem; font-weight: 600; color: #15382b;">
+                            <input type="checkbox" class="section-select-all" data-section="3">
+                            Pilih Semua
+                        </label>
                     </div>
 
                 </div>

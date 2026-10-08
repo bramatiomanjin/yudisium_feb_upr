@@ -1143,14 +1143,13 @@ document.addEventListener(
         // =====================================
         // BULK VERIFICATION LOGIC
         // =====================================
-        const selectAllCheckbox = document.getElementById("selectAllVerification");
         const bulkActionBar = document.getElementById("bulkVerificationActionBar");
         const bulkCountEl = document.getElementById("bulkVerificationCount");
         const btnBulkApprove = document.getElementById("btnBulkApprove");
         const btnBulkRevision = document.getElementById("btnBulkRevision");
 
         function updateBulkActionBar() {
-            const checkboxes = document.querySelectorAll(".bulk-verification-checkbox");
+            const allCheckboxes = document.querySelectorAll(".bulk-verification-checkbox");
             const selectedCheckboxes = document.querySelectorAll(".bulk-verification-checkbox:checked");
             const selectedCount = selectedCheckboxes.length;
 
@@ -1161,24 +1160,33 @@ document.addEventListener(
                 if (bulkActionBar) bulkActionBar.style.display = "none";
             }
 
-            if (selectAllCheckbox) {
-                selectAllCheckbox.checked = checkboxes.length > 0 && selectedCount === checkboxes.length;
-                selectAllCheckbox.indeterminate = selectedCount > 0 && selectedCount < checkboxes.length;
-            }
-        }
-
-        if (selectAllCheckbox) {
-            selectAllCheckbox.addEventListener("change", function () {
-                const checkboxes = document.querySelectorAll(".bulk-verification-checkbox");
-                checkboxes.forEach(function (cb) {
-                    cb.checked = selectAllCheckbox.checked;
-                });
-                updateBulkActionBar();
+            // Sync section select all checkboxes
+            const sections = document.querySelectorAll(".verification-section");
+            sections.forEach(function (section) {
+                const sectionSelectAll = section.querySelector(".section-select-all");
+                if (sectionSelectAll) {
+                    const sectionCheckboxes = section.querySelectorAll(".bulk-verification-checkbox");
+                    const sectionSelected = section.querySelectorAll(".bulk-verification-checkbox:checked");
+                    
+                    if (sectionCheckboxes.length > 0) {
+                        sectionSelectAll.checked = sectionSelected.length === sectionCheckboxes.length;
+                        sectionSelectAll.indeterminate = sectionSelected.length > 0 && sectionSelected.length < sectionCheckboxes.length;
+                    }
+                }
             });
         }
 
         document.addEventListener("change", function (e) {
-            if (e.target.classList.contains("bulk-verification-checkbox")) {
+            if (e.target.classList.contains("section-select-all")) {
+                const section = e.target.closest(".verification-section");
+                if (section) {
+                    const checkboxes = section.querySelectorAll(".bulk-verification-checkbox");
+                    checkboxes.forEach(function (cb) {
+                        cb.checked = e.target.checked;
+                    });
+                    updateBulkActionBar();
+                }
+            } else if (e.target.classList.contains("bulk-verification-checkbox")) {
                 updateBulkActionBar();
             }
         });
