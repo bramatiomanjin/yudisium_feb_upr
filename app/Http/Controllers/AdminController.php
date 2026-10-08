@@ -22,8 +22,12 @@ class AdminController extends Controller
                 ->get(['id', 'name', 'email'])
             : collect();
 
-        $setting = \App\Models\Setting::where('key', 'is_pengajuan_open')->first();
-        $isPengajuanOpen = $setting ? $setting->value === '1' : true;
+        try {
+            $setting = \App\Models\Setting::where('key', 'is_pengajuan_open')->first();
+            $isPengajuanOpen = $setting ? $setting->value === '1' : true;
+        } catch (\Exception $e) {
+            $isPengajuanOpen = true;
+        }
 
         return view('admin.dashboard', compact('pendingAdmins', 'isPengajuanOpen'));
     }

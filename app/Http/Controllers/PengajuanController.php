@@ -33,8 +33,12 @@ private function canonicalDocumentCode(string $code): string
     // 1. Menampilkan halaman form
     public function create()
     {
-        $setting = \App\Models\Setting::where('key', 'is_pengajuan_open')->first();
-        $isPengajuanOpen = $setting ? $setting->value === '1' : true;
+        try {
+            $setting = \App\Models\Setting::where('key', 'is_pengajuan_open')->first();
+            $isPengajuanOpen = $setting ? $setting->value === '1' : true;
+        } catch (\Exception $e) {
+            $isPengajuanOpen = true;
+        }
 
         if (!$isPengajuanOpen) {
             return view('mahasiswa.pengajuan_closed');
@@ -64,9 +68,13 @@ private function canonicalDocumentCode(string $code): string
         StudentYudisiumNotifier $notifier
     )
     {
-        $setting = \App\Models\Setting::where('key', 'is_pengajuan_open')->first();
-        if ($setting && $setting->value === '0') {
-            return back()->with('error', 'Pendaftaran yudisium saat ini sedang ditutup.');
+        try {
+            $setting = \App\Models\Setting::where('key', 'is_pengajuan_open')->first();
+            if ($setting && $setting->value === '0') {
+                return back()->with('error', 'Pendaftaran yudisium saat ini sedang ditutup.');
+            }
+        } catch (\Exception $e) {
+            // Ignore if settings table doesn't exist
         }
 
         // --- A. NORMALISASI NILAI ANGKA ---

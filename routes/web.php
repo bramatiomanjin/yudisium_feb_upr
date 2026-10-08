@@ -160,6 +160,15 @@ Route::middleware('auth')->group(
         Route::post('/admin/toggle-pengajuan-status', [SettingController::class, 'togglePengajuanStatus'])
             ->name('admin.toggle-pengajuan');
 
+        Route::get('/admin/sys-migrate', function () {
+            try {
+                \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+                return "Database berhasil diupdate! Silakan kembali ke halaman dashboard.";
+            } catch (\Exception $e) {
+                return "Error: " . $e->getMessage();
+            }
+        })->name('admin.sys-migrate');
+
         // =================================================
         // DAFTAR PENGAJUAN
         // =================================================
