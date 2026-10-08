@@ -1092,6 +1092,12 @@ document.addEventListener(
 
                 if (modal) {
                     modal.classList.add("active");
+                    
+                    // Reset ukuran dan posisi ke default
+                    if (typeof window.resetPreviewPanel === 'function') {
+                        window.resetPreviewPanel();
+                    }
+
                     window.YudisiumModalAccessibility?.open(modal, e.target);
                 }
             }
@@ -1190,6 +1196,21 @@ document.addEventListener(
         function setTranslate(xPos, yPos, el) {
             el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
         }
+
+        window.resetPreviewPanel = function() {
+            if (modalContainer) {
+                // Reset posisi ke 0, 0
+                xOffset = 0;
+                yOffset = 0;
+                setTranslate(0, 0, modalContainer);
+                
+                // Reset ukuran yang mungkin diubah lewat resize
+                modalContainer.style.width = "";
+                modalContainer.style.height = "";
+            }
+        };
+
+        // =====================================
         // BULK VERIFICATION LOGIC
         // =====================================
         const bulkActionBar = document.getElementById("bulkVerificationActionBar");
