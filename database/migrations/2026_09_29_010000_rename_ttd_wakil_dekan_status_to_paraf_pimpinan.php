@@ -1,9 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -29,18 +27,31 @@ return new class extends Migration
         $this->applyLegacyStatusSchema();
     }
 
-    private function usesMysqlEnum(): bool
-    {
-        return in_array(DB::getDriverName(), ['mysql', 'mariadb'], true);
-    }
-
     private function changeStatusToString(): void
     {
-        Schema::table('pengajuan_yudisium', function (Blueprint $table): void {
-            $table->string('status', 50)
-                ->default('MENUNGGU_VERIFIKASI')
-                ->change();
-        });
+        $driver = DB::getDriverName();
+
+        if ($driver === 'pgsql') {
+            DB::statement("
+                ALTER TABLE pengajuan_yudisium
+                ALTER COLUMN status TYPE VARCHAR(50)
+            ");
+
+            DB::statement("
+                ALTER TABLE pengajuan_yudisium
+                ALTER COLUMN status SET DEFAULT 'MENUNGGU_VERIFIKASI'
+            ");
+
+            return;
+        }
+
+        if (in_array($driver, ['mysql', 'mariadb'], true)) {
+            DB::statement("
+                ALTER TABLE pengajuan_yudisium
+                MODIFY status VARCHAR(50)
+                DEFAULT 'MENUNGGU_VERIFIKASI'
+            ");
+        }
     }
 
     private function applyOfficialStatusSchema(): void
@@ -77,20 +88,32 @@ return new class extends Migration
 
     private function changeStatusToEnum(array $statuses): void
     {
-        if ($this->usesMysqlEnum()) {
+        $driver = DB::getDriverName();
+
+        if (in_array($driver, ['mysql', 'mariadb'], true)) {
             $values = implode("', '", $statuses);
 
             DB::statement(
-                "ALTER TABLE pengajuan_yudisium MODIFY status ENUM('{$values}') DEFAULT 'MENUNGGU_VERIFIKASI'"
+                "ALTER TABLE pengajuan_yudisium
+                 MODIFY status ENUM('{$values}')
+                 DEFAULT 'MENUNGGU_VERIFIKASI'"
             );
 
             return;
         }
 
-        Schema::table('pengajuan_yudisium', function (Blueprint $table) use ($statuses): void {
-            $table->enum('status', $statuses)
-                ->default('MENUNGGU_VERIFIKASI')
-                ->change();
-        });
+        if ($driver === 'pgsql') {
+            // PostgreSQL production menggunakan VARCHAR.
+            // Validasi status tetap ditangani oleh aplikasi.
+            DB::statement("
+                ALTER TABLE pengajuan_yudisium
+                ALTER COLUMN status TYPE VARCHAR(50)
+            ");
+
+            DB::statement("
+                ALTER TABLE pengajuan_yudisium
+                ALTER COLUMN status SET DEFAULT 'MENUNGGU_VERIFIKASI'
+            ");
+        }
     }
 };

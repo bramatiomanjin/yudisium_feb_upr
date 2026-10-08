@@ -60,7 +60,7 @@ class YudisiumStatusNotification extends Notification
     /**
      * @return array{subject: string, message: string}
      */
-    private function content(): array
+    public function content(): array
     {
         return match ($this->event) {
             self::SUBMISSION_RECEIVED => [
