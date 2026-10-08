@@ -750,7 +750,7 @@
     pointer-events: auto;
     position: fixed;
     top: 50px;
-    right: 20px;
+    left: max(20px, calc(100vw - 520px)); /* Anchor left to fix resize direction, but keep on screen */
     width: 500px;
     height: 600px;
     display: flex;
