@@ -792,6 +792,9 @@
                             <input type="checkbox" class="section-select-all" data-section="2">
                             Pilih Semua
                         </label>
+                        <span class="verification-section-status" id="academicDataStatus">
+                            Belum selesai
+                        </span>
                     </div>
 
                 </div>
@@ -1166,6 +1169,9 @@
                             <input type="checkbox" class="section-select-all" data-section="3">
                             Pilih Semua
                         </label>
+                        <span class="verification-section-status" id="documentDataStatus">
+                            Belum selesai
+                        </span>
                     </div>
 
                 </div>

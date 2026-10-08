@@ -564,10 +564,7 @@ document.addEventListener(
             );
 
 
-        const studentDataStatus =
-            document.getElementById(
-                "studentDataStatus"
-            );
+
 
 
         /* =========================================================
@@ -712,41 +709,21 @@ document.addEventListener(
 
 
             /*
-             * Status bagian data mahasiswa.
+             * Status per bagian (section).
              */
-            if (studentDataStatus) {
-
-                const studentItems =
-                    items.filter(
-                        function (item) {
-
-                            return (
-                                item.dataset.itemType ===
-                                "field"
-                            );
-
-                        }
-                    );
-
-
-                const studentCompleted =
-                    studentItems.every(
-                        function (item) {
-
-                            return Boolean(
-                                item.dataset.decision
-                            );
-
-                        }
-                    );
-
-
-                studentDataStatus.textContent =
-                    studentCompleted
-                        ? "Selesai"
-                        : "Belum selesai";
-
-            }
+            const sections = document.querySelectorAll(".verification-section");
+            sections.forEach(function (section) {
+                const statusBadge = section.querySelector(".verification-section-status");
+                if (statusBadge) {
+                    const sectionItems = Array.from(section.querySelectorAll(".verification-item"));
+                    if (sectionItems.length > 0) {
+                        const allCompleted = sectionItems.every(function (item) {
+                            return Boolean(item.dataset.decision);
+                        });
+                        statusBadge.textContent = allCompleted ? "Selesai" : "Belum selesai";
+                    }
+                }
+            });
 
         }
 
