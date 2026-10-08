@@ -1127,6 +1127,7 @@ document.addEventListener(
         // =====================================
         const modalContainer = document.querySelector(".verification-preview-modal");
         const modalHeader = document.querySelector(".verification-preview-header");
+        const modalFooter = document.querySelector(".verification-preview-footer");
         let isDragging = false;
         let currentX;
         let currentY;
@@ -1137,8 +1138,17 @@ document.addEventListener(
 
         if (modalHeader && modalContainer) {
             modalHeader.addEventListener("mousedown", dragStart);
+            if (modalFooter) {
+                modalFooter.addEventListener("mousedown", dragStart);
+                // Ubah kursor footer agar mengindikasikan bisa di-drag
+                modalFooter.style.cursor = "grab";
+                modalFooter.addEventListener("mousedown", function() { modalFooter.style.cursor = "grabbing"; });
+                document.addEventListener("mouseup", function() { modalFooter.style.cursor = "grab"; });
+            }
             document.addEventListener("mouseup", dragEnd);
             document.addEventListener("mousemove", drag);
+            // Lepas drag jika kursor keluar dari layar browser
+            document.addEventListener("mouseleave", dragEnd);
         }
 
         function dragStart(e) {
