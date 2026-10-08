@@ -23,7 +23,7 @@
         href="{{ asset('css/admin.css') }}"
     >
 
-    <link rel="stylesheet" href="{{ asset('css/admin_theme.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin_theme.css') }}?v={{ time() }}">
 
     <link
         rel="stylesheet"
