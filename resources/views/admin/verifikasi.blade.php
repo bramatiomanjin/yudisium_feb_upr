@@ -27,7 +27,7 @@
 
     <link
         rel="stylesheet"
-        href="{{ asset('css/admin_verifikasi.css') }}"
+        href="{{ asset('css/admin_verifikasi.css') }}?v={{ time() }}"
     >
 </head>
 
@@ -1428,7 +1428,7 @@
     <script src="{{ asset('js/yudisium_api.js') }}"></script>
     <script src="{{ asset('js/modal_accessibility.js') }}"></script>
     <script src="{{ asset('js/admin.js') }}"></script>
-    <script src="{{ asset('js/admin_verifikasi.js') }}"></script>
+    <script src="{{ asset('js/admin_verifikasi.js') }}?v={{ time() }}"></script>
 
 </body>
 
