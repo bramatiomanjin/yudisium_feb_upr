@@ -570,9 +570,15 @@
                     </div>
 
 
-                    <span class="detail-document-count">
-                        15 Dokumen
-                    </span>
+                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+                        <span class="detail-document-count">
+                            15 Dokumen
+                        </span>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <input type="checkbox" id="selectAllDocuments">
+                            <label for="selectAllDocuments" style="font-size: 0.88rem; font-weight: 500; cursor: pointer;">Pilih Semua</label>
+                        </div>
+                    </div>
 
                 </div>
 
@@ -1361,6 +1367,20 @@
 
         </div>
 
+    </div>
+
+
+    <!-- =====================================================
+         BULK ACTION BAR
+    ====================================================== -->
+
+    <div class="bulk-action-bar" id="bulkActionBar" style="display: none;">
+        <div class="bulk-action-info">
+            <span id="bulkSelectedCount">0</span> dokumen dipilih
+        </div>
+        <div class="bulk-action-buttons">
+            <button type="button" class="admin-primary-button" id="btnBulkPreview">Buka Preview Terpilih</button>
+        </div>
     </div>
 
 
