@@ -30,4 +30,20 @@ class SettingController extends Controller
 
         return redirect()->back()->with('success', 'Pengaturan dokumen berhasil diperbarui.');
     }
+
+    public function togglePengajuanStatus(Request $request)
+    {
+        $setting = \App\Models\Setting::firstOrCreate(
+            ['key' => 'is_pengajuan_open'],
+            ['value' => '1']
+        );
+        
+        $setting->value = $setting->value === '1' ? '0' : '1';
+        $setting->save();
+        
+        return response()->json([
+            'success' => true, 
+            'is_open' => $setting->value === '1'
+        ]);
+    }
 }

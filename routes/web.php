@@ -157,6 +157,9 @@ Route::middleware('auth')->group(
             [SettingController::class, 'updatePengaturanDokumen']
         )->middleware('super.admin')->name('admin.pengaturan-dokumen.update');
 
+        Route::post('/admin/toggle-pengajuan-status', [SettingController::class, 'togglePengajuanStatus'])
+            ->name('admin.toggle-pengajuan');
+
         // =================================================
         // DAFTAR PENGAJUAN
         // =================================================

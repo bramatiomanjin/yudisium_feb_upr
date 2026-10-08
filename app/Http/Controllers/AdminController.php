@@ -22,7 +22,10 @@ class AdminController extends Controller
                 ->get(['id', 'name', 'email'])
             : collect();
 
-        return view('admin.dashboard', compact('pendingAdmins'));
+        $setting = \App\Models\Setting::where('key', 'is_pengajuan_open')->first();
+        $isPengajuanOpen = $setting ? $setting->value === '1' : true;
+
+        return view('admin.dashboard', compact('pendingAdmins', 'isPengajuanOpen'));
     }
 
     // 1c. Menampilkan Halaman Daftar Pengajuan (terpisah dari dashboard)

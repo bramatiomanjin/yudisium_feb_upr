@@ -495,6 +495,30 @@
 
                 </article>
 
+                <!-- STATUS PENDAFTARAN -->
+                <article class="admin-stat-card" style="background: {{ $isPengajuanOpen ? '#f4faf7' : '#fff4f4' }}; border-color: {{ $isPengajuanOpen ? '#c8d7d0' : '#f5d1d1' }};">
+                    <div class="admin-stat-header">
+                        <span style="color: {{ $isPengajuanOpen ? '#0a684c' : '#c93b3b' }};">
+                            Status Pendaftaran
+                        </span>
+                        <span class="admin-stat-icon">
+                            ⚙
+                        </span>
+                    </div>
+
+                    <strong class="admin-stat-value" style="font-size: 1.5rem; color: {{ $isPengajuanOpen ? '#0a684c' : '#c93b3b' }}; margin-top: 12px; margin-bottom: 8px; display: block;" id="pengajuanStatusText">
+                        {{ $isPengajuanOpen ? 'DIBUKA' : 'DITUTUP' }}
+                    </strong>
+
+                    <p>
+                        Mahasiswa {{ $isPengajuanOpen ? 'bisa' : 'tidak bisa' }} mengakses form pengajuan.
+                    </p>
+
+                    <button type="button" class="admin-secondary-button" id="togglePengajuanBtn" style="margin-top: 12px; width: 100%; justify-content: center; border-color: {{ $isPengajuanOpen ? '#c93b3b' : '#0a684c' }}; color: {{ $isPengajuanOpen ? '#c93b3b' : '#0a684c' }};">
+                        {{ $isPengajuanOpen ? 'Tutup Pendaftaran' : 'Buka Pendaftaran' }}
+                    </button>
+                </article>
+
             </section>
 
 

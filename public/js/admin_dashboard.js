@@ -944,5 +944,39 @@ document.addEventListener(
             });
         })();
 
+        // Toggle Pengajuan Status
+        const togglePengajuanBtn = document.getElementById("togglePengajuanBtn");
+        if (togglePengajuanBtn) {
+            togglePengajuanBtn.addEventListener("click", async function() {
+                const isClosing = togglePengajuanBtn.textContent.includes('Tutup');
+                if (!confirm(isClosing ? 'Apakah Anda yakin ingin MENUTUP pendaftaran yudisium?' : 'Apakah Anda yakin ingin MEMBUKA pendaftaran yudisium?')) {
+                    return;
+                }
+
+                try {
+                    togglePengajuanBtn.disabled = true;
+                    togglePengajuanBtn.textContent = 'Memproses...';
+                    
+                    const response = await fetch('/admin/toggle-pengajuan-status', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Gagal mengubah status pendaftaran.');
+                        window.location.reload();
+                    }
+                } catch (error) {
+                    console.error('Toggle error:', error);
+                    alert('Terjadi kesalahan jaringan.');
+                    window.location.reload();
+                }
+            });
+        }
     }
 );

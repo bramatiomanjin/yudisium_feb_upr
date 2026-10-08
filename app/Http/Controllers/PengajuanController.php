@@ -33,6 +33,13 @@ private function canonicalDocumentCode(string $code): string
     // 1. Menampilkan halaman form
     public function create()
     {
+        $setting = \App\Models\Setting::where('key', 'is_pengajuan_open')->first();
+        $isPengajuanOpen = $setting ? $setting->value === '1' : true;
+
+        if (!$isPengajuanOpen) {
+            return view('mahasiswa.pengajuan_closed');
+        }
+
         $documents = JenisDokumen::where('is_active', 1)->get();
 
         $activeDocs = $documents
@@ -57,6 +64,11 @@ private function canonicalDocumentCode(string $code): string
         StudentYudisiumNotifier $notifier
     )
     {
+        $setting = \App\Models\Setting::where('key', 'is_pengajuan_open')->first();
+        if ($setting && $setting->value === '0') {
+            return back()->with('error', 'Pendaftaran yudisium saat ini sedang ditutup.');
+        }
+
         // --- A. NORMALISASI NILAI ANGKA ---
         if ($request->has('nilai_angka')) {
             $request->merge([
