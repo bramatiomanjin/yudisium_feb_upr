@@ -750,15 +750,15 @@
     pointer-events: auto;
     position: fixed;
     top: 50px;
-    left: max(20px, calc(100vw - 520px)); /* Anchor left to fix resize direction, but keep on screen */
-    width: 500px;
-    height: 600px;
+    left: 20px;
+    width: min(800px, calc(100vw - 40px));
+    height: 80vh;
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--feb-line, #dce6e1);
+    border: 2px solid #a6bfb3;
     border-radius: 16px;
     background: #fff;
-    box-shadow: 0 12px 40px rgba(0,0,0,.2);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Reduced shadow to prevent blurred halo effect */
     resize: both;
     overflow: hidden;
     min-width: 300px;
