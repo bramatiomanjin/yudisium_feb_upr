@@ -1117,7 +1117,57 @@ document.addEventListener(
             });
         }
 
+        // Tutup modal secara otomatis saat pindah halaman
+        window.addEventListener("beforeunload", function () {
+            closePreview();
+        });
+
         // =====================================
+        // DRAGGABLE MODAL LOGIC
+        // =====================================
+        const modalContainer = document.querySelector(".verification-preview-modal");
+        const modalHeader = document.querySelector(".verification-preview-header");
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+        let xOffset = 0;
+        let yOffset = 0;
+
+        if (modalHeader && modalContainer) {
+            modalHeader.addEventListener("mousedown", dragStart);
+            document.addEventListener("mouseup", dragEnd);
+            document.addEventListener("mousemove", drag);
+        }
+
+        function dragStart(e) {
+            if (e.target.closest("button")) return; // Don't drag if clicking close button
+            initialX = e.clientX - xOffset;
+            initialY = e.clientY - yOffset;
+            isDragging = true;
+        }
+
+        function dragEnd(e) {
+            initialX = currentX;
+            initialY = currentY;
+            isDragging = false;
+        }
+
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault();
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+                xOffset = currentX;
+                yOffset = currentY;
+                setTranslate(currentX, currentY, modalContainer);
+            }
+        }
+
+        function setTranslate(xPos, yPos, el) {
+            el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+        }
         // BULK VERIFICATION LOGIC
         // =====================================
         const bulkActionBar = document.getElementById("bulkVerificationActionBar");
