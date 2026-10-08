@@ -281,7 +281,7 @@
 
 .verification-item {
     display: grid;
-    grid-template-columns: minmax(220px, 1fr) auto;
+    grid-template-columns: auto minmax(220px, 1fr) auto;
     align-items: center;
     gap: 12px 16px;
     padding: 14px 15px;

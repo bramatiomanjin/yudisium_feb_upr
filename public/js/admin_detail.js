@@ -442,8 +442,8 @@ document.addEventListener(
 
                 item.innerHTML =
                     `
-                    <div class="detail-document-info" style="display: flex; align-items: center; gap: 12px;">
-                        ${previewUrl ? `<input type="checkbox" class="document-checkbox" value="${escapeHtml(previewUrl)}">` : ''}
+                    <div class="detail-document-info">
+
                         <div class="detail-document-icon">
                             FILE
                         </div>
@@ -489,57 +489,6 @@ document.addEventListener(
 
             }
         );
-
-        // Bulk action logic
-        const selectAllCheckbox = document.getElementById("selectAllDocuments");
-        const bulkActionBar = document.getElementById("bulkActionBar");
-        const bulkSelectedCount = document.getElementById("bulkSelectedCount");
-        const btnBulkPreview = document.getElementById("btnBulkPreview");
-
-        function updateBulkActionBar() {
-            const checkboxes = document.querySelectorAll(".document-checkbox");
-            const selectedCheckboxes = document.querySelectorAll(".document-checkbox:checked");
-            const selectedCount = selectedCheckboxes.length;
-
-            if (selectedCount > 0) {
-                bulkActionBar.style.display = "flex";
-                bulkSelectedCount.textContent = selectedCount;
-            } else {
-                bulkActionBar.style.display = "none";
-            }
-
-            if (selectAllCheckbox) {
-                selectAllCheckbox.checked = checkboxes.length > 0 && selectedCount === checkboxes.length;
-                selectAllCheckbox.indeterminate = selectedCount > 0 && selectedCount < checkboxes.length;
-            }
-        }
-
-        if (selectAllCheckbox) {
-            selectAllCheckbox.addEventListener("change", function () {
-                const checkboxes = document.querySelectorAll(".document-checkbox");
-                checkboxes.forEach(function (cb) {
-                    cb.checked = selectAllCheckbox.checked;
-                });
-                updateBulkActionBar();
-            });
-        }
-
-        list.addEventListener("change", function (e) {
-            if (e.target.classList.contains("document-checkbox")) {
-                updateBulkActionBar();
-            }
-        });
-
-        if (btnBulkPreview) {
-            btnBulkPreview.addEventListener("click", function () {
-                const selectedCheckboxes = document.querySelectorAll(".document-checkbox:checked");
-                selectedCheckboxes.forEach(function (cb) {
-                    if (cb.value) {
-                        window.open(cb.value, "_blank");
-                    }
-                });
-            });
-        }
 
     }
 );

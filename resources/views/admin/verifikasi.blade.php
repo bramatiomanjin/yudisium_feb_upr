@@ -312,6 +312,13 @@
             </section>
 
 
+    <div style="display: flex; align-items: center; justify-content: flex-end; margin-bottom: 12px; margin-top: 16px; padding-right: 24px;">
+        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; color: #15382b;">
+            <input type="checkbox" id="selectAllVerification" style="width: 16px; height: 16px;">
+            Pilih Semua Item
+        </label>
+    </div>
+
             <!-- =====================================
                  DATA MAHASISWA
             ====================================== -->
@@ -359,6 +366,11 @@
                         data-item-type="field"
                         data-item-key="nama_lengkap"
                     >
+
+                        <!-- BULK CHECKBOX -->
+                        <div style="display: flex; align-items: center; justify-content: center; padding-right: 4px;">
+                            <input type="checkbox" class="bulk-verification-checkbox">
+                        </div>
 
                         <div class="verification-item-content">
 
@@ -421,6 +433,11 @@
                         data-item-key="email"
                     >
 
+                        <!-- BULK CHECKBOX -->
+                        <div style="display: flex; align-items: center; justify-content: center; padding-right: 4px;">
+                            <input type="checkbox" class="bulk-verification-checkbox">
+                        </div>
+
                         <div class="verification-item-content">
 
                             <span class="verification-item-label">
@@ -481,6 +498,11 @@
                         data-item-type="field"
                         data-item-key="no_whatsapp"
                     >
+
+                        <!-- BULK CHECKBOX -->
+                        <div style="display: flex; align-items: center; justify-content: center; padding-right: 4px;">
+                            <input type="checkbox" class="bulk-verification-checkbox">
+                        </div>
 
                         <div class="verification-item-content">
 
@@ -543,6 +565,11 @@
                         data-item-key="tahun_angkatan"
                     >
 
+                        <!-- BULK CHECKBOX -->
+                        <div style="display: flex; align-items: center; justify-content: center; padding-right: 4px;">
+                            <input type="checkbox" class="bulk-verification-checkbox">
+                        </div>
+
                         <div class="verification-item-content">
 
                             <span class="verification-item-label">
@@ -604,6 +631,11 @@
                         data-item-key="jalur_masuk"
                     >
 
+                        <!-- BULK CHECKBOX -->
+                        <div style="display: flex; align-items: center; justify-content: center; padding-right: 4px;">
+                            <input type="checkbox" class="bulk-verification-checkbox">
+                        </div>
+
                         <div class="verification-item-content">
 
                             <span class="verification-item-label">
@@ -664,6 +696,11 @@
                         data-item-type="field"
                         data-item-key="jurusan"
                     >
+
+                        <!-- BULK CHECKBOX -->
+                        <div style="display: flex; align-items: center; justify-content: center; padding-right: 4px;">
+                            <input type="checkbox" class="bulk-verification-checkbox">
+                        </div>
 
                         <div class="verification-item-content">
 
@@ -762,6 +799,11 @@
                         data-item-key="karya_tulis"
                     >
 
+                        <!-- BULK CHECKBOX -->
+                        <div style="display: flex; align-items: center; justify-content: center; padding-right: 4px;">
+                            <input type="checkbox" class="bulk-verification-checkbox">
+                        </div>
+
                         <div class="verification-item-content">
 
                             <span class="verification-item-label">
@@ -822,6 +864,11 @@
                         data-item-type="field"
                         data-item-key="judul_karya_tulis"
                     >
+
+                        <!-- BULK CHECKBOX -->
+                        <div style="display: flex; align-items: center; justify-content: center; padding-right: 4px;">
+                            <input type="checkbox" class="bulk-verification-checkbox">
+                        </div>
 
                         <div class="verification-item-content">
 
@@ -885,6 +932,11 @@
                         data-item-key="tanggal_ujian"
                     >
 
+                        <!-- BULK CHECKBOX -->
+                        <div style="display: flex; align-items: center; justify-content: center; padding-right: 4px;">
+                            <input type="checkbox" class="bulk-verification-checkbox">
+                        </div>
+
                         <div class="verification-item-content">
 
                             <span class="verification-item-label">
@@ -946,6 +998,11 @@
                         data-item-key="nilai_angka"
                     >
 
+                        <!-- BULK CHECKBOX -->
+                        <div style="display: flex; align-items: center; justify-content: center; padding-right: 4px;">
+                            <input type="checkbox" class="bulk-verification-checkbox">
+                        </div>
+
                         <div class="verification-item-content">
 
                             <span class="verification-item-label">
@@ -1006,6 +1063,11 @@
                         data-item-type="field"
                         data-item-key="nilai_huruf"
                     >
+
+                        <!-- BULK CHECKBOX -->
+                        <div style="display: flex; align-items: center; justify-content: center; padding-right: 4px;">
+                            <input type="checkbox" class="bulk-verification-checkbox">
+                        </div>
 
                         <div class="verification-item-content">
 
@@ -1329,6 +1391,18 @@
 
     </div>
 
+    <!-- =====================================
+         BULK ACTION BAR
+    ====================================== -->
+    <div class="bulk-action-bar" id="bulkVerificationActionBar" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #fff; padding: 16px 24px; box-shadow: 0 -4px 16px rgba(0,0,0,0.05); z-index: 1000; align-items: center; justify-content: space-between; border-top: 1px solid #e1e8e4;">
+        <div class="bulk-action-info" style="font-weight: 600; color: #15382b;">
+            <span id="bulkVerificationCount">0</span> item dipilih
+        </div>
+        <div class="bulk-action-buttons" style="display: flex; gap: 12px;">
+            <button type="button" class="admin-primary-button" id="btnBulkApprove">✓ Setujui Terpilih</button>
+            <button type="button" class="admin-secondary-button" id="btnBulkRevision" style="color: #c93b3b; border-color: #f5d1d1; background: #fff;">! Revisi Terpilih</button>
+        </div>
+    </div>
 
     <script src="{{ asset('js/yudisium_api.js') }}"></script>
     <script src="{{ asset('js/modal_accessibility.js') }}"></script>

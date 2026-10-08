@@ -425,6 +425,9 @@ document.addEventListener(
 
 
                         item.innerHTML = `
+                        <div style="display: flex; align-items: center; justify-content: center; padding: 0 16px 0 0;">
+                            <input type="checkbox" class="bulk-verification-checkbox" data-item-key="${escapeHtml(item.dataset.itemKey)}">
+                        </div>
                         <div class="verification-document-main">
                             <div class="verification-document-icon">
                                 FILE
@@ -1135,6 +1138,73 @@ document.addEventListener(
             openNewTab.addEventListener("click", function() {
                 if (currentUrl) window.open(currentUrl, "_blank");
             });
+        }
+
+        // =====================================
+        // BULK VERIFICATION LOGIC
+        // =====================================
+        const selectAllCheckbox = document.getElementById("selectAllVerification");
+        const bulkActionBar = document.getElementById("bulkVerificationActionBar");
+        const bulkCountEl = document.getElementById("bulkVerificationCount");
+        const btnBulkApprove = document.getElementById("btnBulkApprove");
+        const btnBulkRevision = document.getElementById("btnBulkRevision");
+
+        function updateBulkActionBar() {
+            const checkboxes = document.querySelectorAll(".bulk-verification-checkbox");
+            const selectedCheckboxes = document.querySelectorAll(".bulk-verification-checkbox:checked");
+            const selectedCount = selectedCheckboxes.length;
+
+            if (selectedCount > 0) {
+                if (bulkActionBar) bulkActionBar.style.display = "flex";
+                if (bulkCountEl) bulkCountEl.textContent = selectedCount;
+            } else {
+                if (bulkActionBar) bulkActionBar.style.display = "none";
+            }
+
+            if (selectAllCheckbox) {
+                selectAllCheckbox.checked = checkboxes.length > 0 && selectedCount === checkboxes.length;
+                selectAllCheckbox.indeterminate = selectedCount > 0 && selectedCount < checkboxes.length;
+            }
+        }
+
+        if (selectAllCheckbox) {
+            selectAllCheckbox.addEventListener("change", function () {
+                const checkboxes = document.querySelectorAll(".bulk-verification-checkbox");
+                checkboxes.forEach(function (cb) {
+                    cb.checked = selectAllCheckbox.checked;
+                });
+                updateBulkActionBar();
+            });
+        }
+
+        document.addEventListener("change", function (e) {
+            if (e.target.classList.contains("bulk-verification-checkbox")) {
+                updateBulkActionBar();
+            }
+        });
+
+        function performBulkDecision(decision) { // 'approved' or 'revision'
+            const selectedCheckboxes = document.querySelectorAll(".bulk-verification-checkbox:checked");
+            selectedCheckboxes.forEach(function (cb) {
+                const article = cb.closest(".verification-item");
+                if (article) {
+                    const btn = article.querySelector(`.verification-choice[data-choice="${decision}"]`);
+                    if (btn) {
+                        btn.click(); // Trigger existing logic
+                    }
+                }
+            });
+            
+            // Optionally uncheck after action
+            selectedCheckboxes.forEach(cb => cb.checked = false);
+            updateBulkActionBar();
+        }
+
+        if (btnBulkApprove) {
+            btnBulkApprove.addEventListener("click", () => performBulkDecision("approved"));
+        }
+        if (btnBulkRevision) {
+            btnBulkRevision.addEventListener("click", () => performBulkDecision("revision"));
         }
 
     }
