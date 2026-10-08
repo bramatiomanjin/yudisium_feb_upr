@@ -1143,15 +1143,27 @@ document.addEventListener(
 
         function dragStart(e) {
             if (e.target.closest("button")) return; // Don't drag if clicking close button
+            
+            // Prevent text selection from starting
+            e.preventDefault(); 
+            
             initialX = e.clientX - xOffset;
             initialY = e.clientY - yOffset;
             isDragging = true;
+
+            // Disable pointer events on iframe so it doesn't swallow mouseup/mousemove
+            if (iframe) iframe.style.pointerEvents = "none";
+            document.body.style.userSelect = "none";
         }
 
         function dragEnd(e) {
             initialX = currentX;
             initialY = currentY;
             isDragging = false;
+
+            // Restore pointer events
+            if (iframe) iframe.style.pointerEvents = "auto";
+            document.body.style.userSelect = "";
         }
 
         function drag(e) {
