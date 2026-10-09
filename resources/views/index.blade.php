@@ -60,12 +60,10 @@
         </div>
 
         <!-- Pengumuman Modal -->
-        <div id="pengumumanModal" class="modal-overlay" style="z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(5,27,19,0.8);">
-            <div style="position: relative; max-width: 600px; width: 100%; max-height: 100%; display: flex; flex-direction: column; align-items: center;">
-                <div style="width: 100%; display: flex; justify-content: flex-end; padding-bottom: 12px;">
-                    <button type="button" onclick="closePengumumanModal()" style="background: white; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">✕</button>
-                </div>
-                <img src="{{ asset($pengumumanImage) }}" alt="Pengumuman Yudisium" style="max-width: 100%; max-height: calc(90vh - 60px); width: auto; height: auto; border-radius: 12px; display: block; box-shadow: 0 10px 30px rgba(0,0,0,0.3); object-fit: contain;">
+        <div id="pengumumanModal" class="modal-overlay" style="z-index: 9999; display: none; align-items: center; justify-content: center; padding: 30px; background: rgba(5,27,19,0.8);">
+            <div style="position: relative; display: inline-flex; max-width: 100%; max-height: 90vh;">
+                <button type="button" onclick="closePengumumanModal()" style="position: absolute; top: -16px; right: -16px; background: white; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 10; padding: 0;">✕</button>
+                <img src="{{ asset($pengumumanImage) }}" alt="Pengumuman Yudisium" style="max-width: 100%; max-height: 90vh; width: auto; height: auto; border-radius: 12px; display: block; box-shadow: 0 10px 40px rgba(0,0,0,0.4); object-fit: contain;">
             </div>
         </div>
 
