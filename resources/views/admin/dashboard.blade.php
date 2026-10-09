@@ -577,18 +577,22 @@
                                             var items = el.querySelectorAll('.pengumuman-sortable-item');
                                             var newOrder = Array.from(items).map(item => item.getAttribute('data-index'));
                                             
-                                            fetch('{{ route('admin.reorder-pengumuman') }}', {
+                                            fetch('/admin/reorder-pengumuman', {
                                                 method: 'POST',
                                                 headers: {
                                                     'Content-Type': 'application/json',
-                                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : '{{ csrf_token() }}'
                                                 },
                                                 body: JSON.stringify({ order: newOrder })
                                             }).then(res => res.json()).then(data => {
                                                 if (data.success) {
-                                                    // optionally reload to update indices in forms
                                                     window.location.reload();
+                                                } else {
+                                                    alert('Gagal menyimpan urutan baru.');
                                                 }
+                                            }).catch(err => {
+                                                console.error(err);
+                                                alert('Gagal menyambung ke server. Pastikan koneksi stabil.');
                                             });
                                         }
                                     });
