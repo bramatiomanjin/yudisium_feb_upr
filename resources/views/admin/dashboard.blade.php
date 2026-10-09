@@ -530,26 +530,30 @@
                         </span>
                     </div>
                     
-                    @if($pengumumanImage)
-                        <div style="margin-top: 12px; margin-bottom: 8px; border: 1px solid #e1e8e4; border-radius: 8px; overflow: hidden; height: 100px; position: relative;">
-                            <img src="{{ asset($pengumumanImage) }}" alt="Pengumuman" style="width: 100%; height: 100%; object-fit: cover;">
+                    @if(count($pengumumanImages) > 0)
+                        <div style="margin-top: 12px; margin-bottom: 8px; display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px;">
+                            @foreach($pengumumanImages as $img)
+                            <div style="flex-shrink: 0; width: 80px; height: 100px; border: 1px solid #e1e8e4; border-radius: 8px; overflow: hidden; position: relative;">
+                                <img src="{{ asset($img) }}" alt="Pengumuman" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            @endforeach
                         </div>
-                        <p style="font-size: 0.8rem; color: #4a5c53;">Poster saat ini sedang tayang di halaman pendaftaran mahasiswa.</p>
-                        <form action="{{ route('admin.hapus-pengumuman') }}" method="POST" style="margin-top: 12px;" onsubmit="return confirm('Yakin ingin menghapus poster pengumuman ini?');">
+                        <p style="font-size: 0.8rem; color: #4a5c53;">{{ count($pengumumanImages) }} poster saat ini tayang di halaman mahasiswa.</p>
+                        <form action="{{ route('admin.hapus-pengumuman') }}" method="POST" style="margin-top: 12px;" onsubmit="return confirm('Yakin ingin menghapus seluruh poster pengumuman ini?');">
                             @csrf
-                            <button type="submit" class="admin-secondary-button" style="width: 100%; justify-content: center; color: #c93b3b; border-color: #f5d1d1;">Hapus Poster</button>
+                            <button type="submit" class="admin-secondary-button" style="width: 100%; justify-content: center; color: #c93b3b; border-color: #f5d1d1;">Hapus Semua Poster</button>
                         </form>
                     @else
                         <strong class="admin-stat-value" style="font-size: 1.2rem; color: #6b7d73; margin-top: 12px; margin-bottom: 8px; display: block;">
                             Belum Ada Poster
                         </strong>
-                        <p style="font-size: 0.8rem; color: #4a5c53;">Upload gambar (JPG/PNG) untuk ditampilkan sebagai popup di halaman mahasiswa.</p>
-                        <form action="{{ route('admin.upload-pengumuman') }}" method="POST" enctype="multipart/form-data" style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
-                            @csrf
-                            <input type="file" name="pengumuman_image" accept="image/*" required style="font-size: 0.8rem; max-width: 100%;">
-                            <button type="submit" class="admin-primary-button" style="width: 100%; justify-content: center; padding: 6px; font-size: 0.9rem;">Upload</button>
-                        </form>
+                        <p style="font-size: 0.8rem; color: #4a5c53;">Upload hingga 5 gambar (JPG/PNG) untuk ditampilkan sebagai popup di halaman mahasiswa.</p>
                     @endif
+                    <form action="{{ route('admin.upload-pengumuman') }}" method="POST" enctype="multipart/form-data" style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+                        @csrf
+                        <input type="file" name="pengumuman_images[]" accept="image/*" multiple required style="font-size: 0.8rem; max-width: 100%;">
+                        <button type="submit" class="admin-primary-button" style="width: 100%; justify-content: center; padding: 6px; font-size: 0.9rem;">{{ count($pengumumanImages) > 0 ? 'Ganti Poster' : 'Upload' }}</button>
+                    </form>
                 </article>
 
             </section>

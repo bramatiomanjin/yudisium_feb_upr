@@ -59,12 +59,20 @@ private function canonicalDocumentCode(string $code): string
 
         try {
             $imgSetting = \App\Models\Setting::where('key', 'pengumuman_image_path')->first();
-            $pengumumanImage = $imgSetting ? $imgSetting->value : '';
+            $pengumumanImages = [];
+            if ($imgSetting && $imgSetting->value) {
+                $decoded = json_decode($imgSetting->value, true);
+                if (is_array($decoded)) {
+                    $pengumumanImages = $decoded;
+                } elseif ($imgSetting->value !== '[]') {
+                    $pengumumanImages = [$imgSetting->value];
+                }
+            }
         } catch (\Exception $e) {
-            $pengumumanImage = '';
+            $pengumumanImages = [];
         }
 
-        return view('index', compact('activeDocs', 'requiredDocs', 'pengumumanImage'));
+        return view('index', compact('activeDocs', 'requiredDocs', 'pengumumanImages'));
     }
 
     // 2. Memproses pengiriman form

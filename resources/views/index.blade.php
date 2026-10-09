@@ -31,11 +31,21 @@
             </div>
         </header>
 
-        @if(!empty($pengumumanImage))
+        @if(!empty($pengumumanImages) && count($pengumumanImages) > 0)
         <style>
             .student-announcement-bar {
                 background: #fff; border: 1px solid #e1e8e4; border-radius: 12px; margin-bottom: 20px; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
             }
+            .pengumuman-nav-btn {
+                position: absolute; top: 50%; transform: translateY(-50%);
+                background: #000; color: white; border: none; width: 44px; height: 44px; border-radius: 50%;
+                font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 11;
+                transition: background 0.2s;
+            }
+            .pengumuman-nav-btn:hover { background: #333; }
+            .pengumuman-nav-left { left: -22px; }
+            .pengumuman-nav-right { right: -22px; }
             @media (max-width: 600px) {
                 .student-announcement-bar {
                     flex-direction: column;
@@ -46,6 +56,8 @@
                     width: 100%;
                     justify-content: center;
                 }
+                .pengumuman-nav-left { left: -10px; }
+                .pengumuman-nav-right { right: -10px; }
             }
         </style>
         <div class="student-announcement-bar">
@@ -62,12 +74,57 @@
         <!-- Pengumuman Modal -->
         <div id="pengumumanModal" class="modal-overlay" style="z-index: 9999; display: none; align-items: center; justify-content: center; padding: 30px; background: rgba(5,27,19,0.8);">
             <div style="position: relative; display: inline-flex; max-width: 100%; max-height: 90vh;">
-                <button type="button" onclick="closePengumumanModal()" style="position: absolute; top: -16px; right: -16px; background: white; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 10; padding: 0;">✕</button>
-                <img src="{{ asset($pengumumanImage) }}" alt="Pengumuman Yudisium" style="max-width: 100%; max-height: 90vh; width: auto; height: auto; border-radius: 12px; display: block; box-shadow: 0 10px 40px rgba(0,0,0,0.4); object-fit: contain;">
+                <button type="button" onclick="closePengumumanModal()" style="position: absolute; top: -16px; right: -16px; background: white; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 12; padding: 0;">✕</button>
+                
+                @if(count($pengumumanImages) > 1)
+                <button type="button" class="pengumuman-nav-btn pengumuman-nav-left" onclick="prevPengumuman()" aria-label="Previous">❮</button>
+                <button type="button" class="pengumuman-nav-btn pengumuman-nav-right" onclick="nextPengumuman()" aria-label="Next">❯</button>
+                @endif
+                
+                <img id="pengumumanImgElement" src="{{ asset($pengumumanImages[0]) }}" alt="Pengumuman Yudisium" style="max-width: 100%; max-height: 90vh; width: auto; height: auto; border-radius: 12px; display: block; box-shadow: 0 10px 40px rgba(0,0,0,0.4); object-fit: contain;">
             </div>
+            
+            @if(count($pengumumanImages) > 1)
+            <div style="position: absolute; bottom: 20px; display: flex; gap: 8px;">
+                @foreach($pengumumanImages as $index => $img)
+                <div class="pengumuman-dot" id="pengumumanDot{{ $index }}" style="width: 10px; height: 10px; border-radius: 50%; background: {{ $index === 0 ? 'white' : 'rgba(255,255,255,0.4)' }}; cursor: pointer;" onclick="goToPengumuman({{ $index }})"></div>
+                @endforeach
+            </div>
+            @endif
         </div>
 
         <script>
+            const pengumumanImages = @json(array_map(function($img) { return asset($img); }, $pengumumanImages));
+            let currentPengumumanIndex = 0;
+
+            function updatePengumumanView() {
+                const imgEl = document.getElementById('pengumumanImgElement');
+                if (imgEl) imgEl.src = pengumumanImages[currentPengumumanIndex];
+                
+                // Update dots
+                pengumumanImages.forEach((_, idx) => {
+                    const dot = document.getElementById('pengumumanDot' + idx);
+                    if (dot) {
+                        dot.style.background = idx === currentPengumumanIndex ? 'white' : 'rgba(255,255,255,0.4)';
+                    }
+                });
+            }
+
+            function nextPengumuman() {
+                currentPengumumanIndex = (currentPengumumanIndex + 1) % pengumumanImages.length;
+                updatePengumumanView();
+            }
+
+            function prevPengumuman() {
+                currentPengumumanIndex = (currentPengumumanIndex - 1 + pengumumanImages.length) % pengumumanImages.length;
+                updatePengumumanView();
+            }
+
+            function goToPengumuman(index) {
+                currentPengumumanIndex = index;
+                updatePengumumanView();
+            }
+
             function openPengumumanModal() {
                 const modal = document.getElementById('pengumumanModal');
                 if (modal) {
@@ -82,16 +139,25 @@
                     document.body.style.overflow = '';
                 }
             }
-            // Close when clicking outside
+            
+            // Keyboard navigation and outside click
             document.addEventListener('DOMContentLoaded', function() {
                 const modal = document.getElementById('pengumumanModal');
                 if (modal) {
                     modal.addEventListener('click', function(e) {
-                        if (e.target === modal) {
-                            closePengumumanModal();
-                        }
+                        if (e.target === modal) closePengumumanModal();
                     });
                 }
+                
+                document.addEventListener('keydown', function(e) {
+                    if (modal && modal.style.display === 'flex') {
+                        if (e.key === 'Escape') closePengumumanModal();
+                        if (pengumumanImages.length > 1) {
+                            if (e.key === 'ArrowRight') nextPengumuman();
+                            if (e.key === 'ArrowLeft') prevPengumuman();
+                        }
+                    }
+                });
             });
         </script>
         @endif

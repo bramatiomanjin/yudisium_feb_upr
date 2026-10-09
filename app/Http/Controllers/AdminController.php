@@ -27,13 +27,21 @@ class AdminController extends Controller
             $isPengajuanOpen = $setting ? $setting->value === '1' : true;
             
             $imgSetting = \App\Models\Setting::where('key', 'pengumuman_image_path')->first();
-            $pengumumanImage = $imgSetting ? $imgSetting->value : '';
+            $pengumumanImages = [];
+            if ($imgSetting && $imgSetting->value) {
+                $decoded = json_decode($imgSetting->value, true);
+                if (is_array($decoded)) {
+                    $pengumumanImages = $decoded;
+                } elseif ($imgSetting->value !== '[]') {
+                    $pengumumanImages = [$imgSetting->value];
+                }
+            }
         } catch (\Exception $e) {
             $isPengajuanOpen = true;
-            $pengumumanImage = '';
+            $pengumumanImages = [];
         }
 
-        return view('admin.dashboard', compact('pendingAdmins', 'isPengajuanOpen', 'pengumumanImage'));
+        return view('admin.dashboard', compact('pendingAdmins', 'isPengajuanOpen', 'pengumumanImages'));
     }
 
     // 1c. Menampilkan Halaman Daftar Pengajuan (terpisah dari dashboard)

@@ -50,27 +50,32 @@ class SettingController extends Controller
     public function uploadPengumuman(Request $request)
     {
         $request->validate([
-            'pengumuman_image' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'pengumuman_images' => 'required|array|max:5',
+            'pengumuman_images.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
 
-        if ($request->hasFile('pengumuman_image')) {
-            $file = $request->file('pengumuman_image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            
-            // Simpan ke public/uploads/pengumuman
-            $file->move(public_path('uploads/pengumuman'), $filename);
-
+        if ($request->hasFile('pengumuman_images')) {
             $setting = \App\Models\Setting::firstOrCreate(
                 ['key' => 'pengumuman_image_path'],
-                ['value' => '']
+                ['value' => '[]']
             );
             
             // Hapus gambar lama jika ada
-            if ($setting->value && file_exists(public_path($setting->value))) {
-                @unlink(public_path($setting->value));
+            $oldImages = json_decode($setting->value, true) ?: [];
+            foreach ($oldImages as $oldImg) {
+                if ($oldImg && file_exists(public_path($oldImg))) {
+                    @unlink(public_path($oldImg));
+                }
             }
 
-            $setting->value = 'uploads/pengumuman/' . $filename;
+            $paths = [];
+            foreach ($request->file('pengumuman_images') as $file) {
+                $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('uploads/pengumuman'), $filename);
+                $paths[] = 'uploads/pengumuman/' . $filename;
+            }
+
+            $setting->value = json_encode($paths);
             $setting->save();
         }
 
@@ -81,10 +86,16 @@ class SettingController extends Controller
     {
         $setting = \App\Models\Setting::where('key', 'pengumuman_image_path')->first();
         if ($setting) {
-            if ($setting->value && file_exists(public_path($setting->value))) {
-                @unlink(public_path($setting->value));
+            $oldImages = json_decode($setting->value, true) ?: [];
+            if (!is_array($oldImages) && $setting->value) {
+                $oldImages = [$setting->value]; // backward compatibility
             }
-            $setting->value = '';
+            foreach ($oldImages as $oldImg) {
+                if ($oldImg && file_exists(public_path($oldImg))) {
+                    @unlink(public_path($oldImg));
+                }
+            }
+            $setting->value = '[]';
             $setting->save();
         }
 
