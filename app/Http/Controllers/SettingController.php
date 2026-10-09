@@ -46,4 +46,48 @@ class SettingController extends Controller
             'is_open' => $setting->value === '1'
         ]);
     }
+
+    public function uploadPengumuman(Request $request)
+    {
+        $request->validate([
+            'pengumuman_image' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+        ]);
+
+        if ($request->hasFile('pengumuman_image')) {
+            $file = $request->file('pengumuman_image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            
+            // Simpan ke public/uploads/pengumuman
+            $file->move(public_path('uploads/pengumuman'), $filename);
+
+            $setting = \App\Models\Setting::firstOrCreate(
+                ['key' => 'pengumuman_image_path'],
+                ['value' => '']
+            );
+            
+            // Hapus gambar lama jika ada
+            if ($setting->value && file_exists(public_path($setting->value))) {
+                @unlink(public_path($setting->value));
+            }
+
+            $setting->value = 'uploads/pengumuman/' . $filename;
+            $setting->save();
+        }
+
+        return redirect()->back()->with('success', 'Gambar pengumuman berhasil diunggah.');
+    }
+
+    public function hapusPengumuman(Request $request)
+    {
+        $setting = \App\Models\Setting::where('key', 'pengumuman_image_path')->first();
+        if ($setting) {
+            if ($setting->value && file_exists(public_path($setting->value))) {
+                @unlink(public_path($setting->value));
+            }
+            $setting->value = '';
+            $setting->save();
+        }
+
+        return redirect()->back()->with('success', 'Gambar pengumuman berhasil dihapus.');
+    }
 }

@@ -57,7 +57,14 @@ private function canonicalDocumentCode(string $code): string
             ->values()
             ->all();
 
-        return view('index', compact('activeDocs', 'requiredDocs'));
+        try {
+            $imgSetting = \App\Models\Setting::where('key', 'pengumuman_image_path')->first();
+            $pengumumanImage = $imgSetting ? $imgSetting->value : '';
+        } catch (\Exception $e) {
+            $pengumumanImage = '';
+        }
+
+        return view('index', compact('activeDocs', 'requiredDocs', 'pengumumanImage'));
     }
 
     // 2. Memproses pengiriman form

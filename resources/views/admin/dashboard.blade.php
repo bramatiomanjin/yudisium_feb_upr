@@ -519,6 +519,39 @@
                     </button>
                 </article>
 
+                <!-- PENGUMUMAN POSTER -->
+                <article class="admin-stat-card">
+                    <div class="admin-stat-header">
+                        <span>
+                            Poster Pengumuman
+                        </span>
+                        <span class="admin-stat-icon" style="background: #e9f2ee; color: #0a684c; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 8px;">
+                            📢
+                        </span>
+                    </div>
+                    
+                    @if($pengumumanImage)
+                        <div style="margin-top: 12px; margin-bottom: 8px; border: 1px solid #e1e8e4; border-radius: 8px; overflow: hidden; height: 100px; position: relative;">
+                            <img src="{{ asset($pengumumanImage) }}" alt="Pengumuman" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p style="font-size: 0.8rem; color: #4a5c53;">Poster saat ini sedang tayang di halaman pendaftaran mahasiswa.</p>
+                        <form action="{{ route('admin.hapus-pengumuman') }}" method="POST" style="margin-top: 12px;" onsubmit="return confirm('Yakin ingin menghapus poster pengumuman ini?');">
+                            @csrf
+                            <button type="submit" class="admin-secondary-button" style="width: 100%; justify-content: center; color: #c93b3b; border-color: #f5d1d1;">Hapus Poster</button>
+                        </form>
+                    @else
+                        <strong class="admin-stat-value" style="font-size: 1.2rem; color: #6b7d73; margin-top: 12px; margin-bottom: 8px; display: block;">
+                            Belum Ada Poster
+                        </strong>
+                        <p style="font-size: 0.8rem; color: #4a5c53;">Upload gambar (JPG/PNG) untuk ditampilkan sebagai popup di halaman mahasiswa.</p>
+                        <form action="{{ route('admin.upload-pengumuman') }}" method="POST" enctype="multipart/form-data" style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+                            @csrf
+                            <input type="file" name="pengumuman_image" accept="image/*" required style="font-size: 0.8rem; max-width: 100%;">
+                            <button type="submit" class="admin-primary-button" style="width: 100%; justify-content: center; padding: 6px; font-size: 0.9rem;">Upload</button>
+                        </form>
+                    @endif
+                </article>
+
             </section>
 
 

@@ -159,6 +159,12 @@ Route::middleware('auth')->group(
 
         Route::post('/admin/toggle-pengajuan-status', [SettingController::class, 'togglePengajuanStatus'])
             ->name('admin.toggle-pengajuan');
+            
+        Route::post('/admin/upload-pengumuman', [SettingController::class, 'uploadPengumuman'])
+            ->name('admin.upload-pengumuman');
+            
+        Route::post('/admin/hapus-pengumuman', [SettingController::class, 'hapusPengumuman'])
+            ->name('admin.hapus-pengumuman');
 
         Route::get('/admin/sys-migrate', function () {
             try {

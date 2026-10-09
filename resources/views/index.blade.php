@@ -31,6 +31,73 @@
             </div>
         </header>
 
+        @if(!empty($pengumumanImage))
+        <style>
+            .student-announcement-bar {
+                background: #fff; border: 1px solid #e1e8e4; border-radius: 12px; margin-bottom: 20px; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            }
+            @media (max-width: 600px) {
+                .student-announcement-bar {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 16px;
+                }
+                .student-announcement-bar button {
+                    width: 100%;
+                    justify-content: center;
+                }
+            }
+        </style>
+        <div class="student-announcement-bar">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 1.5rem;">📢</span>
+                <div>
+                    <h3 style="margin: 0; font-size: 1rem; color: #15382b;">Pengumuman Penting</h3>
+                    <p style="margin: 4px 0 0; font-size: 0.9rem; color: #4a5c53;">Ketentuan jadwal pendaftaran dan penerbitan SK Yudisium.</p>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="openPengumumanModal()" style="padding: 10px 20px; white-space: nowrap;">Lihat Pengumuman</button>
+        </div>
+
+        <!-- Pengumuman Modal -->
+        <div id="pengumumanModal" class="modal-overlay" style="z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(5,27,19,0.8);">
+            <div class="modal-card" style="max-width: 600px; width: 100%; padding: 0; overflow: hidden; background: transparent; box-shadow: none;">
+                <div style="display: flex; justify-content: flex-end; padding-bottom: 12px;">
+                    <button type="button" onclick="closePengumumanModal()" style="background: white; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">✕</button>
+                </div>
+                <img src="{{ asset($pengumumanImage) }}" alt="Pengumuman Yudisium" style="width: 100%; height: auto; border-radius: 12px; display: block; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+            </div>
+        </div>
+
+        <script>
+            function openPengumumanModal() {
+                const modal = document.getElementById('pengumumanModal');
+                if (modal) {
+                    modal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+            function closePengumumanModal() {
+                const modal = document.getElementById('pengumumanModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = '';
+                }
+            }
+            // Close when clicking outside
+            document.addEventListener('DOMContentLoaded', function() {
+                const modal = document.getElementById('pengumumanModal');
+                if (modal) {
+                    modal.addEventListener('click', function(e) {
+                        if (e.target === modal) {
+                            closePengumumanModal();
+                        }
+                    });
+                }
+            });
+        </script>
+        @endif
+
         <div class="student-helper-bar" aria-label="Informasi pengisian">
             <div class="student-helper-item">
                 <span class="student-helper-icon">i</span>
