@@ -264,7 +264,7 @@
                  STATISTICS
             ================================================== -->
 
-            <section class="admin-stats-grid">
+            <section class="admin-stats-grid" style="align-items: flex-start;">
 
 
                 <!-- TOTAL -->
@@ -520,7 +520,7 @@
                 </article>
 
                 <!-- PENGUMUMAN POSTER -->
-                <article class="admin-stat-card">
+                <article class="admin-stat-card" style="display: flex; flex-direction: column;">
                     <div class="admin-stat-header">
                         <span>
                             Poster Pengumuman
@@ -531,29 +531,84 @@
                     </div>
                     
                     @if(count($pengumumanImages) > 0)
-                        <div style="margin-top: 12px; margin-bottom: 8px; display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px;">
-                            @foreach($pengumumanImages as $img)
-                            <div style="flex-shrink: 0; width: 80px; height: 100px; border: 1px solid #e1e8e4; border-radius: 8px; overflow: hidden; position: relative;">
-                                <img src="{{ asset($img) }}" alt="Pengumuman" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div id="pengumuman-sortable-grid" style="margin-top: 12px; margin-bottom: 8px; display: flex; flex-wrap: wrap; gap: 8px; padding-bottom: 8px;">
+                            @foreach($pengumumanImages as $index => $img)
+                            <div class="pengumuman-sortable-item" data-index="{{ $index }}" style="flex-shrink: 0; width: 80px; height: 100px; border: 1px solid #e1e8e4; border-radius: 8px; overflow: hidden; position: relative; cursor: grab;">
+                                <img src="{{ asset($img) }}" alt="Pengumuman" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
+                                <form action="{{ route('admin.hapus-satu-pengumuman') }}" method="POST" onsubmit="return confirm('Hapus gambar ini?');" style="position: absolute; top: 4px; right: 4px;">
+                                    @csrf
+                                    <input type="hidden" name="index" value="{{ $index }}">
+                                    <button type="submit" style="background: white; border: none; width: 20px; height: 20px; border-radius: 50%; color: #c93b3b; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">✕</button>
+                                </form>
                             </div>
                             @endforeach
                         </div>
-                        <p style="font-size: 0.8rem; color: #4a5c53;">{{ count($pengumumanImages) }} poster saat ini tayang di halaman mahasiswa.</p>
-                        <form action="{{ route('admin.hapus-pengumuman') }}" method="POST" style="margin-top: 12px;" onsubmit="return confirm('Yakin ingin menghapus seluruh poster pengumuman ini?');">
+                        <p style="font-size: 0.8rem; color: #4a5c53; margin-bottom: 12px;">{{ count($pengumumanImages) }} poster tayang. (Seret gambar untuk mengubah urutan)</p>
+                        
+                        <div style="display: flex; gap: 8px; margin-top: auto;">
+                            <!-- Form Tambah -->
+                            <form action="{{ route('admin.tambah-pengumuman') }}" method="POST" enctype="multipart/form-data" style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
+                                @csrf
+                                <input type="file" name="pengumuman_images[]" accept="image/*" multiple required style="font-size: 0.75rem; width: 100%;" id="tambahPosterInput">
+                                <button type="submit" class="admin-primary-button" style="width: 100%; justify-content: center; padding: 6px; font-size: 0.8rem;">Tambah</button>
+                            </form>
+                            <!-- Form Ganti Semua -->
+                            <form action="{{ route('admin.upload-pengumuman') }}" method="POST" enctype="multipart/form-data" style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
+                                @csrf
+                                <input type="file" name="pengumuman_images[]" accept="image/*" multiple required style="font-size: 0.75rem; width: 100%;">
+                                <button type="submit" class="admin-secondary-button" style="width: 100%; justify-content: center; padding: 6px; font-size: 0.8rem; border-color: #e1e8e4;">Ganti Semua</button>
+                            </form>
+                        </div>
+                        <form action="{{ route('admin.hapus-pengumuman') }}" method="POST" style="margin-top: 8px;" onsubmit="return confirm('Yakin ingin menghapus seluruh poster pengumuman ini?');">
                             @csrf
-                            <button type="submit" class="admin-secondary-button" style="width: 100%; justify-content: center; color: #c93b3b; border-color: #f5d1d1;">Hapus Semua Poster</button>
+                            <button type="submit" class="admin-secondary-button" style="width: 100%; justify-content: center; color: #c93b3b; border-color: #f5d1d1; padding: 6px; font-size: 0.8rem;">Hapus Semua</button>
                         </form>
+                        
+                        <!-- SortableJS -->
+                        <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                var el = document.getElementById('pengumuman-sortable-grid');
+                                if (el) {
+                                    new Sortable(el, {
+                                        animation: 150,
+                                        ghostClass: 'sortable-ghost',
+                                        onEnd: function (evt) {
+                                            var items = el.querySelectorAll('.pengumuman-sortable-item');
+                                            var newOrder = Array.from(items).map(item => item.getAttribute('data-index'));
+                                            
+                                            fetch('{{ route('admin.reorder-pengumuman') }}', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                },
+                                                body: JSON.stringify({ order: newOrder })
+                                            }).then(res => res.json()).then(data => {
+                                                if (data.success) {
+                                                    // optionally reload to update indices in forms
+                                                    window.location.reload();
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        </script>
+                        <style>
+                            .sortable-ghost { opacity: 0.4; }
+                        </style>
                     @else
                         <strong class="admin-stat-value" style="font-size: 1.2rem; color: #6b7d73; margin-top: 12px; margin-bottom: 8px; display: block;">
                             Belum Ada Poster
                         </strong>
-                        <p style="font-size: 0.8rem; color: #4a5c53;">Upload hingga 5 gambar (JPG/PNG) untuk ditampilkan sebagai popup di halaman mahasiswa.</p>
+                        <p style="font-size: 0.8rem; color: #4a5c53;">Upload hingga 10 gambar (JPG/PNG) untuk ditampilkan sebagai popup di halaman mahasiswa.</p>
+                        <form action="{{ route('admin.upload-pengumuman') }}" method="POST" enctype="multipart/form-data" style="margin-top: auto; display: flex; flex-direction: column; gap: 8px;">
+                            @csrf
+                            <input type="file" name="pengumuman_images[]" accept="image/*" multiple required style="font-size: 0.8rem; max-width: 100%;">
+                            <button type="submit" class="admin-primary-button" style="width: 100%; justify-content: center; padding: 6px; font-size: 0.9rem;">Upload</button>
+                        </form>
                     @endif
-                    <form action="{{ route('admin.upload-pengumuman') }}" method="POST" enctype="multipart/form-data" style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
-                        @csrf
-                        <input type="file" name="pengumuman_images[]" accept="image/*" multiple required style="font-size: 0.8rem; max-width: 100%;">
-                        <button type="submit" class="admin-primary-button" style="width: 100%; justify-content: center; padding: 6px; font-size: 0.9rem;">{{ count($pengumumanImages) > 0 ? 'Ganti Poster' : 'Upload' }}</button>
-                    </form>
                 </article>
 
             </section>

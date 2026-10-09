@@ -163,6 +163,15 @@ Route::middleware('auth')->group(
         Route::post('/admin/upload-pengumuman', [SettingController::class, 'uploadPengumuman'])
             ->name('admin.upload-pengumuman');
             
+        Route::post('/admin/tambah-pengumuman', [SettingController::class, 'tambahPengumuman'])
+            ->name('admin.tambah-pengumuman');
+            
+        Route::post('/admin/reorder-pengumuman', [SettingController::class, 'reorderPengumuman'])
+            ->name('admin.reorder-pengumuman');
+            
+        Route::post('/admin/hapus-satu-pengumuman', [SettingController::class, 'hapusSatuPengumuman'])
+            ->name('admin.hapus-satu-pengumuman');
+            
         Route::post('/admin/hapus-pengumuman', [SettingController::class, 'hapusPengumuman'])
             ->name('admin.hapus-pengumuman');
 
