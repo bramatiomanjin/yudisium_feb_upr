@@ -145,7 +145,7 @@
                 <div class="admin-user-mini">
 
                     <div class="admin-user-avatar">
-                        SA
+                        {{ Auth::user()->initial }}
                     </div>
 
                     <div>
@@ -169,6 +169,8 @@
                         Keluar
                     </button>
                 </form>
+
+                @include('admin.partials.sidebar_watermark')
 
             </div>
 
@@ -203,7 +205,7 @@
                 <div class="admin-profile-chip">
 
                     <div class="admin-profile-avatar">
-                        SA
+                        {{ Auth::user()->initial }}
                     </div>
 
                     <div>
@@ -412,7 +414,7 @@
                         @foreach($admins->where('status', 'PENDING') as $admin)
                         <div class="manage-admin-item">
                             <div class="manage-admin-user">
-                                <div class="manage-admin-avatar">{{ strtoupper(substr($admin->name, 0, 1)) }}</div>
+                                <div class="manage-admin-avatar">{{ $admin->initial }}</div>
                                 <div>
                                     <strong>{{ $admin->name }}</strong>
                                 </div>
@@ -499,7 +501,7 @@
                         @foreach($admins->where('status', 'ACTIVE') as $admin)
                         <div class="manage-admin-item">
                             <div class="manage-admin-user">
-                                <div class="manage-admin-avatar">{{ strtoupper(substr($admin->name, 0, 1)) }}</div>
+                                <div class="manage-admin-avatar">{{ $admin->initial }}</div>
                                 <div>
                                     <strong>{{ $admin->name }}</strong>
                                 </div>
@@ -582,7 +584,7 @@
                         @foreach($admins->where('status', 'INACTIVE') as $admin)
                         <div class="manage-admin-item">
                             <div class="manage-admin-user">
-                                <div class="manage-admin-avatar">{{ strtoupper(substr($admin->name, 0, 1)) }}</div>
+                                <div class="manage-admin-avatar">{{ $admin->initial }}</div>
                                 <div>
                                     <strong>{{ $admin->name }}</strong>
                                 </div>

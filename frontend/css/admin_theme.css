@@ -1749,3 +1749,67 @@ textarea:focus-visible {
     }
 
 }
+
+/* =========================================================
+   WATERMARKS (CREDITS)
+========================================================= */
+
+/* ---------- ADMIN AUTH WATERMARK ---------- */
+.admin-auth-watermark {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 0.78rem;
+    line-height: 1.55;
+    color: var(--feb-muted, #596760);
+}
+
+.admin-auth-watermark p {
+    margin: 0;
+}
+
+.admin-auth-watermark strong {
+    color: var(--feb-heading, #11241b);
+    font-weight: 600;
+}
+
+.admin-auth-watermark-dept {
+    margin-top: 2px !important;
+    font-size: 0.74rem;
+    color: var(--feb-soft-muted, #74827b);
+}
+
+/* ---------- ADMIN SIDEBAR WATERMARK ---------- */
+.admin-sidebar-watermark {
+    width: 100%;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: center;
+    font-size: 0.70rem;
+    line-height: 1.45;
+}
+
+.admin-sidebar-watermark-label {
+    display: block;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.45);
+    margin-bottom: 3px;
+}
+
+.admin-sidebar-watermark-names {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.admin-sidebar-watermark-dept {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.68rem;
+    color: var(--feb-gold-400, #e2bd50);
+    font-weight: 500;
+}

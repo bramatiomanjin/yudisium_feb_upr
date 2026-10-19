@@ -349,7 +349,8 @@ body::before {
 .review-card,
 .confirmation-box,
 .important-notice,
-.form-navigation {
+.form-navigation,
+.student-form-watermark {
     grid-column: 1 / -1;
 }
 
@@ -729,6 +730,28 @@ body::before {
     background: #f8fbf9;
 }
 
+/* ---------- WATERMARK ---------- */
+
+.student-form-watermark {
+    grid-column: 1 / -1;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--reg-line);
+    text-align: center;
+    color: var(--reg-muted);
+    font-size: 0.815rem;
+    line-height: 1.5;
+}
+
+.student-form-watermark p {
+    margin: 0;
+}
+
+.student-form-watermark strong {
+    color: var(--reg-green-900);
+    font-weight: 600;
+}
+
 /* ---------- MODAL ---------- */
 
 .modal-overlay {
@@ -820,8 +843,15 @@ body::before {
     .review-card,
     .confirmation-box,
     .important-notice,
-    .form-navigation {
+    .form-navigation,
+    .student-form-watermark {
         grid-column: 1;
+    }
+
+    .student-form-watermark {
+        font-size: 0.75rem;
+        margin-top: 20px;
+        padding-top: 14px;
     }
 
     .document-upload-summary {

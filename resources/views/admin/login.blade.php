@@ -268,6 +268,12 @@
 
             </div>
 
+            <!-- WATERMARK -->
+            <div class="admin-auth-watermark" aria-hidden="true">
+                <p>Dikembangkan oleh <strong>Ciko Christian</strong> &amp; <strong>Bramatio Manjin</strong></p>
+                <p class="admin-auth-watermark-dept">Jurusan Teknik Informatika</p>
+            </div>
+
         </div>
 
     </main>

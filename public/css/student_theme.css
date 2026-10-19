@@ -1566,3 +1566,26 @@ textarea:focus-visible {
         min-width: 0;
     }
 }
+
+/* =========================================================
+   STUDENT FORM WATERMARK
+========================================================= */
+.student-form-watermark {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--student-line, #dce6e1);
+    text-align: center;
+    color: var(--student-muted, #64766e);
+    font-size: 0.815rem;
+    line-height: 1.5;
+}
+
+.student-form-watermark p {
+    margin: 0;
+}
+
+.student-form-watermark strong {
+    color: var(--student-green-950, #063b2d);
+    font-weight: 600;
+}
+

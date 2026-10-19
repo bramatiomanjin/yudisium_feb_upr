@@ -172,7 +172,7 @@
                 <div class="admin-user-mini">
 
                     <div class="admin-user-avatar">
-                        A
+                        {{ Auth::user()->initial }}
                     </div>
 
                     <div>
@@ -196,6 +196,8 @@
                         Keluar
                     </button>
                 </form>
+
+                @include('admin.partials.sidebar_watermark')
 
             </div>
 
@@ -237,7 +239,7 @@
                 <div class="admin-profile-chip">
 
                     <div class="admin-profile-avatar">
-                        A
+                        {{ Auth::user()->initial }}
                     </div>
 
                     <div>

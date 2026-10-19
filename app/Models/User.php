@@ -29,4 +29,19 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Dapatkan inisial untuk avatar profil user.
+     * Super Admin berinisial SA, admin lainnya menggunakan huruf pertama namanya.
+     */
+    public function getInitialAttribute(): string
+    {
+        if (strtoupper($this->role ?? '') === 'SUPER_ADMIN') {
+            return 'SA';
+        }
+
+        $name = trim($this->name ?? '');
+
+        return $name !== '' ? strtoupper(mb_substr($name, 0, 1, 'UTF-8')) : 'A';
+    }
 }

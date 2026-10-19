@@ -398,6 +398,8 @@
 
                 </div>
 
+                @include('mahasiswa.partials.watermark')
+
             </section>
 
 
@@ -553,6 +555,8 @@
                     </button>
 
                 </div>
+
+                @include('mahasiswa.partials.watermark')
 
             </section>
 
@@ -1169,6 +1173,8 @@
 
                 </div>
 
+                @include('mahasiswa.partials.watermark')
+
             </section>
 
 
@@ -1419,6 +1425,8 @@
                     </button>
 
                 </div>
+
+                @include('mahasiswa.partials.watermark')
 
             </section>
 
