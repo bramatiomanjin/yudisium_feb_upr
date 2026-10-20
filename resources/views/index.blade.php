@@ -127,28 +127,141 @@
                 background: #e5e7eb;
                 color: #111827;
             }
+            .pengumuman-media-wrapper {
+                position: relative;
+                flex: 1 1 auto;
+                min-height: 200px;
+                width: 100%;
+                background: #061911;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+            }
+            .pengumuman-zoom-bar {
+                position: absolute;
+                top: 10px;
+                right: 12px;
+                z-index: 25;
+                display: inline-flex;
+                align-items: center;
+                gap: 3px;
+                background: rgba(10, 25, 18, 0.82);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                padding: 4px 6px;
+                border-radius: 999px;
+                border: 1px solid rgba(255, 255, 255, 0.22);
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+                user-select: none;
+            }
+            .pengumuman-zoom-btn {
+                background: transparent;
+                border: none;
+                color: #f1f5f9;
+                width: 26px;
+                height: 26px;
+                border-radius: 50%;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: background 0.15s, transform 0.1s;
+                padding: 0;
+            }
+            .pengumuman-zoom-btn:hover {
+                background: rgba(255, 255, 255, 0.22);
+                color: #ffffff;
+            }
+            .pengumuman-zoom-btn:active {
+                transform: scale(0.92);
+            }
+            .pengumuman-zoom-badge {
+                font-size: 0.72rem;
+                font-weight: 700;
+                color: #e2e8f0;
+                min-width: 38px;
+                text-align: center;
+                cursor: pointer;
+                padding: 0 2px;
+                letter-spacing: 0.2px;
+            }
+            .pengumuman-zoom-badge:hover {
+                color: #ffffff;
+                text-decoration: underline;
+            }
+            .pengumuman-scroll-hint {
+                position: absolute;
+                bottom: 12px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 20;
+                background: rgba(10, 25, 18, 0.85);
+                backdrop-filter: blur(6px);
+                color: #ecfdf5;
+                font-size: 0.74rem;
+                font-weight: 600;
+                padding: 5px 12px;
+                border-radius: 999px;
+                border: 1px solid rgba(255, 255, 255, 0.22);
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+                pointer-events: none;
+                transition: opacity 0.3s ease, transform 0.3s ease;
+                opacity: 0;
+                white-space: nowrap;
+            }
+            .pengumuman-scroll-hint.visible {
+                opacity: 1;
+            }
             .pengumuman-image-area {
                 position: relative;
                 flex: 1 1 auto;
                 min-height: 0;
                 width: 100%;
-                background: #092017;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                overflow: hidden;
-                padding: 6px;
+                height: 100%;
+                background: transparent;
+                overflow-y: auto;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior: contain;
+                padding: 10px;
                 box-sizing: border-box;
+                text-align: center;
+                scrollbar-width: thin;
+                scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
             }
-            .pengumuman-image-area img {
+            .pengumuman-image-area::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+            .pengumuman-image-area::-webkit-scrollbar-track {
+                background: rgba(0, 0, 0, 0.2);
+            }
+            .pengumuman-image-area::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.35);
+                border-radius: 4px;
+            }
+            .pengumuman-image-area::-webkit-scrollbar-thumb:hover {
+                background: rgba(255, 255, 255, 0.6);
+            }
+            .pengumuman-zoom-stage {
+                display: inline-block;
+                vertical-align: top;
+                width: 100%;
                 max-width: 100%;
-                max-height: 100%;
-                width: auto;
+                box-sizing: border-box;
+                transition: width 0.15s ease-out;
+                transform-origin: top center;
+            }
+            .pengumuman-zoom-stage img {
+                width: 100%;
+                max-width: 100%;
                 height: auto;
-                object-fit: contain;
                 display: block;
                 margin: 0 auto;
+                border-radius: 4px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
                 user-select: none;
+                -webkit-user-drag: none;
             }
             .pengumuman-nav-btn {
                 position: absolute;
@@ -321,12 +434,32 @@
                 .pengumuman-nav-btn {
                     display: none !important;
                 }
-                .pengumuman-image-area {
-                    touch-action: pan-y;
-                    cursor: grab;
-                    padding: 4px;
+                .pengumuman-media-wrapper {
+                    min-height: 180px;
                 }
-                .pengumuman-image-area img {
+                .pengumuman-image-area {
+                    touch-action: pan-x pan-y;
+                    padding: 6px;
+                }
+                .pengumuman-zoom-bar {
+                    top: 8px;
+                    right: 8px;
+                    padding: 3px 5px;
+                }
+                .pengumuman-zoom-btn {
+                    width: 24px;
+                    height: 24px;
+                }
+                .pengumuman-zoom-badge {
+                    font-size: 0.68rem;
+                    min-width: 32px;
+                }
+                .pengumuman-scroll-hint {
+                    font-size: 0.7rem;
+                    padding: 4px 10px;
+                    bottom: 8px;
+                }
+                .pengumuman-zoom-stage img {
                     pointer-events: none;
                 }
                 .pengumuman-modal-header {
@@ -419,14 +552,37 @@
                     </div>
                 </div>
 
-                <!-- Image Area -->
-                <div class="pengumuman-image-area" id="pengumumanImageArea">
+                <!-- Image Section with Floating Controls & Scrollable Viewport -->
+                <div class="pengumuman-media-wrapper">
+                    <!-- Floating Zoom Controls -->
+                    <div class="pengumuman-zoom-bar">
+                        <button type="button" class="pengumuman-zoom-btn" onclick="zoomPengumuman(-0.25)" title="Perkecil (−)" aria-label="Zoom Out">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                        <span class="pengumuman-zoom-badge" id="pengumumanZoomBadge" onclick="resetPengumumanZoom()" title="Reset Zoom (100%)">100%</span>
+                        <button type="button" class="pengumuman-zoom-btn" onclick="zoomPengumuman(0.25)" title="Perbesar (+)" aria-label="Zoom In">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                        <button type="button" class="pengumuman-zoom-btn" onclick="resetPengumumanZoom()" title="Reset Tampilan (100%)" aria-label="Reset Zoom">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                        </button>
+                    </div>
+
+                    <!-- Floating Scroll Hint -->
+                    <div class="pengumuman-scroll-hint" id="pengumumanScrollHint">
+                        <span>↕ Scroll untuk membaca seluruh isi</span>
+                    </div>
+
                     @if(count($pengumumanImages) > 1)
                     <button type="button" id="pengumumanPrevNavBtn" class="pengumuman-nav-btn pengumuman-nav-left" onclick="prevPengumuman()" aria-label="Previous">❮</button>
                     <button type="button" id="pengumumanNextNavBtn" class="pengumuman-nav-btn pengumuman-nav-right" onclick="nextPengumuman()" aria-label="Next">❯</button>
                     @endif
 
-                    <img id="pengumumanImgElement" src="{{ asset($pengumumanImages[0]) }}" alt="Pengumuman Yudisium">
+                    <div class="pengumuman-image-area" id="pengumumanImageArea">
+                        <div class="pengumuman-zoom-stage" id="pengumumanZoomStage">
+                            <img id="pengumumanImgElement" src="{{ asset($pengumumanImages[0]) }}" alt="Pengumuman Yudisium">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Footer with Checkbox & Actions -->
@@ -469,6 +625,61 @@
             const verifiedImages = {};
             let isMandatoryMode = true;
 
+            // Zoom Controller State
+            let currentZoom = 1.0;
+            const MIN_ZOOM = 0.75;
+            const MAX_ZOOM = 2.5;
+
+            function setPengumumanZoom(zoom, smooth = true) {
+                currentZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom));
+                const stage = document.getElementById('pengumumanZoomStage');
+                const badge = document.getElementById('pengumumanZoomBadge');
+
+                if (stage) {
+                    stage.style.transition = smooth ? 'width 0.15s ease-out' : 'none';
+                    if (Math.abs(currentZoom - 1.0) < 0.01) {
+                        stage.style.width = '100%';
+                        stage.style.maxWidth = '100%';
+                    } else {
+                        stage.style.width = `${Math.round(currentZoom * 100)}%`;
+                        stage.style.maxWidth = 'none';
+                    }
+                }
+                if (badge) {
+                    badge.textContent = `${Math.round(currentZoom * 100)}%`;
+                }
+            }
+
+            function zoomPengumuman(delta) {
+                setPengumumanZoom(currentZoom + delta, true);
+            }
+
+            function resetPengumumanZoom(smooth = true) {
+                setPengumumanZoom(1.0, smooth);
+                const area = document.getElementById('pengumumanImageArea');
+                if (area) {
+                    if (smooth) {
+                        area.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+                    } else {
+                        area.scrollTop = 0;
+                        area.scrollLeft = 0;
+                    }
+                }
+            }
+
+            function checkScrollHint() {
+                const area = document.getElementById('pengumumanImageArea');
+                const hint = document.getElementById('pengumumanScrollHint');
+                if (!area || !hint) return;
+
+                const isScrollable = area.scrollHeight > (area.clientHeight + 24);
+                if (isScrollable && area.scrollTop < 20) {
+                    hint.classList.add('visible');
+                } else {
+                    hint.classList.remove('visible');
+                }
+            }
+
             function isAllVerified() {
                 for (let i = 0; i < pengumumanImages.length; i++) {
                     if (!verifiedImages[i]) return false;
@@ -479,7 +690,14 @@
             function updatePengumumanView() {
                 const total = pengumumanImages.length;
                 const imgEl = document.getElementById('pengumumanImgElement');
-                if (imgEl) imgEl.src = pengumumanImages[currentPengumumanIndex];
+                if (imgEl) {
+                    imgEl.src = pengumumanImages[currentPengumumanIndex];
+                    // Reset zoom & scroll ke paling atas setiap ganti poster
+                    resetPengumumanZoom(false);
+                    imgEl.onload = function() {
+                        setTimeout(checkScrollHint, 80);
+                    };
+                }
 
                 // Counter
                 const counterEl = document.getElementById('pengumumanCounter');
@@ -626,6 +844,7 @@
                         isMandatoryMode = false;
                     }
                     updatePengumumanView();
+                    setTimeout(checkScrollHint, 250);
                 }
             }
 
@@ -641,20 +860,33 @@
                 }
             }
 
-            // Touch Swipe Gesture untuk HP / Layar Sentuh
+            // Touch Swipe & Zoom Gestures untuk HP / Layar Sentuh
             let touchStartX = 0;
             let touchStartY = 0;
             let touchEndX = 0;
             let touchEndY = 0;
+            let initialPinchDistance = 0;
+            let initialPinchZoom = 1.0;
+            let isPinching = false;
+            let lastTapTime = 0;
+
+            function getPinchDistance(touches) {
+                const dx = touches[0].clientX - touches[1].clientX;
+                const dy = touches[0].clientY - touches[1].clientY;
+                return Math.sqrt(dx * dx + dy * dy);
+            }
 
             function handleSwipe() {
                 if (pengumumanImages.length <= 1) return;
 
+                // Jangan ganti poster saat user sedang zoom in (biarkan user menggeser/pan gambar yang di-zoom)
+                if (currentZoom > 1.05) return;
+
                 const diffX = touchEndX - touchStartX;
                 const diffY = touchEndY - touchStartY;
 
-                // Threshold minimum 40px dan pastikan arah geser horizontal lebih dominan daripada vertikal
-                if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+                // Threshold minimum 45px dan harus dominan geser horizontal (agar scroll vertikal tidak memicu ganti poster)
+                if (Math.abs(diffX) > 45 && Math.abs(diffX) > Math.abs(diffY) * 1.4) {
                     if (diffX < 0) {
                         // Geser layar ke kiri -> Poster berikutnya
                         if (currentPengumumanIndex < pengumumanImages.length - 1) {
@@ -677,20 +909,57 @@
                 // Otomatis muncul saat mahasiswa membuka halaman
                 openPengumumanModal(true);
 
-                // Pasang touch swipe pada area gambar
+                // Pasang scroll listener, pinch zoom, double tap, & swipe gesture pada area gambar
                 const imageArea = document.getElementById('pengumumanImageArea');
                 if (imageArea) {
+                    imageArea.addEventListener('scroll', function() {
+                        checkScrollHint();
+                    }, { passive: true });
+
                     imageArea.addEventListener('touchstart', function(e) {
                         if (e.touches && e.touches.length === 1) {
                             touchStartX = e.touches[0].clientX;
                             touchStartY = e.touches[0].clientY;
+                        } else if (e.touches && e.touches.length === 2) {
+                            isPinching = true;
+                            initialPinchDistance = getPinchDistance(e.touches);
+                            initialPinchZoom = currentZoom;
+                        }
+                    }, { passive: true });
+
+                    imageArea.addEventListener('touchmove', function(e) {
+                        if (isPinching && e.touches && e.touches.length === 2) {
+                            const currentDist = getPinchDistance(e.touches);
+                            if (initialPinchDistance > 0) {
+                                const scale = currentDist / initialPinchDistance;
+                                setPengumumanZoom(initialPinchZoom * scale, false);
+                            }
                         }
                     }, { passive: true });
 
                     imageArea.addEventListener('touchend', function(e) {
-                        if (e.changedTouches && e.changedTouches.length === 1) {
+                        if (isPinching && (!e.touches || e.touches.length < 2)) {
+                            isPinching = false;
+                            return;
+                        }
+
+                        if (e.changedTouches && e.changedTouches.length === 1 && !isPinching) {
                             touchEndX = e.changedTouches[0].clientX;
                             touchEndY = e.changedTouches[0].clientY;
+
+                            // Double tap untuk cepat zoom in / zoom out
+                            const now = Date.now();
+                            if (now - lastTapTime < 280) {
+                                if (currentZoom > 1.1) {
+                                    resetPengumumanZoom(true);
+                                } else {
+                                    setPengumumanZoom(1.75, true);
+                                }
+                                lastTapTime = 0;
+                                return;
+                            }
+                            lastTapTime = now;
+
                             handleSwipe();
                         }
                     }, { passive: true });
