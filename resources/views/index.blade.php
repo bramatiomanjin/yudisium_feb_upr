@@ -44,13 +44,28 @@
                 justify-content: space-between;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.03);
             }
+            .pengumuman-modal-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 99999;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                padding: 16px;
+                background: rgba(5,27,19,0.88);
+                backdrop-filter: blur(4px);
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
             .pengumuman-card-wrapper {
                 position: relative;
                 background: #ffffff;
                 border-radius: 16px;
                 width: 100%;
-                max-width: 680px;
+                max-width: 620px;
                 max-height: 94vh;
+                max-height: 94dvh;
+                margin: auto;
                 display: flex;
                 flex-direction: column;
                 overflow: hidden;
@@ -68,10 +83,11 @@
                 40%, 80% { transform: translateX(6px); }
             }
             .pengumuman-modal-header {
+                flex-shrink: 0;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                padding: 12px 18px;
+                padding: 10px 16px;
                 background: #fdfdfd;
                 border-bottom: 1px solid #eef2ef;
                 gap: 12px;
@@ -96,10 +112,10 @@
             .pengumuman-close-btn {
                 background: #f3f4f6;
                 border: none;
-                width: 32px;
-                height: 32px;
+                width: 30px;
+                height: 30px;
                 border-radius: 50%;
-                font-size: 1.1rem;
+                font-size: 1.05rem;
                 cursor: pointer;
                 display: flex;
                 align-items: center;
@@ -113,18 +129,20 @@
             }
             .pengumuman-image-area {
                 position: relative;
-                flex: 1;
-                min-height: 200px;
-                max-height: calc(94vh - 200px);
+                flex: 1 1 auto;
+                min-height: 0;
+                width: 100%;
                 background: #092017;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 overflow: hidden;
+                padding: 6px;
+                box-sizing: border-box;
             }
             .pengumuman-image-area img {
                 max-width: 100%;
-                max-height: calc(94vh - 200px);
+                max-height: 100%;
                 width: auto;
                 height: auto;
                 object-fit: contain;
@@ -162,21 +180,22 @@
             .pengumuman-nav-left { left: 14px; }
             .pengumuman-nav-right { right: 14px; }
             .pengumuman-modal-footer {
-                padding: 14px 18px;
+                flex-shrink: 0;
+                padding: 10px 14px;
                 background: #ffffff;
                 border-top: 1px solid #eef2ef;
                 display: flex;
                 flex-direction: column;
-                gap: 10px;
+                gap: 8px;
             }
             .pengumuman-checkbox-card {
                 display: flex;
                 align-items: flex-start;
-                gap: 10px;
+                gap: 8px;
                 background: #f8faf9;
                 border: 1.5px solid #d1fae5;
-                padding: 10px 14px;
-                border-radius: 10px;
+                padding: 8px 12px;
+                border-radius: 8px;
                 cursor: pointer;
                 transition: border-color 0.2s, background 0.2s;
             }
@@ -185,24 +204,24 @@
                 border-color: #059669;
             }
             .pengumuman-checkbox-card input[type="checkbox"] {
-                width: 19px;
-                height: 19px;
+                width: 18px;
+                height: 18px;
                 accent-color: #047857;
                 cursor: pointer;
                 margin-top: 1px;
                 flex-shrink: 0;
             }
             .pengumuman-checkbox-text {
-                font-size: 0.88rem;
+                font-size: 0.84rem;
                 color: #1f2937;
-                line-height: 1.4;
+                line-height: 1.35;
                 font-weight: 600;
             }
             .pengumuman-footer-actions {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                gap: 12px;
+                gap: 10px;
             }
             .pengumuman-buttons-group {
                 display: flex;
@@ -230,19 +249,19 @@
                 cursor: pointer;
             }
             .pengumuman-dot.active {
-                width: 22px;
+                width: 20px;
                 border-radius: 999px;
                 background: #047857;
             }
             .pengumuman-action-btn {
-                min-height: 42px;
-                padding: 10px 20px;
+                min-height: 38px;
+                padding: 8px 18px;
                 background: #047857;
                 color: white;
                 border: none;
                 border-radius: 8px;
                 font-weight: 700;
-                font-size: 0.92rem;
+                font-size: 0.88rem;
                 cursor: pointer;
                 display: inline-flex;
                 align-items: center;
@@ -263,14 +282,14 @@
                 transform: none;
             }
             .pengumuman-prev-btn {
-                min-height: 42px;
-                padding: 10px 16px;
+                min-height: 36px;
+                padding: 8px 14px;
                 background: #f3f4f6;
                 color: #374151;
                 border: 1px solid #d1d5db;
                 border-radius: 8px;
                 font-weight: 600;
-                font-size: 0.88rem;
+                font-size: 0.82rem;
                 cursor: pointer;
                 display: inline-flex;
                 align-items: center;
@@ -290,33 +309,56 @@
                     width: 100%;
                     justify-content: center;
                 }
+                .pengumuman-modal-overlay {
+                    padding: 6px 8px;
+                }
                 .pengumuman-card-wrapper {
-                    max-height: 96vh;
-                    border-radius: 14px;
+                    max-height: 94vh;
+                    max-height: 94dvh;
+                    border-radius: 12px;
                 }
                 /* Sembunyikan tombol panah kiri-kanan di HP karena diganti swipe gesture */
                 .pengumuman-nav-btn {
                     display: none !important;
                 }
                 .pengumuman-image-area {
-                    max-height: calc(96vh - 240px);
                     touch-action: pan-y;
                     cursor: grab;
+                    padding: 4px;
                 }
                 .pengumuman-image-area img {
-                    max-height: calc(96vh - 240px);
                     pointer-events: none;
+                }
+                .pengumuman-modal-header {
+                    padding: 8px 12px;
+                }
+                .pengumuman-badge-title {
+                    font-size: 0.84rem;
+                }
+                .pengumuman-counter-badge {
+                    font-size: 0.72rem;
+                    padding: 2px 8px;
+                }
+                .pengumuman-modal-footer {
+                    padding: 8px 10px;
+                    gap: 6px;
+                }
+                .pengumuman-checkbox-card {
+                    padding: 6px 10px;
+                }
+                .pengumuman-checkbox-text {
+                    font-size: 0.78rem;
                 }
                 /* Susun tombol di HP: Tombol utama di ATAS, Tombol Kembali di BAWAH */
                 .pengumuman-footer-actions {
                     flex-direction: column;
-                    gap: 8px;
+                    gap: 6px;
                     width: 100%;
                 }
                 .pengumuman-buttons-group {
                     display: flex;
                     flex-direction: column;
-                    gap: 8px;
+                    gap: 6px;
                     width: 100%;
                     margin-left: 0;
                 }
@@ -325,7 +367,9 @@
                     width: 100%;
                     margin-left: 0;
                     text-align: center;
-                    padding: 12px 16px;
+                    min-height: 38px;
+                    font-size: 0.84rem;
+                    padding: 8px 12px;
                 }
                 .pengumuman-buttons-group .pengumuman-prev-btn {
                     order: 2; /* Di bawah tombol utama */
@@ -334,12 +378,14 @@
                     background: #f9fafb;
                     border: 1px solid #e5e7eb;
                     color: #4b5563;
-                    padding: 10px 16px;
+                    min-height: 34px;
+                    font-size: 0.8rem;
+                    padding: 6px 12px;
                 }
                 .pengumuman-dots {
                     order: 3; /* Indikator dots di paling bawah */
                     justify-content: center;
-                    margin-top: 4px;
+                    margin-top: 2px;
                 }
             }
         </style>
@@ -356,7 +402,7 @@
         </div>
 
         <!-- Pengumuman Modal -->
-        <div id="pengumumanModal" class="modal-overlay" style="z-index: 99999; display: none; align-items: center; justify-content: center; padding: 16px; background: rgba(5,27,19,0.88); backdrop-filter: blur(4px);">
+        <div id="pengumumanModal" class="pengumuman-modal-overlay">
             <div class="pengumuman-card-wrapper" onclick="event.stopPropagation()">
                 <!-- Header -->
                 <div class="pengumuman-modal-header">
