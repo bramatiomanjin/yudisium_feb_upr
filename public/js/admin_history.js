@@ -325,6 +325,9 @@ document.addEventListener(
                 VERIFICATION:
                     "Verifikasi Pengajuan",
 
+                CANCEL_VERIFICATION:
+                    "Pembatalan Verifikasi",
+
                 REVISION:
                     "Revisi Pengajuan",
 
@@ -358,7 +361,9 @@ document.addEventListener(
 
             if (
                 action ===
-                "REVISION"
+                "REVISION" ||
+                action ===
+                "CANCEL_VERIFICATION"
             ) {
 
                 return "revision";
@@ -563,7 +568,7 @@ document.addEventListener(
 
                     roleDescription
                         .textContent =
-                        "Admin hanya dapat melihat aktivitas yang dilakukan menggunakan akun sendiri.";
+                        "Admin dapat melihat aktivitas yang dilakukan menggunakan akun sendiri serta riwayat pembatalan dan verifikasi ulang pengajuan yang dibatalkan.";
                 }
 
 
@@ -585,7 +590,7 @@ document.addEventListener(
                     adminColumnHeader
                         .style
                         .display =
-                        "none";
+                        "";
                 }
             }
         }
@@ -767,7 +772,13 @@ document.addEventListener(
                                 .adminName,
 
                             activity
-                                .department
+                                .department,
+
+                            activity
+                                .actionLabel,
+
+                            activity
+                                .note
 
                         ]
                             .map(
@@ -916,6 +927,9 @@ document.addEventListener(
 
                     VERIFICATION:
                         "Verifikasi",
+
+                    CANCEL_VERIFICATION:
+                        "Pembatalan Verifikasi",
 
                     REVISION:
                         "Revisi",
@@ -1188,35 +1202,53 @@ document.addEventListener(
 
 
                         const adminCell =
-                            isSuperAdmin
+                            `
+                                <td class="history-admin-cell">
+
+                                    <strong>
+                                        ${escapeHtml(
+                                            activity.adminName
+                                            ||
+                                            "-"
+                                        )}
+                                    </strong>
+
+                                    <span>
+                                        ${escapeHtml(
+                                            activity.adminRole
+                                            ||
+                                            "ADMIN"
+                                        )}
+                                    </span>
+
+                                    <small>
+                                        ${escapeHtml(
+                                            activity.adminUsername
+                                            ||
+                                            ""
+                                        )}
+                                    </small>
+
+                                </td>
+                            `;
+
+
+                        const reasonMatch =
+                            typeof activity.note === "string"
+                                ? activity.note.match(/\(Alasan:\s*(.+)\)\s*$/is)
+                                : null;
+
+                        const cancellationReason =
+                            reasonMatch && reasonMatch[1]
+                                ? reasonMatch[1].trim()
+                                : "";
+
+                        const reasonHtml =
+                            cancellationReason
                                 ? `
-                                    <td class="history-admin-cell">
-
-                                        <strong>
-                                            ${escapeHtml(
-                                                activity.adminName
-                                                ||
-                                                "-"
-                                            )}
-                                        </strong>
-
-                                        <span>
-                                            ${escapeHtml(
-                                                activity.adminRole
-                                                ||
-                                                "ADMIN"
-                                            )}
-                                        </span>
-
-                                        <small>
-                                            ${escapeHtml(
-                                                activity.adminUsername
-                                                ||
-                                                ""
-                                            )}
-                                        </small>
-
-                                    </td>
+                                    <div class="history-change-reason">
+                                        <strong>Alasan:</strong> ${escapeHtml(cancellationReason)}
+                                    </div>
                                 `
                                 : "";
 
@@ -1335,6 +1367,7 @@ document.addEventListener(
                                         </strong>
 
                                     </div>
+                                    ${reasonHtml}
 
                                 </td>
 

@@ -274,4 +274,214 @@ class CancelVerificationTest extends TestCase
         $responseShort->assertStatus(422)
             ->assertJsonValidationErrors(['reason']);
     }
+
+    public function test_cancellation_history_is_visible_to_both_super_admin_and_regular_admin(): void
+    {
+        $superAdmin = $this->createSuperAdmin();
+        $regularAdmin = $this->createAdmin();
+        $submission = $this->createSubmission('TERVERIFIKASI');
+
+        $notifierMock = Mockery::mock(StudentYudisiumNotifier::class);
+        $notifierMock->shouldReceive('verificationCancelled')->once();
+        $this->app->instance(StudentYudisiumNotifier::class, $notifierMock);
+
+        $this->actingAs($superAdmin)
+            ->postJson("/submissions/{$submission->id}/cancel-verification", [
+                'reason' => 'Terdapat dokumen transkrip yang tertukar',
+            ])
+            ->assertOk();
+
+        // Super Admin melihat riwayat pembatalan verifikasi
+        $superAdminHistory = $this->actingAs($superAdmin)
+            ->getJson('/history')
+            ->assertOk();
+
+        $superAdminHistory->assertJsonFragment([
+            'submissionId' => $submission->id,
+            'action' => 'CANCEL_VERIFICATION',
+            'actionLabel' => 'Pembatalan Verifikasi',
+            'previousStatus' => 'terverifikasi',
+            'newStatus' => 'menunggu_verifikasi',
+            'adminName' => $superAdmin->name,
+        ]);
+
+        // Regular Admin juga melihat riwayat pembatalan verifikasi oleh Super Admin
+        $regularAdminHistory = $this->actingAs($regularAdmin)
+            ->getJson('/history')
+            ->assertOk();
+
+        $regularAdminHistory->assertJsonFragment([
+            'submissionId' => $submission->id,
+            'action' => 'CANCEL_VERIFICATION',
+            'actionLabel' => 'Pembatalan Verifikasi',
+            'previousStatus' => 'terverifikasi',
+            'newStatus' => 'menunggu_verifikasi',
+            'adminName' => $superAdmin->name,
+        ]);
+    }
+
+    public function test_regular_admin_sees_super_admin_reverification_after_cancellation_but_not_uncancelled_or_higher_statuses(): void
+    {
+        $superAdmin = $this->createSuperAdmin();
+        $regularAdmin = $this->createAdmin();
+
+        // 1. Pengajuan A: Pernah dibatalkan Super Admin, lalu diverifikasi ulang menjadi TERVERIFIKASI, lalu lanjut ke PEMBUATAN_SK
+        $cancelledSubmission = $this->createSubmission('TERVERIFIKASI');
+
+        // Log verifikasi awal Super Admin sebelum pembatalan (tidak boleh muncul di Admin biasa)
+        $initialVerifyLog = RiwayatStatus::create([
+            'pengajuan_id' => $cancelledSubmission->id,
+            'status' => PengajuanStatus::TERVERIFIKASI->value,
+            'catatan' => 'VERIFIKASI: MENUNGGU_VERIFIKASI → TERVERIFIKASI',
+            'changed_by' => $superAdmin->id,
+        ]);
+
+        // Log pembatalan verifikasi oleh Super Admin (harus muncul di Admin biasa)
+        $cancelLog = RiwayatStatus::create([
+            'pengajuan_id' => $cancelledSubmission->id,
+            'status' => PengajuanStatus::MENUNGGU_VERIFIKASI->value,
+            'catatan' => 'PEMBATALAN VERIFIKASI: TERVERIFIKASI → MENUNGGU_VERIFIKASI (Alasan: Cek ulang nilai)',
+            'changed_by' => $superAdmin->id,
+        ]);
+
+        // Log verifikasi ulang oleh Super Admin setelah pembatalan (harus muncul di Admin biasa)
+        $reverifyLog = RiwayatStatus::create([
+            'pengajuan_id' => $cancelledSubmission->id,
+            'status' => PengajuanStatus::TERVERIFIKASI->value,
+            'catatan' => 'VERIFIKASI: MENUNGGU_VERIFIKASI → TERVERIFIKASI',
+            'changed_by' => $superAdmin->id,
+        ]);
+
+        // Log status di atas TERVERIFIKASI oleh Super Admin (tidak boleh muncul di Admin biasa)
+        $skProcessLog = RiwayatStatus::create([
+            'pengajuan_id' => $cancelledSubmission->id,
+            'status' => PengajuanStatus::PEMBUATAN_SK->value,
+            'catatan' => 'PROSES SK: TERVERIFIKASI → PEMBUATAN_SK',
+            'changed_by' => $superAdmin->id,
+        ]);
+
+        // 2. Pengajuan B: Diverifikasi Super Admin (TERVERIFIKASI) tapi TIDAK PERNAH dibatalkan (tidak boleh muncul di Admin biasa)
+        Mahasiswa::create([
+            'nim' => '233020503002',
+            'nama_lengkap' => 'Siti Aminah',
+            'email' => 'siti@example.test',
+            'no_whatsapp' => '081234567891',
+            'tahun_angkatan' => 2020,
+            'jalur_masuk' => 'SBMPTN',
+            'jurusan' => 'Akuntansi',
+        ]);
+
+        $uncancelledSubmission = PengajuanYudisium::create([
+            'kode_pengajuan' => 'YUD-2026-0002',
+            'nim' => '233020503002',
+            'karya_tulis' => 'SKRIPSI',
+            'judul_karya_tulis' => 'Analisis Laporan Keuangan Daerah',
+            'tanggal_ujian' => '2026-08-02',
+            'nilai_angka' => 90.0,
+            'nilai_huruf' => 'A',
+            'status' => PengajuanStatus::TERVERIFIKASI->value,
+            'submitted_at' => now()->subDays(3),
+            'verified_at' => now()->subDay(),
+        ]);
+
+        $uncancelledVerifyLog = RiwayatStatus::create([
+            'pengajuan_id' => $uncancelledSubmission->id,
+            'status' => PengajuanStatus::TERVERIFIKASI->value,
+            'catatan' => 'VERIFIKASI: MENUNGGU_VERIFIKASI → TERVERIFIKASI',
+            'changed_by' => $superAdmin->id,
+        ]);
+
+        // Cek History Admin Biasa
+        $regularHistoryResponse = $this->actingAs($regularAdmin)
+            ->getJson('/history')
+            ->assertOk();
+
+        $regularHistoryIds = collect($regularHistoryResponse->json())->pluck('id')->all();
+
+        $this->assertContains($cancelLog->id, $regularHistoryIds, 'Riwayat pembatalan harus muncul di Admin biasa');
+        $this->assertContains($reverifyLog->id, $regularHistoryIds, 'Riwayat verifikasi ulang setelah pembatalan harus muncul di Admin biasa');
+        $this->assertNotContains($initialVerifyLog->id, $regularHistoryIds, 'Verifikasi awal sebelum pembatalan oleh Super Admin tidak boleh muncul di Admin biasa');
+        $this->assertNotContains($skProcessLog->id, $regularHistoryIds, 'Status di atas Terverifikasi oleh Super Admin tidak boleh muncul di Admin biasa');
+        $this->assertNotContains($uncancelledVerifyLog->id, $regularHistoryIds, 'Status Terverifikasi tanpa pembatalan oleh Super Admin tidak boleh muncul di Admin biasa');
+
+        // Cek History Super Admin (semua muncul)
+        $superAdminHistoryResponse = $this->actingAs($superAdmin)
+            ->getJson('/history')
+            ->assertOk();
+
+        $superHistoryIds = collect($superAdminHistoryResponse->json())->pluck('id')->all();
+
+        $this->assertContains($initialVerifyLog->id, $superHistoryIds);
+        $this->assertContains($cancelLog->id, $superHistoryIds);
+        $this->assertContains($reverifyLog->id, $superHistoryIds);
+        $this->assertContains($skProcessLog->id, $superHistoryIds);
+        $this->assertContains($uncancelledVerifyLog->id, $superHistoryIds);
+    }
+
+    public function test_regular_admin_sees_other_regular_admin_reverification_after_cancellation(): void
+    {
+        $superAdmin = $this->createSuperAdmin();
+        $adminA = $this->createAdmin();
+        $adminB = User::create([
+            'name' => 'Second Admin',
+            'email' => 'admin2@example.test',
+            'password' => bcrypt('password'),
+            'role' => 'ADMIN',
+            'status' => 'ACTIVE',
+        ]);
+
+        $cancelledSubmission = $this->createSubmission('TERVERIFIKASI');
+
+        // Log verifikasi awal oleh Admin B sebelum pembatalan (tidak boleh muncul di Admin A)
+        $initialAdminBLog = RiwayatStatus::create([
+            'pengajuan_id' => $cancelledSubmission->id,
+            'status' => PengajuanStatus::TERVERIFIKASI->value,
+            'catatan' => 'VERIFIKASI: MENUNGGU_VERIFIKASI → TERVERIFIKASI',
+            'changed_by' => $adminB->id,
+        ]);
+
+        // Log pembatalan verifikasi oleh Super Admin (muncul di semua Admin)
+        $cancelLog = RiwayatStatus::create([
+            'pengajuan_id' => $cancelledSubmission->id,
+            'status' => PengajuanStatus::MENUNGGU_VERIFIKASI->value,
+            'catatan' => 'PEMBATALAN VERIFIKASI: TERVERIFIKASI → MENUNGGU_VERIFIKASI (Alasan: Dokumen kurang jelas)',
+            'changed_by' => $superAdmin->id,
+        ]);
+
+        // Log permintaan revisi oleh Admin B setelah pembatalan (muncul di Admin A)
+        $revisionByAdminBLog = RiwayatStatus::create([
+            'pengajuan_id' => $cancelledSubmission->id,
+            'status' => PengajuanStatus::PERLU_REVISI->value,
+            'catatan' => 'REVISI: MENUNGGU_VERIFIKASI → PERLU_REVISI',
+            'changed_by' => $adminB->id,
+        ]);
+
+        // Log verifikasi ulang oleh Admin B menjadi TERVERIFIKASI setelah pembatalan (muncul di Admin A)
+        $reverifyByAdminBLog = RiwayatStatus::create([
+            'pengajuan_id' => $cancelledSubmission->id,
+            'status' => PengajuanStatus::TERVERIFIKASI->value,
+            'catatan' => 'REVIEW REVISI: REVISI_DIKIRIM → TERVERIFIKASI',
+            'changed_by' => $adminB->id,
+        ]);
+
+        // Log proses SK oleh Admin B di atas TERVERIFIKASI (tidak muncul di Admin A)
+        $skByAdminBLog = RiwayatStatus::create([
+            'pengajuan_id' => $cancelledSubmission->id,
+            'status' => PengajuanStatus::PEMBUATAN_SK->value,
+            'catatan' => 'PROSES SK: TERVERIFIKASI → PEMBUATAN_SK',
+            'changed_by' => $adminB->id,
+        ]);
+
+        $adminAHistoryResponse = $this->actingAs($adminA)
+            ->getJson('/history')
+            ->assertOk();
+
+        $adminAHistoryIds = collect($adminAHistoryResponse->json())->pluck('id')->all();
+
+        $this->assertNotContains($initialAdminBLog->id, $adminAHistoryIds, 'Verifikasi awal Admin B sebelum pembatalan tidak boleh muncul di Admin A');
+        $this->assertContains($cancelLog->id, $adminAHistoryIds, 'Pembatalan Super Admin harus muncul di Admin A');
+        $this->assertContains($revisionByAdminBLog->id, $adminAHistoryIds, 'Revisi ulang oleh Admin B setelah pembatalan harus muncul di Admin A');
+        $this->assertContains($reverifyByAdminBLog->id, $adminAHistoryIds, 'Verifikasi ulang oleh Admin B setelah pembatalan harus muncul di Admin A');
+        $this->assertNotContains($skByAdminBLog->id, $adminAHistoryIds, 'Proses SK di atas Terverifikasi oleh Admin B tidak boleh muncul di Admin A');
+    }
 }

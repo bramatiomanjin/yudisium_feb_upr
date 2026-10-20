@@ -27,7 +27,7 @@
 
     <link
         rel="stylesheet"
-        href="{{ asset('css/admin_history.css') }}"
+        href="{{ asset('css/admin_history.css') }}?v={{ @filemtime(public_path('css/admin_history.css')) }}"
     >
 
     <link
@@ -520,6 +520,10 @@
                                 Verifikasi
                             </option>
 
+                            <option value="CANCEL_VERIFICATION">
+                                Pembatalan Verifikasi
+                            </option>
+
                             <option value="REVISION">
                                 Revisi
                             </option>
@@ -719,9 +723,9 @@
 
 
 
-    <script src="{{ asset('js/yudisium_api.js') }}"></script>
-    <script src="{{ asset('js/admin.js') }}"></script>
-    <script src="{{ asset('js/admin_history.js') }}"></script>
+    <script src="{{ asset('js/yudisium_api.js') }}?v={{ @filemtime(public_path('js/yudisium_api.js')) }}"></script>
+    <script src="{{ asset('js/admin.js') }}?v={{ @filemtime(public_path('js/admin.js')) }}"></script>
+    <script src="{{ asset('js/admin_history.js') }}?v={{ @filemtime(public_path('js/admin_history.js')) }}"></script>
 
 </body>
 

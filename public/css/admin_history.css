@@ -1148,6 +1148,36 @@
 }
 
 
+.history-change-reason {
+
+    margin-top: 6px;
+
+    padding: 5px 9px;
+
+    border-left: 3px solid var(--feb-danger);
+
+    border-radius: 0 6px 6px 0;
+
+    background: var(--feb-danger-bg, #fef2f2);
+
+    color: var(--feb-ink);
+
+    font-size: 0.72rem;
+
+    line-height: 1.45;
+
+}
+
+
+.history-change-reason strong {
+
+    color: var(--feb-danger);
+
+    font-weight: 800;
+
+}
+
+
 /* =========================================================
    DETAIL BUTTON
 ========================================================= */

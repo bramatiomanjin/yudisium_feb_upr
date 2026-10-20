@@ -1063,10 +1063,15 @@ class ApiDataController extends Controller
                 );
 
         /*
-         * ADMIN hanya boleh melihat aktivitas
-         * yang dilakukan akun sendiri.
+         * ADMIN dapat melihat aktivitas yang dilakukan akun sendiri,
+         * riwayat pembatalan verifikasi oleh Super Admin, serta
+         * riwayat tindak lanjut / verifikasi ulang (oleh Super Admin
+         * maupun Admin biasa lainnya) hingga status TERVERIFIKASI
+         * setelah pembatalan.
          *
-         * SUPER_ADMIN dapat melihat semuanya.
+         * Pengajuan tanpa pembatalan (dari akun lain) dan status
+         * di atas TERVERIFIKASI (PROSES SK) dari akun lain tidak
+         * ditampilkan di history ADMIN biasa.
          */
         $user =
             Auth::user();
@@ -1078,10 +1083,54 @@ class ApiDataController extends Controller
             ) !== 'SUPER_ADMIN'
         ) {
 
-            $query->where(
-                'changed_by',
-                $user->id
-            );
+            $query->where(function ($subQuery) use ($user) {
+                $subQuery->where(
+                    'changed_by',
+                    $user->id
+                )
+                    ->orWhere(
+                        'catatan',
+                        'like',
+                        'PEMBATALAN VERIFIKASI:%'
+                    )
+                    ->orWhere(function ($reverifyQuery) {
+                        $reverifyQuery->whereIn(
+                            'status',
+                            [
+                                PengajuanStatus::PERLU_REVISI->value,
+                                PengajuanStatus::TERVERIFIKASI->value,
+                            ]
+                        )
+                            ->where(
+                                'catatan',
+                                'not like',
+                                'PEMBATALAN VERIFIKASI:%'
+                            )
+                            ->where(
+                                'catatan',
+                                'not like',
+                                'PROSES SK:%'
+                            )
+                            ->whereExists(function ($cancelExists) {
+                                $cancelExists->select(DB::raw(1))
+                                    ->from('riwayat_status as cancel_log')
+                                    ->whereColumn(
+                                        'cancel_log.pengajuan_id',
+                                        'riwayat_status.pengajuan_id'
+                                    )
+                                    ->where(
+                                        'cancel_log.catatan',
+                                        'like',
+                                        'PEMBATALAN VERIFIKASI:%'
+                                    )
+                                    ->whereColumn(
+                                        'cancel_log.id',
+                                        '<',
+                                        'riwayat_status.id'
+                                    );
+                            });
+                    });
+            });
         }
 
         $logs =
@@ -1158,6 +1207,20 @@ class ApiDataController extends Controller
                         'Verifikasi Pengajuan';
 
                     if (
+                        str_starts_with(
+                            strtoupper(
+                                $catatan
+                            ),
+                            'PEMBATALAN VERIFIKASI:'
+                        )
+                    ) {
+
+                        $action =
+                            'CANCEL_VERIFICATION';
+
+                        $actionLabel =
+                            'Pembatalan Verifikasi';
+                    } elseif (
                         str_starts_with(
                             strtoupper(
                                 $catatan

@@ -34,18 +34,252 @@
         @if(!empty($pengumumanImages) && count($pengumumanImages) > 0)
         <style>
             .student-announcement-bar {
-                background: #fff; border: 1px solid #e1e8e4; border-radius: 12px; margin-bottom: 20px; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+                background: #fff;
+                border: 1px solid #e1e8e4;
+                border-radius: 12px;
+                margin-bottom: 20px;
+                padding: 16px 24px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            }
+            .pengumuman-card-wrapper {
+                position: relative;
+                background: #ffffff;
+                border-radius: 16px;
+                width: 100%;
+                max-width: 680px;
+                max-height: 94vh;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+                box-shadow: 0 25px 60px rgba(0,0,0,0.45);
+                border: 1px solid rgba(255,255,255,0.2);
+                animation: pengumumanModalFadeIn 0.25s ease-out;
+            }
+            @keyframes pengumumanModalFadeIn {
+                from { opacity: 0; transform: scale(0.96) translateY(10px); }
+                to { opacity: 1; transform: scale(1) translateY(0); }
+            }
+            @keyframes pengumumanShake {
+                0%, 100% { transform: translateX(0); }
+                20%, 60% { transform: translateX(-6px); }
+                40%, 80% { transform: translateX(6px); }
+            }
+            .pengumuman-modal-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 12px 18px;
+                background: #fdfdfd;
+                border-bottom: 1px solid #eef2ef;
+                gap: 12px;
+            }
+            .pengumuman-badge-title {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 0.92rem;
+                font-weight: 800;
+                color: #064e3b;
+            }
+            .pengumuman-counter-badge {
+                background: #ecfdf5;
+                color: #047857;
+                border: 1px solid #a7f3d0;
+                font-size: 0.78rem;
+                font-weight: 700;
+                padding: 3px 10px;
+                border-radius: 999px;
+            }
+            .pengumuman-close-btn {
+                background: #f3f4f6;
+                border: none;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                font-size: 1.1rem;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #4b5563;
+                transition: all 0.2s;
+            }
+            .pengumuman-close-btn:hover {
+                background: #e5e7eb;
+                color: #111827;
+            }
+            .pengumuman-image-area {
+                position: relative;
+                flex: 1;
+                min-height: 200px;
+                max-height: calc(94vh - 200px);
+                background: #092017;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+            }
+            .pengumuman-image-area img {
+                max-width: 100%;
+                max-height: calc(94vh - 200px);
+                width: auto;
+                height: auto;
+                object-fit: contain;
+                display: block;
+                margin: 0 auto;
+                user-select: none;
             }
             .pengumuman-nav-btn {
-                position: absolute; top: 50%; transform: translateY(-50%);
-                background: #000; color: white; border: none; width: 44px; height: 44px; border-radius: 50%;
-                font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 11;
-                transition: background 0.2s;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                background: rgba(0, 0, 0, 0.65);
+                color: white;
+                border: 1.5px solid rgba(255, 255, 255, 0.4);
+                width: 42px;
+                height: 42px;
+                border-radius: 50%;
+                font-size: 1.3rem;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+                z-index: 10;
+                transition: all 0.2s;
             }
-            .pengumuman-nav-btn:hover { background: #333; }
-            .pengumuman-nav-left { left: -22px; }
-            .pengumuman-nav-right { right: -22px; }
+            .pengumuman-nav-btn:hover:not(:disabled) {
+                background: rgba(0, 0, 0, 0.9);
+                transform: translateY(-50%) scale(1.06);
+            }
+            .pengumuman-nav-btn:disabled {
+                opacity: 0.25;
+                cursor: not-allowed;
+            }
+            .pengumuman-nav-left { left: 14px; }
+            .pengumuman-nav-right { right: 14px; }
+            .pengumuman-modal-footer {
+                padding: 14px 18px;
+                background: #ffffff;
+                border-top: 1px solid #eef2ef;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .pengumuman-checkbox-card {
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+                background: #f8faf9;
+                border: 1.5px solid #d1fae5;
+                padding: 10px 14px;
+                border-radius: 10px;
+                cursor: pointer;
+                transition: border-color 0.2s, background 0.2s;
+            }
+            .pengumuman-checkbox-card.checked {
+                background: #ecfdf5;
+                border-color: #059669;
+            }
+            .pengumuman-checkbox-card input[type="checkbox"] {
+                width: 19px;
+                height: 19px;
+                accent-color: #047857;
+                cursor: pointer;
+                margin-top: 1px;
+                flex-shrink: 0;
+            }
+            .pengumuman-checkbox-text {
+                font-size: 0.88rem;
+                color: #1f2937;
+                line-height: 1.4;
+                font-weight: 600;
+            }
+            .pengumuman-footer-actions {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+            }
+            .pengumuman-buttons-group {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-left: auto;
+            }
+            .pengumuman-buttons-group .pengumuman-prev-btn {
+                order: 1;
+            }
+            .pengumuman-buttons-group .pengumuman-action-btn {
+                order: 2;
+            }
+            .pengumuman-dots {
+                display: flex;
+                gap: 6px;
+                align-items: center;
+            }
+            .pengumuman-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #d1d5db;
+                transition: all 0.2s;
+                cursor: pointer;
+            }
+            .pengumuman-dot.active {
+                width: 22px;
+                border-radius: 999px;
+                background: #047857;
+            }
+            .pengumuman-action-btn {
+                min-height: 42px;
+                padding: 10px 20px;
+                background: #047857;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-weight: 700;
+                font-size: 0.92rem;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                transition: all 0.2s;
+            }
+            .pengumuman-action-btn:hover:not(:disabled) {
+                background: #065f46;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(4, 120, 87, 0.25);
+            }
+            .pengumuman-action-btn:disabled {
+                background: #9ca3af;
+                cursor: not-allowed;
+                opacity: 0.7;
+                box-shadow: none;
+                transform: none;
+            }
+            .pengumuman-prev-btn {
+                min-height: 42px;
+                padding: 10px 16px;
+                background: #f3f4f6;
+                color: #374151;
+                border: 1px solid #d1d5db;
+                border-radius: 8px;
+                font-weight: 600;
+                font-size: 0.88rem;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s;
+            }
+            .pengumuman-prev-btn:hover {
+                background: #e5e7eb;
+            }
             @media (max-width: 600px) {
                 .student-announcement-bar {
                     flex-direction: column;
@@ -56,10 +290,60 @@
                     width: 100%;
                     justify-content: center;
                 }
-                .pengumuman-nav-left { left: -10px; }
-                .pengumuman-nav-right { right: -10px; }
+                .pengumuman-card-wrapper {
+                    max-height: 96vh;
+                    border-radius: 14px;
+                }
+                /* Sembunyikan tombol panah kiri-kanan di HP karena diganti swipe gesture */
+                .pengumuman-nav-btn {
+                    display: none !important;
+                }
+                .pengumuman-image-area {
+                    max-height: calc(96vh - 240px);
+                    touch-action: pan-y;
+                    cursor: grab;
+                }
+                .pengumuman-image-area img {
+                    max-height: calc(96vh - 240px);
+                    pointer-events: none;
+                }
+                /* Susun tombol di HP: Tombol utama di ATAS, Tombol Kembali di BAWAH */
+                .pengumuman-footer-actions {
+                    flex-direction: column;
+                    gap: 8px;
+                    width: 100%;
+                }
+                .pengumuman-buttons-group {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                    width: 100%;
+                    margin-left: 0;
+                }
+                .pengumuman-buttons-group .pengumuman-action-btn {
+                    order: 1; /* Paling atas */
+                    width: 100%;
+                    margin-left: 0;
+                    text-align: center;
+                    padding: 12px 16px;
+                }
+                .pengumuman-buttons-group .pengumuman-prev-btn {
+                    order: 2; /* Di bawah tombol utama */
+                    width: 100%;
+                    text-align: center;
+                    background: #f9fafb;
+                    border: 1px solid #e5e7eb;
+                    color: #4b5563;
+                    padding: 10px 16px;
+                }
+                .pengumuman-dots {
+                    order: 3; /* Indikator dots di paling bawah */
+                    justify-content: center;
+                    margin-top: 4px;
+                }
             }
         </style>
+
         <div class="student-announcement-bar">
             <div style="display: flex; align-items: center; gap: 12px;">
                 <span style="font-size: 1.5rem;">📢</span>
@@ -68,90 +352,326 @@
                     <p style="margin: 4px 0 0; font-size: 0.9rem; color: #4a5c53;">Ketentuan jadwal pendaftaran dan penerbitan SK Yudisium.</p>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary" onclick="openPengumumanModal()" style="padding: 10px 20px; white-space: nowrap;">Lihat Pengumuman</button>
+            <button type="button" class="btn btn-primary" onclick="openPengumumanModal(false)" style="padding: 10px 20px; white-space: nowrap;">Lihat Pengumuman</button>
         </div>
 
         <!-- Pengumuman Modal -->
-        <div id="pengumumanModal" class="modal-overlay" style="z-index: 9999; display: none; align-items: center; justify-content: center; padding: 30px; background: rgba(5,27,19,0.8);">
-            <div style="position: relative; display: inline-flex; max-width: 100%; max-height: 90vh;">
-                <button type="button" onclick="closePengumumanModal()" style="position: absolute; top: -16px; right: -16px; background: white; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 12; padding: 0;">✕</button>
-                
-                @if(count($pengumumanImages) > 1)
-                <button type="button" class="pengumuman-nav-btn pengumuman-nav-left" onclick="prevPengumuman()" aria-label="Previous">❮</button>
-                <button type="button" class="pengumuman-nav-btn pengumuman-nav-right" onclick="nextPengumuman()" aria-label="Next">❯</button>
-                @endif
-                
-                <img id="pengumumanImgElement" src="{{ asset($pengumumanImages[0]) }}" alt="Pengumuman Yudisium" style="max-width: 100%; max-height: 90vh; width: auto; height: auto; border-radius: 12px; display: block; box-shadow: 0 10px 40px rgba(0,0,0,0.4); object-fit: contain;">
+        <div id="pengumumanModal" class="modal-overlay" style="z-index: 99999; display: none; align-items: center; justify-content: center; padding: 16px; background: rgba(5,27,19,0.88); backdrop-filter: blur(4px);">
+            <div class="pengumuman-card-wrapper" onclick="event.stopPropagation()">
+                <!-- Header -->
+                <div class="pengumuman-modal-header">
+                    <div class="pengumuman-badge-title">
+                        <span>📢</span>
+                        <span>Pengumuman Yudisium</span>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span id="pengumumanCounter" class="pengumuman-counter-badge" style="{{ count($pengumumanImages) > 1 ? '' : 'display: none;' }}">
+                            Poster 1 dari {{ count($pengumumanImages) }}
+                        </span>
+                        <button type="button" class="pengumuman-close-btn" id="closePengumumanBtn" onclick="closePengumumanModal()" style="display: none;" title="Tutup Pengumuman">✕</button>
+                    </div>
+                </div>
+
+                <!-- Image Area -->
+                <div class="pengumuman-image-area" id="pengumumanImageArea">
+                    @if(count($pengumumanImages) > 1)
+                    <button type="button" id="pengumumanPrevNavBtn" class="pengumuman-nav-btn pengumuman-nav-left" onclick="prevPengumuman()" aria-label="Previous">❮</button>
+                    <button type="button" id="pengumumanNextNavBtn" class="pengumuman-nav-btn pengumuman-nav-right" onclick="nextPengumuman()" aria-label="Next">❯</button>
+                    @endif
+
+                    <img id="pengumumanImgElement" src="{{ asset($pengumumanImages[0]) }}" alt="Pengumuman Yudisium">
+                </div>
+
+                <!-- Footer with Checkbox & Actions -->
+                <div class="pengumuman-modal-footer">
+                    <label class="pengumuman-checkbox-card" id="pengumumanCheckboxCard">
+                        <input type="checkbox" id="pengumumanCheckbox" onchange="handleCheckboxChange(this.checked)">
+                        <span class="pengumuman-checkbox-text" id="pengumumanCheckboxText">
+                            Saya telah membaca dan memahami informasi pada poster pengumuman ini.
+                        </span>
+                    </label>
+
+                    <div class="pengumuman-footer-actions">
+                        @if(count($pengumumanImages) > 1)
+                        <div class="pengumuman-dots">
+                            @foreach($pengumumanImages as $index => $img)
+                            <div class="pengumuman-dot {{ $index === 0 ? 'active' : '' }}" id="pengumumanDot{{ $index }}" onclick="goToPengumuman({{ $index }})"></div>
+                            @endforeach
+                        </div>
+                        @endif
+
+                        <div class="pengumuman-buttons-group">
+                            <button type="button" id="pengumumanActionBtn" class="pengumuman-action-btn" onclick="handlePengumumanAction()" disabled>
+                                {{ count($pengumumanImages) > 1 ? 'Lanjut ke Poster Berikutnya (2/' . count($pengumumanImages) . ') ❯' : 'Saya Mengerti & Lanjut ke Pendaftaran ✓' }}
+                            </button>
+
+                            @if(count($pengumumanImages) > 1)
+                            <button type="button" id="pengumumanPrevActionBtn" class="pengumuman-prev-btn" onclick="prevPengumuman()" style="display: none;">
+                                ❮ Kembali
+                            </button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
             </div>
-            
-            @if(count($pengumumanImages) > 1)
-            <div style="position: absolute; bottom: 20px; display: flex; gap: 8px;">
-                @foreach($pengumumanImages as $index => $img)
-                <div class="pengumuman-dot" id="pengumumanDot{{ $index }}" style="width: 10px; height: 10px; border-radius: 50%; background: {{ $index === 0 ? 'white' : 'rgba(255,255,255,0.4)' }}; cursor: pointer;" onclick="goToPengumuman({{ $index }})"></div>
-                @endforeach
-            </div>
-            @endif
         </div>
 
         <script>
             const pengumumanImages = @json(array_map(function($img) { return asset($img); }, $pengumumanImages));
             let currentPengumumanIndex = 0;
+            const verifiedImages = {};
+            let isMandatoryMode = true;
+
+            function isAllVerified() {
+                for (let i = 0; i < pengumumanImages.length; i++) {
+                    if (!verifiedImages[i]) return false;
+                }
+                return true;
+            }
 
             function updatePengumumanView() {
+                const total = pengumumanImages.length;
                 const imgEl = document.getElementById('pengumumanImgElement');
                 if (imgEl) imgEl.src = pengumumanImages[currentPengumumanIndex];
-                
-                // Update dots
-                pengumumanImages.forEach((_, idx) => {
+
+                // Counter
+                const counterEl = document.getElementById('pengumumanCounter');
+                if (counterEl) {
+                    if (total > 1) {
+                        counterEl.textContent = `Poster ${currentPengumumanIndex + 1} dari ${total}`;
+                        counterEl.style.display = 'inline-block';
+                    } else {
+                        counterEl.style.display = 'none';
+                    }
+                }
+
+                // Dots
+                for (let idx = 0; idx < total; idx++) {
                     const dot = document.getElementById('pengumumanDot' + idx);
                     if (dot) {
-                        dot.style.background = idx === currentPengumumanIndex ? 'white' : 'rgba(255,255,255,0.4)';
+                        if (idx === currentPengumumanIndex) {
+                            dot.classList.add('active');
+                        } else {
+                            dot.classList.remove('active');
+                        }
                     }
-                });
+                }
+
+                // Checkbox status for current image
+                const checkbox = document.getElementById('pengumumanCheckbox');
+                const checkboxCard = document.getElementById('pengumumanCheckboxCard');
+                const isChecked = !!verifiedImages[currentPengumumanIndex];
+                if (checkbox) checkbox.checked = isChecked;
+                if (checkboxCard) {
+                    if (isChecked) {
+                        checkboxCard.classList.add('checked');
+                    } else {
+                        checkboxCard.classList.remove('checked');
+                    }
+                }
+
+                // Nav buttons
+                const prevNavBtn = document.getElementById('pengumumanPrevNavBtn');
+                const nextNavBtn = document.getElementById('pengumumanNextNavBtn');
+                if (prevNavBtn) {
+                    prevNavBtn.style.display = currentPengumumanIndex > 0 ? 'flex' : 'none';
+                }
+                if (nextNavBtn) {
+                    const canGoNext = isChecked || !isMandatoryMode;
+                    nextNavBtn.disabled = !canGoNext;
+                    nextNavBtn.style.display = currentPengumumanIndex < total - 1 ? 'flex' : 'none';
+                }
+
+                // Footer action buttons
+                const prevActionBtn = document.getElementById('pengumumanPrevActionBtn');
+                if (prevActionBtn) {
+                    prevActionBtn.style.display = currentPengumumanIndex > 0 ? 'inline-flex' : 'none';
+                }
+
+                const actionBtn = document.getElementById('pengumumanActionBtn');
+                if (actionBtn) {
+                    const isLast = currentPengumumanIndex === total - 1;
+                    if (isLast) {
+                        actionBtn.innerHTML = 'Saya Mengerti & Lanjut ke Pendaftaran ✓';
+                        actionBtn.disabled = isMandatoryMode ? !isChecked : false;
+                    } else {
+                        actionBtn.innerHTML = `Lanjut ke Poster Berikutnya (${currentPengumumanIndex + 2}/${total}) ❯`;
+                        actionBtn.disabled = isMandatoryMode ? !isChecked : false;
+                    }
+                }
+
+                // Close button (✕)
+                const closeBtn = document.getElementById('closePengumumanBtn');
+                if (closeBtn) {
+                    closeBtn.style.display = (!isMandatoryMode || isAllVerified()) ? 'flex' : 'none';
+                }
+            }
+
+            function handleCheckboxChange(checked) {
+                if (checked) {
+                    verifiedImages[currentPengumumanIndex] = true;
+                } else {
+                    delete verifiedImages[currentPengumumanIndex];
+                }
+                updatePengumumanView();
             }
 
             function nextPengumuman() {
-                currentPengumumanIndex = (currentPengumumanIndex + 1) % pengumumanImages.length;
-                updatePengumumanView();
+                if (isMandatoryMode && !verifiedImages[currentPengumumanIndex]) {
+                    shakeCheckboxCard();
+                    return;
+                }
+                if (currentPengumumanIndex < pengumumanImages.length - 1) {
+                    currentPengumumanIndex++;
+                    updatePengumumanView();
+                }
             }
 
             function prevPengumuman() {
-                currentPengumumanIndex = (currentPengumumanIndex - 1 + pengumumanImages.length) % pengumumanImages.length;
-                updatePengumumanView();
+                if (currentPengumumanIndex > 0) {
+                    currentPengumumanIndex--;
+                    updatePengumumanView();
+                }
             }
 
             function goToPengumuman(index) {
+                if (isMandatoryMode) {
+                    for (let i = 0; i < index; i++) {
+                        if (!verifiedImages[i]) {
+                            shakeCheckboxCard();
+                            return;
+                        }
+                    }
+                }
                 currentPengumumanIndex = index;
                 updatePengumumanView();
             }
 
-            function openPengumumanModal() {
+            function handlePengumumanAction() {
+                const isLast = currentPengumumanIndex === pengumumanImages.length - 1;
+                if (isLast) {
+                    if (isMandatoryMode && !verifiedImages[currentPengumumanIndex]) {
+                        shakeCheckboxCard();
+                        return;
+                    }
+                    isMandatoryMode = false;
+                    closePengumumanModal();
+                } else {
+                    nextPengumuman();
+                }
+            }
+
+            function shakeCheckboxCard() {
+                const card = document.getElementById('pengumumanCheckboxCard');
+                if (card) {
+                    card.style.animation = 'none';
+                    void card.offsetWidth;
+                    card.style.animation = 'pengumumanShake 0.4s ease';
+                }
+            }
+
+            function openPengumumanModal(fromAutoOpen = false) {
                 const modal = document.getElementById('pengumumanModal');
                 if (modal) {
                     modal.style.display = 'flex';
                     document.body.style.overflow = 'hidden';
+                    if (!fromAutoOpen) {
+                        isMandatoryMode = false;
+                    }
+                    updatePengumumanView();
                 }
             }
+
             function closePengumumanModal() {
+                if (isMandatoryMode && !isAllVerified()) {
+                    shakeCheckboxCard();
+                    return;
+                }
                 const modal = document.getElementById('pengumumanModal');
                 if (modal) {
                     modal.style.display = 'none';
                     document.body.style.overflow = '';
                 }
             }
-            
-            // Keyboard navigation and outside click
+
+            // Touch Swipe Gesture untuk HP / Layar Sentuh
+            let touchStartX = 0;
+            let touchStartY = 0;
+            let touchEndX = 0;
+            let touchEndY = 0;
+
+            function handleSwipe() {
+                if (pengumumanImages.length <= 1) return;
+
+                const diffX = touchEndX - touchStartX;
+                const diffY = touchEndY - touchStartY;
+
+                // Threshold minimum 40px dan pastikan arah geser horizontal lebih dominan daripada vertikal
+                if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+                    if (diffX < 0) {
+                        // Geser layar ke kiri -> Poster berikutnya
+                        if (currentPengumumanIndex < pengumumanImages.length - 1) {
+                            if (isMandatoryMode && !verifiedImages[currentPengumumanIndex]) {
+                                shakeCheckboxCard();
+                            } else {
+                                nextPengumuman();
+                            }
+                        }
+                    } else {
+                        // Geser layar ke kanan -> Poster sebelumnya
+                        if (currentPengumumanIndex > 0) {
+                            prevPengumuman();
+                        }
+                    }
+                }
+            }
+
             document.addEventListener('DOMContentLoaded', function() {
+                // Otomatis muncul saat mahasiswa membuka halaman
+                openPengumumanModal(true);
+
+                // Pasang touch swipe pada area gambar
+                const imageArea = document.getElementById('pengumumanImageArea');
+                if (imageArea) {
+                    imageArea.addEventListener('touchstart', function(e) {
+                        if (e.touches && e.touches.length === 1) {
+                            touchStartX = e.touches[0].clientX;
+                            touchStartY = e.touches[0].clientY;
+                        }
+                    }, { passive: true });
+
+                    imageArea.addEventListener('touchend', function(e) {
+                        if (e.changedTouches && e.changedTouches.length === 1) {
+                            touchEndX = e.changedTouches[0].clientX;
+                            touchEndY = e.changedTouches[0].clientY;
+                            handleSwipe();
+                        }
+                    }, { passive: true });
+                }
+
                 const modal = document.getElementById('pengumumanModal');
                 if (modal) {
                     modal.addEventListener('click', function(e) {
-                        if (e.target === modal) closePengumumanModal();
+                        if (e.target === modal) {
+                            if (isMandatoryMode && !isAllVerified()) {
+                                shakeCheckboxCard();
+                            } else {
+                                closePengumumanModal();
+                            }
+                        }
                     });
                 }
-                
+
                 document.addEventListener('keydown', function(e) {
                     if (modal && modal.style.display === 'flex') {
-                        if (e.key === 'Escape') closePengumumanModal();
+                        if (e.key === 'Escape') {
+                            if (isMandatoryMode && !isAllVerified()) {
+                                shakeCheckboxCard();
+                            } else {
+                                closePengumumanModal();
+                            }
+                        }
                         if (pengumumanImages.length > 1) {
                             if (e.key === 'ArrowRight') nextPengumuman();
                             if (e.key === 'ArrowLeft') prevPengumuman();

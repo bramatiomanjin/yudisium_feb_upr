@@ -1369,9 +1369,10 @@
     <!-- =========================================================
          SCRIPT
     ========================================================== -->
-    <script src="{{ asset('js/yudisium_api.js') }}"></script>
-    <script src="{{ asset('js/admin.js') }}"></script>
-    <script src="{{ asset('js/admin_detail.js') }}"></script>
+    <script src="{{ asset('js/yudisium_api.js') }}?v={{ @filemtime(public_path('js/yudisium_api.js')) }}"></script>
+    <script src="{{ asset('js/modal_accessibility.js') }}?v={{ @filemtime(public_path('js/modal_accessibility.js')) }}"></script>
+    <script src="{{ asset('js/admin.js') }}?v={{ @filemtime(public_path('js/admin.js')) }}"></script>
+    <script src="{{ asset('js/admin_detail.js') }}?v={{ @filemtime(public_path('js/admin_detail.js')) }}"></script>
 
 </body>
 

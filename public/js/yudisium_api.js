@@ -428,6 +428,12 @@
             VERIFICATION:
                 "VERIFICATION",
 
+            CANCEL_VERIFICATION:
+                "CANCEL_VERIFICATION",
+
+            PEMBATALAN_VERIFIKASI:
+                "CANCEL_VERIFICATION",
+
             REVISION:
                 "REVISION",
 

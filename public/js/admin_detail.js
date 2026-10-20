@@ -406,6 +406,86 @@ document.addEventListener(
             "";
 
 
+        /* =====================================================
+           PREVIEW MODAL
+        ===================================================== */
+
+        const modal = document.getElementById("documentPreviewModal");
+        const closeBtn = document.getElementById("closeDocumentPreview");
+        const iframe = document.getElementById("documentPreviewFrame");
+        const placeholder = document.getElementById("documentPreviewPlaceholder");
+        const titleEl = document.getElementById("documentPreviewTitle");
+        const filenameEl = document.getElementById("documentPreviewFilename");
+        const openNewTab = document.getElementById("openDocumentNewTab");
+        let currentUrl = "";
+
+        document.addEventListener("click", function (e) {
+            const btn = e.target.closest(".preview-document-button");
+            if (!btn) {
+                return;
+            }
+
+            currentUrl = btn.dataset.previewUrl || "";
+            const title = btn.dataset.previewTitle || "Dokumen";
+            const filename = btn.dataset.previewFilename || "dokumen.pdf";
+
+            if (titleEl) {
+                titleEl.textContent = title;
+            }
+            if (filenameEl) {
+                filenameEl.textContent = filename;
+            }
+
+            if (iframe && placeholder) {
+                const isPdf = filename.toLowerCase().endsWith(".pdf");
+                if (!isPdf) {
+                    iframe.style.display = "none";
+                    iframe.src = "";
+                    placeholder.style.display = "flex";
+                    const p = placeholder.querySelector("p");
+                    if (p) {
+                        p.textContent = "Format file tidak mendukung preview langsung. Silakan klik Buka di Tab Baru untuk mengunduh.";
+                    }
+                } else {
+                    placeholder.style.display = "none";
+                    iframe.style.display = "block";
+                    iframe.src = currentUrl;
+                }
+            }
+
+            if (modal) {
+                modal.classList.add("active");
+                window.YudisiumModalAccessibility?.open(modal, btn);
+            }
+        });
+
+        function closePreview() {
+            if (!modal) {
+                return;
+            }
+
+            modal.classList.remove("active");
+            if (iframe) {
+                iframe.src = "";
+            }
+            window.YudisiumModalAccessibility?.close(modal);
+        }
+
+        window.YudisiumModalAccessibility?.enhance(modal, closePreview);
+
+        if (closeBtn && modal) {
+            closeBtn.addEventListener("click", closePreview);
+        }
+
+        if (openNewTab) {
+            openNewTab.addEventListener("click", function () {
+                if (currentUrl) {
+                    window.open(currentUrl, "_blank", "noopener,noreferrer");
+                }
+            });
+        }
+
+
         if (
             documents.length === 0
         ) {
@@ -465,14 +545,15 @@ document.addEventListener(
                         ${
                             previewUrl
                                 ? `
-                                    <a
-                                        href="${escapeHtml(previewUrl)}"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        class="admin-detail-button"
+                                    <button
+                                        type="button"
+                                        class="admin-detail-button preview-document-button"
+                                        data-preview-url="${escapeHtml(previewUrl)}"
+                                        data-preview-title="${escapeHtml(documentData.title || documentData.label || "Dokumen")}"
+                                        data-preview-filename="${escapeHtml(documentData.filename || "dokumen.pdf")}"
                                     >
                                         Preview
-                                    </a>
+                                    </button>
                                 `
                                 : `
                                     <span class="admin-status-badge pending">
