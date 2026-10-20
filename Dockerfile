@@ -44,8 +44,10 @@ RUN npm ci \
     && npm run build \
     && rm -rf node_modules
 
-RUN chmod -R 775 storage bootstrap/cache
+RUN mkdir -p public/uploads/pengumuman public/images \
+    && chmod -R 775 storage bootstrap/cache \
+    && chmod -R 777 public/uploads
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"]
+CMD ["sh", "-c", "php artisan storage:link || true; php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"]

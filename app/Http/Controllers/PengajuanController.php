@@ -3,44 +3,47 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PengajuanStatus;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use App\Models\Mahasiswa;
-use App\Models\PengajuanYudisium;
 use App\Models\JenisDokumen;
+use App\Models\Mahasiswa;
 use App\Models\PengajuanDokumen;
+use App\Models\PengajuanYudisium;
+use App\Models\RiwayatStatus;
+use App\Models\Setting;
 use App\Models\ValidasiField;
 use App\Support\DocumentUploadValidator;
 use App\Support\PengajuanCodeGenerator;
 use App\Support\StudentYudisiumNotifier;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PengajuanController extends Controller
 {
     private const DOCUMENT_CODE_ALIASES = [
-    'BEBAS_PERPUS_UNIVERSITAS' => 'BEBAS_PERPUS_UNIV',
-    'SURAT_TUGAS_PEMBIMBING' => 'SURAT_TUGAS_DOSBING',
-    'JURNAL_MANAJEMEN' => 'JURNAL_JMSO',
-    'JURNAL_EKONOMI' => 'JURNAL_EP',
-];
+        'BEBAS_PERPUS_UNIVERSITAS' => 'BEBAS_PERPUS_UNIV',
+        'SURAT_TUGAS_PEMBIMBING' => 'SURAT_TUGAS_DOSBING',
+        'JURNAL_MANAJEMEN' => 'JURNAL_JMSO',
+        'JURNAL_EKONOMI' => 'JURNAL_EP',
+    ];
 
-private function canonicalDocumentCode(string $code): string
-{
-    $code = strtoupper(trim($code));
+    private function canonicalDocumentCode(string $code): string
+    {
+        $code = strtoupper(trim($code));
 
-    return self::DOCUMENT_CODE_ALIASES[$code] ?? $code;
-}
+        return self::DOCUMENT_CODE_ALIASES[$code] ?? $code;
+    }
+
     // 1. Menampilkan halaman form
     public function create()
     {
         try {
-            $setting = \App\Models\Setting::where('key', 'is_pengajuan_open')->first();
+            $setting = Setting::where('key', 'is_pengajuan_open')->first();
             $isPengajuanOpen = $setting ? $setting->value === '1' : true;
         } catch (\Exception $e) {
             $isPengajuanOpen = true;
         }
 
-        if (!$isPengajuanOpen) {
+        if (! $isPengajuanOpen) {
             return view('mahasiswa.pengajuan_closed');
         }
 
@@ -58,7 +61,7 @@ private function canonicalDocumentCode(string $code): string
             ->all();
 
         try {
-            $imgSetting = \App\Models\Setting::where('key', 'pengumuman_image_path')->first();
+            $imgSetting = Setting::where('key', 'pengumuman_image_path')->first();
             $pengumumanImages = [];
             if ($imgSetting && $imgSetting->value) {
                 $decoded = json_decode($imgSetting->value, true);
@@ -68,8 +71,29 @@ private function canonicalDocumentCode(string $code): string
                     $pengumumanImages = [$imgSetting->value];
                 }
             }
+
+            // Validasi ketersediaan file di disk
+            $validImages = [];
+            foreach ($pengumumanImages as $img) {
+                if (file_exists(public_path($img))) {
+                    $validImages[] = $img;
+                }
+            }
+
+            // Fallback ke poster default jika file terhapus akibat deploy ulang hosting
+            if (! empty($pengumumanImages) && empty($validImages)) {
+                if (file_exists(public_path('images/default_pengumuman.jpg'))) {
+                    $validImages = ['images/default_pengumuman.jpg'];
+                } elseif (file_exists(public_path('uploads/pengumuman/default.jpg'))) {
+                    $validImages = ['uploads/pengumuman/default.jpg'];
+                }
+            }
+
+            $pengumumanImages = $validImages;
         } catch (\Exception $e) {
-            $pengumumanImages = [];
+            $pengumumanImages = file_exists(public_path('images/default_pengumuman.jpg'))
+                ? ['images/default_pengumuman.jpg']
+                : [];
         }
 
         return view('index', compact('activeDocs', 'requiredDocs', 'pengumumanImages'));
@@ -81,10 +105,9 @@ private function canonicalDocumentCode(string $code): string
         DocumentUploadValidator $documentUploadValidator,
         PengajuanCodeGenerator $codeGenerator,
         StudentYudisiumNotifier $notifier
-    )
-    {
+    ) {
         try {
-            $setting = \App\Models\Setting::where('key', 'is_pengajuan_open')->first();
+            $setting = Setting::where('key', 'is_pengajuan_open')->first();
             if ($setting && $setting->value === '0') {
                 return back()->with('error', 'Pendaftaran yudisium saat ini sedang ditutup.');
             }
@@ -95,7 +118,7 @@ private function canonicalDocumentCode(string $code): string
         // --- A. NORMALISASI NILAI ANGKA ---
         if ($request->has('nilai_angka')) {
             $request->merge([
-                'nilai_angka' => str_replace(',', '.', $request->nilai_angka)
+                'nilai_angka' => str_replace(',', '.', $request->nilai_angka),
             ]);
         }
 
@@ -141,7 +164,7 @@ private function canonicalDocumentCode(string $code): string
         if ($cekPengajuan) {
             return response()->json([
                 'success' => false,
-                'message' => 'NIM ini sudah memiliki pengajuan aktif.'
+                'message' => 'NIM ini sudah memiliki pengajuan aktif.',
             ], 400);
         }
 
@@ -152,7 +175,7 @@ private function canonicalDocumentCode(string $code): string
             // 1. Simpan data mahasiswa
             $mahasiswa = Mahasiswa::firstOrCreate(
                 [
-                    'nim' => $request->nim
+                    'nim' => $request->nim,
                 ],
                 [
                     'nama_lengkap' => $request->nama_lengkap,
@@ -180,11 +203,11 @@ private function canonicalDocumentCode(string $code): string
                 'submitted_at' => now(),
             ]);
 
-            \App\Models\RiwayatStatus::create([
+            RiwayatStatus::create([
                 'pengajuan_id' => $pengajuan->id,
                 'status' => PengajuanStatus::MENUNGGU_VERIFIKASI->value,
                 'catatan' => 'Pendaftaran pengajuan baru',
-                'changed_by' => null // Mahasiswa (no auth)
+                'changed_by' => null, // Mahasiswa (no auth)
             ]);
 
             // 4. Buat data validasi field
@@ -199,14 +222,14 @@ private function canonicalDocumentCode(string $code): string
                 'judul_karya_tulis',
                 'tanggal_ujian',
                 'nilai_angka',
-                'nilai_huruf'
+                'nilai_huruf',
             ];
 
             foreach ($fields as $field) {
                 ValidasiField::create([
                     'pengajuan_id' => $pengajuan->id,
                     'field_key' => $field,
-                    'status_validasi' => 'PENDING'
+                    'status_validasi' => 'PENDING',
                 ]);
             }
 
@@ -226,8 +249,8 @@ private function canonicalDocumentCode(string $code): string
                  * Jadi TIDAK memakai prefix "file_".
                  */
                 $inputName = strtolower(
-    $this->canonicalDocumentCode($doc->kode)
-);
+                    $this->canonicalDocumentCode($doc->kode)
+                );
 
                 /*
                  * Dokumen khusus jurusan hanya diproses
@@ -240,7 +263,7 @@ private function canonicalDocumentCode(string $code): string
                     continue;
                 }
 
-                if (!$request->hasFile($inputName)) {
+                if (! $request->hasFile($inputName)) {
                     continue;
                 }
 
@@ -269,12 +292,12 @@ private function canonicalDocumentCode(string $code): string
                  * dari bentrok nama file.
                  */
                 $namaFileStorage =
-                    $pengajuan->id .
-                    '_' .
-                    time() .
-                    '_' .
-                    $doc->kode .
-                    '.' .
+                    $pengajuan->id.
+                    '_'.
+                    time().
+                    '_'.
+                    $doc->kode.
+                    '.'.
                     $extension;
 
                 /*
@@ -283,7 +306,7 @@ private function canonicalDocumentCode(string $code): string
                  */
                 $path =
                     $file->storeAs(
-                        'yudisium/' .
+                        'yudisium/'.
                             $mahasiswa->nim,
                         $namaFileStorage,
                         'local'
@@ -300,7 +323,7 @@ private function canonicalDocumentCode(string $code): string
                     'file_path' => $path,
                     'mime_type' => $mimeType,
                     'ukuran_file' => $ukuranFile,
-                    'status_validasi' => 'PENDING'
+                    'status_validasi' => 'PENDING',
                 ]);
             }
 
@@ -311,7 +334,7 @@ private function canonicalDocumentCode(string $code): string
                 'success' => true,
                 'code' => $kodePengajuan,
                 'nim' => $mahasiswa->nim,
-                'message' => 'Pengajuan berhasil dikirim.'
+                'message' => 'Pengajuan berhasil dikirim.',
             ]);
 
         } catch (\Exception $e) {
@@ -323,7 +346,7 @@ private function canonicalDocumentCode(string $code): string
 
             return response()->json([
                 'success' => false,
-                'message' => 'Pengajuan belum dapat diproses. Silakan coba lagi.'
+                'message' => 'Pengajuan belum dapat diproses. Silakan coba lagi.',
             ], 500);
         }
     }
@@ -332,7 +355,7 @@ private function canonicalDocumentCode(string $code): string
     public function success()
     {
         return
-            "Pengajuan Berhasil! Kode Pengajuan Anda: " .
+            'Pengajuan Berhasil! Kode Pengajuan Anda: '.
             session('kode');
     }
 }

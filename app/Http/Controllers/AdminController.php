@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PengajuanDokumen;
 use App\Models\PengajuanYudisium;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -23,10 +24,10 @@ class AdminController extends Controller
             : collect();
 
         try {
-            $setting = \App\Models\Setting::where('key', 'is_pengajuan_open')->first();
+            $setting = Setting::where('key', 'is_pengajuan_open')->first();
             $isPengajuanOpen = $setting ? $setting->value === '1' : true;
-            
-            $imgSetting = \App\Models\Setting::where('key', 'pengumuman_image_path')->first();
+
+            $imgSetting = Setting::where('key', 'pengumuman_image_path')->first();
             $pengumumanImages = [];
             if ($imgSetting && $imgSetting->value) {
                 $decoded = json_decode($imgSetting->value, true);
@@ -36,6 +37,25 @@ class AdminController extends Controller
                     $pengumumanImages = [$imgSetting->value];
                 }
             }
+
+            // Validasi ketersediaan file di disk
+            $validImages = [];
+            foreach ($pengumumanImages as $img) {
+                if (file_exists(public_path($img))) {
+                    $validImages[] = $img;
+                }
+            }
+
+            // Fallback ke poster default jika file terhapus akibat deploy ulang hosting
+            if (! empty($pengumumanImages) && empty($validImages)) {
+                if (file_exists(public_path('images/default_pengumuman.jpg'))) {
+                    $validImages = ['images/default_pengumuman.jpg'];
+                } elseif (file_exists(public_path('uploads/pengumuman/default.jpg'))) {
+                    $validImages = ['uploads/pengumuman/default.jpg'];
+                }
+            }
+
+            $pengumumanImages = $validImages;
         } catch (\Exception $e) {
             $isPengajuanOpen = true;
             $pengumumanImages = [];
@@ -84,52 +104,51 @@ class AdminController extends Controller
 
     // 3. Fungsi untuk membuka file privat (diperbaiki menggunakan Storage Laravel)
     public function viewFile(string $id_dokumen)
-{
-    $dokumen = PengajuanDokumen::findOrFail($id_dokumen);
-    $disk = Storage::disk('local');
+    {
+        $dokumen = PengajuanDokumen::findOrFail($id_dokumen);
+        $disk = Storage::disk('local');
 
-    if (!$disk->exists($dokumen->file_path)) {
-        Log::warning('Dokumen pengajuan tidak ditemukan di storage.', [
-            'dokumen_id' => $dokumen->id,
-            'file_path' => $dokumen->file_path,
-        ]);
+        if (! $disk->exists($dokumen->file_path)) {
+            Log::warning('Dokumen pengajuan tidak ditemukan di storage.', [
+                'dokumen_id' => $dokumen->id,
+                'file_path' => $dokumen->file_path,
+            ]);
 
-        abort(404, 'File tidak ditemukan.');
+            abort(404, 'File tidak ditemukan.');
+        }
+
+        $path = $disk->path($dokumen->file_path);
+
+        $filename = $dokumen->nama_file_asli
+            ?: basename($path);
+
+        $extension = strtolower(
+            pathinfo($filename, PATHINFO_EXTENSION)
+        );
+
+        $mimeType = match ($extension) {
+            'pdf' => 'application/pdf',
+            'jpg', 'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'webp' => 'image/webp',
+            default => $dokumen->mime_type
+                ?: 'application/octet-stream',
+        };
+
+        $response = response()->file(
+            $path,
+            [
+                'Content-Type' => $mimeType,
+                'Cache-Control' => 'private, no-store, max-age=0',
+                'Pragma' => 'no-cache',
+            ]
+        );
+
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_INLINE,
+            $filename
+        );
+
+        return $response;
     }
-
-    $path = $disk->path($dokumen->file_path);
-
-    $filename = $dokumen->nama_file_asli
-        ?: basename($path);
-
-    $extension = strtolower(
-        pathinfo($filename, PATHINFO_EXTENSION)
-    );
-
-    $mimeType = match ($extension) {
-        'pdf' => 'application/pdf',
-        'jpg', 'jpeg' => 'image/jpeg',
-        'png' => 'image/png',
-        'webp' => 'image/webp',
-        default => $dokumen->mime_type
-            ?: 'application/octet-stream',
-    };
-
-    $response = response()->file(
-        $path,
-        [
-            'Content-Type' => $mimeType,
-            'Cache-Control' => 'private, no-store, max-age=0',
-            'Pragma' => 'no-cache',
-        ]
-    );
-
-    $response->setContentDisposition(
-        ResponseHeaderBag::DISPOSITION_INLINE,
-        $filename
-    );
-
-    return $response;
-}
-
 }

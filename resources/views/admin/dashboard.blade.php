@@ -532,6 +532,12 @@
                         </span>
                     </div>
                     
+                    @if($errors->has('pengumuman_images') || $errors->has('pengumuman_images.*'))
+                        <div style="background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 8px 12px; border-radius: 6px; font-size: 0.78rem; margin-top: 8px;">
+                            {{ $errors->first('pengumuman_images') ?: $errors->first('pengumuman_images.*') }}
+                        </div>
+                    @endif
+
                     @if(count($pengumumanImages) > 0)
                         <div id="pengumuman-sortable-grid" style="margin-top: 12px; margin-bottom: 8px; display: flex; flex-wrap: wrap; gap: 8px; padding-bottom: 8px;">
                             @foreach($pengumumanImages as $index => $img)

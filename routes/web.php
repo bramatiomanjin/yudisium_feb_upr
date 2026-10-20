@@ -23,6 +23,12 @@ Route::get(
     [PengajuanController::class, 'create']
 )->name('pengajuan.create');
 
+// Endpoint penyajian & fallback gambar pengumuman
+Route::get(
+    '/uploads/pengumuman/{filename}',
+    [SettingController::class, 'showPengumumanImage']
+)->where('filename', '.*')->name('pengumuman.image');
+
 // Submit pengajuan
 Route::post(
     '/pengajuan',
