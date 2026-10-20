@@ -26,12 +26,15 @@ class YudisiumStatusNotification extends Notification
 
     public const READY_FOR_COLLECTION = 'ready_for_collection';
 
+    public const VERIFICATION_CANCELLED = 'verification_cancelled';
+
     public function __construct(
         public readonly string $event,
         public readonly string $studentName,
         public readonly string $submissionCode,
         public readonly string $statusLabel,
         public readonly string $trackingUrl,
+        public readonly ?string $reason = null,
     ) {}
 
     /**
@@ -46,12 +49,18 @@ class YudisiumStatusNotification extends Notification
     {
         $content = $this->content();
 
-        return (new MailMessage)
+        $mail = (new MailMessage)
             ->subject($content['subject'])
             ->greeting('Yth. '.$this->studentName.',')
             ->line($content['message'])
             ->line('Kode pengajuan: '.$this->submissionCode)
-            ->line('Status: '.$this->statusLabel)
+            ->line('Status: '.$this->statusLabel);
+
+        if ($this->reason) {
+            $mail->line('Alasan: '.$this->reason);
+        }
+
+        return $mail
             ->action('Lacak Pengajuan', $this->trackingUrl)
             ->line('Silakan gunakan halaman tracking untuk melihat informasi terbaru mengenai pengajuan Anda.')
             ->salutation('Fakultas Ekonomi dan Bisnis Universitas Palangka Raya');
@@ -94,6 +103,10 @@ class YudisiumStatusNotification extends Notification
             self::READY_FOR_COLLECTION => [
                 'subject' => 'SK Yudisium Siap Diambil',
                 'message' => 'SK Yudisium Anda telah selesai dan siap diambil sesuai ketentuan Fakultas.',
+            ],
+            self::VERIFICATION_CANCELLED => [
+                'subject' => 'Pembatalan Verifikasi Pengajuan Yudisium',
+                'message' => 'Status verifikasi pengajuan Yudisium Anda telah dibatalkan oleh Super Admin dan dikembalikan ke tahap pemeriksaan ulang.',
             ],
             default => [
                 'subject' => 'Pembaruan Status Pengajuan Yudisium',

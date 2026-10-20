@@ -1427,10 +1427,10 @@
         </div>
     </div>
 
-    <script src="{{ asset('js/yudisium_api.js') }}"></script>
+    <script src="{{ asset('js/yudisium_api.js') }}?v={{ @filemtime(public_path('js/yudisium_api.js')) }}"></script>
     <script src="{{ asset('js/modal_accessibility.js') }}"></script>
     <script src="{{ asset('js/admin.js') }}"></script>
-    <script src="{{ asset('js/admin_verifikasi.js') }}?v={{ time() }}"></script>
+    <script src="{{ asset('js/admin_verifikasi.js') }}?v={{ @filemtime(public_path('js/admin_verifikasi.js')) }}"></script>
 
 </body>
 

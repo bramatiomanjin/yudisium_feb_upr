@@ -23,7 +23,7 @@
 
     <link
         rel="stylesheet"
-        href="{{ asset('css/admin.css') }}"
+        href="{{ asset('css/admin.css') }}?v={{ @filemtime(public_path('css/admin.css')) }}"
     >
 
     <link
@@ -703,17 +703,48 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="cancelVerifModal" role="dialog" aria-modal="true" aria-labelledby="cancelVerifTitle" aria-hidden="true" tabindex="-1" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1100; align-items: center; justify-content: center; background: rgba(5, 27, 19, 0.58); backdrop-filter: blur(4px);">
+        <div class="modal-card" style="max-width: 480px; width: 90%;">
+            <h3 id="cancelVerifTitle" style="margin: 0 0 12px 0; font-size: 1.25rem; color: #b91c1c;">Batalkan Verifikasi Pengajuan</h3>
+            <p id="cancelVerifInfo" style="margin-bottom: 14px; color: #475569; font-size: 0.92rem; line-height: 1.5;">
+                Apakah Anda yakin ingin membatalkan status verifikasi pengajuan untuk mahasiswa <strong id="cancelVerifStudentName">-</strong> (<span id="cancelVerifNim">-</span>)?
+            </p>
+            <div style="margin-bottom: 14px;">
+                <label for="cancelVerifReason" style="display: block; margin-bottom: 6px; font-weight: 700; font-size: 0.88rem; color: #334155;">
+                    Alasan Pembatalan Verifikasi <span style="color: #b91c1c;">*</span>
+                </label>
+                <textarea class="admin-input" id="cancelVerifReason" rows="3" style="width: 100%; resize: vertical; box-sizing: border-box;" placeholder="Tuliskan alasan pembatalan verifikasi..."></textarea>
+                <div id="cancelVerifError" style="display: none; color: #b91c1c; font-size: 0.8rem; margin-top: 4px; font-weight: 600;"></div>
+            </div>
+            <div style="margin-bottom: 20px; padding: 10px 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.82rem; color: #64748b; line-height: 1.4;">
+                <ul style="margin: 0; padding-left: 18px;">
+                    <li>Status pengajuan akan dikembalikan ke <strong>Menunggu Verifikasi</strong>.</li>
+                    <li>Status berkas dan validasi isian tetap disetujui.</li>
+                    <li>Notifikasi email pemberitahuan pembatalan akan dikirimkan kepada mahasiswa.</li>
+                </ul>
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="button" class="admin-secondary-button" id="btnCancelCancelVerif">Batal</button>
+                <button type="button" class="admin-danger-button" id="btnConfirmCancelVerif">Ya, Batalkan Verifikasi</button>
+            </div>
+        </div>
+    </div>
+
     <!-- =====================================================
          SCRIPT
     ====================================================== -->
 
-    <script src="{{ asset('js/yudisium_api.js') }}"></script>
+    <script>
+        window.currentUserRole = @json(Auth::user()->role);
+    </script>
+
+    <script src="{{ asset('js/yudisium_api.js') }}?v={{ @filemtime(public_path('js/yudisium_api.js')) }}"></script>
 
     <script src="{{ asset('js/modal_accessibility.js') }}"></script>
 
     <script src="{{ asset('js/admin.js') }}"></script>
 
-    <script src="{{ asset('js/admin_pengajuan.js') }}"></script>
+    <script src="{{ asset('js/admin_pengajuan.js') }}?v={{ @filemtime(public_path('js/admin_pengajuan.js')) }}"></script>
 
 
 </body>

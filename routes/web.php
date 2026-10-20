@@ -10,6 +10,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SkController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\TrackingController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 // =========================================================
@@ -159,28 +160,29 @@ Route::middleware('auth')->group(
 
         Route::post('/admin/toggle-pengajuan-status', [SettingController::class, 'togglePengajuanStatus'])
             ->name('admin.toggle-pengajuan');
-            
+
         Route::post('/admin/upload-pengumuman', [SettingController::class, 'uploadPengumuman'])
             ->name('admin.upload-pengumuman');
-            
+
         Route::post('/admin/tambah-pengumuman', [SettingController::class, 'tambahPengumuman'])
             ->name('admin.tambah-pengumuman');
-            
+
         Route::post('/admin/reorder-pengumuman', [SettingController::class, 'reorderPengumuman'])
             ->name('admin.reorder-pengumuman');
-            
+
         Route::post('/admin/hapus-satu-pengumuman', [SettingController::class, 'hapusSatuPengumuman'])
             ->name('admin.hapus-satu-pengumuman');
-            
+
         Route::post('/admin/hapus-pengumuman', [SettingController::class, 'hapusPengumuman'])
             ->name('admin.hapus-pengumuman');
 
         Route::get('/admin/sys-migrate', function () {
             try {
-                \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-                return "Database berhasil diupdate! Silakan kembali ke halaman dashboard.";
-            } catch (\Exception $e) {
-                return "Error: " . $e->getMessage();
+                Artisan::call('migrate', ['--force' => true]);
+
+                return 'Database berhasil diupdate! Silakan kembali ke halaman dashboard.';
+            } catch (Exception $e) {
+                return 'Error: '.$e->getMessage();
             }
         })->name('admin.sys-migrate');
 
@@ -206,6 +208,11 @@ Route::middleware('auth')->group(
             '/submissions/{id}/verify',
             [ApiDataController::class, 'verifySubmission']
         );
+
+        Route::post(
+            '/submissions/{id}/cancel-verification',
+            [ApiDataController::class, 'cancelVerification']
+        )->middleware('super.admin')->name('submissions.cancel-verification');
 
         // =================================================
         // REVISI

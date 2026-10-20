@@ -45,10 +45,23 @@ class StudentYudisiumNotifier
         }
     }
 
+    public function verificationCancelled(
+        PengajuanYudisium $submission,
+        string $reason
+    ): void {
+        $this->send(
+            $submission,
+            YudisiumStatusNotification::VERIFICATION_CANCELLED,
+            PengajuanStatus::MENUNGGU_VERIFIKASI,
+            $reason
+        );
+    }
+
     private function send(
         PengajuanYudisium $submission,
         string $event,
-        PengajuanStatus $status
+        PengajuanStatus $status,
+        ?string $reason = null
     ): void {
         try {
             $submission->loadMissing('mahasiswa');
@@ -78,6 +91,7 @@ class StudentYudisiumNotifier
                 submissionCode: (string) $submission->kode_pengajuan,
                 statusLabel: $status->label(),
                 trackingUrl: route('tracking.index'),
+                reason: $reason,
             );
 
             $content = $notification->content();
@@ -100,6 +114,14 @@ class StudentYudisiumNotifier
             $statusLabel = $status->label();
             $trackingUrl = route('tracking.index');
 
+            $reasonHtml = '';
+            if ($reason !== null && trim($reason) !== '') {
+                $reasonHtml = '
+                <div style="margin: 14px 0; padding: 12px 14px; background: #fef2f2; border-left: 4px solid #ef4444; border-radius: 4px; color: #991b1b;">
+                    <strong>Alasan Pembatalan:</strong><br>'.nl2br(e(trim($reason))).'
+                </div>';
+            }
+
             $html = '
             <html>
             <body style="font-family: Arial, sans-serif; color: #1f2937; line-height: 1.6;">
@@ -108,6 +130,7 @@ class StudentYudisiumNotifier
                 <p>Yth. '.e($studentName).',</p>
 
                 <p>'.e($content['message']).'</p>
+                '.$reasonHtml.'
 
                 <p>
                     <strong>Kode Pengajuan:</strong> '.e($submissionCode).'<br>

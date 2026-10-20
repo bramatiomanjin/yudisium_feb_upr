@@ -857,6 +857,8 @@ document.addEventListener(
 
             showSubmissionState("ready");
 
+            const isSuperAdmin = (window.currentUserRole || document.getElementById('sidebarAdminRole')?.textContent || '').trim().toUpperCase() === 'SUPER_ADMIN';
+
             const startIndex = (currentPage - 1) * itemsPerPage;
             const endIndex = startIndex + itemsPerPage;
             const paginatedData = filteredSubmissions.slice(startIndex, endIndex);
@@ -1005,6 +1007,17 @@ document.addEventListener(
                                     data-status="${escapeHtml(submission.status)}"
                                     style="font-size: 0.75rem; padding: 6px 10px; min-height: auto; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; text-align: center;">
                                 Lanjutkan
+                            </button>
+                            ` : ''}
+
+                            ${(appliedFilterForBtn === 'proses-sk' && (submission.status || '').toUpperCase() === 'TERVERIFIKASI' && isSuperAdmin) ? `
+                            <div style="margin-top: 8px;"></div>
+                            <button class="btn-cancel-verif admin-danger-button" 
+                                    data-id="${escapeHtml(submission.id)}"
+                                    data-nama="${escapeHtml(submission.name || '')}"
+                                    data-nim="${escapeHtml(submission.nim || '')}"
+                                    style="font-size: 0.75rem; padding: 6px 10px; min-height: auto; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; text-align: center;">
+                                Batalkan Verifikasi
                             </button>
                             ` : ''}
 
@@ -1504,7 +1517,7 @@ document.addEventListener(
             }
         });
         
-        // Event delegation for single 'Lanjutkan' button
+        // Event delegation for single 'Lanjutkan' & 'Batalkan Verifikasi' button
         tableBody.addEventListener("click", async function(e) {
             if (e.target.classList.contains("btn-single-lanjut")) {
                 const btn = e.target;
@@ -1528,6 +1541,15 @@ document.addEventListener(
                     btn.disabled = false;
                     btn.textContent = "Lanjutkan";
                 }
+            }
+
+            if (e.target.classList.contains("btn-cancel-verif")) {
+                const btn = e.target;
+                const submissionId = btn.dataset.id;
+                const studentName = btn.dataset.nama;
+                const nim = btn.dataset.nim;
+
+                openCancelVerifModal(submissionId, studentName, nim, btn);
             }
         });
 
@@ -1594,6 +1616,122 @@ document.addEventListener(
                 } finally {
                     btnConfirmBulkLoncat.disabled = false;
                     btnConfirmBulkLoncat.textContent = "Konfirmasi dan Proses";
+                }
+            });
+        }
+
+
+        /* =====================================================
+           CANCEL VERIFICATION LOGIC (SUPER ADMIN)
+        ===================================================== */
+        const cancelVerifModal = document.getElementById("cancelVerifModal");
+        const cancelVerifStudentName = document.getElementById("cancelVerifStudentName");
+        const cancelVerifNim = document.getElementById("cancelVerifNim");
+        const cancelVerifReason = document.getElementById("cancelVerifReason");
+        const cancelVerifError = document.getElementById("cancelVerifError");
+        const btnCancelCancelVerif = document.getElementById("btnCancelCancelVerif");
+        const btnConfirmCancelVerif = document.getElementById("btnConfirmCancelVerif");
+
+        let activeCancelSubmissionId = null;
+        let activeCancelTriggerBtn = null;
+
+        function openCancelVerifModal(submissionId, studentName, nim, triggerBtn) {
+            if (!cancelVerifModal) return;
+            activeCancelSubmissionId = submissionId;
+            activeCancelTriggerBtn = triggerBtn;
+
+            if (cancelVerifStudentName) cancelVerifStudentName.textContent = studentName || "-";
+            if (cancelVerifNim) cancelVerifNim.textContent = nim || "-";
+            if (cancelVerifReason) cancelVerifReason.value = "";
+            if (cancelVerifError) {
+                cancelVerifError.textContent = "";
+                cancelVerifError.style.display = "none";
+            }
+
+            cancelVerifModal.style.display = "flex";
+            window.YudisiumModalAccessibility?.open(cancelVerifModal, triggerBtn);
+            setTimeout(function() {
+                cancelVerifReason?.focus();
+            }, 50);
+        }
+
+        function closeCancelVerifModal() {
+            if (!cancelVerifModal) return;
+            cancelVerifModal.style.display = "none";
+            window.YudisiumModalAccessibility?.close(cancelVerifModal);
+            activeCancelSubmissionId = null;
+            activeCancelTriggerBtn = null;
+        }
+
+        window.YudisiumModalAccessibility?.enhance(
+            cancelVerifModal,
+            closeCancelVerifModal
+        );
+
+        if (btnCancelCancelVerif) {
+            btnCancelCancelVerif.addEventListener("click", closeCancelVerifModal);
+        }
+
+        if (btnConfirmCancelVerif) {
+            btnConfirmCancelVerif.addEventListener("click", async function() {
+                if (!activeCancelSubmissionId) return;
+
+                const reason = (cancelVerifReason?.value || "").trim();
+                if (!reason) {
+                    if (cancelVerifError) {
+                        cancelVerifError.textContent = "Alasan pembatalan verifikasi wajib diisi.";
+                        cancelVerifError.style.display = "block";
+                    }
+                    cancelVerifReason?.focus();
+                    return;
+                }
+
+                if (reason.length < 3) {
+                    if (cancelVerifError) {
+                        cancelVerifError.textContent = "Alasan pembatalan minimal 3 karakter.";
+                        cancelVerifError.style.display = "block";
+                    }
+                    cancelVerifReason?.focus();
+                    return;
+                }
+
+                btnConfirmCancelVerif.disabled = true;
+                btnConfirmCancelVerif.textContent = "Membatalkan...";
+
+                try {
+                    if (typeof window.YudisiumAPI?.cancelVerification === "function") {
+                        await window.YudisiumAPI.cancelVerification(activeCancelSubmissionId, reason);
+                    } else {
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "";
+                        const res = await fetch("/submissions/" + encodeURIComponent(activeCancelSubmissionId) + "/cancel-verification", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Accept": "application/json",
+                                "X-CSRF-TOKEN": csrfToken
+                            },
+                            body: JSON.stringify({ reason: reason })
+                        });
+                        const data = await res.json().catch(function() { return {}; });
+                        if (!res.ok) {
+                            throw new Error(data.message || "Gagal membatalkan verifikasi.");
+                        }
+                    }
+                    closeCancelVerifModal();
+                    await loadSubmissions();
+                    alert("Status verifikasi berhasil dibatalkan dan pengajuan dikembalikan ke Menunggu Verifikasi.");
+                } catch (error) {
+                    console.error("Cancel verification error:", error);
+                    const errorMsg = error?.response?.message || error?.message || "Terjadi kesalahan saat membatalkan verifikasi.";
+                    if (cancelVerifError) {
+                        cancelVerifError.textContent = errorMsg;
+                        cancelVerifError.style.display = "block";
+                    } else {
+                        alert(errorMsg);
+                    }
+                } finally {
+                    btnConfirmCancelVerif.disabled = false;
+                    btnConfirmCancelVerif.textContent = "Ya, Batalkan Verifikasi";
                 }
             });
         }

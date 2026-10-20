@@ -181,6 +181,50 @@ document.addEventListener(
 
         let submission = null;
         let documents = [];
+        let verificationItems = [];
+
+        function normalizeSavedDecision(status) {
+            const normalized = String(status || "").trim().toLowerCase();
+            if (normalized === "disetujui" || normalized === "approved") {
+                return "approved";
+            }
+            if (normalized === "revisi" || normalized === "revision") {
+                return "revision";
+            }
+            return "";
+        }
+
+        function applyInitialItemDecision(item, decision, feedbackText) {
+            if (!item || !decision) {
+                return;
+            }
+
+            item.dataset.decision = decision;
+
+            const buttons = item.querySelectorAll(".verification-choice");
+            buttons.forEach(function (button) {
+                if (button.dataset.choice === decision) {
+                    button.classList.add("active");
+                } else {
+                    button.classList.remove("active");
+                }
+            });
+
+            const feedbackBox = item.querySelector(".verification-feedback");
+            const textarea = feedbackBox?.querySelector("textarea");
+
+            if (decision === "revision") {
+                feedbackBox?.classList.add("active");
+                if (textarea && feedbackText) {
+                    textarea.value = feedbackText;
+                }
+            } else {
+                feedbackBox?.classList.remove("active");
+                if (textarea) {
+                    textarea.value = "";
+                }
+            }
+        }
 
         try {
 
@@ -241,6 +285,26 @@ document.addEventListener(
                 documents = [];
             }
 
+            try {
+                const verificationResult =
+                    typeof API.getVerificationResult === "function"
+                        ? await API.getVerificationResult(submission.id)
+                        : null;
+
+                if (
+                    verificationResult &&
+                    Array.isArray(verificationResult.items)
+                ) {
+                    verificationItems = verificationResult.items;
+                }
+            } catch (verificationError) {
+                console.error(
+                    "Gagal mengambil status validasi field:",
+                    verificationError
+                );
+                verificationItems = [];
+            }
+
         } catch (error) {
 
             console.error(
@@ -296,6 +360,16 @@ document.addEventListener(
            ISI DATA MAHASISWA + AKADEMIK
         ========================================================= */
 
+        const fieldValidationMap = {};
+        verificationItems.forEach(function (vItem) {
+            if (vItem && vItem.key) {
+                fieldValidationMap[vItem.key] = {
+                    decision: normalizeSavedDecision(vItem.status),
+                    feedback: vItem.feedback || ""
+                };
+            }
+        });
+
         const fieldItems =
             Array.from(
                 document.querySelectorAll(
@@ -329,6 +403,15 @@ document.addEventListener(
                         submission,
                         key
                     );
+
+                const savedField = fieldValidationMap[key];
+                if (savedField && savedField.decision) {
+                    applyInitialItemDecision(
+                        item,
+                        savedField.decision,
+                        savedField.feedback
+                    );
+                }
 
             }
         );
@@ -489,6 +572,19 @@ document.addEventListener(
                             .appendChild(
                                 item
                             );
+
+                        const savedDocDecision =
+                            normalizeSavedDecision(
+                                doc.status || doc.status_validasi
+                            );
+
+                        if (savedDocDecision) {
+                            applyInitialItemDecision(
+                                item,
+                                savedDocDecision,
+                                doc.feedback || ""
+                            );
+                        }
 
                     }
                 );

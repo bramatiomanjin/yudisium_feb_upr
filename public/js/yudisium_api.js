@@ -1240,6 +1240,39 @@
     }
 
 
+    /* =========================================================
+       10b. CANCEL VERIFICATION (SUPER ADMIN ONLY)
+    ========================================================= */
+
+    async function cancelVerification(
+        submissionId,
+        reason
+    ) {
+
+        return request(
+            "/submissions/" +
+            encodeURIComponent(
+                submissionId
+            ) +
+            "/cancel-verification",
+            {
+
+                method:
+                    "POST",
+
+                body: {
+
+                    reason:
+                        reason
+
+                }
+
+            }
+        );
+
+    }
+
+
     async function exportExcel(
         filters = {}
     ) {
@@ -1640,6 +1673,9 @@
 
         updateSkStatus:
             updateSkStatus,
+
+        cancelVerification:
+            cancelVerification,
 
         exportExcel:
             exportExcel,

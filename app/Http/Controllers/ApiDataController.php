@@ -3,18 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PengajuanStatus;
-use Illuminate\Http\Request;
-
-use App\Models\PengajuanYudisium;
 use App\Models\PengajuanDokumen;
-use App\Models\ValidasiField;
+use App\Models\PengajuanYudisium;
 use App\Models\RiwayatRevisi;
 use App\Models\RiwayatStatus;
-
+use App\Models\ValidasiField;
+use App\Support\StudentYudisiumNotifier;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Support\StudentYudisiumNotifier;
 
 class ApiDataController extends Controller
 {
@@ -26,7 +24,7 @@ class ApiDataController extends Controller
     {
         $pengajuan =
             PengajuanYudisium::with([
-                'mahasiswa'
+                'mahasiswa',
             ])
                 ->findOrFail($id);
 
@@ -34,83 +32,61 @@ class ApiDataController extends Controller
 
         $data = [
 
-            'id' =>
-                $pengajuan->id,
+            'id' => $pengajuan->id,
 
-            'nim' =>
-                $pengajuan->nim,
-
+            'nim' => $pengajuan->nim,
 
             // Mahasiswa
-            'nama' =>
-                $pengajuan->mahasiswa
-                    ->nama_lengkap ?? '',
+            'nama' => $pengajuan->mahasiswa
+                ->nama_lengkap ?? '',
 
-            'jurusan' =>
-                $pengajuan->mahasiswa
-                    ->jurusan ?? '',
+            'jurusan' => $pengajuan->mahasiswa
+                ->jurusan ?? '',
 
-            'email' =>
-                $pengajuan->mahasiswa
-                    ->email ?? '',
+            'email' => $pengajuan->mahasiswa
+                ->email ?? '',
 
-            'no_whatsapp' =>
-                $pengajuan->mahasiswa
-                    ->no_whatsapp ?? '',
+            'no_whatsapp' => $pengajuan->mahasiswa
+                ->no_whatsapp ?? '',
 
-            'tahun_angkatan' =>
-                $pengajuan->mahasiswa
-                    ->tahun_angkatan ?? '',
+            'tahun_angkatan' => $pengajuan->mahasiswa
+                ->tahun_angkatan ?? '',
 
-            'jalur_masuk' =>
-                $pengajuan->mahasiswa
-                    ->jalur_masuk ?? '',
-
+            'jalur_masuk' => $pengajuan->mahasiswa
+                ->jalur_masuk ?? '',
 
             // Pengajuan
-            'status' =>
-                strtolower(
-                    $pengajuan->status
-                ),
+            'status' => strtolower(
+                $pengajuan->status
+            ),
 
-            'kode_pengajuan' =>
-                $pengajuan->kode_pengajuan,
+            'kode_pengajuan' => $pengajuan->kode_pengajuan,
 
-            'jenis_karya_tulis' =>
-                $pengajuan->karya_tulis ?? '',
+            'jenis_karya_tulis' => $pengajuan->karya_tulis ?? '',
 
-            'judul_karya_tulis' =>
-                $pengajuan->judul_karya_tulis ?? '',
+            'judul_karya_tulis' => $pengajuan->judul_karya_tulis ?? '',
 
-            'tanggal_ujian' =>
-                $pengajuan->tanggal_ujian ?? '',
+            'tanggal_ujian' => $pengajuan->tanggal_ujian ?? '',
 
-            'nilai_angka' =>
-                $pengajuan->nilai_angka ?? '',
+            'nilai_angka' => $pengajuan->nilai_angka ?? '',
 
-            'nilai_huruf' =>
-                $pengajuan->nilai_huruf ?? '',
+            'nilai_huruf' => $pengajuan->nilai_huruf ?? '',
 
+            'created_at' => $pengajuan->created_at
+                ?->toISOString(),
 
-            'created_at' =>
-                $pengajuan->created_at
-                    ?->toISOString(),
+            'updated_at' => $pengajuan->updated_at
+                ?->toISOString(),
 
-            'updated_at' =>
-                $pengajuan->updated_at
-                    ?->toISOString(),
-
-
-            'revision_count' =>
-                ValidasiField::where(
-                    'pengajuan_id',
-                    $id
+            'revision_count' => ValidasiField::where(
+                'pengajuan_id',
+                $id
+            )
+                ->where(
+                    'status_validasi',
+                    'REVISI'
                 )
-                    ->where(
-                        'status_validasi',
-                        'REVISI'
-                    )
-                    ->count()
+                ->count()
                 +
                 PengajuanDokumen::where(
                     'pengajuan_id',
@@ -120,15 +96,13 @@ class ApiDataController extends Controller
                         'status_validasi',
                         'REVISI'
                     )
-                    ->count()
+                    ->count(),
         ];
-
 
         return response()->json(
             $data
         );
     }
-
 
     // =========================================================
     // 2. DOCUMENTS
@@ -137,7 +111,7 @@ class ApiDataController extends Controller
     public function getDocuments(Request $request, string $id)
     {
         $pengajuan = PengajuanYudisium::findOrFail($id);
-        
+
         $this->authorizePublicSubmissionRequest($request, $pengajuan, true);
 
         $dokumens =
@@ -150,60 +124,48 @@ class ApiDataController extends Controller
                 )
                 ->get();
 
-
         $data =
             $dokumens->map(
                 function ($doc) {
 
                     return [
 
-                        'id' =>
-                            $doc->id,
+                        'id' => $doc->id,
 
-                        'type' =>
-                            $doc->jenis_dokumen_id,
+                        'type' => $doc->jenis_dokumen_id,
 
-                        'title' =>
-                            $doc->jenisDokumen
-                                ->nama_dokumen
+                        'title' => $doc->jenisDokumen
+                            ->nama_dokumen
                                 ?? 'Dokumen',
 
-                        'label' =>
-                            $doc->jenisDokumen
-                                ->nama_dokumen
+                        'label' => $doc->jenisDokumen
+                            ->nama_dokumen
                                 ?? 'Dokumen',
 
-                        'name' =>
-                            $doc->jenisDokumen
-                                ->nama_dokumen
+                        'name' => $doc->jenisDokumen
+                            ->nama_dokumen
                                 ?? 'Dokumen',
 
-                        'filename' =>
-                            $doc->nama_file_asli
+                        'filename' => $doc->nama_file_asli
                                 ?? '',
 
-                        'status' =>
-                            strtolower(
-                                $doc->status_validasi
-                                ?? 'PENDING'
-                            ),
+                        'status' => strtolower(
+                            $doc->status_validasi
+                            ?? 'PENDING'
+                        ),
 
-                        'feedback' =>
-                            $doc->feedback,
+                        'feedback' => $doc->feedback,
 
-                        'url' =>
-                            '/admin/file/' .
+                        'url' => '/admin/file/'.
                             $doc->id,
                     ];
                 }
             );
 
-
         return response()->json(
             $data
         );
     }
-
 
     // =========================================================
     // 3. VERIFICATION RESULT
@@ -214,7 +176,7 @@ class ApiDataController extends Controller
         string $id
     ) {
         $pengajuan = PengajuanYudisium::findOrFail($id);
-        
+
         $this->authorizePublicSubmissionRequest($request, $pengajuan, true);
 
         $fields =
@@ -224,38 +186,30 @@ class ApiDataController extends Controller
             )
                 ->get();
 
-
         $items =
             $fields->map(
                 function ($field) {
 
                     return [
 
-                        'type' =>
-                            'field',
+                        'type' => 'field',
 
-                        'key' =>
-                            $field->field_key,
+                        'key' => $field->field_key,
 
-                        'status' =>
-                            strtolower(
-                                $field->status_validasi
-                            ),
+                        'status' => strtolower(
+                            $field->status_validasi
+                        ),
 
-                        'feedback' =>
-                            $field->feedback,
+                        'feedback' => $field->feedback,
 
-                        'updatedAt' =>
-                            $field->updated_at
-                                ?->toISOString()
+                        'updatedAt' => $field->updated_at
+                            ?->toISOString(),
                     ];
                 }
             );
 
-
         return response()->json([
-            'items' =>
-                $items
+            'items' => $items,
         ]);
     }
 
@@ -285,7 +239,6 @@ class ApiDataController extends Controller
         }
     }
 
-
     // =========================================================
     // 4. VERIFY SUBMISSION
     // =========================================================
@@ -306,7 +259,6 @@ class ApiDataController extends Controller
             'Pengajuan tidak berada pada tahap verifikasi awal.'
         );
 
-
         $validated = $request->validate([
             'items' => ['required', 'array', 'min:1'],
             'items.*.type' => ['required', 'in:field,document'],
@@ -314,7 +266,6 @@ class ApiDataController extends Controller
             'items.*.decision' => ['required', 'in:approved,revision'],
             'items.*.feedback' => ['nullable', 'string', 'max:2000'],
         ]);
-
 
         /*
          * Simpan status sebelum verifikasi.
@@ -329,12 +280,9 @@ class ApiDataController extends Controller
                 )
             );
 
-
         $items = $validated['items'];
 
-
         DB::beginTransaction();
-
 
         try {
 
@@ -348,11 +296,9 @@ class ApiDataController extends Controller
                         ? 'DISETUJUI'
                         : 'REVISI';
 
-
                 $feedback =
                     $item['feedback']
                     ?? null;
-
 
                 if (
                     $item['type'] ===
@@ -369,22 +315,15 @@ class ApiDataController extends Controller
                         )
                         ->update([
 
-                            'status_validasi' =>
-                                $status,
+                            'status_validasi' => $status,
 
-                            'feedback' =>
-                                $feedback,
+                            'feedback' => $feedback,
 
-                            'checked_by' =>
-                                Auth::id(),
+                            'checked_by' => Auth::id(),
 
-                            'checked_at' =>
-                                now(),
+                            'checked_at' => now(),
                         ]);
-                }
-
-
-                elseif (
+                } elseif (
                     $item['type'] ===
                     'document'
                 ) {
@@ -399,21 +338,16 @@ class ApiDataController extends Controller
                         )
                         ->update([
 
-                            'status_validasi' =>
-                                $status,
+                            'status_validasi' => $status,
 
-                            'feedback' =>
-                                $feedback,
+                            'feedback' => $feedback,
 
-                            'checked_by' =>
-                                Auth::id(),
+                            'checked_by' => Auth::id(),
 
-                            'checked_at' =>
-                                now(),
+                            'checked_at' => now(),
                         ]);
                 }
             }
-
 
             $masihRevisiField =
                 ValidasiField::where(
@@ -426,7 +360,6 @@ class ApiDataController extends Controller
                     )
                     ->exists();
 
-
             $masihRevisiDokumen =
                 PengajuanDokumen::where(
                     'pengajuan_id',
@@ -437,7 +370,6 @@ class ApiDataController extends Controller
                         'REVISI'
                     )
                     ->exists();
-
 
             $masihPendingField =
                 ValidasiField::where(
@@ -450,7 +382,6 @@ class ApiDataController extends Controller
                     )
                     ->exists();
 
-
             $masihPendingDokumen =
                 PengajuanDokumen::where(
                     'pengajuan_id',
@@ -462,19 +393,16 @@ class ApiDataController extends Controller
                     )
                     ->exists();
 
-
             $statusBaru = PengajuanStatus::resolveVerificationResult(
                 $masihRevisiField || $masihRevisiDokumen,
                 $masihPendingField || $masihPendingDokumen
             );
-
 
             $pengajuan->transitionTo($statusBaru, [
                 'verified_at' => $statusBaru === PengajuanStatus::TERVERIFIKASI
                     ? now()
                     : null,
             ]);
-
 
             /*
              * =================================================
@@ -496,51 +424,42 @@ class ApiDataController extends Controller
             ) {
 
                 $catatanHistory =
-                    'REVISI: ' .
-                    $statusSebelumnya .
-                    ' → ' .
+                    'REVISI: '.
+                    $statusSebelumnya.
+                    ' → '.
                     $statusBaru->value;
 
             } else {
 
                 $catatanHistory =
-                    'VERIFIKASI: ' .
-                    $statusSebelumnya .
-                    ' → ' .
+                    'VERIFIKASI: '.
+                    $statusSebelumnya.
+                    ' → '.
                     $statusBaru->value;
             }
 
-
             RiwayatStatus::create([
 
-                'pengajuan_id' =>
-                    $pengajuan->id,
+                'pengajuan_id' => $pengajuan->id,
 
-                'status' =>
-                    $statusBaru->value,
+                'status' => $statusBaru->value,
 
-                'catatan' =>
-                    $catatanHistory,
+                'catatan' => $catatanHistory,
 
-                'changed_by' =>
-                    Auth::id(),
+                'changed_by' => Auth::id(),
             ]);
-
 
             DB::commit();
             $notifier->statusChanged($pengajuan, $statusSebelumnya, $statusBaru);
 
-
             return response()->json([
-                'success' =>
-                    true,
+                'success' => true,
 
-                'status' =>
-                    strtolower(
-                        $pengajuan
-                            ->fresh()
-                            ->status
-                    )
+                'status' => strtolower(
+                    $pengajuan
+                        ->fresh()
+                        ->status
+                ),
             ]);
 
         } catch (\Throwable $e) {
@@ -551,18 +470,81 @@ class ApiDataController extends Controller
                 'exception' => $e,
             ]);
 
-
             return response()->json([
-                'success' =>
-                    false,
+                'success' => false,
 
-                'message' =>
-                    'Gagal menyimpan hasil verifikasi.'
+                'message' => 'Gagal menyimpan hasil verifikasi.',
 
             ], 500);
         }
     }
 
+    // =========================================================
+    // 4b. CANCEL VERIFICATION (SUPER ADMIN ONLY)
+    // =========================================================
+
+    public function cancelVerification(
+        Request $request,
+        string $id,
+        StudentYudisiumNotifier $notifier
+    ) {
+        $validated = $request->validate([
+            'reason' => ['required', 'string', 'min:3', 'max:1000'],
+        ], [
+            'reason.required' => 'Alasan pembatalan verifikasi wajib diisi.',
+            'reason.min' => 'Alasan pembatalan minimal :min karakter.',
+            'reason.max' => 'Alasan pembatalan maksimal :max karakter.',
+        ]);
+
+        $pengajuan = PengajuanYudisium::findOrFail($id);
+
+        $statusSebelumnya = strtoupper(trim((string) $pengajuan->status));
+
+        abort_unless(
+            $statusSebelumnya === PengajuanStatus::TERVERIFIKASI->value,
+            409,
+            'Pembatalan verifikasi hanya dapat dilakukan pada pengajuan dengan status Terverifikasi.'
+        );
+
+        $statusBaru = PengajuanStatus::MENUNGGU_VERIFIKASI;
+        $reason = trim((string) $validated['reason']);
+
+        DB::beginTransaction();
+
+        try {
+            $pengajuan->transitionTo($statusBaru, [
+                'verified_at' => null,
+            ]);
+
+            RiwayatStatus::create([
+                'pengajuan_id' => $pengajuan->id,
+                'status' => $statusBaru->value,
+                'catatan' => 'PEMBATALAN VERIFIKASI: '.$statusSebelumnya.' → '.$statusBaru->value.' (Alasan: '.$reason.')',
+                'changed_by' => Auth::id(),
+            ]);
+
+            DB::commit();
+
+            $notifier->verificationCancelled($pengajuan, $reason);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Verifikasi pengajuan berhasil dibatalkan.',
+                'status' => strtolower($statusBaru->value),
+            ]);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error('Gagal membatalkan verifikasi pengajuan.', [
+                'pengajuan_id' => $id,
+                'exception' => $e,
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal membatalkan verifikasi.',
+            ], 500);
+        }
+    }
 
     // =========================================================
     // 5. GET REVISION SUBMISSION
@@ -573,12 +555,11 @@ class ApiDataController extends Controller
     ) {
         $pengajuan =
             PengajuanYudisium::with([
-                'mahasiswa'
+                'mahasiswa',
             ])
                 ->findOrFail(
                     $id
                 );
-
 
         /*
          * Ambil revisi paling baru untuk setiap
@@ -595,14 +576,11 @@ class ApiDataController extends Controller
                 )
                 ->get();
 
-
         $seen =
             [];
 
-
         $items =
             [];
-
 
         foreach (
             $riwayat as $r
@@ -614,16 +592,15 @@ class ApiDataController extends Controller
             ) {
 
                 $uniqueKey =
-                    'FIELD:' .
+                    'FIELD:'.
                     $r->field_key;
 
             } else {
 
                 $uniqueKey =
-                    'DOKUMEN:' .
+                    'DOKUMEN:'.
                     $r->jenis_dokumen_id;
             }
-
 
             if (
                 isset(
@@ -635,12 +612,10 @@ class ApiDataController extends Controller
                 continue;
             }
 
-
             $seen[
                 $uniqueKey
             ] =
                 true;
-
 
             // =============================================
             // FIELD
@@ -662,43 +637,33 @@ class ApiDataController extends Controller
                         )
                         ->first();
 
-
                 if (
-                    !$currentField ||
+                    ! $currentField ||
                     $currentField->status_validasi !== 'PENDING'
                 ) {
                     continue;
                 }
 
-
                 $items[] = [
 
-                    'type' =>
-                        'field',
+                    'type' => 'field',
 
-                    'key' =>
-                        $r->field_key,
+                    'key' => $r->field_key,
 
-                    'label' =>
-                        $this
-                            ->fieldLabel(
-                                $r->field_key
-                            ),
+                    'label' => $this
+                        ->fieldLabel(
+                            $r->field_key
+                        ),
 
-                    'oldValue' =>
-                        $r->nilai_lama,
+                    'oldValue' => $r->nilai_lama,
 
-                    'newValue' =>
-                        $r->nilai_baru,
+                    'newValue' => $r->nilai_baru,
 
-                    'feedback' =>
-                        $r->feedback_admin,
+                    'feedback' => $r->feedback_admin,
 
-                    'revisionNumber' =>
-                        $r->revisi_ke
+                    'revisionNumber' => $r->revisi_ke,
                 ];
             }
-
 
             // =============================================
             // DOKUMEN
@@ -720,101 +685,79 @@ class ApiDataController extends Controller
                         )
                         ->first();
 
-
                 if (
-                    !$dokumen ||
+                    ! $dokumen ||
                     $dokumen->status_validasi !== 'PENDING'
                 ) {
                     continue;
                 }
 
-
                 $items[] = [
 
-    'type' =>
-        'document',
+                    'type' => 'document',
 
-    'key' =>
-        (string) $dokumen->id,
+                    'key' => (string) $dokumen->id,
 
-    'jenisDokumenId' =>
-        $r->jenis_dokumen_id,
+                    'jenisDokumenId' => $r->jenis_dokumen_id,
 
-    'label' =>
-        $dokumen
-            ->jenisDokumen
-            ->nama_dokumen
-            ?? 'Dokumen',
+                    'label' => $dokumen
+                        ->jenisDokumen
+                        ->nama_dokumen
+                            ?? 'Dokumen',
 
-    'oldFile' =>
-        $r->nilai_lama,
+                    'oldFile' => $r->nilai_lama,
 
-  'oldFile' =>
-    $r->nilai_lama,
+                    'oldFile' => $r->nilai_lama,
 
-'newFile' => [
-    'name' =>
-        $dokumen->nama_file_asli
-        ?? $r->nilai_baru,
+                    'newFile' => [
+                        'name' => $dokumen->nama_file_asli
+                            ?? $r->nilai_baru,
 
-    'url' =>
-        '/admin/file/' .
-        $dokumen->id,
+                        'url' => '/admin/file/'.
+                            $dokumen->id,
 
-    'mimeType' =>
-        $dokumen->mime_type
-        ?? '',
-],
+                        'mimeType' => $dokumen->mime_type
+                            ?? '',
+                    ],
 
-'feedback' =>
-    $r->feedback_admin,
+                    'feedback' => $r->feedback_admin,
 
-'revisionNumber' =>
-    $r->revisi_ke,
-];
+                    'revisionNumber' => $r->revisi_ke,
+                ];
             }
         }
-
 
         return response()->json([
 
             'submission' => [
 
-                'id' =>
-                    $pengajuan->id,
+                'id' => $pengajuan->id,
 
-                'code' =>
+                'code' => $pengajuan
+                    ->kode_pengajuan,
+
+                'nim' => $pengajuan
+                    ->nim,
+
+                'name' => $pengajuan
+                    ->mahasiswa
+                    ->nama_lengkap ?? '',
+
+                'department' => $pengajuan
+                    ->mahasiswa
+                    ->jurusan ?? '',
+
+                'status' => strtolower(
                     $pengajuan
-                        ->kode_pengajuan,
-
-                'nim' =>
-                    $pengajuan
-                        ->nim,
-
-                'name' =>
-                    $pengajuan
-                        ->mahasiswa
-                        ->nama_lengkap ?? '',
-
-                'department' =>
-                    $pengajuan
-                        ->mahasiswa
-                        ->jurusan ?? '',
-
-                'status' =>
-                    strtolower(
-                        $pengajuan
-                            ->status
-                    )
+                        ->status
+                ),
             ],
 
-            'items' =>
-                array_values(
-                    $items
-                )
+            'items' => array_values(
+                $items
+            ),
         ]);
     }
-
 
     // =========================================================
     // 6. REVIEW REVISION
@@ -836,7 +779,6 @@ class ApiDataController extends Controller
             'Pengajuan tidak berada pada tahap review revisi.'
         );
 
-
         $validated = $request->validate([
             'items' => ['required', 'array', 'min:1'],
             'items.*.type' => ['required', 'in:field,document'],
@@ -844,7 +786,6 @@ class ApiDataController extends Controller
             'items.*.decision' => ['required', 'in:approved,revision'],
             'items.*.feedback' => ['nullable', 'string', 'max:2000'],
         ]);
-
 
         /*
          * Status sebelum Admin melakukan
@@ -857,12 +798,9 @@ class ApiDataController extends Controller
                 )
             );
 
-
         $items = $validated['items'];
 
-
         DB::beginTransaction();
-
 
         try {
 
@@ -874,18 +812,15 @@ class ApiDataController extends Controller
                     $item['decision']
                     ?? null;
 
-
                 $feedback =
                     $item['feedback']
                     ?? null;
-
 
                 $status =
                     $decision ===
                     'approved'
                         ? 'DISETUJUI'
                         : 'REVISI';
-
 
                 // =========================================
                 // FIELD
@@ -906,19 +841,14 @@ class ApiDataController extends Controller
                         )
                         ->update([
 
-                            'status_validasi' =>
-                                $status,
+                            'status_validasi' => $status,
 
-                            'feedback' =>
-                                $feedback,
+                            'feedback' => $feedback,
 
-                            'checked_by' =>
-                                Auth::id(),
+                            'checked_by' => Auth::id(),
 
-                            'checked_at' =>
-                                now(),
+                            'checked_at' => now(),
                         ]);
-
 
                     RiwayatRevisi::where(
                         'pengajuan_id',
@@ -937,11 +867,9 @@ class ApiDataController extends Controller
                         )
                         ->first()
                         ?->update([
-                            'feedback_admin' =>
-                                $feedback
+                            'feedback_admin' => $feedback,
                         ]);
                 }
-
 
                 // =========================================
                 // DOKUMEN
@@ -963,24 +891,18 @@ class ApiDataController extends Controller
                             )
                             ->first();
 
-
                     if ($dokumen) {
 
                         $dokumen->update([
 
-                            'status_validasi' =>
-                                $status,
+                            'status_validasi' => $status,
 
-                            'feedback' =>
-                                $feedback,
+                            'feedback' => $feedback,
 
-                            'checked_by' =>
-                                Auth::id(),
+                            'checked_by' => Auth::id(),
 
-                            'checked_at' =>
-                                now(),
+                            'checked_at' => now(),
                         ]);
-
 
                         RiwayatRevisi::where(
                             'pengajuan_id',
@@ -1000,13 +922,11 @@ class ApiDataController extends Controller
                             )
                             ->first()
                             ?->update([
-                                'feedback_admin' =>
-                                    $feedback
+                                'feedback_admin' => $feedback,
                             ]);
                     }
                 }
             }
-
 
             $masihRevisiField =
                 ValidasiField::where(
@@ -1019,7 +939,6 @@ class ApiDataController extends Controller
                     )
                     ->exists();
 
-
             $masihRevisiDokumen =
                 PengajuanDokumen::where(
                     'pengajuan_id',
@@ -1030,7 +949,6 @@ class ApiDataController extends Controller
                         'REVISI'
                     )
                     ->exists();
-
 
             $masihPendingField =
                 ValidasiField::where(
@@ -1043,7 +961,6 @@ class ApiDataController extends Controller
                     )
                     ->exists();
 
-
             $masihPendingDokumen =
                 PengajuanDokumen::where(
                     'pengajuan_id',
@@ -1055,20 +972,17 @@ class ApiDataController extends Controller
                     )
                     ->exists();
 
-
             $statusBaru = PengajuanStatus::resolveVerificationResult(
                 $masihRevisiField || $masihRevisiDokumen,
                 $masihPendingField || $masihPendingDokumen,
                 PengajuanStatus::REVISI_DIKIRIM
             );
 
-
             $pengajuan->transitionTo($statusBaru, [
                 'verified_at' => $statusBaru === PengajuanStatus::TERVERIFIKASI
                     ? now()
                     : null,
             ]);
-
 
             /*
              * =================================================
@@ -1080,38 +994,30 @@ class ApiDataController extends Controller
              */
             RiwayatStatus::create([
 
-                'pengajuan_id' =>
-                    $pengajuan->id,
+                'pengajuan_id' => $pengajuan->id,
 
-                'status' =>
+                'status' => $statusBaru->value,
+
+                'catatan' => 'REVIEW REVISI: '.
+                    $statusSebelumnya.
+                    ' → '.
                     $statusBaru->value,
 
-                'catatan' =>
-                    'REVIEW REVISI: ' .
-                    $statusSebelumnya .
-                    ' → ' .
-                    $statusBaru->value,
-
-                'changed_by' =>
-                    Auth::id(),
+                'changed_by' => Auth::id(),
             ]);
-
 
             DB::commit();
             $notifier->statusChanged($pengajuan, $statusSebelumnya, $statusBaru);
 
-
             return response()->json([
 
-                'success' =>
-                    true,
+                'success' => true,
 
-                'status' =>
-                    strtolower(
-                        $pengajuan
-                            ->fresh()
-                            ->status
-                    )
+                'status' => strtolower(
+                    $pengajuan
+                        ->fresh()
+                        ->status
+                ),
             ]);
 
         } catch (\Throwable $e) {
@@ -1122,19 +1028,15 @@ class ApiDataController extends Controller
                 'exception' => $e,
             ]);
 
-
             return response()->json([
 
-                'success' =>
-                    false,
+                'success' => false,
 
-                'message' =>
-                    'Gagal menyimpan hasil review revisi.'
+                'message' => 'Gagal menyimpan hasil review revisi.',
 
             ], 500);
         }
     }
-
 
     // =========================================================
     // 7. HISTORY
@@ -1151,7 +1053,7 @@ class ApiDataController extends Controller
         $query =
             RiwayatStatus::with([
                 'pengajuan.mahasiswa',
-                'changedBy'
+                'changedBy',
             ])
                 ->orderByDesc(
                     'created_at'
@@ -1159,7 +1061,6 @@ class ApiDataController extends Controller
                 ->orderByDesc(
                     'id'
                 );
-
 
         /*
          * ADMIN hanya boleh melihat aktivitas
@@ -1169,7 +1070,6 @@ class ApiDataController extends Controller
          */
         $user =
             Auth::user();
-
 
         if (
             $user &&
@@ -1184,12 +1084,10 @@ class ApiDataController extends Controller
             );
         }
 
-
         $logs =
             $query
                 ->limit(100)
                 ->get();
-
 
         $data =
             $logs->map(
@@ -1203,10 +1101,8 @@ class ApiDataController extends Controller
                             )
                         );
 
-
                     $previousStatus =
                         null;
-
 
                     $newStatus =
                         strtoupper(
@@ -1217,7 +1113,6 @@ class ApiDataController extends Controller
                                 )
                             )
                         );
-
 
                     /*
                      * Contoh:
@@ -1248,12 +1143,10 @@ class ApiDataController extends Controller
                             $matches[1]
                             ?? null;
 
-
                         $newStatus =
                             $matches[2]
                             ?? $newStatus;
                     }
-
 
                     /*
                      * Tentukan kategori aktivitas.
@@ -1261,10 +1154,8 @@ class ApiDataController extends Controller
                     $action =
                         'VERIFICATION';
 
-
                     $actionLabel =
                         'Verifikasi Pengajuan';
-
 
                     if (
                         str_starts_with(
@@ -1278,13 +1169,9 @@ class ApiDataController extends Controller
                         $action =
                             'UPDATE_SK_STATUS';
 
-
                         $actionLabel =
                             'Proses SK';
-                    }
-
-
-                    elseif (
+                    } elseif (
                         str_starts_with(
                             strtoupper(
                                 $catatan
@@ -1303,7 +1190,6 @@ class ApiDataController extends Controller
                         $action =
                             'REVISION';
 
-
                         $actionLabel =
                             str_starts_with(
                                 strtoupper(
@@ -1315,147 +1201,106 @@ class ApiDataController extends Controller
                                 : 'Meminta Revisi';
                     }
 
-
                     $admin =
                         $log->changedBy;
 
-
                     $pengajuan =
                         $log->pengajuan;
-
 
                     $mahasiswa =
                         $pengajuan
                             ?->mahasiswa;
 
-
                     return [
 
-                        'id' =>
-                            $log->id,
+                        'id' => $log->id,
 
+                        'submissionId' => $log->pengajuan_id,
 
-                        'submissionId' =>
-                            $log->pengajuan_id,
-
-
-                        'submissionCode' =>
-                            $pengajuan
-                                ?->kode_pengajuan
+                        'submissionCode' => $pengajuan
+                            ?->kode_pengajuan
                             ?? '',
 
-
-                        'studentName' =>
-                            $mahasiswa
-                                ?->nama_lengkap
+                        'studentName' => $mahasiswa
+                            ?->nama_lengkap
                             ?? '',
 
-
-                        'nim' =>
-                            $mahasiswa
-                                ?->nim
+                        'nim' => $mahasiswa
+                            ?->nim
                             ??
                             $pengajuan
                                 ?->nim
                             ??
                             '',
 
-
-                        'department' =>
-                            $mahasiswa
-                                ?->jurusan
+                        'department' => $mahasiswa
+                            ?->jurusan
                             ?? '',
 
-
-                        'adminUsername' =>
-                            $admin
-                                ?->email
+                        'adminUsername' => $admin
+                            ?->email
                             ??
                             $admin
                                 ?->name
                             ??
                             '-',
 
-
-                        'adminName' =>
-                            $admin
-                                ?->name
+                        'adminName' => $admin
+                            ?->name
                             ?? 'Sistem',
 
-
-                        'adminRole' =>
-                            $admin
-                                ?->role
+                        'adminRole' => $admin
+                            ?->role
                             ?? 'SYSTEM',
 
+                        'action' => $action,
 
-                        'action' =>
-                            $action,
+                        'actionLabel' => $actionLabel,
 
-
-                        'actionLabel' =>
-                            $actionLabel,
-
-
-                        'previousStatus' =>
-                            $previousStatus
+                        'previousStatus' => $previousStatus
                                 ? strtolower(
                                     $previousStatus
                                 )
                                 : null,
 
-
-                        'newStatus' =>
-                            $newStatus
+                        'newStatus' => $newStatus
                                 ? strtolower(
                                     $newStatus
                                 )
                                 : null,
 
-
-                        'note' =>
-                            $catatan !== ''
+                        'note' => $catatan !== ''
                                 ? $catatan
                                 : null,
 
-
-                        'createdAt' =>
-                            $log->created_at
-                                ?->toISOString(),
-
+                        'createdAt' => $log->created_at
+                            ?->toISOString(),
 
                         /*
                          * Alias kompatibilitas frontend.
                          */
-                        'status_sebelumnya' =>
-                            $previousStatus
+                        'status_sebelumnya' => $previousStatus
                                 ? strtolower(
                                     $previousStatus
                                 )
                                 : null,
 
-
-                        'status_baru' =>
-                            $newStatus
+                        'status_baru' => $newStatus
                                 ? strtolower(
                                     $newStatus
                                 )
                                 : null,
 
-
-                        'created_at' =>
-                            $log->created_at
-                                ?->toISOString(),
+                        'created_at' => $log->created_at
+                            ?->toISOString(),
                     ];
                 }
             );
-
 
         return response()->json(
             $data
         );
     }
-
 
     // =========================================================
     // HELPER LABEL
@@ -1467,40 +1312,28 @@ class ApiDataController extends Controller
 
         $labels = [
 
-            'nama_lengkap' =>
-                'Nama Lengkap',
+            'nama_lengkap' => 'Nama Lengkap',
 
-            'email' =>
-                'Email',
+            'email' => 'Email',
 
-            'no_whatsapp' =>
-                'Nomor WhatsApp',
+            'no_whatsapp' => 'Nomor WhatsApp',
 
-            'tahun_angkatan' =>
-                'Tahun Angkatan',
+            'tahun_angkatan' => 'Tahun Angkatan',
 
-            'jalur_masuk' =>
-                'Jalur Masuk',
+            'jalur_masuk' => 'Jalur Masuk',
 
-            'jurusan' =>
-                'Jurusan',
+            'jurusan' => 'Jurusan',
 
-            'karya_tulis' =>
-                'Karya Tulis Ilmiah',
+            'karya_tulis' => 'Karya Tulis Ilmiah',
 
-            'judul_karya_tulis' =>
-                'Judul Skripsi / Artikel',
+            'judul_karya_tulis' => 'Judul Skripsi / Artikel',
 
-            'tanggal_ujian' =>
-                'Tanggal Ujian',
+            'tanggal_ujian' => 'Tanggal Ujian',
 
-            'nilai_angka' =>
-                'Nilai Ujian',
+            'nilai_angka' => 'Nilai Ujian',
 
-            'nilai_huruf' =>
-                'Nilai Huruf',
+            'nilai_huruf' => 'Nilai Huruf',
         ];
-
 
         return
             $labels[$key]

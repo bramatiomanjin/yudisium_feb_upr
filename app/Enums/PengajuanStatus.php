@@ -105,7 +105,7 @@ enum PengajuanStatus: string
                 self::PERLU_REVISI,
                 self::TERVERIFIKASI,
             ], true),
-            self::TERVERIFIKASI,
+            self::TERVERIFIKASI => $next === self::MENUNGGU_VERIFIKASI || $this->canAdvanceInSkFlowTo($next),
             self::PEMBUATAN_SK,
             self::PARAF_PIMPINAN,
             self::TTD_DEKAN => $this->canAdvanceInSkFlowTo($next),
