@@ -66,11 +66,18 @@ class ApiDataController extends Controller
 
             'judul_karya_tulis' => $pengajuan->judul_karya_tulis ?? '',
 
-            'tanggal_ujian' => $pengajuan->tanggal_ujian ?? '',
+            'tanggal_ujian' => $pengajuan->tanggal_ujian instanceof \DateTimeInterface
+                ? $pengajuan->tanggal_ujian->format('Y-m-d')
+                : ($pengajuan->tanggal_ujian ?? ''),
 
             'nilai_angka' => $pengajuan->nilai_angka ?? '',
 
             'nilai_huruf' => $pengajuan->nilai_huruf ?? '',
+
+            'submitted_at' => $pengajuan->submitted_at
+                ?->toISOString()
+                ?? $pengajuan->created_at
+                ?->toISOString(),
 
             'created_at' => $pengajuan->created_at
                 ?->toISOString(),

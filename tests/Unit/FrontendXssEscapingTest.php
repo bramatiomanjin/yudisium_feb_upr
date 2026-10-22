@@ -63,6 +63,14 @@ class FrontendXssEscapingTest extends TestCase
         $this->assertStringNotContainsString('data-status="${submission.status}"', $source);
     }
 
+    public function test_admin_detail_formats_exam_date(): void
+    {
+        $source = $this->javascript('admin_detail.js');
+
+        $this->assertStringContainsString('function formatDate(', $source);
+        $this->assertStringContainsString('formatDate(submission.examDate)', $source);
+    }
+
     private function javascript(string $filename): string
     {
         $source = file_get_contents(

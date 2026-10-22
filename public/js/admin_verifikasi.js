@@ -94,6 +94,20 @@ document.addEventListener(
                 return "-";
             }
 
+            if (typeof value === "string") {
+                const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+                if (match) {
+                    const [, year, month, day] = match;
+                    const date = new Date(Date.UTC(+year, +month - 1, +day));
+                    return new Intl.DateTimeFormat("id-ID", {
+                        timeZone: "UTC",
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric"
+                    }).format(date);
+                }
+            }
+
             const date =
                 new Date(value);
 
@@ -109,7 +123,7 @@ document.addEventListener(
                 "id-ID",
                 {
                     timeZone: "Asia/Jakarta",
-                    day: "2-digit",
+                    day: "numeric",
                     month: "long",
                     year: "numeric"
                 }
