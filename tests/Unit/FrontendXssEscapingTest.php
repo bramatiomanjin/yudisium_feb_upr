@@ -25,6 +25,7 @@ class FrontendXssEscapingTest extends TestCase
             'admin_detail.js',
             'admin_detail_history.js',
             'admin_verifikasi.js',
+            'admin_review_revisi.js',
         ] as $filename) {
             $source = $this->javascript($filename);
 
@@ -36,6 +37,10 @@ class FrontendXssEscapingTest extends TestCase
         $this->assertStringNotContainsString(
             '${documentData.filename || "-"}',
             $this->javascript('admin_detail.js')
+        );
+        $this->assertStringNotContainsString(
+            '${documentData.filename || "-"}',
+            $this->javascript('admin_review_revisi.js')
         );
         $this->assertStringNotContainsString(
             '<strong>${title}</strong>',

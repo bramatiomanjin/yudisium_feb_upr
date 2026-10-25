@@ -27,9 +27,15 @@
         href="{{ asset('css/admin.css') }}"
     >
 
+    <!-- CSS DETAIL PENGAJUAN (IDENTITAS, AKADEMIK, DOKUMEN) -->
     <link
         rel="stylesheet"
-        href="{{ asset('css/admin_review_revisi.css') }}"
+        href="{{ asset('css/admin_detail_pengajuan.css') }}?v={{ @filemtime(public_path('css/admin_detail_pengajuan.css')) }}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ asset('css/admin_review_revisi.css') }}?v={{ @filemtime(public_path('css/admin_review_revisi.css')) }}"
     >
 
     <link
@@ -312,7 +318,273 @@
 
 
             <!-- =================================================
-                 INFO
+                 1. IDENTITAS (Data Mahasiswa)
+            ================================================== -->
+            <section class="admin-dashboard-card detail-section">
+
+                <div class="admin-card-header detail-section-header">
+
+                    <div>
+
+                        <p class="detail-section-eyebrow">
+                            IDENTITAS
+                        </p>
+
+                        <h2>
+                            Data Mahasiswa
+                        </h2>
+
+                        <p>
+                            Informasi identitas mahasiswa yang
+                            mengajukan yudisium.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-data-grid">
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Nama Lengkap
+                        </span>
+
+                        <strong id="detailStudentFullName">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            NIM
+                        </span>
+
+                        <strong id="detailStudentNim">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Email
+                        </span>
+
+                        <strong id="detailStudentEmail">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Nomor WhatsApp
+                        </span>
+
+                        <strong id="detailStudentWhatsapp">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Tahun Angkatan
+                        </span>
+
+                        <strong id="detailStudentYear">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Jalur Masuk
+                        </span>
+
+                        <strong id="detailStudentEntryRoute">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Jurusan
+                        </span>
+
+                        <strong id="detailStudentDepartment">
+                            -
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 2. DATA AKADEMIK
+            ================================================== -->
+            <section class="admin-dashboard-card detail-section">
+
+                <div class="admin-card-header detail-section-header">
+
+                    <div>
+
+                        <p class="detail-section-eyebrow">
+                            AKADEMIK
+                        </p>
+
+                        <h2>
+                            Data Akademik
+                        </h2>
+
+                        <p>
+                            Informasi karya tulis dan hasil ujian
+                            mahasiswa.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail-data-grid">
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Jenis Karya Tulis
+                        </span>
+
+                        <strong id="detailWorkType">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Tanggal Ujian
+                        </span>
+
+                        <strong id="detailExamDate">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item detail-data-wide">
+
+                        <span>
+                            Judul Skripsi / Artikel
+                        </span>
+
+                        <strong id="detailWorkTitle">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Nilai Ujian
+                        </span>
+
+                        <strong id="detailExamScore">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-data-item">
+
+                        <span>
+                            Nilai Huruf
+                        </span>
+
+                        <strong id="detailLetterGrade">
+                            -
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 3. DOKUMEN MAHASISWA (BERKAS)
+            ================================================== -->
+            <section class="admin-dashboard-card detail-section">
+
+                <div class="admin-card-header detail-section-header">
+
+                    <div>
+
+                        <p class="detail-section-eyebrow">
+                            BERKAS
+                        </p>
+
+                        <h2>
+                            Dokumen Mahasiswa
+                        </h2>
+
+                        <p>
+                            Klik tombol Preview untuk melihat
+                            dokumen tanpa meninggalkan halaman.
+                        </p>
+
+                    </div>
+
+
+                    <span class="detail-document-count" id="detailDocumentCount">
+                        0 Dokumen
+                    </span>
+
+                </div>
+
+
+                <div class="detail-document-list" id="detailDocumentList">
+                    <div style="padding:24px;text-align:center;color:var(--feb-muted);">
+                        Memuat berkas dokumen mahasiswa...
+                    </div>
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 INFO PERIKSA ITEM REVISI
             ================================================== -->
 
             <section class="revision-info-box">
@@ -323,10 +595,8 @@
 
 
                 <p>
-                    Halaman ini hanya menampilkan item yang
-                    dikirim ulang oleh mahasiswa. Item yang
-                    sebelumnya sudah disetujui tetap terkunci
-                    dan tidak perlu diperiksa kembali.
+                    Berikut adalah item yang dikirim ulang oleh mahasiswa untuk direview di bawah ini.
+                    Item yang sebelumnya sudah disetujui tetap terkunci dan tidak perlu diperiksa kembali.
                 </p>
 
             </section>
@@ -575,10 +845,10 @@
          SCRIPT
     ====================================================== -->
 
-    <script src="{{ asset('js/yudisium_api.js') }}"></script>
-    <script src="{{ asset('js/modal_accessibility.js') }}"></script>
-    <script src="{{ asset('js/admin.js') }}"></script>
-    <script src="{{ asset('js/admin_review_revisi.js') }}"></script>
+    <script src="{{ asset('js/yudisium_api.js') }}?v={{ @filemtime(public_path('js/yudisium_api.js')) }}"></script>
+    <script src="{{ asset('js/modal_accessibility.js') }}?v={{ @filemtime(public_path('js/modal_accessibility.js')) }}"></script>
+    <script src="{{ asset('js/admin.js') }}?v={{ @filemtime(public_path('js/admin.js')) }}"></script>
+    <script src="{{ asset('js/admin_review_revisi.js') }}?v={{ @filemtime(public_path('js/admin_review_revisi.js')) }}"></script>
 
 
 </body>
