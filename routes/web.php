@@ -27,7 +27,7 @@ Route::get(
 Route::get(
     '/uploads/pengumuman/{filename}',
     [SettingController::class, 'showPengumumanImage']
-)->where('filename', '.*')->name('pengumuman.image');
+)->where('filename', '[A-Za-z0-9._() -]+')->name('pengumuman.image');;
 
 // Submit pengajuan
 Route::post(

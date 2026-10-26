@@ -140,45 +140,57 @@ class SettingController extends Controller
      * sehingga gambar tidak pernah broken / corrupt di browser.
      */
     public function showPengumumanImage(string $filename)
-    {
-        $decodedFilename = rawurldecode($filename);
+{
+    // Pertahanan berlapis: buang semua komponen direktori,
+    // apa pun bentuk input dari route tetap diperlakukan sebagai nama file polos.
+    $safeFilename = basename(rawurldecode($filename));
 
-        $candidates = [
-            public_path('uploads/pengumuman/'.$decodedFilename),
-            public_path('uploads/pengumuman/'.$filename),
-            storage_path('app/public/pengumuman/'.$decodedFilename),
-            storage_path('app/public/pengumuman/'.$filename),
-        ];
-
-        foreach ($candidates as $candidate) {
-            if (file_exists($candidate) && is_file($candidate)) {
-                $mime = mime_content_type($candidate) ?: 'image/jpeg';
-
-                return response()->file($candidate, [
-                    'Content-Type' => $mime,
-                    'Cache-Control' => 'public, max-age=86400',
-                ]);
-            }
-        }
-
-        // Fallback: Jika file di database terhapus (misal akibat rebuild container ephemeral),
-        // sajikan poster default resmi agar pop-up tidak menampilkan gambar corrupt/rusak.
-        $fallbackPaths = [
-            public_path('images/default_pengumuman.jpg'),
-            public_path('uploads/pengumuman/default.jpg'),
-        ];
-
-        foreach ($fallbackPaths as $fallback) {
-            if (file_exists($fallback) && is_file($fallback)) {
-                return response()->file($fallback, [
-                    'Content-Type' => 'image/jpeg',
-                    'Cache-Control' => 'no-cache, private',
-                ]);
-            }
-        }
-
+    if ($safeFilename === '' || $safeFilename === '.' || $safeFilename === '..') {
         abort(404);
     }
+
+    $candidates = [
+        public_path('uploads/pengumuman/'.$safeFilename),
+        storage_path('app/public/pengumuman/'.$safeFilename),
+    ];
+
+    foreach ($candidates as $candidate) {
+        $real = realpath($candidate);
+        $allowedRoot = realpath(dirname($candidate));
+
+        if (
+            $real !== false
+            && $allowedRoot !== false
+            && str_starts_with($real, $allowedRoot.DIRECTORY_SEPARATOR)
+            && is_file($real)
+        ) {
+            $mime = mime_content_type($real) ?: 'image/jpeg';
+
+            return response()->file($real, [
+                'Content-Type' => $mime,
+                'Cache-Control' => 'public, max-age=86400',
+            ]);
+        }
+    }
+
+    // Fallback: jika file di database terhapus (misal akibat rebuild container ephemeral),
+    // sajikan poster default resmi agar pop-up tidak menampilkan gambar corrupt/rusak.
+    $fallbackPaths = [
+        public_path('images/default_pengumuman.jpg'),
+        public_path('uploads/pengumuman/default.jpg'),
+    ];
+
+    foreach ($fallbackPaths as $fallback) {
+        if (file_exists($fallback) && is_file($fallback)) {
+            return response()->file($fallback, [
+                'Content-Type' => 'image/jpeg',
+                'Cache-Control' => 'no-cache, private',
+            ]);
+        }
+    }
+
+    abort(404);
+}
 
     public function reorderPengumuman(Request $request)
     {
