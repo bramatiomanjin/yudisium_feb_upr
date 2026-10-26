@@ -32,11 +32,12 @@ RUN composer install \
     --no-interaction \
     --prefer-dist
 
-# Production PHP upload limits
+# Production PHP upload limits & security hardening (mitigasi PHP2Shell CVE-2026-109618)
 RUN echo "upload_max_filesize=20M" > /usr/local/etc/php/conf.d/uploads.ini \
     && echo "post_max_size=100M" >> /usr/local/etc/php/conf.d/uploads.ini \
     && echo "max_file_uploads=30" >> /usr/local/etc/php/conf.d/uploads.ini \
-    && echo "memory_limit=256M" >> /usr/local/etc/php/conf.d/uploads.ini
+    && echo "memory_limit=256M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "session.upload_progress.enabled=0" >> /usr/local/etc/php/conf.d/uploads.ini
 
     
 # Build frontend assets
