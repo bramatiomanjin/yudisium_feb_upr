@@ -439,6 +439,7 @@
                     Cek Pengajuan Lain
                 </a>
 
+                @include('mahasiswa.partials.watermark')
 
                 <a
                     href="/"
